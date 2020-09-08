@@ -12,5 +12,5 @@ deploy_production:
   environment: Production
   script:
     - npm ci
-    - npm run build
+    - npm run build-dev
     - ls -l dist

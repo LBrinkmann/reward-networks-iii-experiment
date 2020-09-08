@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import I from 'immutable';
 import {hot} from "react-hot-loader";
 
-import './tailwind-1.6.2.min.css';
+import './App.css';
 
 function say(...args) {
   console.log(...args);
