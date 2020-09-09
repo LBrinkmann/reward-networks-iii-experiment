@@ -1,16 +1,73 @@
-image: node:12
+stages:
+  - build
+  - docker
+  - deploy
+
+variables:
+  DOCKER_HOST: tcp://localhost:2375/
+  DOCKER_DRIVER: overlay2
+  REGISTERY_URL: docker.gitlab.gwdg.de
+  DOCKER_REGISTERY_PREFIX: mpib/chm/common/base-images
+  IMAGE_NAME: airfoilscoringfrontend
+  IMAGE_TAG: ${CI_COMMIT_TIMESTAMP}_${CI_COMMIT_SHORT_SHA}
+
+.tags: &tags
+  tags:
+    - chm
+
+.before: &before
+  before_script:
+    - docker login --username ${REGISTERY_USERNAME} --password ${REGISTERY_PASSWORD} ${REGISTERY_URL}
+.services: &services
+  services:
+    - name: "docker:18.09.0-dind"
+      alias: docker
+
+.commonheader: &commonheader
+  <<: *services
+  <<: *tags
+  <<: *before
 
 cache:
   paths:
     - node_modules/
 
-deploy_production:
+build:
+  <<: *commonheader
   only:
     refs:
       - master
   stage: deploy
+  image: node:12
+  artifacts:
+    paths:
+      - dist/
   environment: Production
   script:
     - npm ci
     - npm run build-dev
-    - ls -l dist
+
+buildimage:
+  <<: *commonheader
+  only:
+    refs:
+      - master
+  stage: docker
+  image: docker:18.09.0
+  environment: Production
+  script:
+    - docker build --no-cache -f Dockerfile -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest.
+    - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
+    - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
+
+deploy:
+  <<: *commonheader
+  only:
+    refs:
+      - master
+  stage: deploy
+  image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
+  environment: Production
+  script:
+    - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
+    - helm upgrade -n mcu --install airfoil charts/airfoil-scoring --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}  --atomic
