@@ -408,6 +408,35 @@ function SvgContainer(props) {
 }
 
 
+function DebugOutput({coordinates, result}) {
+  return (
+    <div className="bg-gray-300 p-8">
+      <div className="flex flow-row">
+        <div className="border border-black">
+          <pre className="p-2">
+            {coordinates}
+          </pre>
+        </div>
+        <div className="border border-black">
+          <pre className="p-2" style={{whiteSpace: "pre-wrap"}}>
+            {result && (result.error || JSON.stringify({ lift: result.lift, drag: result.drag, performance: result.performance}, null, 2))}
+          </pre>
+        </div>
+      </div>
+
+      <div className="p-2 mt-4 border border-black">
+        <p>airfoil.log</p>
+        <pre>{result && result.airfoil_log}</pre>
+      </div>
+
+      <div className="p-2 mt-4 border border-black">
+        <p>xfoil output</p>
+        <pre>{result && result.xfoil_output}</pre>
+      </div>
+
+  </div>
+  );
+}
 
 function Workspace(props) {
   const [airfoil_points, set_airfoil_points] = useState(null);
@@ -427,6 +456,9 @@ function Workspace(props) {
 
     set_coordinates(coordinates_as_array.map(([x, y]) => x + " " + y).join("\n"));
 
+    // result will contain `airfoil_log`, `xfoil_output`, and
+    // either `error` or `lift`, `drag`, and `performance`.
+
     set_result(null);
 
     fetch(
@@ -441,10 +473,7 @@ function Workspace(props) {
       return response.json();
     })
     .then(function (result) {
-      if (result.error)
-        set_result(result.error);
-      else
-        set_result(JSON.stringify(result, null, 2));
+      set_result(result)
     });
   }
 
@@ -456,18 +485,8 @@ function Workspace(props) {
           change_airfoil_points={change_airfoil_points}
           {...props}/>
       </div>
-      <div className="p-8 bg-gray-300 flex flow-row">
-        <div className="border border-black">
-          <pre className="p-2">
-            {coordinates}
-          </pre>
-        </div>
-        <div className="border border-black">
-          <pre className="p-2" style={{whiteSpace: "pre-wrap"}}>
-            {result}
-          </pre>
-        </div>
-      </div>
+
+      <DebugOutput coordinates={coordinates} result={result}/>
     </div>
   );
 }

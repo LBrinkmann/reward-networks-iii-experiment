@@ -1,6 +1,6 @@
 {
   "name": "airfoil-scoring",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "build-dev": "webpack --mode development && cp public/* dist/",
