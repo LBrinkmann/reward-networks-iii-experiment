@@ -34,6 +34,8 @@ cache:
 
 build:
   <<: *commonheader
+  before_script:
+    - echo "Overriding before_script"
   only:
     refs:
       - master
