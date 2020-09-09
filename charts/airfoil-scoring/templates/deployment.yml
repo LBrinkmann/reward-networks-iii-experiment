@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: dockersecret
+  name: airfoil-scoring-frontend
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ .Values.dockersecret }}
@@ -35,5 +35,5 @@ spec:
             - containerPort: 80
               protocol: TCP
       imagePullSecrets:
-        - name: dockersecret
+        - name: airfoil-scoring-frontend
 ---
