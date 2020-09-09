@@ -37,7 +37,7 @@ build:
   only:
     refs:
       - master
-  stage: deploy
+  stage: build
   image: node:12
   artifacts:
     paths:
@@ -56,7 +56,7 @@ buildimage:
   image: docker:18.09.0
   environment: Production
   script:
-    - docker build --no-cache -f Dockerfile -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest.
+    - docker build --no-cache -f Dockerfile -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest .
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
 
