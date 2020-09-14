@@ -11,15 +11,24 @@ function say(...args) {
 
 function Node({i, pos, begin_node_move}) {
   return (
-    <circle
-      data-i={i}
-      cx={pos.x}
-      cy={pos.y}
-      r={8 / 600}
-      stroke="#555"
-      strokeWidth={ 5 / 600 }
-      fill="#ddd"
-      onPointerDown={begin_node_move}/>);
+    <React.Fragment>
+      <circle
+        data-i={i}
+        cx={pos.x}
+        cy={pos.y}
+        r={12 / 600}
+        fill="transparent"
+        onPointerDown={begin_node_move}/>
+      <circle
+        data-i={i}
+        cx={pos.x}
+        cy={pos.y}
+        r={8 / 600}
+        stroke="#555"
+        strokeWidth={ 5 / 600 }
+        fill="#ddd"
+        onPointerDown={begin_node_move}/>
+    </React.Fragment>);
 }
 
 function Nodes({node_positions, begin_node_move}) {
@@ -34,16 +43,27 @@ function Nodes({node_positions, begin_node_move}) {
 
 function Anchor({i, a, pos, begin_anchor_move}) {
   return (
-    <circle
-      data-i={i}
-      data-a={a}
-      cx={pos.x}
-      cy={pos.y}
-      r={ 6 / 600 }
-      stroke="#888"
-      strokeWidth={ 5 / 600 }
-      fill="#ffffff"
-      onPointerDown={begin_anchor_move}/>);
+    <React.Fragment>
+      <circle
+        data-i={i}
+        data-a={a}
+        cx={pos.x}
+        cy={pos.y}
+        r={ 10 / 600 }
+        fill="transparent"
+        onPointerDown={begin_anchor_move}/>
+      <circle
+        data-i={i}
+        data-a={a}
+        cx={pos.x}
+        cy={pos.y}
+        r={ 6 / 600 }
+        stroke="#888"
+        strokeWidth={ 5 / 600 }
+        fill="#ffffff"
+        onPointerDown={begin_anchor_move}/>
+    </React.Fragment>
+  );
 }
 
 function Anchors({anchor_positions, begin_anchor_move}) {
