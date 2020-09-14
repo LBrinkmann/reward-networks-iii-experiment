@@ -9,7 +9,7 @@ function say(...args) {
   console.log(...args);
 }
 
-function Node({i, pos, begin_move}) {
+function Node({i, pos, begin_node_move}) {
   return (
     <circle
       data-i={i}
@@ -19,7 +19,7 @@ function Node({i, pos, begin_move}) {
       stroke="#555"
       strokeWidth={ 5 / 600 }
       fill="#ddd"
-      onPointerDown={begin_move}/>);
+      onPointerDown={begin_node_move}/>);
 }
 
 function Anchor({i, a, pos, begin_anchor_move}) {
@@ -113,9 +113,8 @@ function initial_anchor_positions(n_nodes) {
 
 
 function Drawing(props) {
-  const [moving, setMoving] = useState(false);
+  const [moving_node, set_moving_node] = useState(null);
   const [moving_anchor, set_moving_anchor] = useState(null);
-  const [moving_circle, set_moving_circle] = useState(null);
 
   const {
     airfoil_points,
@@ -124,10 +123,9 @@ function Drawing(props) {
     set_update_airfoil_points
   } = props;
 
-  function begin_move(e) {
+  function begin_node_move(e) {
     e.target.setPointerCapture(e.pointerId);
-    set_moving_circle(e.target.getAttribute("data-i"));
-    setMoving(true);
+    set_moving_node(e.target.getAttribute("data-i"));
   }
 
   function begin_anchor_move(e) {
@@ -138,9 +136,8 @@ function Drawing(props) {
     ]);
   }
 
-  function end_circle_move() {
-    setMoving(false);
-    set_moving_circle(null);
+  function end_node_move() {
+    set_moving_node(null);
   }
 
   function end_anchor_move() {
@@ -157,8 +154,8 @@ function Drawing(props) {
     [update_airfoil_points, set_update_airfoil_points, change_airfoil_points, props.n_airfoil_points]);
 
   function end_move(e) {
-    if (moving)
-      end_circle_move();
+    if (moving_node)
+      end_node_move();
     else if (moving_anchor)
       end_anchor_move();
     set_update_airfoil_points(true);
@@ -169,7 +166,7 @@ function Drawing(props) {
              key={"" + i}
              i={i}
              pos={pos}
-             begin_move={begin_move}/>;
+             begin_node_move={begin_node_move}/>;
   });
 
   const anchors = props.anchor_positions.map(function (point, i) {
@@ -238,7 +235,7 @@ function Drawing(props) {
   }
 
   function move_circle(event) {
-    const pos = props.node_positions.get(moving_circle);
+    const pos = props.node_positions.get(moving_node);
 
     const {x: screen_x, y: screen_y} = svg_to_screen(pos);
 
@@ -249,7 +246,7 @@ function Drawing(props) {
 
     props.set_node_positions(
       props.node_positions.set(
-        moving_circle,
+        moving_node,
         {x: keep_within(x, 1.0),
          y: keep_within(y, 1.0)}));
   }
@@ -273,7 +270,7 @@ function Drawing(props) {
   }
 
   function on_pointer_move(e) {
-    if (moving)
+    if (moving_node)
       move_circle(e);
     else if (moving_anchor)
       move_anchor(e);
