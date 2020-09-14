@@ -203,19 +203,36 @@ function initial_node_positions(n_nodes) {
   }));
 }
 
-function initial_anchor_positions(n_nodes) {
+function initial_anchor_position(node_position, angle) {
+  const {x: node_x, y: node_y} = node_position;
+
+  return {
+    x: node_x + (30 / 600) * Math.cos(angle),
+    y: node_y + (30 / 600) * Math.sin(angle)
+  };
+}
+
+
+function initial_anchor_positions(n_nodes, node_positions) {
   return I.List(range(n_nodes, function (i) {
+    const angle = 2 * Math.PI * i / n_nodes;
+
     return I.List([
-      {
-        x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i - 0.1) / n_nodes)),
-        y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i - 0.1) / n_nodes))
-      },
-      {
-        x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i + 0.1) / n_nodes)),
-        y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i + 0.1) / n_nodes))
-      }
+      initial_anchor_position(node_positions.get(i), angle - 0.5 * Math.PI),
+      initial_anchor_position(node_positions.get(i), angle + 0.5 * Math.PI)
     ]);
   }));
+
+  //     {
+  //       x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i - 0.1) / n_nodes)),
+  //       y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i - 0.1) / n_nodes))
+  //     },
+  //     {
+  //       x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i + 0.1) / n_nodes)),
+  //       y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i + 0.1) / n_nodes))
+  //     }
+  //   ]);
+  // }));
 }
 
 
@@ -326,21 +343,43 @@ function Drawing({
   }
 
   function move_anchor(event) {
-    const pos = anchor_positions.get(moving_anchor[0]).get(moving_anchor[1]);
-    const {x: screen_x, y: screen_y} = svg_to_screen(pos);
-    const new_screen_x = screen_x + event.movementX;
-    const new_screen_y = screen_y + event.movementY;
-    const {x, y} = screen_to_svg({x: new_screen_x, y: new_screen_y});
+    // The node of the anchor we're moving.
 
-    set_anchor_positions(
-      anchor_positions.set(
-        moving_anchor[0],
-        anchor_positions.get(moving_anchor[0]).set(
-          moving_anchor[1],
-          {
-            x: keep_within(x, 1.0),
-            y: keep_within(y, 1.0)
-          })));
+    const {x: node_x, y: node_y} =
+      node_positions.get(moving_anchor[0]);
+
+    // Retrieve both the anchor we're moving and the other anchor for
+    // the node.
+
+    const anchors = anchor_positions.get(moving_anchor[0]);
+
+    const anchor = anchors.get(moving_anchor[1]);
+    const mirror_anchor = anchors.get(1 - moving_anchor[1]);
+
+    // Move the anchor being moved by the mouse offset distance, and
+    // constrain to the workspace.
+
+    const {x: new_x, y: new_y} =
+      offset_svg_pos_by_screen_distance(
+        anchor,
+        event.movementX,
+        event.movementY);
+
+    const x = keep_within(new_x, 1.0);
+    const y = keep_within(new_y, 1.0);
+
+    // Move the other anchor to the mirror position.
+
+    const mirror_x = node_x - (x - node_x);
+    const mirror_y = node_y - (y - node_y);
+
+    const new_anchors =
+      anchors
+      .set(moving_anchor[1], {x, y})
+      .set(1 - moving_anchor[1], {x: mirror_x, y: mirror_y});
+
+    set_anchor_positions(anchor_positions.set(moving_anchor[0], new_anchors));
+
   }
 
   function on_pointer_move(e) {
@@ -582,7 +621,7 @@ function App() {
     initial_node_positions(n_nodes));
 
   const [anchor_positions, set_anchor_positions] = useState(
-    initial_anchor_positions(n_nodes));
+    initial_anchor_positions(n_nodes, node_positions));
 
   const [update_airfoil_points, set_update_airfoil_points] = useState(true);
 
