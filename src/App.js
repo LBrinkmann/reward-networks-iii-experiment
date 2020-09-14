@@ -315,6 +315,9 @@ function Drawing({
         event.movementX,
         event.movementY);
 
+    if (node_x < 0.0 || node_x > 1.0 || node_y < 0.0 || node_y > 1.0)
+      return;
+
     const {x: anchor1_x, y: anchor1_y} =
       offset_svg_pos_by_screen_distance(
         anchor_positions.get(moving_node).get(0),
@@ -328,10 +331,7 @@ function Drawing({
         event.movementY);
 
     set_node_positions(
-      node_positions.set(
-        moving_node,
-        {x: keep_within(node_x, 1.0),
-         y: keep_within(node_y, 1.0)}));
+      node_positions.set(moving_node, {x: node_x, y: node_y}));
 
     set_anchor_positions(
       anchor_positions.set(
