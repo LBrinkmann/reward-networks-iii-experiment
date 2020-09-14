@@ -413,6 +413,41 @@ function Drawing({
   );
 }
 
+function TextInput({id, default_value, update}) {
+  function blur_on_enter(event) {
+    if (event.key === 'Enter') {
+      event.target.blur();
+    }
+  }
+
+  return (
+    <input
+      className="bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-16 text-right"
+    id={id}
+    type="text"
+    defaultValue={default_value}
+    onBlur={update}
+    onKeyDown={blur_on_enter}/>
+  );
+}
+
+function AdminEntry({children, id, title, update, no_left_margin}) {
+  return (
+    <div className={"flex flex-row items-center " + (no_left_margin ? "" : "ml-8")}>
+      <div>
+        <label
+          className="block text-black font-bold text-right mb-1 mb-0 pr-4"
+          htmlFor={id}>
+            {title}
+        </label>
+      </div>
+      <div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function Admin(props) {
   function update_show_trace(event) {
     props.set_show_trace(event.target.checked);
@@ -439,42 +474,31 @@ function Admin(props) {
   }
 
   const NumberOfNodes = (
-    <div className="flex flex-row items-center">
-      <div className="">
-        <label className="block text-black font-bold text-right mb-1 mb-0 pr-4" htmlFor="nnodes">
-          Number of Nodes
-        </label>
-      </div>
-      <div className="">
-        <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-16 text-right" id="nnodes" type="text" defaultValue={props.n_nodes} onBlur={update_nnodes} onKeyDown={blur_on_enter}/>
-      </div>
-    </div>
+    <AdminEntry
+      no_left_margin="true"
+      id="nnodes"
+      title="Number of Nodes"
+      update={update_nnodes}>
+        <TextInput id="nnodes" default_value={props.n_nodes} update={update_nnodes}/>
+    </AdminEntry>
   );
 
   const NumberOfAirfoilPoints = (
-    <div className="flex flex-row items-center ml-8">
-      <div className="">
-        <label className="block text-black font-bold text-right mb-1 mb-0 pr-4" htmlFor="npoints">
-          Number of Airfoil Points
-        </label>
-      </div>
-      <div className="">
-        <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-16 text-right" id="npoints" type="text" defaultValue={props.n_airfoil_points} onBlur={update_npoints} onKeyDown={blur_on_enter}/>
-      </div>
-    </div>
+    <AdminEntry
+      id="npoints"
+      title="Number of Airfoil Points"
+      update={update_npoints}>
+        <TextInput id="npoints" default_value={props.n_airfoil_points} update={update_npoints}/>
+    </AdminEntry>
   );
 
   const ShowTrace = (
-    <div className="flex flex-row items-center ml-8">
-      <div className="">
-        <label className="block text-black font-bold text-right mb-1 mb-0 pr-4" htmlFor="show-trace">
-          Show Airfoil Points
-        </label>
-      </div>
-      <div className="">
+    <AdminEntry
+      id="show-trace"
+      title="Show Airfoil Points"
+      update={update_show_trace}>
         <input id="show-trace" type="checkbox" onChange={update_show_trace}/>
-      </div>
-    </div>
+    </AdminEntry>
   );
 
   return (
@@ -511,7 +535,7 @@ function SvgContainer(props) {
     []);
 
   return (
-    <div ref={svg_container} className="flex-1 flex justify-center items-center relative w-full h-full">
+    <div ref={svg_container} className="flex-grow flex justify-center items-center relative w-full h-full">
       <Drawing svg_size={svg_size} {...props}/>
     </div>
   );
@@ -545,6 +569,44 @@ function DebugOutput({coordinates, result}) {
       </div>
 
   </div>
+  );
+}
+
+function describe_error(error) {
+  if (! error)
+    return "";
+
+  if (error === "no result")
+    return "No Result";
+  else if (/Convergence failed/.test(error))
+    return "Convergence Failed";
+  else
+    return "Error";
+}
+
+function display_number(x) {
+  if (typeof x === 'number')
+    return x.toFixed(2);
+  else
+    return "";
+}
+
+function ResultBar({result}) {
+  return (
+    <div className="p-4 bg-gray-100 w-64">
+      <div className="font-bold">Lift</div>
+      <div style={{minHeight: "1.5em"}}>{display_number(result && result.lift)}</div>
+
+      <div className="mt-2 font-bold">Drag</div>
+      <div style={{minHeight: "1.5em"}}>{display_number(result && result.drag)}</div>
+
+      <div className="mt-2 font-bold">Performance</div>
+      <div style={{minHeight: "1.5em"}}>{display_number(result && result.performance)}</div>
+
+      <div className="mt-4 font-bold text-red-700">
+        {describe_error(result && result.error)}
+      </div>
+    </div>
   );
 }
 
@@ -589,11 +651,12 @@ function Workspace(props) {
 
   return (
     <div>
-      <div style={{height: "600px"}}>
+      <div className="flex flex-row" style={{height: "600px"}}>
         <SvgContainer
           airfoil_points={airfoil_points}
           change_airfoil_points={change_airfoil_points}
           {...props}/>
+        <ResultBar result={result}/>
       </div>
 
       <DebugOutput coordinates={coordinates} result={result}/>
