@@ -86,7 +86,8 @@ function AnchorLines({n_nodes, node_positions, anchor_positions}) {
             y2={anchor1.y}
             stroke="#888"
             strokeWidth={ (1 / 600) + "px" }
-            strokeDasharray={dashed_line}/>,
+            strokeDasharray={dashed_line}
+            pointerEvents="none"/>,
           <line
             key={"R" + i}
             x1={node.x}
@@ -95,7 +96,8 @@ function AnchorLines({n_nodes, node_positions, anchor_positions}) {
             y2={anchor2.y}
             stroke="#888"
             strokeWidth={ (1 / 600) + "px" }
-            strokeDasharray={dashed_line}/>
+            strokeDasharray={dashed_line}
+            pointerEvents="none"/>
         ];
       })}
     </React.Fragment>
@@ -313,16 +315,16 @@ function Drawing(props) {
         n_nodes={props.n_nodes}
         node_positions={props.node_positions}
         anchor_positions={props.anchor_positions}/>
-      <AnchorLines
-        n_nodes={props.n_nodes}
-        node_positions={props.node_positions}
-        anchor_positions={props.anchor_positions}/>
       <Nodes
         node_positions={props.node_positions}
         begin_node_move={begin_node_move}/>
       <Anchors
         anchor_positions={props.anchor_positions}
         begin_anchor_move={begin_anchor_move}/>
+      <AnchorLines
+        n_nodes={props.n_nodes}
+        node_positions={props.node_positions}
+        anchor_positions={props.anchor_positions}/>
       {airfoil_dots}
     </svg>
   );
