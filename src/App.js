@@ -282,7 +282,7 @@ function Drawing({
     return pt.matrixTransform(svg.current.getScreenCTM().inverse());
   }
 
-  function move_circle(event) {
+  function move_node(event) {
     const pos = node_positions.get(moving_node);
 
     const {x: screen_x, y: screen_y} = svg_to_screen(pos);
@@ -319,7 +319,7 @@ function Drawing({
 
   function on_pointer_move(e) {
     if (moving_node)
-      move_circle(e);
+      move_node(e);
     else if (moving_anchor)
       move_anchor(e);
   }
