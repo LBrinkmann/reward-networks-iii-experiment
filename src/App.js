@@ -22,6 +22,16 @@ function Node({i, pos, begin_node_move}) {
       onPointerDown={begin_node_move}/>);
 }
 
+function Nodes({node_positions, begin_node_move}) {
+  return node_positions.map(function (pos, i) {
+    return <Node
+             key={"" + i}
+             i={i}
+             pos={pos}
+             begin_node_move={begin_node_move}/>;
+  });
+}
+
 function Anchor({i, a, pos, begin_anchor_move}) {
   return (
     <circle
@@ -161,14 +171,6 @@ function Drawing(props) {
     set_update_airfoil_points(true);
   }
 
-  const nodes = props.node_positions.map(function (pos, i) {
-    return <Node
-             key={"" + i}
-             i={i}
-             pos={pos}
-             begin_node_move={begin_node_move}/>;
-  });
-
   const anchors = props.anchor_positions.map(function (point, i) {
     return [
       <Anchor
@@ -293,7 +295,9 @@ function Drawing(props) {
          style={{outline: "1px solid gray"}}>
       {curve_path}
       {anchor_lines}
-      {nodes}
+      <Nodes
+        node_positions={props.node_positions}
+        begin_node_move={begin_node_move}/>;
       {anchors}
       {airfoil_dots}
     </svg>
