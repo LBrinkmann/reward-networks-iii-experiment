@@ -282,21 +282,47 @@ function Drawing({
     return pt.matrixTransform(svg.current.getScreenCTM().inverse());
   }
 
-  function move_node(event) {
-    const pos = node_positions.get(moving_node);
-
+  function offset_svg_pos_by_screen_distance(pos, x, y) {
     const {x: screen_x, y: screen_y} = svg_to_screen(pos);
 
-    const new_screen_x = screen_x + event.movementX;
-    const new_screen_y = screen_y + event.movementY;
+    const new_screen_x = screen_x + x;
+    const new_screen_y = screen_y + y;
 
-    const {x, y} = screen_to_svg({x: new_screen_x, y: new_screen_y});
+    return screen_to_svg({x: new_screen_x, y: new_screen_y});
+  }
+
+  function move_node(event) {
+    const {x: node_x, y: node_y} =
+      offset_svg_pos_by_screen_distance(
+        node_positions.get(moving_node),
+        event.movementX,
+        event.movementY);
+
+    const {x: anchor1_x, y: anchor1_y} =
+      offset_svg_pos_by_screen_distance(
+        anchor_positions.get(moving_node).get(0),
+        event.movementX,
+        event.movementY);
+
+    const {x: anchor2_x, y: anchor2_y} =
+      offset_svg_pos_by_screen_distance(
+        anchor_positions.get(moving_node).get(1),
+        event.movementX,
+        event.movementY);
 
     set_node_positions(
       node_positions.set(
         moving_node,
-        {x: keep_within(x, 1.0),
-         y: keep_within(y, 1.0)}));
+        {x: keep_within(node_x, 1.0),
+         y: keep_within(node_y, 1.0)}));
+
+    set_anchor_positions(
+      anchor_positions.set(
+        moving_node,
+        I.List([
+          {x: anchor1_x, y: anchor1_y},
+          {x: anchor2_x, y: anchor2_y}
+        ])));
   }
 
   function move_anchor(event) {
