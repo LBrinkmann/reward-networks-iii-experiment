@@ -96,6 +96,17 @@ function curves(node_positions, anchor_positions, n_nodes) {
     .join(" "));
 }
 
+function CurvePath({n_nodes, node_positions, anchor_positions}) {
+  return (
+    <path
+      id="airfoil"
+      d={curves(node_positions, anchor_positions, n_nodes)}
+      stroke="#555"
+      strokeWidth={ (4 / 600) + "px"}
+      fill="none"/>
+  );
+}
+
 function trace_airfoil_points(n_points) {
   const airfoil = document.getElementById("airfoil");
   const length = airfoil.getTotalLength();
@@ -282,11 +293,6 @@ function Drawing(props) {
       move_anchor(e);
   }
 
-  const d = curves(props.node_positions, props.anchor_positions, props.n_nodes);
-
-  const curve_path =
-    <path id="airfoil" d={d} stroke="#555" strokeWidth={ (4 / 600) + "px"} fill="none"/>;
-
   return (
     <svg ref={svg}
          xmlns="http://www.w3.org/2000/svg"
@@ -297,7 +303,10 @@ function Drawing(props) {
          onPointerUp={end_move}
          onPointerMove={on_pointer_move}
          style={{outline: "1px solid gray"}}>
-      {curve_path}
+      <CurvePath
+        n_nodes={props.n_nodes}
+        node_positions={props.node_positions}
+        anchor_positions={props.anchor_positions}/>
       {anchor_lines}
       <Nodes
         node_positions={props.node_positions}
