@@ -116,6 +116,16 @@ function range(n, f) {
   return result;
 }
 
+function trace_airfoil_points(n_points) {
+  const airfoil = document.getElementById("airfoil");
+  const length = airfoil.getTotalLength();
+  return (
+    range(n_points, function (i) {
+      const point = airfoil.getPointAtLength((i / n_points) * length);
+      return {x: point.x, y: point.y};
+    }));
+}
+
 function curve(node_positions, anchor_positions, n_nodes, n) {
   const c0 = node_positions.get(n);
   const c1 = node_positions.get((n + 1) % n_nodes);
@@ -133,7 +143,24 @@ function curves(node_positions, anchor_positions, n_nodes) {
     .join(" "));
 }
 
-function CurvePath({n_nodes, node_positions, anchor_positions}) {
+function CurvePath({
+  n_nodes,
+  node_positions,
+  anchor_positions,
+  n_airfoil_points,
+  update_airfoil_points,
+  set_update_airfoil_points,
+  change_airfoil_points})
+{
+  useEffect(
+    function () {
+      if (update_airfoil_points) {
+        change_airfoil_points(trace_airfoil_points(n_airfoil_points));
+        set_update_airfoil_points(false);
+      }
+    },
+    [update_airfoil_points, set_update_airfoil_points, change_airfoil_points, n_airfoil_points]);
+
   return (
     <path
       id="airfoil"
@@ -142,16 +169,6 @@ function CurvePath({n_nodes, node_positions, anchor_positions}) {
       strokeWidth={ (4 / 600) + "px"}
       fill="none"/>
   );
-}
-
-function trace_airfoil_points(n_points) {
-  const airfoil = document.getElementById("airfoil");
-  const length = airfoil.getTotalLength();
-  return (
-    range(n_points, function (i) {
-      const point = airfoil.getPointAtLength((i / n_points) * length);
-      return {x: point.x, y: point.y};
-    }));
 }
 
 function AirfoilDots({show_trace, airfoil_points}) {
@@ -215,8 +232,8 @@ function Drawing({
     set_node_positions,
     anchor_positions,
     set_anchor_positions
-  }) {
-
+  })
+{
   const [moving_node, set_moving_node] = useState(null);
   const [moving_anchor, set_moving_anchor] = useState(null);
 
@@ -240,15 +257,6 @@ function Drawing({
   function end_anchor_move() {
     set_moving_anchor(null);
   }
-
-  useEffect(
-    function () {
-      if (update_airfoil_points) {
-        change_airfoil_points(trace_airfoil_points(n_airfoil_points));
-        set_update_airfoil_points(false);
-      }
-    },
-    [update_airfoil_points, set_update_airfoil_points, change_airfoil_points, n_airfoil_points]);
 
   function end_move(e) {
     if (moving_node)
@@ -329,7 +337,11 @@ function Drawing({
       <CurvePath
         n_nodes={n_nodes}
         node_positions={node_positions}
-        anchor_positions={anchor_positions}/>
+        anchor_positions={anchor_positions}
+        n_airfoil_points={n_airfoil_points}
+        update_airfoil_points={update_airfoil_points}
+        set_update_airfoil_points={set_update_airfoil_points}
+        change_airfoil_points={change_airfoil_points}/>
       <Nodes
         node_positions={node_positions}
         begin_node_move={begin_node_move}/>
