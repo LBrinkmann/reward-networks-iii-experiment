@@ -161,7 +161,7 @@ function Drawing(props) {
     set_update_airfoil_points(true);
   }
 
-  const circles = props.node_positions.map(function (pos, i) {
+  const nodes = props.node_positions.map(function (pos, i) {
     return <Node
              key={"" + i}
              i={i}
@@ -293,7 +293,7 @@ function Drawing(props) {
          style={{outline: "1px solid gray"}}>
       {curve_path}
       {anchor_lines}
-      {circles}
+      {nodes}
       {anchors}
       {airfoil_dots}
     </svg>
