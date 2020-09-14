@@ -47,7 +47,7 @@ build:
   environment: Production
   script:
     - npm ci
-    - npm run build-dev
+    - npm run build-prod
 
 buildimage:
   <<: *commonheader
