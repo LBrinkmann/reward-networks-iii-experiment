@@ -222,17 +222,6 @@ function initial_anchor_positions(n_nodes, node_positions) {
       initial_anchor_position(node_positions.get(i), angle + 0.5 * Math.PI)
     ]);
   }));
-
-  //     {
-  //       x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i - 0.1) / n_nodes)),
-  //       y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i - 0.1) / n_nodes))
-  //     },
-  //     {
-  //       x: 0.5 + 210 / 600 * Math.cos(2 * Math.PI * ((i + 0.1) / n_nodes)),
-  //       y: 0.5 + 210 / 600 * Math.sin(2 * Math.PI * ((i + 0.1) / n_nodes))
-  //     }
-  //   ]);
-  // }));
 }
 
 
@@ -627,8 +616,9 @@ function App() {
 
   function set_number_of_nodes(n) {
     set_nnodes(n);
-    set_node_positions(initial_node_positions(n));
-    set_anchor_positions(initial_anchor_positions(n));
+    const new_node_positions = initial_node_positions(n);
+    set_node_positions(new_node_positions);
+    set_anchor_positions(initial_anchor_positions(n, new_node_positions));
     set_update_airfoil_points(true);
   }
 
