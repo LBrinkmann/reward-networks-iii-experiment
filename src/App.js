@@ -46,6 +46,27 @@ function Anchor({i, a, pos, begin_anchor_move}) {
       onPointerDown={begin_anchor_move}/>);
 }
 
+function Anchors({anchor_positions, begin_anchor_move}) {
+  return anchor_positions.map(function (point, i) {
+    return (
+      <React.Fragment key={i}>
+        <Anchor
+          key={"L" + i}
+          i={i}
+          a={0}
+          pos={point.get(0)}
+          begin_anchor_move={begin_anchor_move}/>,
+        <Anchor
+          key={"R" + i}
+          i={i}
+          a={1}
+          pos={point.get(1)}
+          begin_anchor_move={begin_anchor_move}/>,
+      </React.Fragment>
+    );
+  });
+}
+
 function keep_within(x, bound) {
   return Math.min(Math.max(x, 0), bound);
 }
@@ -171,23 +192,6 @@ function Drawing(props) {
     set_update_airfoil_points(true);
   }
 
-  const anchors = props.anchor_positions.map(function (point, i) {
-    return [
-      <Anchor
-        key={"L" + i}
-        i={i}
-        a={0}
-        pos={props.anchor_positions.get(i).get(0)}
-        begin_anchor_move={begin_anchor_move}/>,
-      <Anchor
-        key={"R" + i}
-        i={i}
-        a={1}
-        pos={props.anchor_positions.get(i).get(1)}
-        begin_anchor_move={begin_anchor_move}/>,
-    ];
-  });
-
   const anchor_lines = props.anchor_positions.map(function (point, i) {
     const node = props.node_positions.get(i);
     const anchor1 = props.anchor_positions.get(i).get(0);
@@ -297,8 +301,10 @@ function Drawing(props) {
       {anchor_lines}
       <Nodes
         node_positions={props.node_positions}
-        begin_node_move={begin_node_move}/>;
-      {anchors}
+        begin_node_move={begin_node_move}/>
+      <Anchors
+        anchor_positions={props.anchor_positions}
+        begin_anchor_move={begin_anchor_move}/>
       {airfoil_dots}
     </svg>
   );
