@@ -154,17 +154,28 @@ function trace_airfoil_points(n_points) {
     }));
 }
 
-function airfoil_dot_circles(airfoil_points) {
-  return airfoil_points.map(function ({x, y}, i) {
+function AirfoilDots({show_trace, airfoil_points}) {
+  if (show_trace && airfoil_points) {
     return (
-      <circle
-        key={"" + i}
-        cx={x}
-        cy={y}
-        r={2 / 600}
-        fill="red"/>);
-  });
+      <React.Fragment>
+        {airfoil_points.map(function ({x, y}, i) {
+          return (
+            <circle
+              key={"" + i}
+              cx={x}
+              cy={y}
+              r={2 / 600}
+              fill="red"/>
+          );
+        })}
+      </React.Fragment>
+    );
+  }
+  else {
+    return <React.Fragment/>;
+  }
 }
+
 
 function initial_node_positions(n_nodes) {
   return I.List(range(n_nodes, function (i) {
@@ -239,9 +250,6 @@ function Drawing(props) {
       end_anchor_move();
     set_update_airfoil_points(true);
   }
-
-  const airfoil_dots =
-    (props.show_trace && airfoil_points) ? airfoil_dot_circles(airfoil_points) : [];
 
   const svg = useRef(null);
 
@@ -325,7 +333,9 @@ function Drawing(props) {
         n_nodes={props.n_nodes}
         node_positions={props.node_positions}
         anchor_positions={props.anchor_positions}/>
-      {airfoil_dots}
+      <AirfoilDots
+        show_trace={props.show_trace}
+        airfoil_points={props.airfoil_points}/>
     </svg>
   );
 }
