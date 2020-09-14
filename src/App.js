@@ -67,6 +67,41 @@ function Anchors({anchor_positions, begin_anchor_move}) {
   });
 }
 
+function AnchorLines({n_nodes, node_positions, anchor_positions}) {
+  return (
+    <React.Fragment>
+      {range(n_nodes, function (i) {
+        const node = node_positions.get(i);
+        const anchor1 = anchor_positions.get(i).get(0);
+        const anchor2 = anchor_positions.get(i).get(1);
+
+        const dashed_line = "0.01 0.01";
+
+        return [
+          <line
+            key={"L" + i}
+            x1={node.x}
+            y1={node.y}
+            x2={anchor1.x}
+            y2={anchor1.y}
+            stroke="#888"
+            strokeWidth={ (1 / 600) + "px" }
+            strokeDasharray={dashed_line}/>,
+          <line
+            key={"R" + i}
+            x1={node.x}
+            y1={node.y}
+            x2={anchor2.x}
+            y2={anchor2.y}
+            stroke="#888"
+            strokeWidth={ (1 / 600) + "px" }
+            strokeDasharray={dashed_line}/>
+        ];
+      })}
+    </React.Fragment>
+  );
+}
+
 function keep_within(x, bound) {
   return Math.min(Math.max(x, 0), bound);
 }
@@ -203,35 +238,6 @@ function Drawing(props) {
     set_update_airfoil_points(true);
   }
 
-  const anchor_lines = props.anchor_positions.map(function (point, i) {
-    const node = props.node_positions.get(i);
-    const anchor1 = props.anchor_positions.get(i).get(0);
-    const anchor2 = props.anchor_positions.get(i).get(1);
-
-    const dashed_line = "0.01 0.01";
-
-    return [
-      <line
-        key={"L" + i}
-        x1={node.x}
-        y1={node.y}
-        x2={anchor1.x}
-        y2={anchor1.y}
-        stroke="#888"
-        strokeWidth={ (1 / 600) + "px" }
-        strokeDasharray={dashed_line}/>,
-      <line
-        key={"R" + i}
-        x1={node.x}
-        y1={node.y}
-        x2={anchor2.x}
-        y2={anchor2.y}
-        stroke="#888"
-        strokeWidth={ (1 / 600) + "px" }
-        strokeDasharray={dashed_line}/>
-    ];
-  });
-
   const airfoil_dots =
     (props.show_trace && airfoil_points) ? airfoil_dot_circles(airfoil_points) : [];
 
@@ -307,7 +313,10 @@ function Drawing(props) {
         n_nodes={props.n_nodes}
         node_positions={props.node_positions}
         anchor_positions={props.anchor_positions}/>
-      {anchor_lines}
+      <AnchorLines
+        n_nodes={props.n_nodes}
+        node_positions={props.node_positions}
+        anchor_positions={props.anchor_positions}/>
       <Nodes
         node_positions={props.node_positions}
         begin_node_move={begin_node_move}/>
