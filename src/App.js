@@ -202,16 +202,23 @@ function initial_anchor_positions(n_nodes) {
 }
 
 
-function Drawing(props) {
-  const [moving_node, set_moving_node] = useState(null);
-  const [moving_anchor, set_moving_anchor] = useState(null);
-
-  const {
+function Drawing({
+    svg_size,
+    n_airfoil_points,
     airfoil_points,
     change_airfoil_points,
     update_airfoil_points,
-    set_update_airfoil_points
-  } = props;
+    set_update_airfoil_points,
+    show_trace,
+    n_nodes,
+    node_positions,
+    set_node_positions,
+    anchor_positions,
+    set_anchor_positions
+  }) {
+
+  const [moving_node, set_moving_node] = useState(null);
+  const [moving_anchor, set_moving_anchor] = useState(null);
 
   function begin_node_move(e) {
     e.target.setPointerCapture(e.pointerId);
@@ -237,11 +244,11 @@ function Drawing(props) {
   useEffect(
     function () {
       if (update_airfoil_points) {
-        change_airfoil_points(trace_airfoil_points(props.n_airfoil_points));
+        change_airfoil_points(trace_airfoil_points(n_airfoil_points));
         set_update_airfoil_points(false);
       }
     },
-    [update_airfoil_points, set_update_airfoil_points, change_airfoil_points, props.n_airfoil_points]);
+    [update_airfoil_points, set_update_airfoil_points, change_airfoil_points, n_airfoil_points]);
 
   function end_move(e) {
     if (moving_node)
@@ -268,7 +275,7 @@ function Drawing(props) {
   }
 
   function move_circle(event) {
-    const pos = props.node_positions.get(moving_node);
+    const pos = node_positions.get(moving_node);
 
     const {x: screen_x, y: screen_y} = svg_to_screen(pos);
 
@@ -277,24 +284,24 @@ function Drawing(props) {
 
     const {x, y} = screen_to_svg({x: new_screen_x, y: new_screen_y});
 
-    props.set_node_positions(
-      props.node_positions.set(
+    set_node_positions(
+      node_positions.set(
         moving_node,
         {x: keep_within(x, 1.0),
          y: keep_within(y, 1.0)}));
   }
 
   function move_anchor(event) {
-    const pos = props.anchor_positions.get(moving_anchor[0]).get(moving_anchor[1]);
+    const pos = anchor_positions.get(moving_anchor[0]).get(moving_anchor[1]);
     const {x: screen_x, y: screen_y} = svg_to_screen(pos);
     const new_screen_x = screen_x + event.movementX;
     const new_screen_y = screen_y + event.movementY;
     const {x, y} = screen_to_svg({x: new_screen_x, y: new_screen_y});
 
-    props.set_anchor_positions(
-      props.anchor_positions.set(
+    set_anchor_positions(
+      anchor_positions.set(
         moving_anchor[0],
-        props.anchor_positions.get(moving_anchor[0]).set(
+        anchor_positions.get(moving_anchor[0]).set(
           moving_anchor[1],
           {
             x: keep_within(x, 1.0),
@@ -314,28 +321,28 @@ function Drawing(props) {
          xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 1 1"
          className="absolute"
-         height={props.svg_size + "px"}
-         width={props.svg_size + "px"}
+         height={svg_size + "px"}
+         width={svg_size + "px"}
          onPointerUp={end_move}
          onPointerMove={on_pointer_move}
          style={{outline: "1px solid gray"}}>
       <CurvePath
-        n_nodes={props.n_nodes}
-        node_positions={props.node_positions}
-        anchor_positions={props.anchor_positions}/>
+        n_nodes={n_nodes}
+        node_positions={node_positions}
+        anchor_positions={anchor_positions}/>
       <Nodes
-        node_positions={props.node_positions}
+        node_positions={node_positions}
         begin_node_move={begin_node_move}/>
       <Anchors
-        anchor_positions={props.anchor_positions}
+        anchor_positions={anchor_positions}
         begin_anchor_move={begin_anchor_move}/>
       <AnchorLines
-        n_nodes={props.n_nodes}
-        node_positions={props.node_positions}
-        anchor_positions={props.anchor_positions}/>
+        n_nodes={n_nodes}
+        node_positions={node_positions}
+        anchor_positions={anchor_positions}/>
       <AirfoilDots
-        show_trace={props.show_trace}
-        airfoil_points={props.airfoil_points}/>
+        show_trace={show_trace}
+        airfoil_points={airfoil_points}/>
     </svg>
   );
 }
