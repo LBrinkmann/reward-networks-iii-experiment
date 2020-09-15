@@ -249,7 +249,8 @@ function AirfoilDots({show_trace, airfoil_points}) {
               cx={x}
               cy={y}
               r={2 / 600}
-              fill="red"/>
+              fill="red"
+              pointerEvents="none"/>
           );
         })}
       </React.Fragment>
@@ -503,7 +504,7 @@ function AdminEntry({children, id, title, update, no_left_margin}) {
     <div className={"flex flex-row items-center " + (no_left_margin ? "" : "ml-8")}>
       <div>
         <label
-          className="block text-black font-bold text-right mb-1 mb-0 pr-4"
+          className="block text-black font-bold text-right mb-1 mb-0 pr-2"
           htmlFor={id}>
             {title}
         </label>
@@ -512,6 +513,90 @@ function AdminEntry({children, id, title, update, no_left_margin}) {
         {children}
       </div>
     </div>
+  );
+}
+
+const small_button_style =
+  "flex-none text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded";
+
+function SmallButton({on_click, children}) {
+  return (
+    <div className="flex flex-col justify-center">
+      <button
+        className={small_button_style}
+        onClick={on_click}>
+          {children}
+      </button>
+    </div>
+  );
+}
+
+function ExportAirfoilButton({n_nodes, node_positions, anchor_positions}) {
+  const airfoil = {
+    type: "airfoil",
+    n_nodes: n_nodes,
+    node_positions: node_positions.toJS(),
+    anchor_positions: anchor_positions.toJS()
+  };
+
+  const airfoil_download =
+    'data:application/json;charset=utf-8,' +
+    encodeURIComponent(JSON.stringify(airfoil, null, 2));
+
+  return (
+    <div className="flex flex-col justify-center">
+      <a
+        className={small_button_style}
+        href={airfoil_download}
+        download="airfoil.json">
+          Export Airfoil
+      </a>
+    </div>
+  );
+}
+
+
+function ImportAirfoilButton({
+  set_nnodes,
+  set_node_positions,
+  set_anchor_positions,
+  set_update_airfoil_points})
+{
+  function import_airfoil(event) {
+    const files = event.target.files;
+    if (files.length !== 1)
+      return;
+    const file = files[0];
+
+    file.text().then(function (text) {
+      const airfoil = JSON.parse(text);
+      if (! (airfoil && airfoil.type === 'airfoil')) {
+        set_message('invalid airfoil file');
+        return
+      }
+
+      set_nnodes(airfoil.n_nodes);
+      set_node_positions(I.List(airfoil.node_positions));
+      set_anchor_positions(
+        I.List(airfoil.anchor_positions.map(function (anchors) {
+          return I.List(anchors);
+        })));
+      set_update_airfoil_points(true);
+    });
+  }
+
+  return (
+    <form className="flex flex-col justify-center">
+      <label htmlFor="import-airfoil" className={small_button_style + " block"}>
+        Import Airfoil
+      </label>
+      <input
+        id="import-airfoil"
+        className="hidden"
+        type="file"
+        accept="application/json"
+        onChange={import_airfoil}/>
+    </form>
   );
 }
 
@@ -575,6 +660,19 @@ function Admin(props) {
         {NumberOfNodes}
         {NumberOfAirfoilPoints}
         {ShowTrace}
+        <div className="w-8"/>
+        <ImportAirfoilButton
+          set_nnodes={props.set_nnodes}
+          set_node_positions={props.set_node_positions}
+          set_anchor_positions={props.set_anchor_positions}
+          set_update_airfoil_points={props.set_update_airfoil_points}/>
+        <div className="w-4"/>
+        <ExportAirfoilButton
+          n_nodes={props.n_nodes}
+          node_positions={props.node_positions}
+          anchor_positions={props.anchor_positions}/>
+      </div>
+      <div>
       </div>
     </div>);
 }
@@ -764,11 +862,17 @@ function App() {
       <div className="flex-none bg-gray-400">
         <Admin
           n_nodes={n_nodes}
+          node_positions={node_positions}
+          anchor_positions={anchor_positions}
+          set_nnodes={set_nnodes}
           set_number_of_nodes={set_number_of_nodes}
           show_trace={show_trace}
           set_show_trace={set_show_trace}
           n_airfoil_points={n_airfoil_points}
-          set_number_of_airfoil_points={set_number_of_airfoil_points}/>
+          set_number_of_airfoil_points={set_number_of_airfoil_points}
+          set_node_positions={set_node_positions}
+          set_anchor_positions={set_anchor_positions}
+          set_update_airfoil_points={set_update_airfoil_points}/>
       </div>
       <div className="flex-1">
         <Workspace
