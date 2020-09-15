@@ -556,6 +556,38 @@ function ExportAirfoilButton({n_nodes, node_positions, anchor_positions}) {
 }
 
 
+function points_in_xfoil_coordinates(airfoil_points) {
+  return airfoil_points.map(({x, y}) => [x, 0.5 - y]);
+}
+
+
+function ExportPointsButton({airfoil_points}) {
+  if (! airfoil_points)
+    return "";
+
+  const points_text =
+    points_in_xfoil_coordinates(airfoil_points)
+    .map(function ([x, y]) {
+      return "" + x + " " + y + "\n";
+    })
+    .join("");
+
+  const points_download =
+    'data:text/plain;charset=utf-8,' +
+    encodeURIComponent(points_text);
+
+  return (
+    <div className="flex flex-col justify-center">
+      <a
+        className={small_button_style}
+        href={points_download}
+        download="points.txt">
+          Export Points
+      </a>
+    </div>
+  );
+}
+
 function ImportAirfoilButton({
   set_nnodes,
   set_node_positions,
@@ -671,6 +703,8 @@ function Admin(props) {
           n_nodes={props.n_nodes}
           node_positions={props.node_positions}
           anchor_positions={props.anchor_positions}/>
+        <div className="w-4"/>
+        <ExportPointsButton airfoil_points={props.airfoil_points}/>
       </div>
       <div>
       </div>
@@ -775,12 +809,19 @@ function ResultBar({result}) {
   );
 }
 
+function successful_xfoil_result(result) {
+  return !! result.lift;
+}
+
 function Workspace(props) {
-  const [airfoil_points, set_airfoil_points] = useState(null);
+  const airfoil_points = props.airfoil_points;
+  const set_airfoil_points = props.set_airfoil_points;
 
   const [coordinates, set_coordinates] = useState(null);
 
   const [result, set_result] = useState(null);
+
+  const [last_good_airfoil, set_last_good_airfoil] = useState(null);
 
   function change_airfoil_points(points) {
     set_airfoil_points(points);
@@ -788,15 +829,13 @@ function Workspace(props) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    const coordinates_as_array = points.map(
-      ({x, y}) => [x, 0.5 - y]);
+    const xfoil_coordinates = points_in_xfoil_coordinates(points);
 
-    set_coordinates(coordinates_as_array.map(([x, y]) => x + " " + y).join("\n"));
+    set_coordinates(
+      xfoil_coordinates.map(([x, y]) => x + " " + y).join("\n"));
 
     // result will contain `airfoil_log`, `xfoil_output`, and
     // either `error` or `lift`, `drag`, and `performance`.
-
-    set_result(null);
 
     fetch(
       'https://airfoil-scoring.eks-test-default.mpg-chm.com/compute_coeff',
@@ -804,13 +843,23 @@ function Workspace(props) {
         method: 'POST',
         headers,
         cache: 'no-store',
-        body: JSON.stringify(coordinates_as_array)
+        body: JSON.stringify(xfoil_coordinates)
       })
     .then(function (response) {
       return response.json();
     })
     .then(function (result) {
-      set_result(result)
+      set_result(result);
+      if (successful_xfoil_result(result)) {
+        set_last_good_airfoil({
+          node_positions: props.node_positions,
+          anchor_positions: props.anchor_positions});
+      }
+      else if (last_good_airfoil) {
+        props.set_node_positions(last_good_airfoil.node_positions);
+        props.set_anchor_positions(last_good_airfoil.anchor_positions);
+        props.set_update_airfoil_points(true);
+      }
     });
   }
 
@@ -833,6 +882,8 @@ function App() {
   const [n_nodes, set_nnodes] = useState(10);
 
   const [n_airfoil_points, set_n_airfoil_points] = useState(100);
+
+  const [airfoil_points, set_airfoil_points] = useState(null);
 
   const [node_positions, set_node_positions] = useState(
     initial_node_positions(n_nodes));
@@ -872,7 +923,8 @@ function App() {
           set_number_of_airfoil_points={set_number_of_airfoil_points}
           set_node_positions={set_node_positions}
           set_anchor_positions={set_anchor_positions}
-          set_update_airfoil_points={set_update_airfoil_points}/>
+          set_update_airfoil_points={set_update_airfoil_points}
+          airfoil_points={airfoil_points}/>
       </div>
       <div className="flex-1">
         <Workspace
@@ -884,7 +936,9 @@ function App() {
           update_airfoil_points={update_airfoil_points}
           set_update_airfoil_points={set_update_airfoil_points}
           show_trace={show_trace}
-          n_airfoil_points={n_airfoil_points}/>
+          n_airfoil_points={n_airfoil_points}
+          airfoil_points={airfoil_points}
+          set_airfoil_points={set_airfoil_points}/>
       </div>
     </div>);
 }
