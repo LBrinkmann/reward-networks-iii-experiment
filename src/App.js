@@ -9,8 +9,19 @@ function say(...args) {
   console.log(...args);
 }
 
+// SVG circle element to draw a node of the airfoil path.
+//
+// i: integer (0, 1, ... number of nodes - 1) node number.
+// pos: {x, y} position of node.
+// begin_node_move: callback on mouse down to start moving the node.
+//
+// To make it easier to click on the node, a slightly larger
+// transparent circle is drawn behind the node to provide a larger
+// click target.
+
 function Node({i, pos, begin_node_move}) {
   return (
+    // data-i is used to identify the node being clicked on.
     <React.Fragment>
       <circle
         data-i={i}
@@ -31,6 +42,11 @@ function Node({i, pos, begin_node_move}) {
     </React.Fragment>);
 }
 
+// All the nodes of the airfoil path.
+//
+// node_positions: Immutable.List of {x, y} positions.
+// begin_node_move: callback on mouse down to start moving a node.
+
 function Nodes({node_positions, begin_node_move}) {
   return node_positions.map(function (pos, i) {
     return <Node
@@ -41,7 +57,20 @@ function Nodes({node_positions, begin_node_move}) {
   });
 }
 
+// An anchor for one of the nodes on the airfoil path.
+//
+// i: integer (0, 1, ... number of nodes - 1) node number of this anchor.
+// a: 0 = left anchor of node; 1 = right anchor of node.
+// pos: {x, y} position of anchor.
+// begin_anchor_move: callback on mouse down to start moving the anchor.
+//
+// A slightly larger transparent circle is drawn behind the anchor to
+// provide a larger click target to make it easier to click on the
+// anchor.
+
 function Anchor({i, a, pos, begin_anchor_move}) {
+  // data-i (node number) and data-a (0 = left anchor, 1 = right
+  // anchor) is used to identify the anchor being clicked on.
   return (
     <React.Fragment>
       <circle
@@ -66,6 +95,11 @@ function Anchor({i, a, pos, begin_anchor_move}) {
   );
 }
 
+// All the anchors on the airfoil path.
+//
+// anchor_positions: Immutable.List of {x, y} positions.
+// begin_anchor_move: callback on mouse down to start moving the anchor.
+
 function Anchors({anchor_positions, begin_anchor_move}) {
   return anchor_positions.map(function (point, i) {
     return (
@@ -87,42 +121,55 @@ function Anchors({anchor_positions, begin_anchor_move}) {
   });
 }
 
+// Draws the dashed line from an anchor to its node.
+
+function AnchorLine({i, a, node_pos, anchor_pos}) {
+  return (
+    // By default, clicking on a dashed line above a node or anchor
+    // would register the click as being applied to the dashed line.
+    // By setting pointer-events to none, the mouse click will pass
+    // through the line and be registered by the underlying node or
+    // anchor.
+    <line
+      x1={node_pos.x}
+      y1={node_pos.y}
+      x2={anchor_pos.x}
+      y2={anchor_pos.y}
+      stroke="#888"
+      strokeWidth={ (1 / 600) + "px" }
+      strokeDasharray={"0.01 0.01"}
+      pointerEvents="none"/>
+  );
+}
+
+
 function AnchorLines({n_nodes, node_positions, anchor_positions}) {
   return (
     <React.Fragment>
       {range(n_nodes, function (i) {
-        const node = node_positions.get(i);
-        const anchor1 = anchor_positions.get(i).get(0);
-        const anchor2 = anchor_positions.get(i).get(1);
+        const node_pos = node_positions.get(i);
+        const left_anchor_pos = anchor_positions.get(i).get(0);
+        const right_anchor_pos = anchor_positions.get(i).get(1);
 
-        const dashed_line = "0.01 0.01";
-
-        return [
-          <line
-            key={"L" + i}
-            x1={node.x}
-            y1={node.y}
-            x2={anchor1.x}
-            y2={anchor1.y}
-            stroke="#888"
-            strokeWidth={ (1 / 600) + "px" }
-            strokeDasharray={dashed_line}
-            pointerEvents="none"/>,
-          <line
-            key={"R" + i}
-            x1={node.x}
-            y1={node.y}
-            x2={anchor2.x}
-            y2={anchor2.y}
-            stroke="#888"
-            strokeWidth={ (1 / 600) + "px" }
-            strokeDasharray={dashed_line}
-            pointerEvents="none"/>
-        ];
+        return (
+          <React.Fragment key={i}>
+            <AnchorLine
+              i={i}
+              a={0}
+              node_pos={node_pos}
+              anchor_pos={left_anchor_pos}/>
+            <AnchorLine
+              i={i}
+              a={1}
+              node_pos={node_pos}
+              anchor_pos={right_anchor_pos}/>
+          </React.Fragment>
+        );
       })}
     </React.Fragment>
   );
 }
+
 
 function keep_within(x, bound) {
   return Math.min(Math.max(x, 0), bound);
