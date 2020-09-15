@@ -501,16 +501,18 @@ function TextInput({id, default_value, update}) {
 
 function AdminEntry({children, id, title, update, no_left_margin}) {
   return (
-    <div className={"flex flex-row items-center " + (no_left_margin ? "" : "ml-8")}>
-      <div>
-        <label
-          className="block text-black font-bold text-right mb-1 mb-0 pr-2"
-          htmlFor={id}>
-            {title}
-        </label>
-      </div>
-      <div>
-        {children}
+    <div className={"inline-block m-2"}>
+      <div className="flex flex-row items-center">
+        <div>
+          <label
+            className="block text-black font-bold text-right mb-1 mb-0 pr-2"
+            htmlFor={id}>
+              {title}
+          </label>
+        </div>
+        <div>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -544,29 +546,32 @@ function ExportAirfoilButton({n_nodes, node_positions, anchor_positions}) {
     encodeURIComponent(JSON.stringify(airfoil, null, 2));
 
   return (
-    <div className="flex flex-col justify-center">
-      <a
-        className={small_button_style}
-        href={airfoil_download}
-        download="airfoil.json">
-          Export Airfoil
-      </a>
+    <div className="inline-block m-2">
+      <div className="flex flex-col justify-center">
+        <a
+          className={small_button_style}
+          href={airfoil_download}
+          download="airfoil.json">
+            Export Airfoil
+        </a>
+      </div>
     </div>
   );
 }
 
 
-function points_in_xfoil_coordinates(airfoil_points) {
-  return airfoil_points.map(({x, y}) => [x, 0.5 - y]);
+function points_in_xfoil_coordinates(airfoil_scale, airfoil_points) {
+  return airfoil_points.map(
+    ({x, y}) => [airfoil_scale * x, airfoil_scale * (0.5 - y)]);
 }
 
 
-function ExportPointsButton({airfoil_points}) {
+function ExportPointsButton({airfoil_scale, airfoil_points}) {
   if (! airfoil_points)
     return "";
 
   const points_text =
-    points_in_xfoil_coordinates(airfoil_points)
+    points_in_xfoil_coordinates(airfoil_scale, airfoil_points)
     .map(function ([x, y]) {
       return "" + x + " " + y + "\n";
     })
@@ -577,13 +582,15 @@ function ExportPointsButton({airfoil_points}) {
     encodeURIComponent(points_text);
 
   return (
-    <div className="flex flex-col justify-center">
-      <a
-        className={small_button_style}
-        href={points_download}
-        download="points.txt">
-          Export Points
-      </a>
+    <div className="inline-block mt-2">
+      <div className="flex flex-col justify-center">
+        <a
+          className={small_button_style}
+          href={points_download}
+          download="points.txt">
+            Export Points
+        </a>
+      </div>
     </div>
   );
 }
@@ -618,17 +625,19 @@ function ImportAirfoilButton({
   }
 
   return (
-    <form className="flex flex-col justify-center">
-      <label htmlFor="import-airfoil" className={small_button_style + " block"}>
-        Import Airfoil
-      </label>
-      <input
-        id="import-airfoil"
-        className="hidden"
-        type="file"
-        accept="application/json"
-        onChange={import_airfoil}/>
-    </form>
+    <div className="inline-block m-2">
+      <form className="flex flex-col justify-center">
+        <label htmlFor="import-airfoil" className={small_button_style + " block"}>
+          Import Airfoil
+        </label>
+        <input
+          id="import-airfoil"
+          className="hidden"
+          type="file"
+          accept="application/json"
+          onChange={import_airfoil}/>
+      </form>
+    </div>
   );
 }
 
@@ -676,6 +685,25 @@ function Admin(props) {
     </AdminEntry>
   );
 
+  function update_airfoil_scale(event) {
+    const scale = parseFloat(event.target.value);
+    if (isNaN(scale))
+      return;
+    props.set_airfoil_scale(scale);
+    props.set_update_airfoil_points(true);
+  }
+
+  const AirfoilScale = (
+    <AdminEntry
+      id="airfoil-scale"
+      title="Airfoil Scale">
+        <TextInput
+          id="airfoil-scale"
+          default_value={props.airfoil_scale}
+          update={update_airfoil_scale}/>
+    </AdminEntry>
+  );
+
   const ShowTrace = (
     <AdminEntry
       id="show-trace"
@@ -688,23 +716,23 @@ function Admin(props) {
   return (
     <div className="m-4">
       <h1>Admin (not shown to user)</h1>
-      <div className="w-full mt-4 flex flex-row">
+      <div className="mt-4">
         {NumberOfNodes}
         {NumberOfAirfoilPoints}
+        {AirfoilScale}
         {ShowTrace}
-        <div className="w-8"/>
         <ImportAirfoilButton
           set_nnodes={props.set_nnodes}
           set_node_positions={props.set_node_positions}
           set_anchor_positions={props.set_anchor_positions}
           set_update_airfoil_points={props.set_update_airfoil_points}/>
-        <div className="w-4"/>
         <ExportAirfoilButton
           n_nodes={props.n_nodes}
           node_positions={props.node_positions}
           anchor_positions={props.anchor_positions}/>
-        <div className="w-4"/>
-        <ExportPointsButton airfoil_points={props.airfoil_points}/>
+        <ExportPointsButton
+          airfoil_scale={props.airfoil_scale}
+          airfoil_points={props.airfoil_points}/>
       </div>
       <div>
       </div>
@@ -734,7 +762,7 @@ function SvgContainer(props) {
     []);
 
   return (
-    <div ref={svg_container} className="flex-grow flex justify-center items-center relative w-full h-full">
+    <div ref={svg_container} className="flex-grow flex justify-center items-center relative w-full h-full" style={{opacity: props.calculating? 0.5 : 1.0}}>
       <Drawing svg_size={svg_size} {...props}/>
     </div>
   );
@@ -823,19 +851,24 @@ function Workspace(props) {
 
   const [last_good_airfoil, set_last_good_airfoil] = useState(null);
 
+  const [calculating, set_calculating] = useState(false);
+
   function change_airfoil_points(points) {
     set_airfoil_points(points);
 
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    const xfoil_coordinates = points_in_xfoil_coordinates(points);
+    const xfoil_coordinates =
+      points_in_xfoil_coordinates(props.airfoil_scale, points);
 
     set_coordinates(
       xfoil_coordinates.map(([x, y]) => x + " " + y).join("\n"));
 
     // result will contain `airfoil_log`, `xfoil_output`, and
     // either `error` or `lift`, `drag`, and `performance`.
+
+    set_calculating(true);
 
     fetch(
       'https://airfoil-scoring.eks-test-default.mpg-chm.com/compute_coeff',
@@ -850,6 +883,7 @@ function Workspace(props) {
     })
     .then(function (result) {
       set_result(result);
+      set_calculating(false);
       if (successful_xfoil_result(result)) {
         set_last_good_airfoil({
           node_positions: props.node_positions,
@@ -869,6 +903,7 @@ function Workspace(props) {
         <SvgContainer
           airfoil_points={airfoil_points}
           change_airfoil_points={change_airfoil_points}
+          calculating={calculating}
           {...props}/>
         <ResultBar result={result}/>
       </div>
@@ -880,6 +915,8 @@ function Workspace(props) {
 
 function App() {
   const [n_nodes, set_nnodes] = useState(10);
+
+  const [airfoil_scale, set_airfoil_scale] = useState(1.0);
 
   const [n_airfoil_points, set_n_airfoil_points] = useState(100);
 
@@ -924,6 +961,8 @@ function App() {
           set_node_positions={set_node_positions}
           set_anchor_positions={set_anchor_positions}
           set_update_airfoil_points={set_update_airfoil_points}
+          airfoil_scale={airfoil_scale}
+          set_airfoil_scale={set_airfoil_scale}
           airfoil_points={airfoil_points}/>
       </div>
       <div className="flex-1">
@@ -936,6 +975,7 @@ function App() {
           update_airfoil_points={update_airfoil_points}
           set_update_airfoil_points={set_update_airfoil_points}
           show_trace={show_trace}
+          airfoil_scale={airfoil_scale}
           n_airfoil_points={n_airfoil_points}
           airfoil_points={airfoil_points}
           set_airfoil_points={set_airfoil_points}/>
