@@ -26,7 +26,7 @@ variables:
 .deploy: &deploy
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm upgrade -n mcu --install airfoil-frontend charts/airfoil-scoring-frontend
+    - helm upgrade -n mcu --install airfoil-scoring-frontend-${CI_COMMIT_REF_NAME} charts/airfoil-scoring-frontend
       --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
       --set branchName=${CI_COMMIT_REF_NAME}
       --atomic
@@ -81,4 +81,6 @@ deploy-nonprod:
   stage: deploy
   image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
   <<: *deploy
+
+undeploy-nonprod:
 
