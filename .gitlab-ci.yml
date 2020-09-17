@@ -2,6 +2,7 @@ stages:
   - build
   - docker
   - deploy
+  - undeploy
 
 variables:
   DOCKER_HOST: tcp://localhost:2375/
@@ -83,4 +84,13 @@ deploy-nonprod:
   <<: *deploy
 
 undeploy-nonprod:
+  <<: *commonheader
+  except:
+    refs:
+      - master
+  stage: undeploy
+  image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
+  script:
+    - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
+    - helm uninstall airfoil-scoring-frontend-${CI_COMMIT_REF_NAME}
 
