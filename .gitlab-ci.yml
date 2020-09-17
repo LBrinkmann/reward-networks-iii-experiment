@@ -23,6 +23,14 @@ variables:
     - name: "docker:18.09.0-dind"
       alias: docker
 
+.deploy: &deploy
+  script:
+    - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
+    - helm upgrade -n mcu --install airfoil-frontend charts/airfoil-scoring
+      --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
+      --set branchName=${CI_COMMIT_REF_NAME}
+      --atomic
+
 .commonheader: &commonheader
   <<: *services
   <<: *tags
@@ -62,7 +70,7 @@ buildimage:
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
 
-deploy:
+deploy-prod:
   <<: *commonheader
   only:
     refs:
@@ -70,9 +78,14 @@ deploy:
   stage: deploy
   image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
   environment: Production
-  script:
-    - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm upgrade -n mcu --install airfoil-frontend charts/airfoil-scoring
-      --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
-      --set branchName=${CI_COMMIT_REF_NAME}
-      --atomic
+  <<: *deploy
+
+deploy-nonprod:
+  <<: *commonheader
+  except:
+    refs:
+      - master
+  stage: deploy
+  image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
+  <<: *deploy
+
