@@ -44,27 +44,19 @@ build:
   <<: *commonheader
   before_script:
     - echo "Overriding before_script"
-  only:
-    refs:
-      - master
   stage: build
   image: node:12
   artifacts:
     paths:
       - dist/
-  environment: Production
   script:
     - npm ci
     - npm run build-prod
 
 buildimage:
   <<: *commonheader
-  only:
-    refs:
-      - master
   stage: docker
   image: docker:18.09.0
-  environment: Production
   script:
     - docker build --no-cache -f Dockerfile -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest .
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
