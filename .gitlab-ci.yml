@@ -5,11 +5,12 @@ stages:
   - undeploy
 
 variables:
+  APP_NAME: react-app-template
   DOCKER_HOST: tcp://localhost:2375/
   DOCKER_DRIVER: overlay2
   REGISTERY_URL: docker.gitlab.gwdg.de
   DOCKER_REGISTERY_PREFIX: mpib/chm/common/base-images
-  IMAGE_NAME: airfoilscoringfrontend
+  IMAGE_NAME: ${APP_NAME}
   IMAGE_TAG: ${CI_COMMIT_TIMESTAMP}_${CI_COMMIT_SHORT_SHA}
 
 .tags: &tags
@@ -27,9 +28,10 @@ variables:
 .deploy: &deploy
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm upgrade -n mcu --install airfoil-scoring-frontend-${CI_COMMIT_REF_NAME} charts/airfoil-scoring-frontend
+    - helm upgrade -n mcu --install ${APP_NAME}-${CI_COMMIT_REF_NAME} charts/static-web-server
       --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
       --set branchName=${CI_COMMIT_REF_NAME}
+      --set app.name=${APP_NAME}
       --atomic
 
 .commonheader: &commonheader
@@ -93,5 +95,4 @@ undeploy-nonprod:
   when: manual
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm uninstall airfoil-scoring-frontend-${CI_COMMIT_REF_NAME}
-
+    - helm uninstall ${APP_NAME}-${CI_COMMIT_REF_NAME}

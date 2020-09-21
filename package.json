@@ -1,10 +1,10 @@
 {
-  "name": "airfoil-scoring",
+  "name": "react-app-template",
   "version": "0.1.0",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "build-dev": "webpack --mode development && cp public/* dist/",
-    "build-prod": "webpack --mode production && cp public/* dist/"
+    "build-dev": "webpack --mode development && cp -R static/ dist/",
+    "build-prod": "webpack --mode production && cp -R static/ dist/"
   },
   "devDependencies": {
     "@babel/cli": "^7.11.6",
@@ -21,10 +21,8 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "immutable": "^4.0.0-rc.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hot-loader": "^4.12.21",
-    "tailwindcss": "^1.8.5"
+    "react-hot-loader": "^4.12.21"
   }
 }

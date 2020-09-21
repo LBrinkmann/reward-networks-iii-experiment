@@ -29,10 +29,10 @@ module.exports = {
     filename: "bundle.js"
   },
   devServer: {
-    contentBase: path.join(__dirname, "public/"),
+    contentBase: path.join(__dirname, "static/"),
     port: 3000,
     publicPath: "http://localhost:3000/",
-    hotOnly: true
+    hot: true
   },
   plugins: [new webpack.HotModuleReplacementPlugin()]
 };
