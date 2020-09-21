@@ -1,4 +1,5 @@
-#
+include:
+  - local: 'app.yml'
 
 stages:
   - build
@@ -7,7 +8,6 @@ stages:
   - undeploy
 
 variables:
-  APP_NAME: react-app-template
   DOCKER_HOST: tcp://localhost:2375/
   DOCKER_DRIVER: overlay2
   REGISTERY_URL: docker.gitlab.gwdg.de
