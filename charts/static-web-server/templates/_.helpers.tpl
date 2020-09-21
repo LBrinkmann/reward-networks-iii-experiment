@@ -25,6 +25,3 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
-
-# Chart.Name: {{ .Chart.Name }}
-# Release.Name: {{ .Release.Name }}
