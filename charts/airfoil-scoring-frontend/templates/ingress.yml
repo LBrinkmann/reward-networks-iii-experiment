@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: {{ include "deployment.fullname" . }}
+spec:
+  rules:
+    - host: '{{ include "deployment.fullname" . }}.eks-test-default.mpg-chm.com'
+      http:
+        paths:
+          - backend:
+              serviceName: {{ include "deployment.fullname" . }}
+              servicePort: http
+            path: /
+  tls:
+    - hosts:
+        - '{{ include "deployment.fullname" . }}.eks-test-default.mpg-chm.com'

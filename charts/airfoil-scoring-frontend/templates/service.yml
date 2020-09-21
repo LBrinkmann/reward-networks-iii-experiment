@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: airfoil-scoring-frontend
+  name: {{ include "deployment.fullname" . }}
 spec:
   ports:
     - name: http
@@ -10,6 +10,6 @@ spec:
       port: 80
       targetPort: 80
   selector:
-    app: airfoil-scoring-frontend
+    app: {{ include "deployment.fullname" . }}
   type: ClusterIP
   sessionAffinity: None

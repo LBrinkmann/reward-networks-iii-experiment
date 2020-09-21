@@ -2,6 +2,7 @@ stages:
   - build
   - docker
   - deploy
+  - undeploy
 
 variables:
   DOCKER_HOST: tcp://localhost:2375/
@@ -23,6 +24,14 @@ variables:
     - name: "docker:18.09.0-dind"
       alias: docker
 
+.deploy: &deploy
+  script:
+    - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
+    - helm upgrade -n mcu --install airfoil-scoring-frontend-${CI_COMMIT_REF_NAME} charts/airfoil-scoring-frontend
+      --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
+      --set branchName=${CI_COMMIT_REF_NAME}
+      --atomic
+
 .commonheader: &commonheader
   <<: *services
   <<: *tags
@@ -36,33 +45,26 @@ build:
   <<: *commonheader
   before_script:
     - echo "Overriding before_script"
-  only:
-    refs:
-      - master
   stage: build
   image: node:12
   artifacts:
     paths:
       - dist/
-  environment: Production
+    expire_in: 1 week
   script:
     - npm ci
     - npm run build-prod
 
 buildimage:
   <<: *commonheader
-  only:
-    refs:
-      - master
   stage: docker
   image: docker:18.09.0
-  environment: Production
   script:
     - docker build --no-cache -f Dockerfile -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} -t ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest .
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG}
     - docker push ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/${IMAGE_NAME}:latest
 
-deploy:
+deploy-prod:
   <<: *commonheader
   only:
     refs:
@@ -70,6 +72,26 @@ deploy:
   stage: deploy
   image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
   environment: Production
+  <<: *deploy
+
+deploy-nonprod:
+  <<: *commonheader
+  except:
+    refs:
+      - master
+  stage: deploy
+  image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
+  <<: *deploy
+
+undeploy-nonprod:
+  <<: *commonheader
+  except:
+    refs:
+      - master
+  stage: undeploy
+  image: ${REGISTERY_URL}/${DOCKER_REGISTERY_PREFIX}/app/cd-tools:0.1
+  when: manual
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm upgrade -n mcu --install airfoil-frontend charts/airfoil-scoring --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}  --atomic
+    - helm uninstall airfoil-scoring-frontend-${CI_COMMIT_REF_NAME}
+
