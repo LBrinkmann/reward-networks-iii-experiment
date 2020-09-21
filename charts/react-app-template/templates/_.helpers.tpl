@@ -26,3 +26,5 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+# Chart.Name: {{ .Chart.Name }}
+# Release.Name: {{ .Release.Name }}
