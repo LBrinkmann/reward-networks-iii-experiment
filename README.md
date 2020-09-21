@@ -47,3 +47,12 @@ You'll see the sample React app.
 
 Run `npm run dev` to run the development server locally, and open the
 React app on http://localhost:3000/.
+
+
+## References
+
+- [Creating a React App… From Scratch.](https://blog.usejournal.com/creating-a-react-app-from-scratch-f3c693b84658)
+
+- [Webpack](https://webpack.js.org/concepts/)
+
+- [React](https://reactjs.org/)
