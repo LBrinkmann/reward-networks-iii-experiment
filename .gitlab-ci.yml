@@ -35,6 +35,7 @@ variables:
       --set branchName=${CI_COMMIT_REF_NAME}
       --set app.name=${APP_NAME}
       --set nameOverride=${APP_NAME}
+      --set app.main_url=${MAIN_URL}
       --atomic
 
 .commonheader: &commonheader

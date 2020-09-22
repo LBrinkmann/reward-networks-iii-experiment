@@ -1,10 +1,12 @@
+{{- $main_url := default .Values.app.name .Values.app.main_url -}}
+
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
     name: {{ include "deployment.fullname" . }}
 spec:
   rules:
-    - host: '{{ include "deployment.fullname" . }}.eks-test-default.mpg-chm.com'
+    - host: '{{ $main_url }}.eks-test-default.mpg-chm.com'
       http:
         paths:
           - backend:
@@ -13,4 +15,4 @@ spec:
             path: /
   tls:
     - hosts:
-        - '{{ include "deployment.fullname" . }}.eks-test-default.mpg-chm.com'
+        - '{{ $main_url }}.eks-test-default.mpg-chm.com'
