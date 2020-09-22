@@ -1,4 +1,6 @@
-{{- $main_url := default .Values.app.name .Values.app.main_url -}}
+{{- $main_url_base := default .Values.app.name .Values.app.main_url -}}
+{{- $main_url_branch := eq .Values.branchName "master" | ternary "" (print "-" .Values.branchName) -}}
+{{- $main_url := print $main_url_base $main_url_branch -}}
 
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
