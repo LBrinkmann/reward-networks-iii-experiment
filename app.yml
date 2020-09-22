@@ -1,3 +1,5 @@
 variables:
   APP_NAME: react-app-template
   MAIN_URL: react-app
+  BACKEND_URL: https://airfoil-scoring.eks-test-default.mpg-chm.com/
+  BACKEND_URL_DEV: https://airfoil-scoring-dev.eks-test-default.mpg-chm.com/

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import config from "./config";
 
 function App() {
   const [count, set_count] = useState(0);
@@ -13,6 +14,9 @@ function App() {
       <p><button onClick={on_click}>Click Me</button></p>
 
       <p>You clicked {count} times.</p>
+
+      <p>Backend URL: <code>{config.backend_url}</code></p>
+
     </div>
   );
 }
