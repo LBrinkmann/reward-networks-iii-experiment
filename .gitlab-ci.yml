@@ -24,6 +24,7 @@ variables:
     - export COMMIT_TIMESTAMP=$(cat COMMIT_TIMESTAMP)
     - export IMAGE_TAG=${COMMIT_TIMESTAMP}_${CI_COMMIT_SHORT_SHA}
     - docker login --username ${REGISTERY_USERNAME} --password ${REGISTERY_PASSWORD} ${REGISTERY_URL}
+
 .services: &services
   services:
     - name: "docker:18.09.0-dind"
@@ -33,7 +34,7 @@ variables:
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
     - helm upgrade -n mcu --install ${APP_NAME}-${CI_COMMIT_REF_NAME}
-      charts/static-web-server
+      charts/${HELM_CHART}
       --set dockersecret=${DOCKERCFG}
       --set image.name=${IMAGE_NAME}
       --set image.tag=${IMAGE_TAG}
