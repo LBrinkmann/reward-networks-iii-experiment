@@ -32,7 +32,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: {{ include "deployment.fullname" . }}
-          image: docker.gitlab.gwdg.de/mpib/chm/common/base-images/{{ .Values.app.name }}:{{ .Values.image.tag }}
+          image: docker.gitlab.gwdg.de/mpib/chm/common/base-images/{{ .Values.image.name }}:{{ .Values.image.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

@@ -32,8 +32,11 @@ variables:
 .deploy: &deploy
   script:
     - aws --region eu-central-1 eks update-kubeconfig --name chm-test-default --region eu-central-1
-    - helm upgrade -n mcu --install ${APP_NAME}-${CI_COMMIT_REF_NAME} charts/static-web-server
-      --set dockersecret=${DOCKERCFG},image.tag=${IMAGE_TAG}
+    - helm upgrade -n mcu --install ${APP_NAME}-${CI_COMMIT_REF_NAME}
+      charts/static-web-server
+      --set dockersecret=${DOCKERCFG}
+      --set image.name=${IMAGE_NAME}
+      --set image.tag=${IMAGE_TAG}
       --set branchName=${CI_COMMIT_REF_NAME}
       --set app.name=${APP_NAME}
       --set nameOverride=${APP_NAME}
