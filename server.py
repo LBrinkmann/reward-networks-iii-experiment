@@ -6,6 +6,7 @@ import uuid
 from flask import Flask
 from flask_cors import CORS
 
+
 logging.basicConfig(level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
