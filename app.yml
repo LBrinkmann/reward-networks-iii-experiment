@@ -1,0 +1,3 @@
+variables:
+  APP_NAME: python-app-template
+  HELM_CHART: web-server

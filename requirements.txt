@@ -1,0 +1,5 @@
+pyyaml
+gunicorn
+eventlet
+flask
+flask-cors
