@@ -32,3 +32,14 @@ $ curl --header 'Content-Type: application/json' \
   "result": 6
 }
 ```
+
+## Deployed
+
+```
+$ curl --header 'Content-Type: application/json' \
+       --data-binary '{"x": 5}' \
+       https://python-app-template.eks-test-default.mpg-chm.com/
+{
+  "result": 6
+}
+```
