@@ -1,5 +1,7 @@
 # Python App Template
 
+Demonstrates a JSON API with logging to ElasticSearch.
+
 Python version >= 3.7 is required.
 
 
@@ -15,4 +17,18 @@ pip install -r requirements.txt
 
 ```
 env FLASK_APP=server.py FLASK_ENV=development flask run
+```
+
+
+## Example
+
+Add one to `x`.
+
+```
+$ curl --header 'Content-Type: application/json' \
+       --data-binary '{"x": 5}' \
+       http://localhost:5000/
+{
+  "result": 6
+}
 ```
