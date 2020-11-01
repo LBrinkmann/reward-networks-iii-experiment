@@ -1,6 +1,2 @@
 variables:
-  APP_NAME: react-app-template
-  HELM_CHART: static-web-server
-  MAIN_URL: react-app
-  BACKEND_URL: https://airfoil-scoring-backend.eks-test-default.mpg-chm.com/
-  BACKEND_URL_DEV: https://airfoil-scoring-backend-dev.eks-test-default.mpg-chm.com/
+  APP_NAME: change-me

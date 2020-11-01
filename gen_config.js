@@ -3,16 +3,12 @@ const fs = require('fs');
 const in_dev_branch = (process.env['CI_COMMIT_REF_NAME'] === "dev");
 
 function env(name) {
-  var value = process.env[name + (in_dev_branch ? "_DEV" : "")];
+  const value = process.env[name + (in_dev_branch ? "_DEV" : "")];
 
-  value = value && value.trim();
-
-  if (! value) {
-    console.log("Environment variable " + name + " is not specified.");
-    process.exit(1);
-  }
-
-  return value;
+  if (value === undefined)
+    return null;
+  else
+    return value;
 }
 
 const config_js = [
