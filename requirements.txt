@@ -3,3 +3,6 @@ gunicorn
 eventlet
 flask
 flask-cors
+autopep8
+flake8
+pymongo
