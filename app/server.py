@@ -1,6 +1,7 @@
 import json
 import logging
 import sys
+import random
 import uuid
 from flask import Flask, request
 from flask_cors import CORS
@@ -51,6 +52,22 @@ def new_experiment(name):
         return f"Experiment exists."
 
 
+def gen_random_solution(actions, startingNodeId, **_):
+    action_map = {}
+    for action in actions:
+        source = action['sourceId']
+        action_map[source] = action_map.get(source, []) + [action]
+
+    solution = []
+    current_node = startingNodeId
+    for i in range(8):
+        action_idx = random.randint(0, 1)
+        action = action_map[current_node][action_idx]
+        solution.append(action)
+        current_node = action['targetId']
+    return solution
+
+
 @app.route("/game/<prolific_id>", methods=['GET'])
 def game(prolific_id):
 
@@ -64,7 +81,7 @@ def game(prolific_id):
             prev_solutions = get_solutions(
                 chain_id=game['chainId'], chain_pos=game['chainPos'] - 1, n=2)
         else:
-            prev_solutions = []
+            prev_solutions = [gen_random_solution(**environment) for i in range(2)]
 
     print(user_id)
 
