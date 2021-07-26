@@ -3,12 +3,37 @@ import ReactDOM from "react-dom";
 import config from "./config";
 import axios from "axios";
 
+import Header from "./header";
+import Steps from "./steps";
+import Game from "./game/game";
+
+import "./main.less";
+
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import purple from "@material-ui/core/colors/purple";
+import teal from "@material-ui/core/colors/teal";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      // Purple and green play nicely together.
+      main: purple[500],
+      shaded: purple[100],
+    },
+    secondary: {
+      // This is green.A700 as hex.
+      main: teal[500],
+      shaded: teal[100],
+    },
+  },
+});
+
 function App() {
-  const [game, set_game] = useState();
-  const [solutions, set_solutions] = useState([]);
-  const [environment, set_environment] = useState();
-  const [pervSolutions, set_prev_solutions] = useState();
-  const [stage, set_stage] = useState("loading");
+  const [game, setGame] = useState();
+  const [solutions, setSolutions] = useState([]);
+  const [environment, setEnvironment] = useState();
+  const [stage, setStage] = useState("loading");
 
   useEffect(() => {
     async function fetchData() {
@@ -19,15 +44,18 @@ function App() {
       if (result.userExist) {
         set_stage("userExists");
       } else {
-        set_game(result.game);
-        set_solutions(result.solutions);
-        set_environment(result.environment);
-        set_prev_solutions(result.pervSolutions);
-        set_stage("intro");
+        setGame(result.data.game);
+        setEnvironment(result.data.environment);
+        setSolutions(result.data.prevSolutions);
+        setStage("intro");
       }
     }
     fetchData();
   }, []);
+
+  const onRoundFinish = (solution) => {
+    setSolutions([...solutions, solution]);
+  };
 
   //   useEffect(async () => {
   //     if (solutions.length == 5) {
@@ -46,16 +74,26 @@ function App() {
   //   }, [solutions]);
 
   return (
-    <div style={{ margin: "2em" }}>
-      <p>{game}</p>
-      <p>{solutions}</p>
-      <p>{environment}</p>
-      <p>{pervSolutions}</p>
+    <ThemeProvider theme={theme}>
+      <Header />
+      <Steps />
+      <Game
+        solutions={solutions}
+        environment={environment}
+        onRoundFinish={onRoundFinish}
+      />
+    </ThemeProvider>
 
-      <p>
-        Backend URL: <code>{config.backend_url}</code>
-      </p>
-    </div>
+    // <div style={{ margin: "2em" }}>
+    //   <p>{game}</p>
+    //   <p>{solutions}</p>
+    //   <p>{environment}</p>
+    //   <p>{pervSolutions}</p>
+
+    //   <p>
+    //     Backend URL: <code>{config.backend_url}</code>
+    //   </p>
+    // </div>
   );
 }
 
