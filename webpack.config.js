@@ -2,10 +2,15 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: ["babel-polyfill", "./src/index.js"],
+  entry: ["babel-polyfill", "./src/index.tsx"],
   mode: "development",
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
@@ -37,17 +42,19 @@ module.exports = {
       },
     ],
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: { extensions: ["*", ".js", ".jsx", ".tsx", ".ts"] },
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/",
     filename: "bundle.js",
   },
   devServer: {
-    contentBase: path.join(__dirname, "static/"),
-    port: 3000,
-    publicPath: "http://localhost:3000/",
-    hot: true,
+    static: {
+      directory: path.join(__dirname, "static"),
+    },
+    compress: true,
+    port: 9000,
+    historyApiFallback: true,
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 };
