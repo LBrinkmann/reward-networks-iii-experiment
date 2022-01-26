@@ -1,0 +1,5 @@
+ipdb
+ipython
+autopep8
+ipykernel
+flake8

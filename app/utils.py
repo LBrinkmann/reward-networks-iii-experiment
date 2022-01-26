@@ -2,6 +2,7 @@ import json
 import yaml
 import sys
 import os
+import stringcase
 
 
 # basics
@@ -35,3 +36,16 @@ def get_subfolders(d):
 
 def get_subfiles(d):
     return [o for o in os.listdir(d)]
+
+
+def to_camel(obj):
+    return {
+        stringcase.camelcase(k): v
+        for k, v in obj.items()
+    }
+
+def to_snake(obj):
+    return {
+        stringcase.snakecase(k): v
+        for k, v in obj.items()
+    }

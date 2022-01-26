@@ -1,0 +1,302 @@
+[
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_55773",
+    "actions": [
+      { "reward": -20, "sourceId": 0, "targetId": 1, "rewardId": 1 },
+      { "reward": 20, "sourceId": 0, "targetId": 5, "rewardId": 2 },
+      { "reward": 140, "sourceId": 1, "targetId": 0, "rewardId": 3 },
+      { "reward": -100, "sourceId": 1, "targetId": 5, "rewardId": 0 },
+      { "reward": 140, "sourceId": 5, "targetId": 4, "rewardId": 3 },
+      { "reward": -100, "sourceId": 5, "targetId": 1, "rewardId": 0 },
+      { "reward": -20, "sourceId": 2, "targetId": 4, "rewardId": 1 },
+      { "reward": -100, "sourceId": 2, "targetId": 3, "rewardId": 0 },
+      { "reward": -20, "sourceId": 4, "targetId": 2, "rewardId": 1 },
+      { "reward": 20, "sourceId": 4, "targetId": 1, "rewardId": 2 },
+      { "reward": 20, "sourceId": 3, "targetId": 0, "rewardId": 2 },
+      { "reward": 140, "sourceId": 3, "targetId": 4, "rewardId": 3 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 }
+    ],
+    "starting_node": 2,
+    "n_steps": 8,
+    "max_reward": 520.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_106253",
+    "actions": [
+      { "reward": -100, "sourceId": 0, "targetId": 3, "rewardId": 0 },
+      { "reward": 140, "sourceId": 0, "targetId": 4, "rewardId": 3 },
+      { "reward": 20, "sourceId": 3, "targetId": 2, "rewardId": 2 },
+      { "reward": -20, "sourceId": 3, "targetId": 1, "rewardId": 1 },
+      { "reward": 20, "sourceId": 4, "targetId": 1, "rewardId": 2 },
+      { "reward": 140, "sourceId": 4, "targetId": 5, "rewardId": 3 },
+      { "reward": -20, "sourceId": 1, "targetId": 3, "rewardId": 1 },
+      { "reward": -100, "sourceId": 1, "targetId": 2, "rewardId": 0 },
+      { "reward": -100, "sourceId": 2, "targetId": 5, "rewardId": 0 },
+      { "reward": 140, "sourceId": 2, "targetId": 0, "rewardId": 3 },
+      { "reward": 20, "sourceId": 5, "targetId": 3, "rewardId": 2 },
+      { "reward": -20, "sourceId": 5, "targetId": 1, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 }
+    ],
+    "starting_node": 1,
+    "n_steps": 8,
+    "max_reward": 640.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_129044",
+    "actions": [
+      { "reward": -20, "sourceId": 0, "targetId": 4, "rewardId": 1 },
+      { "reward": 140, "sourceId": 0, "targetId": 3, "rewardId": 3 },
+      { "reward": -100, "sourceId": 4, "targetId": 5, "rewardId": 0 },
+      { "reward": 20, "sourceId": 4, "targetId": 1, "rewardId": 2 },
+      { "reward": 20, "sourceId": 3, "targetId": 0, "rewardId": 2 },
+      { "reward": -20, "sourceId": 3, "targetId": 5, "rewardId": 1 },
+      { "reward": -100, "sourceId": 1, "targetId": 2, "rewardId": 0 },
+      { "reward": 140, "sourceId": 1, "targetId": 5, "rewardId": 3 },
+      { "reward": -100, "sourceId": 2, "targetId": 4, "rewardId": 0 },
+      { "reward": -20, "sourceId": 2, "targetId": 3, "rewardId": 1 },
+      { "reward": 140, "sourceId": 5, "targetId": 3, "rewardId": 3 },
+      { "reward": 20, "sourceId": 5, "targetId": 0, "rewardId": 2 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 }
+    ],
+    "starting_node": 2,
+    "n_steps": 8,
+    "max_reward": 520.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_141573",
+    "actions": [
+      { "reward": 140, "sourceId": 0, "targetId": 5, "rewardId": 3 },
+      { "reward": 20, "sourceId": 0, "targetId": 2, "rewardId": 2 },
+      { "reward": -100, "sourceId": 5, "targetId": 3, "rewardId": 0 },
+      { "reward": 140, "sourceId": 5, "targetId": 2, "rewardId": 3 },
+      { "reward": 20, "sourceId": 2, "targetId": 4, "rewardId": 2 },
+      { "reward": 140, "sourceId": 2, "targetId": 1, "rewardId": 3 },
+      { "reward": -20, "sourceId": 1, "targetId": 2, "rewardId": 1 },
+      { "reward": 20, "sourceId": 1, "targetId": 3, "rewardId": 2 },
+      { "reward": -20, "sourceId": 3, "targetId": 0, "rewardId": 1 },
+      { "reward": -100, "sourceId": 3, "targetId": 4, "rewardId": 0 },
+      { "reward": -20, "sourceId": 4, "targetId": 2, "rewardId": 1 },
+      { "reward": -100, "sourceId": 4, "targetId": 5, "rewardId": 0 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 }
+    ],
+    "starting_node": 4,
+    "n_steps": 8,
+    "max_reward": 600.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_300531",
+    "actions": [
+      { "reward": -100, "sourceId": 0, "targetId": 1, "rewardId": 0 },
+      { "reward": 20, "sourceId": 0, "targetId": 4, "rewardId": 2 },
+      { "reward": -100, "sourceId": 1, "targetId": 3, "rewardId": 0 },
+      { "reward": -20, "sourceId": 1, "targetId": 2, "rewardId": 1 },
+      { "reward": 140, "sourceId": 4, "targetId": 2, "rewardId": 3 },
+      { "reward": -20, "sourceId": 4, "targetId": 1, "rewardId": 1 },
+      { "reward": 140, "sourceId": 3, "targetId": 0, "rewardId": 3 },
+      { "reward": 20, "sourceId": 3, "targetId": 2, "rewardId": 2 },
+      { "reward": -100, "sourceId": 2, "targetId": 0, "rewardId": 0 },
+      { "reward": 20, "sourceId": 2, "targetId": 5, "rewardId": 2 },
+      { "reward": 140, "sourceId": 5, "targetId": 2, "rewardId": 3 },
+      { "reward": -20, "sourceId": 5, "targetId": 0, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 }
+    ],
+    "starting_node": 1,
+    "n_steps": 8,
+    "max_reward": 520.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_327418",
+    "actions": [
+      { "reward": -20, "sourceId": 0, "targetId": 5, "rewardId": 1 },
+      { "reward": 140, "sourceId": 0, "targetId": 2, "rewardId": 3 },
+      { "reward": -20, "sourceId": 5, "targetId": 2, "rewardId": 1 },
+      { "reward": -100, "sourceId": 5, "targetId": 3, "rewardId": 0 },
+      { "reward": -100, "sourceId": 2, "targetId": 5, "rewardId": 0 },
+      { "reward": 20, "sourceId": 2, "targetId": 1, "rewardId": 2 },
+      { "reward": -100, "sourceId": 1, "targetId": 2, "rewardId": 0 },
+      { "reward": 20, "sourceId": 1, "targetId": 4, "rewardId": 2 },
+      { "reward": -20, "sourceId": 4, "targetId": 1, "rewardId": 1 },
+      { "reward": 140, "sourceId": 4, "targetId": 0, "rewardId": 3 },
+      { "reward": 20, "sourceId": 3, "targetId": 5, "rewardId": 2 },
+      { "reward": 140, "sourceId": 3, "targetId": 0, "rewardId": 3 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 }
+    ],
+    "starting_node": 5,
+    "n_steps": 8,
+    "max_reward": 520.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_337084",
+    "actions": [
+      { "reward": 140, "sourceId": 0, "targetId": 3, "rewardId": 3 },
+      { "reward": 20, "sourceId": 0, "targetId": 2, "rewardId": 2 },
+      { "reward": 20, "sourceId": 3, "targetId": 5, "rewardId": 2 },
+      { "reward": 140, "sourceId": 3, "targetId": 4, "rewardId": 3 },
+      { "reward": -100, "sourceId": 2, "targetId": 3, "rewardId": 0 },
+      { "reward": -20, "sourceId": 2, "targetId": 1, "rewardId": 1 },
+      { "reward": 20, "sourceId": 1, "targetId": 0, "rewardId": 2 },
+      { "reward": -100, "sourceId": 1, "targetId": 5, "rewardId": 0 },
+      { "reward": -20, "sourceId": 5, "targetId": 1, "rewardId": 1 },
+      { "reward": -100, "sourceId": 5, "targetId": 2, "rewardId": 0 },
+      { "reward": 140, "sourceId": 4, "targetId": 5, "rewardId": 3 },
+      { "reward": -20, "sourceId": 4, "targetId": 1, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 }
+    ],
+    "starting_node": 2,
+    "n_steps": 8,
+    "max_reward": 600.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_387724",
+    "actions": [
+      { "reward": 20, "sourceId": 0, "targetId": 5, "rewardId": 2 },
+      { "reward": -20, "sourceId": 0, "targetId": 1, "rewardId": 1 },
+      { "reward": 140, "sourceId": 5, "targetId": 3, "rewardId": 3 },
+      { "reward": 20, "sourceId": 5, "targetId": 2, "rewardId": 2 },
+      { "reward": 140, "sourceId": 1, "targetId": 0, "rewardId": 3 },
+      { "reward": -100, "sourceId": 1, "targetId": 4, "rewardId": 0 },
+      { "reward": -20, "sourceId": 4, "targetId": 3, "rewardId": 1 },
+      { "reward": -100, "sourceId": 4, "targetId": 1, "rewardId": 0 },
+      { "reward": -100, "sourceId": 2, "targetId": 4, "rewardId": 0 },
+      { "reward": 140, "sourceId": 2, "targetId": 0, "rewardId": 3 },
+      { "reward": 20, "sourceId": 3, "targetId": 2, "rewardId": 2 },
+      { "reward": -20, "sourceId": 3, "targetId": 5, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 }
+    ],
+    "starting_node": 4,
+    "n_steps": 8,
+    "max_reward": 520.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_439729",
+    "actions": [
+      { "reward": 140, "sourceId": 0, "targetId": 4, "rewardId": 3 },
+      { "reward": 20, "sourceId": 0, "targetId": 3, "rewardId": 2 },
+      { "reward": 140, "sourceId": 4, "targetId": 3, "rewardId": 3 },
+      { "reward": -20, "sourceId": 4, "targetId": 5, "rewardId": 1 },
+      { "reward": 20, "sourceId": 3, "targetId": 1, "rewardId": 2 },
+      { "reward": -100, "sourceId": 3, "targetId": 2, "rewardId": 0 },
+      { "reward": -100, "sourceId": 1, "targetId": 4, "rewardId": 0 },
+      { "reward": 140, "sourceId": 1, "targetId": 5, "rewardId": 3 },
+      { "reward": 20, "sourceId": 5, "targetId": 0, "rewardId": 2 },
+      { "reward": -20, "sourceId": 5, "targetId": 3, "rewardId": 1 },
+      { "reward": -100, "sourceId": 2, "targetId": 0, "rewardId": 0 },
+      { "reward": -20, "sourceId": 2, "targetId": 1, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 }
+    ],
+    "starting_node": 2,
+    "n_steps": 8,
+    "max_reward": 640.0
+  },
+  {
+    "type": "network",
+    "version": "four-rewards-v2",
+    "network_id": "42_772588",
+    "actions": [
+      { "reward": -20, "sourceId": 0, "targetId": 2, "rewardId": 1 },
+      { "reward": -100, "sourceId": 0, "targetId": 3, "rewardId": 0 },
+      { "reward": 20, "sourceId": 2, "targetId": 5, "rewardId": 2 },
+      { "reward": -100, "sourceId": 2, "targetId": 3, "rewardId": 0 },
+      { "reward": 140, "sourceId": 3, "targetId": 1, "rewardId": 3 },
+      { "reward": -20, "sourceId": 3, "targetId": 5, "rewardId": 1 },
+      { "reward": 20, "sourceId": 1, "targetId": 4, "rewardId": 2 },
+      { "reward": -100, "sourceId": 1, "targetId": 5, "rewardId": 0 },
+      { "reward": 20, "sourceId": 4, "targetId": 5, "rewardId": 2 },
+      { "reward": 140, "sourceId": 4, "targetId": 2, "rewardId": 3 },
+      { "reward": 140, "sourceId": 5, "targetId": 2, "rewardId": 3 },
+      { "reward": -20, "sourceId": 5, "targetId": 0, "rewardId": 1 }
+    ],
+    "nodes": [
+      { "id": 0, "displayName": "A", "x": 0.7, "y": 0.2 },
+      { "id": 2, "displayName": "C", "x": 0.1, "y": 0.5 },
+      { "id": 3, "displayName": "D", "x": 0.3, "y": 0.8 },
+      { "id": 1, "displayName": "B", "x": 0.3, "y": 0.2 },
+      { "id": 4, "displayName": "E", "x": 0.7, "y": 0.8 },
+      { "id": 5, "displayName": "F", "x": 0.9, "y": 0.5 }
+    ],
+    "starting_node": 0,
+    "n_steps": 8,
+    "max_reward": 520.0
+  }
+]
