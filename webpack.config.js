@@ -55,6 +55,7 @@ module.exports = {
     compress: true,
     port: 9000,
     historyApiFallback: true,
+    allowedHosts: "all",
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 };

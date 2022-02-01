@@ -9,10 +9,8 @@ import {
 } from "react-router-dom";
 import { v4 as uuid4 } from "uuid";
 
-import { createTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-import purple from "@material-ui/core/colors/purple";
-import teal from "@material-ui/core/colors/teal";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { purple, teal } from "@mui/material/colors";
 
 import Experiment from "./experiment/experiment";
 import Admin from "./admin/admin";

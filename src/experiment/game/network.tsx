@@ -1,14 +1,18 @@
 import * as React from "react";
+import { useSpring, animated } from "react-spring";
+
 import _ from "lodash";
-import shortid from "shortid";
-import { Node, Action, ActionType, Environment } from "../../apiTypes";
 
-type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
+import {
+  ParsedActionInterface,
+  ParsedNodeInterface,
+  actionTypeClasses,
+} from "./animated-network";
 
-interface NodeInterface extends Node {
-  size: number;
-  status: Status;
+interface NodeInterface extends ParsedNodeInterface {
+  nodeSize: number;
   onNodeClick: (nodeIdx: number) => void;
+  networkId: string;
 }
 
 const NodeComponent = ({
@@ -16,9 +20,10 @@ const NodeComponent = ({
   x,
   y,
   displayName,
-  size,
+  nodeSize,
   onNodeClick,
   status,
+  networkId,
 }: NodeInterface) => {
   return (
     <g
@@ -26,12 +31,12 @@ const NodeComponent = ({
       style={{ cursor: status != "disabled" && "pointer" }}
       onClick={() => onNodeClick(nodeIdx)}
     >
-      <circle cx={x} cy={y} r={size} className={status} key={"circle"} />
+      <circle cx={x} cy={y} r={nodeSize} className={status} key={"circle"} />
       <text
         x={x}
-        y={y + size * 0.3}
+        y={y + nodeSize * 0.35}
         textAnchor="middle"
-        style={{ fontSize: "30px" }}
+        style={{ fontSize: nodeSize }}
         key={"state-name"}
       >
         {displayName}
@@ -40,84 +45,112 @@ const NodeComponent = ({
   );
 };
 
-interface StyledActionType extends ActionType {
-  className: string;
-}
-
-interface LinkInterface extends Action {
-  highlighted: boolean;
-  actionType: StyledActionType;
+interface LinkInterface extends ParsedActionInterface {
   width: number;
-  source: Node;
-  target: Node;
   nodeSize: number;
+  networkId: string;
+  linkCurvation?: number;
 }
 
 const Link = ({
   actionIdx,
-  actionType,
+  colorClass,
+  annotation,
   source,
   target,
   width,
-  highlighted,
+  linkStyle,
   nodeSize,
+  networkId,
+  linkCurvation = 2.5,
 }: LinkInterface) => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
   let markerEnd, markerStart, textx, d;
-  const dr = dist * 2.5;
+  const dr = dist * linkCurvation;
 
   // drawing direction must be adjusted, to keep text upright
   if (dx >= 0) {
-    markerEnd = `url(#marker-arrow-end-${actionType.className})`;
+    markerEnd = `url(#marker-arrow-end-${networkId}-${colorClass})`;
     d = `M ${source.x} ${source.y} A ${dr} ${dr} 0 0 1 ${target.x} ${target.y}`;
     textx = 80;
   } else {
-    markerStart = `url(#marker-arrow-start-${actionType.className})`;
+    markerStart = `url(#marker-arrow-start-${networkId}-${colorClass})`;
     d = `M ${target.x} ${target.y} A ${dr} ${dr} 0 0 0 ${source.x} ${source.y}`;
     textx = dist * 0.9 - 80;
   }
 
-  if (highlighted) {
-    width *= 2.5;
+  let strokeDasharray;
+  let springConfig = {};
+  // let dashOffset;
+
+  switch (linkStyle) {
+    case "normal":
+      strokeDasharray = null;
+      springConfig = {};
+      break;
+    case "dashed":
+      strokeDasharray = "4,4";
+      springConfig = {};
+      break;
+    case "animated":
+      strokeDasharray = "4,4";
+      springConfig = {
+        loop: true,
+        from: { dashOffset: 0 },
+        dashOffset: dx >= 0 ? -100 : 100,
+        delay: 0,
+        config: { duration: 10000 },
+      };
+      break;
+    case "highlighted":
+      width *= 2.5;
+      strokeDasharray = null;
+      springConfig = {};
+    default:
+      break;
   }
 
+  const { dashOffset } = useSpring(springConfig);
+
   return (
-    <g className={actionType.className}>
-      <path
-        id={"link-" + actionIdx}
+    <g className={colorClass}>
+      <animated.path
+        strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
+        style={{ strokeWidth: width }}
+        id={`link-${networkId}-${actionIdx}`}
         className="link colored-stroke"
-        style={{ strokeWidth: `${width}px` }}
+        strokeDasharray={strokeDasharray ? strokeDasharray : null}
         markerEnd={markerEnd}
         markerStart={markerStart}
         markerUnits="userSpaceOnUse"
         d={d}
-      ></path>
+      ></animated.path>
       <text
-        id={"link-text-bg-" + actionIdx}
+        id={`link-text-bg-${networkId}-${actionIdx}`}
         className="link-text link-text-bg"
         x={textx}
         dy={5}
       >
         <textPath
           alignmentBaseline="text-after-edge"
-          xlinkHref={`#${actionIdx}`}
+          xlinkHref={`#link-${networkId}-${actionIdx}`}
         >
-          {actionType.reward}
+          {annotation}
         </textPath>
       </text>
       <text
-        id={"link-text-" + actionIdx}
+        id={`link-text-${networkId}-${actionIdx}`}
         className="link-text colored-fill"
         x={textx}
         dy={5}
       >
         <textPath
           alignmentBaseline="text-after-edge"
-          xlinkHref={`#${actionIdx}`}
+          xlinkHref={`#link-${networkId}-${actionIdx}`}
         >
-          {actionType.reward}
+          {annotation}
         </textPath>
       </text>
     </g>
@@ -125,13 +158,6 @@ const Link = ({
 };
 
 // // we need to define a link marker for each link color
-
-const actionTypeClasses = [
-  "large-negative",
-  "negative",
-  "positive",
-  "large-positive",
-];
 
 interface Size {
   width: number;
@@ -143,17 +169,28 @@ interface MarkerInterface {
   orient: string;
   prefix: string;
   name: string;
+  nodeSize: number;
+  linkWidth: number;
+  linkCurvation: number;
 }
 
-const Marker = ({ size, orient, prefix, name }: MarkerInterface) => (
+const Marker = ({
+  nodeSize,
+  size,
+  orient,
+  prefix,
+  name,
+  linkWidth,
+  linkCurvation,
+}: MarkerInterface) => (
   <marker
     markerUnits="userSpaceOnUse"
     id={`${prefix}-${name}`}
     className={name}
-    markerWidth="26"
-    markerHeight="26"
-    refX={size.width / 10.5}
-    refY="11"
+    markerWidth={linkWidth * 10}
+    markerHeight={linkWidth * 10}
+    refX={linkCurvation != 0 ? nodeSize * 1.45 : nodeSize * 2.2}
+    refY={linkCurvation != 0 ? (11 * nodeSize) / 40 : (32 * nodeSize) / 40}
     orient={orient}
   >
     <path className="colored-fill" d="M4,4 L4,22 L20,12 L4,4" />
@@ -162,27 +199,43 @@ const Marker = ({ size, orient, prefix, name }: MarkerInterface) => (
 
 interface LinkMarkerInterface {
   size: Size;
+  networkId: string;
+  nodeSize: number;
+  linkWidth: number;
+  linkCurvation: number;
 }
 
-const LinkMarker = ({ size }: LinkMarkerInterface) => (
+const LinkMarker = ({
+  networkId,
+  size,
+  nodeSize,
+  linkWidth,
+  linkCurvation,
+}: LinkMarkerInterface) => (
   <defs>
     {[
       ...actionTypeClasses.map((name, idx) => (
         <Marker
           key={"marker-" + idx}
           orient="auto"
-          prefix="marker-arrow-end"
+          prefix={"marker-arrow-end" + "-" + networkId}
           name={name}
           size={size}
+          nodeSize={nodeSize}
+          linkWidth={linkWidth}
+          linkCurvation={linkCurvation}
         />
       )),
       ...actionTypeClasses.map((name, idx) => (
         <Marker
           key={"marker-reverse" + idx}
           orient="auto-start-reverse"
-          prefix="marker-arrow-start"
+          prefix={"marker-arrow-start" + "-" + networkId}
           name={name}
           size={size}
+          nodeSize={nodeSize}
+          linkWidth={linkWidth}
+          linkCurvation={linkCurvation}
         />
       )),
     ]}
@@ -190,58 +243,52 @@ const LinkMarker = ({ size }: LinkMarkerInterface) => (
 );
 
 interface LinksInterface {
-  actions: Action[];
-  nodes: Node[];
-  actionTypes: StyledActionType[];
-  activeSourceIdx: number;
-  activeTargetIdx: number;
+  actions: ParsedActionInterface[];
   nodeSize: number;
+  size: Size;
   linkWidth: number;
+  networkId: string;
+  linkCurvation?: number;
 }
 
 const Links = ({
   actions,
-  nodes,
-  actionTypes,
-  activeSourceIdx,
-  activeTargetIdx,
   nodeSize,
   linkWidth,
+  size,
+  networkId,
+  linkCurvation,
 }: LinksInterface) => (
   <>
     <g>
       {actions.map((action, idx) => {
-        const { actionIdx, sourceIdx, targetIdx, actionTypeIdx } = action;
-        const highlighted =
-          sourceIdx == activeSourceIdx && targetIdx == activeTargetIdx;
+        const { actionIdx, source, target } = action;
+
         return (
           <Link
             {...action}
+            source={scaleXY(source, size)}
+            target={scaleXY(target, size)}
             nodeSize={nodeSize}
-            actionType={actionTypes[actionTypeIdx]}
             width={linkWidth}
-            source={nodes[sourceIdx]}
-            target={nodes[targetIdx]}
-            highlighted={highlighted}
+            linkCurvation={linkCurvation}
             key={"link-" + actionIdx}
+            networkId={networkId}
           />
         );
       })}
     </g>
     {/* to bring the link describtion (rewards) to the front */}
     <g>
-      {actions.map(({ actionIdx, actionTypeIdx }, idx) => (
-        <g
-          className={actionTypes[actionTypeIdx].className}
-          key={"use-text-" + actionIdx}
-        >
+      {actions.map(({ actionIdx, colorClass }, idx) => (
+        <g className={colorClass} key={`use-text-${networkId}-${actionIdx}`}>
           <use
             className="link-text link-text-bg"
-            xlinkHref={`#link-text-bg-${actionIdx}`}
+            xlinkHref={`#link-text-bg-${networkId}-${actionIdx}`}
           />
           <use
             className="link-text colored-fill"
-            xlinkHref={`#link-text-${actionIdx}`}
+            xlinkHref={`#link-text-${networkId}-${actionIdx}`}
           />
         </g>
       ))}
@@ -249,80 +296,70 @@ const Links = ({
   </>
 );
 
-const scaleXY = (nodes: Node[], size: Size) =>
-  nodes.map((node) => ({
-    ...node,
-    x: node.x * size.width,
-    y: node.y * size.height,
-  }));
+const scaleXY = (
+  node: ParsedNodeInterface,
+  size: Size
+): ParsedNodeInterface => ({
+  ...node,
+  x: node.x * size.width,
+  y: node.y * size.height * 1.1,
+});
 
-interface NetworkInterface extends Environment {
-  activeSourceIdx: number;
-  activeTargetIdx: number;
-  invalidIdx: number;
-  onNodeClick: (nodeIdx: number) => void;
+interface NetworkInterface {
+  actions: ParsedActionInterface[];
+  nodes: ParsedNodeInterface[];
+  onNodeClick?: (nodeIdx: number) => void;
   version?: string;
   size?: Size;
   disabled?: boolean;
-  move: number;
+  nodeSize?: number;
+  networkId?: string;
+  linkCurvation?: number;
+  linkWidth?: number;
 }
 
 const NetworkComponent = ({
-  activeSourceIdx,
-  activeTargetIdx,
-  invalidIdx,
   actions,
   nodes,
-  actionTypes,
-  onNodeClick,
+  onNodeClick = (nodeIdx) => null,
   version = "",
-  size = { width: 600, height: 600 },
+  size = { width: 550, height: 400 },
+  nodeSize = 500 / 15,
   disabled = false,
-  move,
+  networkId = "default",
+  linkCurvation,
+  linkWidth = 5,
 }: NetworkInterface) => {
-  const nodeSize = size.width / 15;
-  const scaledNodes = scaleXY(nodes, size);
-  const styledActionTypes = actionTypes.map((at) => ({
-    ...at,
-    className: actionTypeClasses[at.actionTypeIdx],
-  }));
   return (
     <svg
       className={`network-game ${version}`}
-      width={size.height}
+      width={size.width}
       height={size.height}
     >
-      <LinkMarker size={size} />
-      <Links
-        activeSourceIdx={activeSourceIdx}
-        activeTargetIdx={activeTargetIdx}
-        actions={actions}
-        nodes={scaledNodes}
-        actionTypes={styledActionTypes}
+      <LinkMarker
+        size={size}
+        networkId={networkId}
         nodeSize={nodeSize}
-        linkWidth={3}
+        linkWidth={linkWidth}
+        linkCurvation={linkCurvation}
+      />
+      <Links
+        actions={actions}
+        nodeSize={nodeSize}
+        size={size}
+        networkId={networkId}
+        linkWidth={linkWidth}
+        linkCurvation={linkCurvation}
       />
       <g>
-        {scaledNodes.map((node, idx) => {
-          // "starting" | "active" | "disabled" | "invalid-click";
-          const nodeIdx = node.nodeIdx;
-          let status = "" as Status;
-          status =
-            activeSourceIdx == nodeIdx
-              ? move == 0
-                ? "starting"
-                : "active"
-              : status;
-          status = invalidIdx == nodeIdx ? "invalid-click" : status;
-          status = disabled ? "disabled" : status;
-
+        {nodes.map((node, idx) => {
           return (
             <NodeComponent
-              {...node}
-              status={status}
-              size={nodeSize}
+              {...scaleXY(node, size)}
+              nodeSize={nodeSize}
               onNodeClick={onNodeClick}
               key={"point-" + idx}
+              networkId={networkId}
             />
           );
         })}

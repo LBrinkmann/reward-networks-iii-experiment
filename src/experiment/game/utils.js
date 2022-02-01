@@ -17,3 +17,5 @@ export const isSolutionValid = (actions, requiredSolutionLength) => {
 export const isPlayerBot = (player) => {
   return player.bot;
 };
+
+
