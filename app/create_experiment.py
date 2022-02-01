@@ -16,7 +16,7 @@ def create_step_stages():
 
 
 phases = [
-     'placeholder', 'expectedReward', 'playout', 'table', 'text',
+     'none', 'expectedReward', 'playout', 'play', 'table', 'text',
 ]
 
 # ['learning', 'demonstration']

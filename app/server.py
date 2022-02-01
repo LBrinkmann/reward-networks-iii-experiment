@@ -100,17 +100,8 @@ def argument_step(game: Game, treatment: Treatment, step: Step):
         data['explanations'] = [Explanation(type='text', content='Some explanation.')]
     else:
         environment = ENVIRONMENTS[step.environment_id]
-        # explanation_types = [
-        #     'table', 'rule', 'play', 'none', 'expected_reward', 'playout'
-        # ]
-
-        explanation_types = [
-            'playout'
-        ]
-        expanation = [e
-            for et in explanation_types
-            for e in ADVISOR[treatment.advisor].explanation(
-            game=game, environment=environment, explanation_type=et)]
+        expanation = ADVISOR[treatment.advisor].explanation(
+            game=game, environment=environment, explanation_type=step.phase)
         data['explanations'] = expanation
         data['environment'] = environment
     return data
