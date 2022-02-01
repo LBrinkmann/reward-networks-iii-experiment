@@ -11,10 +11,12 @@ import stringcase
 
 
 MONGO_URL = os.environ.get('MONGO_URL', "mongodb://localhost:3002/")
+APP_NAME = os.environ.get('APP_NAME', 'reward-network-ii')
+
 
 # todo, make queries asyncronos with motor
 client = MongoClient(MONGO_URL)
-db = client['reward-network-ii']
+db = client[APP_NAME]
 
 class PyObjectId(ObjectId):
 
