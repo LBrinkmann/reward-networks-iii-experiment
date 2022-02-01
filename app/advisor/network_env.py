@@ -10,29 +10,28 @@ class NetworkEnvironment:
 
         env = self.env
         action = env.actions[action_idx]
-        reward = env.actionTypes[action.actionTypeIdx].reward
+        reward = env.action_types[action.action_type_idx].reward
         self.total_reward += reward
 
-        target_idx = action.targetIdx
+        target_idx = action.target_idx
         self.node = env.nodes[target_idx]
 
         self.move += 1
-        if self.move >= env.nMoves:
+        obs = self.observe()
+        if self.move >= env.n_moves:
             self.done = True
 
-        return self.observe(), reward, self.done, {'total_reward': self.total_reward}
+        return obs, reward, self.done, {'total_reward': self.total_reward}
 
-
-    @staticmethod
     def observe(self):
         if self.done:
             return
         else:
-            action_types = (
-                self.env.actions[aidx].actionTypeIdx
-                for aidx in self.node.actionIdx
-            )
-            return self.move, self.node.actionIdx, action_types
+            action_types = [
+                self.env.actions[aidx].action_type_idx
+                for aidx in self.node.action_idx
+            ]
+            return self.move, self.node.action_idx, action_types
 
     def set_state(self, node_idx, move, total_reward = 0):
         self.move = move

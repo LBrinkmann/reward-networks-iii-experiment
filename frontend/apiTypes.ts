@@ -5,6 +5,24 @@
 /* Do not modify it by hand - just update the pydantic models and then re-run the script
 */
 
+export interface Advise {
+  _id?: string;
+  createdAt?: string;
+  adviseId?: string;
+  environmentId: string;
+  move: number;
+  nodeIdx: number;
+  userId: string;
+  gameId: string;
+  actions: EvaluatedAction[];
+}
+export interface EvaluatedAction {
+  actionIdx: number;
+  advise: "not_recommended" | "indifferent" | "recommended";
+  expectedReward?: number;
+  playout?: number[];
+  move: number;
+}
 export interface AdviseRequest {
   environmentId: string;
   move: number;
@@ -59,8 +77,19 @@ export interface Experiment {
 export interface Treatment {
   name?: string;
   playout?: boolean;
-  explanationType?: "table" | "rule" | "replay";
+  explanationType?: "table" | "rule" | "replay" | "playout" | "expectedReward";
   advisor: "human" | "qtable";
+}
+export interface Explanation {
+  type: "table" | "text" | "playout" | "expectedReward" | "placeholder" | "replay" | "title";
+  content?: Table | string | number[];
+}
+export interface Table {
+  columns: string[];
+  index: string[];
+  columnName: string;
+  indexName: string;
+  data: number[][];
 }
 export interface Game {
   _id?: string;
@@ -87,10 +116,6 @@ export interface State {
   treatment: Treatment;
   steps: StepPreview[];
 }
-export interface Explanation {
-  type: "table" | "text";
-  content?: unknown;
-}
 export interface Step {
   _id?: string;
   createdAt?: string;
@@ -103,6 +128,12 @@ export interface Step {
   current?: boolean;
   trailIdx?: number;
   environmentId?: string;
+  stages?: Stage[];
+}
+export interface Stage {
+  stageIdx: number;
+  stageName: string;
+  timeout?: number;
 }
 export interface User {
   _id?: string;

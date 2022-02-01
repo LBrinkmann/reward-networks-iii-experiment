@@ -5,21 +5,35 @@ from app.models.environment import Environment
 from app.models.experiment import Experiment, Treatment
 from .models.chain import Chain
 from .models.game import Game
-from .models.step import Step
+from .models.step import Step, Stage
 from typing import List
+
+
+def create_step_stages():
+    return [
+        Stage(stage_name='game', stage_idx=0), Stage(stage_name='results', stage_idx=1)
+    ]
+
+
+phases = [
+     'placeholder', 'expectedReward', 'playout', 'table', 'text',
+]
+
+# ['learning', 'demonstration']
 
 
 def create_game_steps(experiment: Experiment, treatment: Treatment, chain: Chain, game: Game):
     Step(stepIdx=0, phase='tutorial', gameId=game.id, current=True, phaseStep=0).flush()
     step_idx = 1
     trial_idx = 0
-    for phase in ['learning', 'demonstration']:
+    for phase in phases:
         for phase_step in range(experiment.n_steps_per_phase):
             environment_id = game.environment_ids[trial_idx]
+            stages = create_step_stages()
             Step(
                 stepIdx=step_idx, phase=phase, gameId=game.id, 
                 phaseStep=phase_step, current=False, trailIdx=trial_idx,
-                environmentId=environment_id
+                environmentId=environment_id, stages=stages
             ).flush()
             step_idx += 1
             trial_idx += 1

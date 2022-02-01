@@ -15,8 +15,10 @@ pip install -e ".[dev]"
 ## Run Locally
 
 ```
-env FLASK_APP=app/app.py FLASK_ENV=development flask run
+./dev_server.sh
 ```
+
+##
 
 ## Logs
 

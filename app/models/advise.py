@@ -1,10 +1,20 @@
-from typing import List, Optional, Literal, Any
+from typing import List, Optional, Literal, Any, Union
 from app.models.base import ExtBaseModel, SnakeModel, PyObjectId
 
 
+class Table(SnakeModel):
+    columns: List[str]
+    index: List[str]
+    column_name: str
+    index_name: str
+    data: List[List[float]]
+
+replay = List[int]
+
+
 class Explanation(SnakeModel):
-    type: Literal['table', 'text']
-    content: Any
+    type: Literal['table', 'text', 'playout', 'expectedReward', 'placeholder', 'replay', 'title']
+    content: Optional[Union[Table, str, replay]]
 
 
 class HumanExplanation(ExtBaseModel):
@@ -31,6 +41,7 @@ class EvaluatedAction(SnakeModel):
     advise: Literal['not_recommended', 'indifferent', 'recommended']
     expected_reward: Optional[float]
     playout: Optional[List[int]]
+    move: int
 
 
 class Advise(ExtBaseModel):

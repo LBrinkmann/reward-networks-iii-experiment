@@ -68,11 +68,6 @@ class ExtBaseModel(SnakeModel):
             this_dict = super().dict(by_alias=by_alias, **kwargs)
         return this_dict
 
-
-    # def to_json(self):
-    #     print('test1')
-    #     return jsonable_encoder(self, exclude_none=True)
-
     def to_bson(self):
         data = self.dict(by_alias=True, exclude_none=True, export=False)
         if ("_id" in data) and (data["_id"] is None):

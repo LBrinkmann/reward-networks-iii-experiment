@@ -3,8 +3,8 @@ from typing import Optional, Literal, Dict
 
 class Treatment(SnakeModel):
     name: str = 'control'
-    playout: Optional[bool]
-    explanation_type: Optional[Literal['table', 'rule', 'replay']]
+    playout: Optional[bool] = True # deprecated
+    explanation_type: Optional[Literal['table', 'rule', 'replay', 'playout', 'expectedReward']]
     advisor: Literal['human', 'qtable']
 
 class Experiment(ExtBaseModel):
@@ -12,7 +12,7 @@ class Experiment(ExtBaseModel):
     experiment_name: str = None
     treatments: Dict[str, Treatment] = {
         'control': Treatment(name='control', advisor='human'), 
-        'full': Treatment(name='full', advisor='qtable', explanationType='table', playout=True), 
+        'full': Treatment(name='full', advisor='qtable', explanationType='table'), 
     }
     n_chains_per_treatment: int = 4
     n_games_per_chain: int = 3

@@ -70,7 +70,8 @@ class Environment(SnakeModel):
     def parse(cls, env, version='v1'):
         actions_sorted = sorted(env['actions'], key=lambda a: (a['sourceId'], a['targetId']))
         actions = [Action.parse(**a, idx=idx, version=version) for idx, a in enumerate(actions_sorted)]
-        nodes = [Node.parse(n, actions, version=version) for n in env['nodes']]
+        nodes_sorted = sorted(env['nodes'], key=lambda a: a['id'])
+        nodes = [Node.parse(n, actions, version=version) for n in nodes_sorted]
         action_types = [ActionType(**at) for at in ACTION_TYPES]
         if version == 'v1':
             environment_id = env['network_id']

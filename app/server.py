@@ -6,11 +6,10 @@ from flask import current_app
 
 from app.models import (
     Environment, AdviseRequest, Step, User, Game, Experiment, Treatment,
-    StepResult, StateUpdate, State)
+    StepResult, StateUpdate, State, Advise, Explanation)
 
 from app.advisor import init_advisor
 from app.create_experiment import create_chains
-from app.models.advise import Explanation
 
 app = FastAPI()
 
@@ -59,7 +58,6 @@ async def post_experiment(experiment: Experiment):
 @app.put('/experiment/{experiment_name}/active')
 async def put_experiment_active(experiment_name):
     experiment = Experiment.get(experiment_name=experiment_name).set_active()
-    print(experiment)
     set_globals(experiment)
     return experiment
 
@@ -73,7 +71,6 @@ async def get_games(experiment_name):
 @app.get('/game/{prolific_id}', response_model_by_alias=False)
 async def get_game(prolific_id):
     user = User.get(prolific_id=prolific_id, experiment_id=EXPERIMENT.id)
-    print('user', user)
     if not user:
         user = User(prolific_id=prolific_id, experiment_id=EXPERIMENT.id).flush()
         game = Game.assign(experiment_id=EXPERIMENT.id, user_id=user.id)
@@ -101,15 +98,23 @@ def argument_step(game: Game, treatment: Treatment, step: Step):
         environment = ENVIRONMENTS[game.environment_ids[0]]
         data['environment'] = environment
         data['explanations'] = [Explanation(type='text', content='Some explanation.')]
-    if step.phase in ['learning', 'demonstration']:
+    else:
         environment = ENVIRONMENTS[step.environment_id]
-        data['environment'] = environment
-    if step.phase == 'learning':
-        environment = ENVIRONMENTS[step.environment_id]
-        expanation = ADVISOR[treatment.advisor].explanation(
-            game=game, environment=environment, treatment=treatment)
+        # explanation_types = [
+        #     'table', 'rule', 'play', 'none', 'expected_reward', 'playout'
+        # ]
+
+        explanation_types = [
+            'playout'
+        ]
+        expanation = [e
+            for et in explanation_types
+            for e in ADVISOR[treatment.advisor].explanation(
+            game=game, environment=environment, explanation_type=et)]
         data['explanations'] = expanation
+        data['environment'] = environment
     return data
+
 
 
 @app.post('/step_result')
@@ -128,17 +133,13 @@ async def post_step_result(s_result: StepResult):
     if next_step:
         treatment = EXPERIMENT.treatments[game.treatment_name]
         resp = argument_step(game, treatment, next_step)
-        print(resp)
-        return StateUpdate(**resp)
+        return StateUpdate(step=next_step, **resp)
     else:
         raise HTTPException(status_code=404, detail='No further step avaible.')
 
 
 @app.post('/advise')
-async def post_advise(ad_request: AdviseRequest):
+async def post_advise(ad_request: AdviseRequest) -> Advise:
     environment = ENVIRONMENTS[ad_request.environment_id]
-    advise = ADVISOR[ad_request.advisor].advise(
-        environment=environment, node_idx=ad_request.node_idx,
-        move=ad_request.move, playout=ad_request.playout,
-        total_reward=ad_request.total_reward)
+    advise = ADVISOR[ad_request.advisor].advise(environment, ad_request)
     return advise
