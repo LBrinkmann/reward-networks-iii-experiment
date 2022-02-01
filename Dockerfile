@@ -19,7 +19,12 @@ RUN pip --no-cache-dir install -r requirements.txt
 
 RUN useradd --create-home server -s /bin/bash
 
-COPY server.py run_server.sh /home/server/
+ADD app ./app
+
+COPY app.yml .
+COPY setup.py .
+COPY run_server.sh .
+RUN pip install --no-deps .
 
 USER server
 CMD /home/server/run_server.sh
