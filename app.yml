@@ -1,2 +1,3 @@
 variables:
   APP_NAME: rw-ii-frontend
+  BACKEND_URL: https://rw-ii-backend.eks-test-default.mpg-chm.com/
