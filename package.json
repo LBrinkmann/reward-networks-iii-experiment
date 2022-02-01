@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "start": "BACKEND_URL=\"http://localhost:8000\" node gen_config.js && npx webpack-dev-server --mode development --open --hot",
-    "build": "node gen_config.js && npx webpack --mode production && cp -R static/* dist/"
+    "build-dev": "node gen_config.js && webpack --mode development && cp -R static/* dist/",
+    "build-prod": "node gen_config.js && webpack --mode production && cp -R static/* dist/"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
