@@ -61,12 +61,12 @@ const rootElement = document.getElementById("root");
 render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<App />}>
-        <Route
+      <Route path="/" element={<UserExperiment {...config} />}>
+        {/* <Route
           path="experiment"
           element={<UserExperiment {...config} />}
         ></Route>
-        <Route path="admin" element={<Admin />} />
+        <Route path="admin" element={<Admin />} /> */}
       </Route>
     </Routes>
   </BrowserRouter>,
