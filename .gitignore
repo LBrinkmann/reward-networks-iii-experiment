@@ -3,3 +3,4 @@ tmp
 app.egg-info
 __pycache__
 *~
+build

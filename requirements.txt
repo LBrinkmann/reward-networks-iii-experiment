@@ -1,13 +1,8 @@
 pyyaml
-gunicorn
-eventlet
-flask
-flask-cors
-autopep8
-flake8
 pymongo
 numpy
 pandas
 fastapi==0.72.0
 pydantic==1.9.0
 stringcase
+uvicorn

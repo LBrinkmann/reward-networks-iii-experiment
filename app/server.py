@@ -1,8 +1,6 @@
-from cmath import exp
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
-from flask import current_app
 
 from app.models import (
     Environment, AdviseRequest, Step, User, Game, Experiment, Treatment,
