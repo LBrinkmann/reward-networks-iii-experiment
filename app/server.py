@@ -14,6 +14,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:9000",
+    "https://rn-ii-frontend.eks-test-default.mpg-chm.com"
 ]
 
 app.add_middleware(
