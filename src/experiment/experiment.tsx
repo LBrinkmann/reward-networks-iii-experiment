@@ -80,10 +80,16 @@ const ExperimentAPIWrapper = ({
   };
 
   const onStepFinish = async (stepResult: StepResult) => {
-    axios.post(`${backendUrl}/step_result/`, stepResult).then((response) => {
-      const stateUpdate = response.data as StateUpdate;
-      setExperimentState({ ...experimentState, ...stateUpdate });
-    });
+    axios
+      .request({
+        url: `${backendUrl}/step_result`,
+        method: "post",
+        data: stepResult,
+      })
+      .then((response) => {
+        const stateUpdate = response.data as StateUpdate;
+        setExperimentState({ ...experimentState, ...stateUpdate });
+      });
   };
 
   const onRequestAdvise = async ({ move, nodeIdx, totalReward }: Move) => {
@@ -98,13 +104,18 @@ const ExperimentAPIWrapper = ({
       environmentId: experimentState.environment.environmentId,
       phase: experimentState.step.phase,
     } as AdviseRequest;
-
-    axios.post(`${backendUrl}/advise/`, adviseRequest).then((response) => {
-      const evalActions = response.data
-        ? _.keyBy(response.data.actions, ({ actionIdx }) => actionIdx)
-        : null;
-      setEvaluatedActions(evalActions);
-    });
+    axios
+      .request({
+        url: `${backendUrl}/advise`,
+        method: "post",
+        data: adviseRequest,
+      })
+      .then((response) => {
+        const evalActions = response.data
+          ? _.keyBy(response.data.actions, ({ actionIdx }) => actionIdx)
+          : null;
+        setEvaluatedActions(evalActions);
+      });
   };
 
   const onTutorialClose = (idx: number) => {
