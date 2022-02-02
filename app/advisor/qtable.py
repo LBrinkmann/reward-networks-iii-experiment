@@ -36,7 +36,7 @@ class QTableAdvisor():
 
 
     def expected_reward_explanation(self):
-        return [Explanation(type='expectedReward')]
+        return [Explanation(type='title', content='Expected Reward'), Explanation(type='expectedReward')]
 
 
     def placeholder_explanation(self):
@@ -52,14 +52,16 @@ class QTableAdvisor():
 
     def table_explanation(self):
         text = """
-        Each value in the table represents the expected remaining total reward, when taking that action.
+        Each value in the table represents the expected remaining total reward, when taking that action. The recommended
+        action is hightlighted green. The not recommended action is hightlighted red. For each move the best action is depicted
+        in light green. 
         """
         table = self.q_table.to_dict(orient='split')
         table['columns'] = [str(r) for r in table['columns']]
         table['index'] = [str(m) for m in table['index']]
         table = Table(**table, index_name='move', column_name='reward')
 
-        return [Explanation(type='text', content=text), Explanation(type='table', content=table)]
+        return [Explanation(type='title', content='Action Value Table'), Explanation(type='text', content=text), Explanation(type='table', content=table)]
 
     def play_explanation(self, environment: Environment):
         play, total_reward = self.get_playout(environment)
@@ -67,14 +69,15 @@ class QTableAdvisor():
         You see a the algorithm playing on this environment. It got a total reward of {total_reward}
         """
         play = [int(p) for p in play]
-        return [Explanation(type='text', content=text), Explanation(type='replay', content=play)]
+        return [Explanation(type='title', content='AI Play'),Explanation(type='text', content=text), Explanation(type='replay', content=play)]
 
 
     def playout_explanation(self):
         text = """
-        You see a the algorithm playing on this environment.
+        For each action you are entering, a playout is visualized for both, the recommended and the non
+        recommended action.
         """
-        return [Explanation(type='text', content=text), Explanation(type='playout')]
+        return [Explanation(type='title', content='Playouts'), Explanation(type='text', content=text), Explanation(type='playout')]
         
 
     def advise(self, environment, ar: AdviseRequest):

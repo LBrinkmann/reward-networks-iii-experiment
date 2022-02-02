@@ -32,6 +32,7 @@ export interface AdviseRequest {
   advisor: string;
   playout: boolean;
   totalReward: number;
+  phase: string;
 }
 export interface Environment {
   environmentId: string;
@@ -111,8 +112,8 @@ export interface State {
   environment?: Environment;
   explanations?: Explanation[];
   step: Step;
-  user: User;
   game: Game;
+  user: User;
   treatment: Treatment;
   steps: StepPreview[];
 }
@@ -151,6 +152,7 @@ export interface StateUpdate {
   environment?: Environment;
   explanations?: Explanation[];
   step: Step;
+  game: Game;
 }
 export interface StepResult {
   _id?: string;

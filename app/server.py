@@ -34,6 +34,7 @@ def set_globals(experiment):
     EXPERIMENT = experiment
     ADVISOR = init_advisor(experiment)
     ENVIRONMENTS = Environment.read_file(experiment.environments_path)
+    
 
 
 @app.on_event("startup")
@@ -41,6 +42,13 @@ async def startup_event():
     experiment = Experiment.get(active=True)
     if experiment:
         set_globals(experiment)
+
+
+def check_experiment():
+    experiment = Experiment.get(active=True)
+    if not EXPERIMENT or (experiment.id != EXPERIMENT.id):
+        if experiment:
+            set_globals(experiment)
 
 @app.get('/experiment')
 async def get_experiments():
@@ -69,6 +77,7 @@ async def get_games(experiment_name):
 
 @app.get('/game/{prolific_id}', response_model_by_alias=False)
 async def get_game(prolific_id):
+    check_experiment()
     user = User.get(prolific_id=prolific_id, experiment_id=EXPERIMENT.id)
     if not user:
         user = User(prolific_id=prolific_id, experiment_id=EXPERIMENT.id).flush()
@@ -109,6 +118,7 @@ def argument_step(game: Game, treatment: Treatment, step: Step):
 
 @app.post('/step_result')
 async def post_step_result(s_result: StepResult):
+    check_experiment()
     current_step = Step.get(s_result.step_id)
     if not current_step.current:
         raise HTTPException(status_code=404, detail='Posted step is not the current step.')
@@ -116,6 +126,7 @@ async def post_step_result(s_result: StepResult):
         s_result.solution.flush()
     if s_result.explanation:
         s_result.explanation.flush()
+
     next_step = Step.next(current_step)
     game = Game.get(current_step.game_id)
     game.total_points += s_result.points
