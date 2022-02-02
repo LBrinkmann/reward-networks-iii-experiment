@@ -8,7 +8,9 @@ export PATH="$VIRTUAL_ENV/bin:$PATH"
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 
+echo $(pwd)
 
+ls
 # For development
 # env FLASK_APP=server.py FLASK_ENV=development flask run --host=0.0.0.0
 
