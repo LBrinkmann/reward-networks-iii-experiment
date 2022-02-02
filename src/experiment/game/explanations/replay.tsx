@@ -40,6 +40,9 @@ const Replay = ({ content, environment }: ReplayInterface) => {
 
   return (
     <>
+      <Box sx={{ textAlign: "center" }}>
+        <Button onClick={startAnimation}>Restart</Button>
+      </Box>
       <AnimatedNetwork
         environment={environment}
         currentNodeIdx={currentNodeIdx}
@@ -47,9 +50,6 @@ const Replay = ({ content, environment }: ReplayInterface) => {
         move={move}
         networkId={"replay"}
       ></AnimatedNetwork>
-      <Box sx={{ textAlign: "center" }}>
-        <Button onClick={startAnimation}>Restart</Button>
-      </Box>
     </>
   );
 };

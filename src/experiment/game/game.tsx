@@ -3,12 +3,13 @@ import axios from "axios";
 
 import { styled } from "@mui/material/styles";
 
-import { Paper, Grid, Stack, Typography } from "@mui/material";
+import { Paper, Grid, Typography, Box } from "@mui/material";
 
 import Network from "./animated-network";
 import ExplanationComponent from "./explanation";
 import Results from "./results";
 import { Move, EvaluatedActions } from "../experiment";
+import TutorialTip from "../../tutorial";
 
 import { Environment, Action, Explanation, Stage } from "../../apiTypes";
 
@@ -52,7 +53,13 @@ interface GameInterface {
   gameActive: boolean;
   evaluatedActions: EvaluatedActions;
   onRequestAdvise: (move: Move) => void;
-  onStageFinish: (stageIdx: number, actions?: Action[]) => void;
+  onStageFinish: (
+    stageIdx: number,
+    actions?: Action[],
+    points?: number
+  ) => void;
+  tutorialIdx?: number;
+  onTutorialClose?: (tutorialIdx: number) => void;
 }
 
 const Game = ({
@@ -65,6 +72,8 @@ const Game = ({
   onStageFinish,
   evaluatedActions,
   onRequestAdvise,
+  tutorialIdx,
+  onTutorialClose,
 }: GameInterface) => {
   const { startingNodeIdx, nMoves, nodes, actions, actionTypes } = environment;
 
@@ -91,7 +100,7 @@ const Game = ({
 
   useEffect(() => {
     if (nMoves == solution.length) {
-      onStageFinish(0, solution);
+      onStageFinish(0, solution, totalReward);
     }
   }, [solution]);
 
@@ -113,6 +122,7 @@ const Game = ({
       }
     }
   };
+  console.log(tutorialIdx);
 
   return (
     <div>
@@ -138,14 +148,23 @@ const Game = ({
           <Grid item>
             <GameElement>
               {showGame ? (
-                <Network
-                  move={move}
-                  currentNodeIdx={currentNodeIdx}
-                  environment={environment}
-                  evaluatedActions={evaluatedActions}
-                  onValidAction={onValidAction}
-                  disabled={!gameActive}
-                />
+                <TutorialTip
+                  idx={2}
+                  tutorialIdx={tutorialIdx}
+                  onTutorialClose={onTutorialClose}
+                  placement={"right"}
+                >
+                  <Box>
+                    <Network
+                      move={move}
+                      currentNodeIdx={currentNodeIdx}
+                      environment={environment}
+                      evaluatedActions={evaluatedActions}
+                      onValidAction={onValidAction}
+                      disabled={!gameActive}
+                    />
+                  </Box>
+                </TutorialTip>
               ) : showResults ? (
                 <Results
                   totalReward={totalReward}
@@ -157,19 +176,28 @@ const Game = ({
           </Grid>
         </Grid>
         <Grid container item xs={5} direction="column">
-          {explanations
-            ? explanations.map((explanation, idx) => (
-                <Grid key={"solution-grid-" + idx} item>
-                  {/* <ExplanationElement> */}
-                  <ExplanationComponent
-                    {...explanation}
-                    environment={environment}
-                    evaluatedActions={evaluatedActions}
-                  />
-                  {/* </ExplanationElement> */}
-                </Grid>
-              ))
-            : null}
+          <TutorialTip
+            idx={3}
+            tutorialIdx={tutorialIdx}
+            onTutorialClose={onTutorialClose}
+            placement={"left"}
+          >
+            <Box>
+              {explanations
+                ? explanations.map((explanation, idx) => (
+                    <Grid key={"solution-grid-" + idx} item>
+                      {/* <ExplanationElement> */}
+                      <ExplanationComponent
+                        {...explanation}
+                        environment={environment}
+                        evaluatedActions={evaluatedActions}
+                      />
+                      {/* </ExplanationElement> */}
+                    </Grid>
+                  ))
+                : null}
+            </Box>
+          </TutorialTip>
         </Grid>
       </Grid>
     </div>

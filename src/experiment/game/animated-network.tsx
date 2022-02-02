@@ -70,7 +70,7 @@ export const parseAction = ({
       linkStyle = "animated";
       break;
     case "not_recommended":
-      linkStyle = "normal";
+      linkStyle = "dashed";
       break;
     case "indifferent":
       linkStyle = "dashed";

@@ -101,6 +101,9 @@ const TableExplanation = ({
                   key={`row-${rowIdx}-${colIdx}`}
                   align="center"
                   style={{
+                    ...(Math.max(...row) == el
+                      ? { backgroundColor: "rgba(62, 207, 0, 0.3)" }
+                      : {}),
                     ...getCellStyle(rowIdx, colIdx),
                     padding: "0px 16px",
                   }}

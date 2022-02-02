@@ -302,7 +302,7 @@ const scaleXY = (
 ): ParsedNodeInterface => ({
   ...node,
   x: node.x * size.width,
-  y: node.y * size.height * 1.1,
+  y: node.y * size.height,
 });
 
 interface NetworkInterface {
@@ -323,8 +323,8 @@ const NetworkComponent = ({
   nodes,
   onNodeClick = (nodeIdx) => null,
   version = "",
-  size = { width: 550, height: 400 },
-  nodeSize = 500 / 15,
+  size = { width: 550, height: 550 },
+  nodeSize = 600 / 15,
   disabled = false,
   networkId = "default",
   linkCurvation,

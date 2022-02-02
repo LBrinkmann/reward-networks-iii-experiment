@@ -25,15 +25,15 @@ const ExpRewardExplanationComponent = ({
       {_.map(evaluatedActions, (evaluatedAction, idx) => (
         <Box sx={{ m: 3 }} key={`evaluated-action-${idx}`}>
           <Divider />
-          <Typography variant="h3" sx={{ m: 1, textAlign: "center" }}>
+          <Typography variant="h5" sx={{ m: 1, textAlign: "center" }}>
             from node{" "}
             {nodes[actions[evaluatedAction.actionIdx].sourceIdx].displayName} to{" "}
             {nodes[actions[evaluatedAction.actionIdx].targetIdx].displayName}
           </Typography>
-          <Typography variant="h5" sx={{ m: 1, textAlign: "center" }}>
+          <Typography variant="h6" sx={{ m: 1, textAlign: "center" }}>
             {evaluatedAction.advise}
           </Typography>
-          <Typography variant="h5" sx={{ m: 1, textAlign: "center" }}>
+          <Typography variant="h6" sx={{ m: 1, textAlign: "center" }}>
             {"Expected reward " + evaluatedAction.expectedReward}
           </Typography>
         </Box>
@@ -48,7 +48,7 @@ interface TextExplanationInterface {
 
 const TitleExplanationComponent = ({ content }: TextExplanationInterface) => {
   return (
-    <Typography sx={{ m: 3 }} variant="h3">
+    <Typography sx={{ m: 3 }} variant="h4">
       {content}
     </Typography>
   );

@@ -3,11 +3,16 @@ import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import TutorialTip from "./tutorial";
 
 interface Props {
+  totalPoints?: number;
   tutorialIdx?: number;
   onTutorialClose?: (tutorialIdx: number) => void;
 }
 
-const ButtonAppBar = ({ tutorialIdx, onTutorialClose }: Props) => {
+const ButtonAppBar = ({
+  tutorialIdx,
+  onTutorialClose,
+  totalPoints = 0,
+}: Props) => {
   return (
     <Box sx={{ flexGrow: 1, height: 80 }}>
       <AppBar position="static">
@@ -29,7 +34,7 @@ const ButtonAppBar = ({ tutorialIdx, onTutorialClose }: Props) => {
             placement={"bottom-start"}
           >
             <Typography variant="h6" sx={{ mr: 2 }}>
-              0 points
+              {totalPoints} points
             </Typography>
           </TutorialTip>
         </Toolbar>

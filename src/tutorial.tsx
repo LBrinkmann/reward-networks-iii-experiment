@@ -16,6 +16,22 @@ const tutorial = [
     earned so far will be shown here.`,
     tip: "Your total number of points accross the full experiment.",
   },
+  {
+    id: "task",
+    title: "Task",
+    text: `The task is to find a sequence of 8 moves, that is 
+    maximising the cumulative reward as indicated on top of the arrows.
+    You will be helped by an algorithm. The move recommended by the algorithm 
+    is going to be visulized by a animated dashed line.`,
+    tip: "Maximise the cumulative reward",
+  },
+  {
+    id: "explanation",
+    title: "Explanation",
+    text: `In later stages of the experiment you will get here an explanation
+    from the algorithm.`,
+    tip: "Explanation",
+  },
 ];
 
 interface TutorialTipProps {

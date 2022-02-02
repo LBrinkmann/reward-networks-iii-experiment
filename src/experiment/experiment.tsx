@@ -45,10 +45,15 @@ const ExperimentAPIWrapper = ({
     {} as EvaluatedActions
   );
 
-  const onStageFinish = (stageIdx: number, actions?: Action[]) => {
+  const onStageFinish = (
+    stageIdx: number,
+    actions?: Action[],
+    points?: number
+  ) => {
     if (actions) {
       setStepResult({
         ...stepResult,
+        points,
         solution: {
           actions,
           environmentId: experimentState.environment.environmentId,
@@ -91,13 +96,13 @@ const ExperimentAPIWrapper = ({
       advisor: experimentState.treatment.advisor,
       playout: experimentState.treatment.playout,
       environmentId: experimentState.environment.environmentId,
+      phase: experimentState.step.phase,
     } as AdviseRequest;
 
     axios.post(`${backendUrl}/advise/`, adviseRequest).then((response) => {
-      const evalActions = _.keyBy(
-        response.data.actions,
-        ({ actionIdx }) => actionIdx
-      );
+      const evalActions = response.data
+        ? _.keyBy(response.data.actions, ({ actionIdx }) => actionIdx)
+        : null;
       setEvaluatedActions(evalActions);
     });
   };
@@ -151,7 +156,11 @@ const ExperimentAPIWrapper = ({
 };
 
 interface ExperimentInterface extends State {
-  onStageFinish: (stageIdx: number, actions?: Action[]) => void;
+  onStageFinish: (
+    stageIdx: number,
+    actions?: Action[],
+    points?: number
+  ) => void;
   onTutorialClose: (tutorialIdx: number) => void;
   tutorialIdx: number;
   stage?: Stage;
@@ -181,7 +190,11 @@ const Experiment = ({
 
   return (
     <>
-      <Header tutorialIdx={tutorialIdx} onTutorialClose={onTutorialClose} />
+      <Header
+        tutorialIdx={tutorialIdx}
+        onTutorialClose={onTutorialClose}
+        totalPoints={game ? game.totalPoints : 0}
+      />
       <Steps step={step} steps={steps} />
       {environment ? (
         <Game
@@ -194,6 +207,8 @@ const Experiment = ({
           gameActive={gameActive}
           evaluatedActions={evaluatedActions}
           onRequestAdvise={onRequestAdvise}
+          tutorialIdx={tutorialIdx}
+          onTutorialClose={onTutorialClose}
         />
       ) : null}
     </>
