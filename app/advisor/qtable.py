@@ -29,7 +29,7 @@ class QTableAdvisor():
             return self.play_explanation(environment)
         elif explanation_type == 'none':
             return self.placeholder_explanation()
-        elif explanation_type == 'expected_reward':
+        elif explanation_type == 'expectedReward':
             return self.expected_reward_explanation()
         elif explanation_type == 'playout':
             return self.playout_explanation()
