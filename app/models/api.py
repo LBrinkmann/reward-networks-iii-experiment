@@ -19,6 +19,7 @@ class StateUpdate(SnakeModel):
     environment: Optional[Environment]
     explanations: Optional[List[Explanation]]
     step: Step
+    game: Game
 
 class StepPreview(SnakeModel):
     step_id: PyObjectId

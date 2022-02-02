@@ -11,15 +11,15 @@ from app.create_experiment import create_chains
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:9000",
-    "https://rn-ii-frontend.eks-test-default.mpg-chm.com"
-]
+# origins = [
+#     "http://localhost",
+#     "http://localhost:9000",
+#     "https://rn-ii-frontend.eks-test-default.mpg-chm.com"
+# ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -123,13 +123,16 @@ async def post_step_result(s_result: StepResult):
     if next_step:
         treatment = EXPERIMENT.treatments[game.treatment_name]
         resp = argument_step(game, treatment, next_step)
-        return StateUpdate(step=next_step, **resp)
+        return StateUpdate(step=next_step, game=game, **resp)
     else:
         raise HTTPException(status_code=404, detail='No further step avaible.')
 
 
 @app.post('/advise')
 async def post_advise(ad_request: AdviseRequest) -> Advise:
-    environment = ENVIRONMENTS[ad_request.environment_id]
-    advise = ADVISOR[ad_request.advisor].advise(environment, ad_request)
-    return advise
+    if ad_request.phase == 'none':
+        return None
+    else:
+        environment = ENVIRONMENTS[ad_request.environment_id]
+        advise = ADVISOR[ad_request.advisor].advise(environment, ad_request)
+        return advise

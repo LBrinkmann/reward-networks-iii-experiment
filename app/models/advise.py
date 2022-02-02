@@ -34,6 +34,7 @@ class AdviseRequest(SnakeModel):
     advisor: str
     playout: bool
     total_reward: int
+    phase: str
 
 
 class EvaluatedAction(SnakeModel):
