@@ -27,4 +27,4 @@ COPY run_server.sh .
 RUN pip install --no-deps .
 
 USER server
-CMD /home/server/run_server.sh
+CMD ["./run_server.sh"]
