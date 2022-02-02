@@ -49,6 +49,7 @@ const Replay = ({ content, environment }: ReplayInterface) => {
         disabled={false}
         move={move}
         networkId={"replay"}
+        size={{ height: 430, width: 430 }}
       ></AnimatedNetwork>
     </>
   );

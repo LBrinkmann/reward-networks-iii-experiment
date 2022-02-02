@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { styled } from "@mui/material/styles";
 
-import { Paper, Grid, Typography, Box } from "@mui/material";
+import { Paper, Grid, Typography, Box, Divider } from "@mui/material";
 
 import Network from "./animated-network";
 import ExplanationComponent from "./explanation";
@@ -16,8 +16,6 @@ import { Environment, Action, Explanation, Stage } from "../../apiTypes";
 const GameElement = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(0),
-  width: 600,
-  height: 650,
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
@@ -38,9 +36,9 @@ const GameElement = styled(Paper)(({ theme }) => ({
 
 const StatsElement: React.FC = ({ children }) => {
   return (
-    <Paper sx={{ textAlign: "center", p: 3 }}>
-      <Typography variant="h5">{children}</Typography>
-    </Paper>
+    <Typography sx={{ p: 2 }} variant="h5">
+      {children}
+    </Typography>
   );
 };
 
@@ -134,15 +132,13 @@ const Game = ({
           direction="column"
           justifyContent="flex-start"
         >
-          <Grid item sx={{ pb: 2 }}>
+          <GameElement sx={{ p: 1 }}>
             <StatsElement>Move {move}</StatsElement>
-          </Grid>
-          <Grid item sx={{ pb: 2 }}>
+            <Divider />
             <StatsElement>Moves Remaining {remainingMoves}</StatsElement>
-          </Grid>
-          <Grid item sx={{ pb: 2 }}>
+            <Divider />
             <StatsElement>Total Reward {totalReward}</StatsElement>
-          </Grid>
+          </GameElement>
         </Grid>
         <Grid container item xs={5} direction="column">
           <Grid item>
@@ -162,6 +158,7 @@ const Game = ({
                       evaluatedActions={evaluatedActions}
                       onValidAction={onValidAction}
                       disabled={!gameActive}
+                      size={{ width: 550, height: 550 }}
                     />
                   </Box>
                 </TutorialTip>
@@ -182,7 +179,7 @@ const Game = ({
             onTutorialClose={onTutorialClose}
             placement={"left"}
           >
-            <Box>
+            <GameElement>
               {explanations
                 ? explanations.map((explanation, idx) => (
                     <Grid key={"solution-grid-" + idx} item>
@@ -196,7 +193,7 @@ const Game = ({
                     </Grid>
                   ))
                 : null}
-            </Box>
+            </GameElement>
           </TutorialTip>
         </Grid>
       </Grid>

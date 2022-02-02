@@ -159,7 +159,7 @@ const Link = ({
 
 // // we need to define a link marker for each link color
 
-interface Size {
+export interface Size {
   width: number;
   height: number;
 }
@@ -330,6 +330,7 @@ const NetworkComponent = ({
   linkCurvation,
   linkWidth = 5,
 }: NetworkInterface) => {
+  const effNodeSize = nodeSize ? nodeSize : ((size.height / 550) * 600) / 15;
   return (
     <svg
       className={`network-game ${version}`}
@@ -339,13 +340,13 @@ const NetworkComponent = ({
       <LinkMarker
         size={size}
         networkId={networkId}
-        nodeSize={nodeSize}
+        nodeSize={effNodeSize}
         linkWidth={linkWidth}
         linkCurvation={linkCurvation}
       />
       <Links
         actions={actions}
-        nodeSize={nodeSize}
+        nodeSize={effNodeSize}
         size={size}
         networkId={networkId}
         linkWidth={linkWidth}
@@ -356,7 +357,7 @@ const NetworkComponent = ({
           return (
             <NodeComponent
               {...scaleXY(node, size)}
-              nodeSize={nodeSize}
+              nodeSize={effNodeSize}
               onNodeClick={onNodeClick}
               key={"point-" + idx}
               networkId={networkId}

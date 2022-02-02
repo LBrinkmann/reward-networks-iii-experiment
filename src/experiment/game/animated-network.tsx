@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 
-import Network from "./network";
+import Network, { Size } from "./network";
 import { Environment, Action, ActionType, Node } from "../../apiTypes";
 import { EvaluatedActions } from "../experiment";
 
@@ -137,6 +137,7 @@ interface AnimatedNetworkInterface {
   currentNodeIdx?: number;
   move?: number;
   networkId?: string;
+  size: Size;
 }
 
 const AnimatedNetwork = ({
@@ -147,6 +148,7 @@ const AnimatedNetwork = ({
   evaluatedActions,
   move,
   networkId = "default",
+  size,
 }: AnimatedNetworkInterface) => {
   const { actions, nodes } = environment;
   const [animationState, setanimationState] = useState(
@@ -210,6 +212,7 @@ const AnimatedNetwork = ({
       actions={parsedActions}
       nodes={parsedNodes}
       onNodeClick={onNodeClick}
+      size={size}
     />
   );
 };
