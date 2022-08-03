@@ -101,6 +101,7 @@ export interface Game {
   generation: number;
   locked: boolean;
   childId?: string;
+  parentId?: string;
   chainId: string;
   userId?: string;
   started?: string;

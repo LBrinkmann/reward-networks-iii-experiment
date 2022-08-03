@@ -4,18 +4,14 @@ from fastapi.exceptions import HTTPException
 
 from app.models import (
     Environment, AdviseRequest, Step, User, Game, Experiment, Treatment,
-    StepResult, StateUpdate, State, Advise, Explanation)
+    StepResult, StateUpdate, State, Advise, Explanation, experiment)
 
 from app.advisor import init_advisor
 from app.create_experiment import create_chains
 
-app = FastAPI()
+from app.utils import load_yaml
 
-# origins = [
-#     "http://localhost",
-#     "http://localhost:9000",
-#     "https://rn-ii-frontend.eks-test-default.mpg-chm.com"
-# ]
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,11 +30,24 @@ def set_globals(experiment):
     EXPERIMENT = experiment
     ADVISOR = init_advisor(experiment)
     ENVIRONMENTS = Environment.read_file(experiment.environments_path)
-    
 
+def reset_all():
+    for m in (User, Game, Experiment, Advise):
+        m.reset()
+
+def load_experiments():
+    experiments = load_yaml('experiments.yml')
+    experiments = [{**exp, 'experimentName': name} for name, exp in experiments.items()]
+
+    for exp in experiments:
+        exp = Experiment(**exp).flush()
+        environments = Environment.read_file(exp.environments_path)
+        create_chains(exp, environments=environments)
 
 @app.on_event("startup")
 async def startup_event():
+    reset_all()
+    load_experiments()
     experiment = Experiment.get(active=True)
     if experiment:
         set_globals(experiment)

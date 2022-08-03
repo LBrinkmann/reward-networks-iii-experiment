@@ -11,7 +11,7 @@ class Game(ExtBaseModel):
     generation: int
     locked: bool
     child_id: Optional[PyObjectId] = None
-    # parentId: Optional[PyObjectId] = None
+    parentId: Optional[PyObjectId] = None
     chain_id: PyObjectId
     user_id: Optional[PyObjectId]
     started: Optional[datetime.datetime]
@@ -23,8 +23,8 @@ class Game(ExtBaseModel):
     @classmethod
     def assign(cls, experiment_id, user_id):
         game = cls.db().find_one_and_update(
-            {'experimentId': experiment_id, 'locked': False}, 
-            {"$set": {'userId': user_id, 'started': datetime.datetime.now(), 'locked': True}}, 
+            {'experimentId': experiment_id, 'locked': False},
+            {"$set": {'userId': user_id, 'started': datetime.datetime.now(), 'locked': True}},
             return_document=pymongo.ReturnDocument.AFTER)
             # sort=[('rank', 1)]
         return Game(**game)

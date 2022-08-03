@@ -31,7 +31,7 @@ def create_game_steps(experiment: Experiment, treatment: Treatment, chain: Chain
             environment_id = game.environment_ids[trial_idx]
             stages = create_step_stages()
             Step(
-                stepIdx=step_idx, phase=phase, gameId=game.id, 
+                stepIdx=step_idx, phase=phase, gameId=game.id,
                 phaseStep=phase_step, current=False, trailIdx=trial_idx,
                 environmentId=environment_id, stages=stages
             ).flush()
@@ -47,7 +47,7 @@ def create_chain_games(experiment: Experiment, treatment: Treatment, chain: Chai
         environment_ids = (chain.environment_ids + chain.environment_ids)[(5*generation)%10:(5*generation)%10+10]
         game = Game(
             experimentId=experiment.id,
-            treatmentName=chain.treatment_name, generation=generation, 
+            treatmentName=chain.treatment_name, generation=generation,
             locked=generation != 1, childId=child_id, chainId=chain.id,
             environmentIds=environment_ids
         ).flush()
@@ -60,6 +60,6 @@ def create_chains(experiment: Experiment, environments: List[Environment]):
         for c_in_t in range(experiment.n_chains_per_treatment):
             environment_ids = random.sample(environments.keys(), experiment.n_steps_per_phase * len(phases))
             chain = Chain(
-                experimentId=experiment.id, treatmentName=treatment.name, 
+                experimentId=experiment.id, treatmentName=treatment.name,
                 environmentIds=environment_ids).flush()
             create_chain_games(experiment, treatment, chain)

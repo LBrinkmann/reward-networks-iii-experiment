@@ -111,5 +111,9 @@ class ExtBaseModel(SnakeModel):
             raise HTTPException(status_code=409, detail=f"Failed to upsort {name}. Probably a constraint was violated.")
         return self
 
+    @classmethod
+    def reset(cls):
+        cls.db().drop()
+
 
 json.ENCODERS_BY_TYPE[ObjectId]=str
