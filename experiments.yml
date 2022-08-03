@@ -9,8 +9,8 @@ test1:
       playout: true
       explanation_type: table
       advisor: qtable
-  nChainsPerTreatment: 1
-  nGamesPerChain: 1
+  nChainsPerTreatment: 3
+  nGamesPerChain: 2
   nStepsPerPhase: 2
   qTablePath: app/data/algorithm_1.json
   environmentsPath: app/data/test.json

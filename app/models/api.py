@@ -1,4 +1,3 @@
-from pydantic import BaseModel
 from app.models.base import ExtBaseModel, PyObjectId, SnakeModel
 from app.models import (
     Environment, Solution, User, Explanation, HumanExplanation)
