@@ -15,11 +15,14 @@ pip install -e ".[dev]"
 ## Run Locally
 
 ```
+export NETWORK_FILE="$(PWD)/app/data/test.json"
+export RN_FRONTEND="$(PWD)/../reward-networks-ii-frontend"
+
 ./dev_server.sh
 ```
 
-##
+## Deployment
 
-## Logs
+### Logs
 
 https://onenr.io/0EPwJ0NDkj7
