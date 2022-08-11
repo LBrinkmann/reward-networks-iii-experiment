@@ -1,0 +1,6 @@
+ipdb
+ipython
+autopep8
+ipykernel
+flake8
+pydantic-to-typescript

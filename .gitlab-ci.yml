@@ -1,0 +1,6 @@
+include:
+  - project: "mpib/chm/common/deploy-pipeline"
+    ref: "1.4.7"
+    file: "python-app.yml"
+
+  - local: "app.yml"
