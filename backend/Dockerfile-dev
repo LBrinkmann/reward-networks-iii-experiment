@@ -7,4 +7,6 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY setup.py /app/setup.py
 RUN pip install --no-deps /app
 
-COPY ./app /app
+copy ./experiments.yml /app/experiments.yml
+
+COPY ./app /app/app
