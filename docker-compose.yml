@@ -17,6 +17,11 @@ services:
     environment:
       PORT: 5000
       MONGO_URL: 'mongodb://database:27017/'
+      # Environment variables for official FastAPI docker image
+      APP_MODULE: 'app.server:app'
+      LOG_LEVEL: 'debug'
+    # start-reload.sh is a version of start.sh for development with live auto-reload
+    command: '/start-reload.sh'
     ports:
       - "5000:5000"
     depends_on:

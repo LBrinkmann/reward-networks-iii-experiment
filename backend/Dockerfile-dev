@@ -1,12 +1,15 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+# SEE: https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker
 
-COPY ./requirements.txt /app/requirements.txt
+WORKDIR /backend
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+COPY ./requirements.txt /backend/requirements.txt
 
-COPY setup.py /app/setup.py
-RUN pip install --no-deps /app
+RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
 
-copy ./experiments.yml /app/experiments.yml
+COPY setup.py /backend/setup.py
+RUN pip install --no-deps /backend
 
-COPY ./app /app/app
+copy ./experiments.yml /backend/experiments.yml
+
+COPY ./app /backend/app
