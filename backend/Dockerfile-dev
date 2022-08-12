@@ -1,15 +1,11 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 # SEE: https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker
 
+# This is the directory where the code is located
 WORKDIR /backend
 
-COPY ./requirements.txt /backend/requirements.txt
+# copy everything from the code directory to the container
+COPY . .
 
-RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
-
-COPY setup.py /backend/setup.py
-RUN pip install --no-deps /backend
-
-copy ./experiments.yml /backend/experiments.yml
-
-COPY ./app /backend/app
+# run setup.py file
+RUN pip --no-cache-dir install /backend

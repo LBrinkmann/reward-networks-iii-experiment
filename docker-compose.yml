@@ -5,7 +5,6 @@ services:
     volumes:
       - data:/data/db
     restart: unless-stopped
-    command: mongod
     ports:
       - "27017:27017"
   fastapi:  # backend
@@ -20,12 +19,26 @@ services:
       # Environment variables for official FastAPI docker image
       APP_MODULE: 'app.server:app'
       LOG_LEVEL: 'debug'
+      # run script before starting the app
+      # PRE_START_PATH: ./backend/pre_start.sh
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'
     ports:
       - "5000:5000"
     depends_on:
       - database
+  react:  # frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-dev
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./frontend/src:/frontend/src
+    stdin_open: true  # to replicate `-it` mode in docker run
+    tty: true  # to replicate `-it` mode in docker run
+    depends_on:
+      - fastapi
 
 volumes:
   data:

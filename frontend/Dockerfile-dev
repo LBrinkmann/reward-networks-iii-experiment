@@ -1,0 +1,15 @@
+FROM node
+
+WORKDIR /frontend
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 9000
+
+ENV BACKEND_URL='http://localhost:5000'
+
+CMD [ "npm", "start" ]
