@@ -7,5 +7,5 @@ WORKDIR /backend
 # copy everything from the code directory to the container
 COPY . .
 
-# run setup.py file
-RUN pip --no-cache-dir install /backend
+# run setup.py file with development mode `-e`
+RUN pip --no-cache-dir install -e .[dev]

@@ -20,7 +20,7 @@ services:
       APP_MODULE: 'app.server:app'
       LOG_LEVEL: 'debug'
       # run script before starting the app
-      # PRE_START_PATH: ./backend/pre_start.sh
+      PRE_START_PATH: ./pre_start.sh
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'
     ports:
