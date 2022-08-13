@@ -35,6 +35,8 @@ services:
       - "9000:9000"
     volumes:
       - ./frontend/src:/frontend/src
+    environment:
+      BACKEND_URL: 'http://localhost:5000'
     stdin_open: true  # to replicate `-it` mode in docker run
     tty: true  # to replicate `-it` mode in docker run
     depends_on:

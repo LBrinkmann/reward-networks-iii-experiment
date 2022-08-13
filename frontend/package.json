@@ -2,7 +2,7 @@
   "name": "react-app-template",
   "version": "0.1.0",
   "scripts": {
-    "start": "BACKEND_URL=\"http://localhost:5000\" node gen_config.js && npx webpack-dev-server --mode development --open --hot",
+    "start": "node gen_config.js && npx webpack-dev-server --mode development --open --hot",
     "build-dev": "node gen_config.js && webpack --mode development && cp -R static/* dist/",
     "build-prod": "node gen_config.js && webpack --mode production && cp -R static/* dist/"
   },
