@@ -13,12 +13,12 @@ WORKDIR /backend
 # copy everything from the code directory to the container
 COPY . .
 
-RUN pip --no-cache-dir install -r requirements.txt
-RUN pip --no-cache-dir install -r requirements_dev.txt
-
 # run setup.py file with development mode `-e`
+RUN pip --no-cache-dir install -e .[dev]
+
 # This is not neccesary since we install all dependencies above
-# RUN pip --no-cache-dir install -e .[dev]
+# RUN pip --no-cache-dir install -r requirements.txt
+# RUN pip --no-cache-dir install -r requirements_dev.txt
 
 
 
