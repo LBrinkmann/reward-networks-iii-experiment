@@ -64,7 +64,7 @@ async def startup_event():
     if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
-            'app.server', os.path.join(path, 'apiTypes.ts')) # , ('Advise')
+            'app.server', os.path.join(path, 'apiTypes.ts'))
 
 
 def check_experiment():
