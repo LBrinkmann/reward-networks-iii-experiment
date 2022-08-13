@@ -51,6 +51,9 @@ async def startup_event():
     experiment = Experiment.get(active=True)
     if experiment:
         set_globals(experiment)
+    if True:
+        from pydantic2ts import generate_typescript_defs
+        generate_typescript_defs("app.server", "apiTypes.ts")
 
 
 def check_experiment():

@@ -1,11 +1,24 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 # SEE: https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker
 
+# `json-schema-to-typescript` from npm is neccessary to run `generate_typescript_defs`
+# SEE: https://github.com/phillipdupuis/pydantic-to-typescript
+RUN apt-get update && apt-get install -y nodejs npm
+# install json-schema-to-typescript globally
+RUN npm install -g json-schema-to-typescript --save
+
 # This is the directory where the code is located
 WORKDIR /backend
 
 # copy everything from the code directory to the container
 COPY . .
 
+RUN pip --no-cache-dir install -r requirements.txt
+RUN pip --no-cache-dir install -r requirements_dev.txt
+
 # run setup.py file with development mode `-e`
-RUN pip --no-cache-dir install -e .[dev]
+# This is not neccesary since we install all dependencies above
+# RUN pip --no-cache-dir install -e .[dev]
+
+
+
