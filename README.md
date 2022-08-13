@@ -1,24 +1,20 @@
-# Python App Template
+## Development environment
+Development environment is defined in `docker-compose-dev.yml` file. To simplify docker-compose usage, one can set `docker-compose-dev.yml` as an environmental variable in `.env` file: `COMPOSE_FILE=docker-compose-dev.yml`.
 
-Python version >= 3.7 is required.
+Set up the development environment and ensure that all images are recreated (`--build`) in detached mode (`-d`):
 
-## Setup
+```bash
 
-```
-python3 -m venv .venv
-. .venv/bin/activate
-pip install --upgrade pip
-pip install wheel
-pip install -e ".[dev]"
-```
-
-## Run Locally
+docker-compose -f docker-compose-dev.yml up --build -d
 
 ```
-export NETWORK_FILE="$(PWD)/app/data/test.json"
-export RN_FRONTEND="$(PWD)/../reward-networks-ii-frontend"
 
-./dev_server.sh
+To stop everything and remove all volumes:
+
+```bash
+
+docker-compose -f docker-compose-dev.yml down --volumes
+
 ```
 
 ## Deployment
@@ -26,3 +22,7 @@ export RN_FRONTEND="$(PWD)/../reward-networks-ii-frontend"
 ### Logs
 
 https://onenr.io/0EPwJ0NDkj7
+
+
+
+
