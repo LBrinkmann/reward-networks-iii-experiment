@@ -25,9 +25,8 @@ api.add_middleware(
 )
 
 # Register routes
-api.include_router(session_router, prefix="")
+api.include_router(session_router, prefix="/session")
 api.include_router(advise_router, prefix="/advise")
-api.include_router(experiment_router, prefix="/experiment")
 api.include_router(results_router, prefix="")
 
 

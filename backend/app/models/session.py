@@ -4,7 +4,7 @@ from typing import Optional, List
 from beanie import Document
 
 from trial import Trial
-from advice import Adviсe
+from advise import Advise
 
 
 class Session(Document):
@@ -14,9 +14,11 @@ class Session(Document):
     repetition_in_generation: int
     started: Optional[datetime.datetime]
     finished: Optional[datetime.datetime]
+    current_trial_inx: int
     trials: List[Trial]
-    advices: List[Adviсe]
+    advises: List[Advise]
     valid: bool
+    available: bool
 
     class Config:
         # TODO: add example

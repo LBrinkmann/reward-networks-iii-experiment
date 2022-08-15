@@ -1,43 +1,54 @@
 from fastapi import APIRouter
 
-from ..models.api import State
-from ..models.experiment import Experiment
-from ..models.game import Game
-from ..models.step import Step
-from ..models.user import User
-from .results import argument_step
+from models.session import Session
+from models.subject import Subject
+from models.trial import Trial
 
-session_router = APIRouter(
-    tags=["Session"],
-)
-
-@session_router.get('/games/{experiment_name}')
-async def get_games(experiment_name):
-    experiment = Experiment.get(experiment_name=experiment_name)
-    return Game.get_many(experiment_id=experiment.id)
+session_router = APIRouter(tags=["Session"])
 
 
-@session_router.get('/game/{prolific_id}', response_model_by_alias=False)
-async def get_game(prolific_id):
-    # check_experiment()
-    EXPERIMENT = Experiment.get(active=True)
-    user = User.get(prolific_id=prolific_id, experiment_id=EXPERIMENT.id)
-    if not user:
-        user = User(prolific_id=prolific_id,
-                    experiment_id=EXPERIMENT.id).flush()
-        game = Game.assign(experiment_id=EXPERIMENT.id, user_id=user.id)
+@session_router.get('/{prolific_id}', response_model_by_alias=False)
+async def get_current_trial(prolific_id: str) -> Trial:
+    """
+    Get current trial from the session.
+    """
+    subjects_with_id = await Subject.find_all(
+        Subject.prolific_id == prolific_id).to_list()
+    if len(subjects_with_id) > 1:
+        # TODO: raise exception and make proper error handling
+        raise Exception("More than one subject with the same prolific id")
+    elif len(subjects_with_id) == 0:
+        # creat a new subject
+        subject = Subject(prolific_id=prolific_id)
+        # save subject to database
+        await subject.save()
+        # session initialization
+        session = await initialize_session(subject)
     else:
-        game = Game.get(experiment_id=EXPERIMENT.id, user_id=user.id)
-    steps = Step.get_many(game_id=game.id)
-    step = Step.get(game_id=game.id, current=True)
-    treatment = EXPERIMENT.treatments[game.treatment_name]
+        subject = subjects_with_id[0]
+        # get session for the subject
+        session = await Session.find_one(Session.subject_id == subject.id)
+        # increase trial index by 1
+        session.current_trial_inx += 1
+        await session.save()
+    trial = session.trials[session.current_trial_inx]
+    # TODO: return model compatible with frontend
+    return trial
 
-    return State(**{
-        "user": user,
-        "game": game,
-        "treatment": treatment,
-        "steps": [{'stepId': s.id, 'phase': s.phase, 'phaseStep': s.phase_step}
-                  for s in steps],
-        "step": step,
-        **argument_step(game, treatment, step)
-    })
+
+async def initialize_session(subject: Subject) -> Session:
+    # get any available session
+    session = await Session.find_one(Session.available)
+    # session is not available anymore
+    session.available = False
+    # assign subject to session
+    session.subject_id = subject.id
+    # update trial index
+    session.current_trial_inx = 0
+    # save session
+    await session.save()
+    # assign session to subject
+    subject.session_id = session.id
+    # save subject
+    await subject.save()
+    return session

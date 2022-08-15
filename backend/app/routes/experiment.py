@@ -1,9 +1,5 @@
 from fastapi import APIRouter
 
-from ..experiment.create_experiment import create_chains
-from ..models.environment import Environment
-from ..models.experiment import Experiment
-
 experiment_router = APIRouter(
     tags=["Experiment"],
 )
@@ -26,10 +22,3 @@ async def put_experiment_active(experiment_name):
     experiment = Experiment.get(experiment_name=experiment_name).set_active()
     # set_globals(experiment)
     return experiment
-
-
-def check_experiment():
-    experiment = Experiment.get(active=True)
-    # if not EXPERIMENT or (experiment.id != EXPERIMENT.id):
-    #     if experiment:
-    #         set_globals(experiment)

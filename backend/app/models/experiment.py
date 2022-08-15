@@ -1,8 +1,9 @@
-from app.models.base import ExtBaseModel, PyObjectId, SnakeModel
 from typing import Optional, Literal, Dict
 
+from pydantic import BaseModel
 
-class Treatment(SnakeModel):
+
+class Treatment(BaseModel):
     name: str = 'control'
     playout: Optional[bool] = True  # deprecated
     explanation_type: Optional[

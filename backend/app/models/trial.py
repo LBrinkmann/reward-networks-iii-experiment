@@ -72,10 +72,13 @@ class Edge(BaseModel):
         }
 
 
-class Trial(BaseModel):
-    started: Optional[datetime.datetime]
-    finished: Optional[datetime.datetime]
-    valid: bool
+class Network(BaseModel):
     nodes: List[Node]
     edges: List[Edge]
     edge_types: List[EdgeType]
+
+
+class Trial(BaseModel):
+    started: Optional[datetime.datetime]
+    finished: Optional[datetime.datetime]
+    network: Optional[Network]
