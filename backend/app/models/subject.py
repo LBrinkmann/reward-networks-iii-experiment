@@ -1,6 +1,6 @@
 from typing import Optional
 
-from beanie import Document, PydanticObjectId
+from beanie import Document
 
 
 class Subject(Document):

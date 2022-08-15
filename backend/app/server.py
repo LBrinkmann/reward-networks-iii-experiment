@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database.connection import Settings
 from routes.advise import advise_router
-from routes.experiment import experiment_router
 from routes.results import results_router
 from routes.session import session_router
 

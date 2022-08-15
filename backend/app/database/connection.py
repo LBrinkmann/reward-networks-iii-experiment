@@ -1,9 +1,8 @@
-import os
-from typing import Optional, List, Any
+from typing import Optional
 
-from beanie import init_beanie, PydanticObjectId, Document
+from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseSettings, BaseModel
+from pydantic import BaseSettings
 
 from models.session import Session
 from models.subject import Subject
