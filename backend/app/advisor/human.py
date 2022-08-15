@@ -1,7 +1,7 @@
-from app.models.advise import HumanExplanation, Explanation, Advise, AdviseRequest
-from app.models.game import Game
-from app.models.environment import Environment
-from app.models.solution import Solution
+from ..models.advise import HumanExplanation, Explanation, Advise, AdviseRequest
+from ..models.game import Game
+from ..models.environment import Environment
+from ..models.solution import Solution
 
 
 class HumanAdvisor():

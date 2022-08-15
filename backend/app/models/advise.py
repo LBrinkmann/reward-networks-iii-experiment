@@ -1,5 +1,5 @@
 from typing import List, Optional, Literal, Any, Union
-from app.models.base import ExtBaseModel, SnakeModel, PyObjectId
+from .base import ExtBaseModel, SnakeModel, PyObjectId
 
 
 class Table(SnakeModel):

@@ -1,4 +1,4 @@
-from app.models.experiment import Experiment
+from ..models.experiment import Experiment
 from .human import HumanAdvisor
 from .qtable import QTableAdvisor
 

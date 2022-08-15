@@ -1,11 +1,15 @@
-from app.models.base import ExtBaseModel, PyObjectId, SnakeModel
-from app.models import (
-    Environment, Solution, User, Explanation, HumanExplanation)
+from .advise import HumanExplanation, Explanation
+from .base import ExtBaseModel, PyObjectId, SnakeModel
 from typing import Optional, List
-from app.models.experiment import Treatment
-from app.models.game import Game
 
-from app.models.step import Step
+from .environment import Environment
+from .experiment import Treatment
+from .game import Game
+from .solution import Solution
+
+from .step import Step
+from .user import User
+
 
 class StepResult(ExtBaseModel):
     step_result_id: Optional[PyObjectId] = None

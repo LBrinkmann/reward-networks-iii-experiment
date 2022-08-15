@@ -2,10 +2,10 @@ import random
 
 from app.models.environment import Environment
 
-from app.models.experiment import Experiment, Treatment
-from .models.chain import Chain
-from .models.game import Game
-from .models.step import Step, Stage
+from ..models.experiment import Experiment, Treatment
+from ..models.chain import Chain
+from ..models.game import Game
+from ..models.step import Step, Stage
 from typing import List
 
 

@@ -4,7 +4,7 @@ from fastapi.exceptions import HTTPException
 from bson import ObjectId
 from typing import List, Optional
 from pymongo import MongoClient
-from app.utils import to_camel
+from ..utils import to_camel
 import os
 import datetime
 import stringcase

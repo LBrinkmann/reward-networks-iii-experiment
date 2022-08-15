@@ -1,10 +1,10 @@
 from operator import index
-from app.models.environment import Environment
-from app.models.experiment import Experiment, Treatment
+from ..models.environment import Environment
+from ..models.experiment import Experiment, Treatment
 import numpy as np
 import pandas as pd
-from app.advisor.network_env import NetworkEnvironment
-from app.models.advise import Advise, Explanation, AdviseRequest, Table
+from .network_env import NetworkEnvironment
+from ..models.advise import Advise, Explanation, AdviseRequest, Table
 
 
 

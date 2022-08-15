@@ -1,18 +1,22 @@
 from app.models.base import ExtBaseModel, PyObjectId, SnakeModel
 from typing import Optional, Literal, Dict
 
+
 class Treatment(SnakeModel):
     name: str = 'control'
-    playout: Optional[bool] = True # deprecated
-    explanation_type: Optional[Literal['table', 'rule', 'replay', 'playout', 'expectedReward']]
+    playout: Optional[bool] = True  # deprecated
+    explanation_type: Optional[
+        Literal['table', 'rule', 'replay', 'playout', 'expectedReward']]
     advisor: Literal['human', 'qtable']
+
 
 class Experiment(ExtBaseModel):
     experiment_id: Optional[PyObjectId] = None
     experiment_name: str = None
     treatments: Dict[str, Treatment] = {
-        'control': Treatment(name='control', advisor='human'), 
-        'full': Treatment(name='full', advisor='qtable', explanationType='table'), 
+        'control': Treatment(name='control', advisor='human'),
+        'full': Treatment(name='full', advisor='qtable',
+                          explanationType='table'),
     }
     n_chains_per_treatment: int = 4
     n_games_per_chain: int = 3
@@ -33,5 +37,6 @@ class Experiment(ExtBaseModel):
         self.active = True
         self.flush()
         return self
+
 
 Experiment.db().create_index("experimentName", unique=True)

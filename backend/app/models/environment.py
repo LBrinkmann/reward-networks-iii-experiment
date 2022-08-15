@@ -1,5 +1,5 @@
-from app.models.base import SnakeModel
-from app.utils import load_json
+from .base import SnakeModel
+from ..utils import load_json
 from typing import List
 
 

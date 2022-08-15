@@ -1,6 +1,6 @@
 import datetime
-from app.models.base import SnakeModel
-from app.models.base import ExtBaseModel, PyObjectId
+from .base import SnakeModel
+from .base import ExtBaseModel, PyObjectId
 from typing import Optional, List
 
 

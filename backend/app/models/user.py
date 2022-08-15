@@ -1,4 +1,4 @@
-from app.models.base import ExtBaseModel, PyObjectId
+from .base import ExtBaseModel, PyObjectId
 from typing import Optional
 
 

@@ -22,7 +22,7 @@ services:
       GENERATE_FRONTEND_TYPES: 'true'
       FOLDER_TO_SAVE_FRONTEND_TYPES: 'frontend'
       # Environment variables for official FastAPI docker image
-      APP_MODULE: 'app.server:app'
+      APP_MODULE: 'app.server:api'
       LOG_LEVEL: 'debug'
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'

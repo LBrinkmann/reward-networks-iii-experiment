@@ -1,5 +1,5 @@
-from app.models.base import ExtBaseModel, PyObjectId
-from app.models.environment import Action
+from .base import ExtBaseModel, PyObjectId
+from .environment import Action
 from typing import List, Optional
 
 

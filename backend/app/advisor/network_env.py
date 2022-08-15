@@ -1,4 +1,4 @@
-from app.models.environment import Environment
+from ..models.environment import Environment
 
 
 class NetworkEnvironment:
