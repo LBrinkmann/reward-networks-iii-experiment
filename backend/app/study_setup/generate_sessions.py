@@ -11,7 +11,7 @@ async def generate_sessions(n_generations: int = 5,
                             n_trials_per_session: int = 10,
                             trial_types: Union[List[str], str, None] = None,
                             n_advise_per_session: int = 3,
-                            experiment_type: str = 'reward_network_iii',
+                            experiment_type: str = 'reward_networks_iii',
                             experiment_num: int = 0
                             ):
     # Set random seed
@@ -42,6 +42,8 @@ async def generate_sessions(n_generations: int = 5,
 
             s_n_1.advise_ids = advise_ids
             await s_n_1.save()
+        # now sessions_n_0 is the previous generation
+        sessions_n_0 = sessions_n_1
 
 
 async def create_generation(generation: int,
@@ -64,6 +66,7 @@ async def create_generation(generation: int,
             )
             trials.append(trial)
         # create session
+        # TODO: check if session already exists
         session = Session(
             experiment_num=experiment_num,
             experiment_type=experiment_type,
