@@ -6,3 +6,4 @@ flake8
 pydantic-to-typescript
 pytest
 pytest-asyncio
+pyvis
