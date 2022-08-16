@@ -22,20 +22,6 @@ class Node(BaseModel):
             y=node['y'],
             action_idx=source_edge_idx)
 
-    class Config:
-        schema_extra = {
-            "example":
-                {
-                    {
-                        "id": 0,
-                        "displayName": "A",
-                        "x": 0.7,
-                        "y": 0.2,
-                        "actionIdx": [0, 1, 2]
-                    },
-                }
-        }
-
 
 class EdgeType(BaseModel):
     action_type_idx: int
@@ -62,14 +48,6 @@ class Edge(BaseModel):
             target_idx=action['targetId'],
             edge_idx=idx,
             edge_type_idx=action['rewardId'])
-
-    class Config:
-        schema_extra = {
-            "example":
-                {
-                    {},
-                }
-        }
 
 
 class Network(BaseModel):

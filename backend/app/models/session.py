@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from beanie import Document
 
-from trial import Trial
+from models.trial import Trial
 
 
 class Session(Document):

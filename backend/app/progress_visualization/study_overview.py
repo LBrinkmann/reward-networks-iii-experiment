@@ -1,12 +1,15 @@
+import datetime
 import random
+from pathlib import Path
 
 from pyvis.network import Network
 
+ROOT = Path(__file__).parent
+
 
 def create_sessions_network():
-    # , bgcolor='#222222', font_color='white',
     net = Network(height='800px', width='100%', directed=True, layout=True)
-    # net.barnes_hut()
+
     for g in range(4):
         # two parallel sessions in neighboring generations
         for n_connections in range(20):
@@ -20,8 +23,17 @@ def create_sessions_network():
 
     # net.show_buttons(filter_=['edges'])
     # net.show_buttons()
-    net.set_options(open('graph_settings.json').read())
-    net.show('study_net.html')
+
+    net.set_options(open(ROOT / 'graph_settings.json').read())
+    # net.show('study_net.html')
+    path = ROOT / 'tmp'
+    path.mkdir(exist_ok=True)
+    file = path / f'study_net_{datetime.datetime.now()}.html'
+    net.save_graph(str(file))
+    # html_file = open(file, 'r', encoding='utf-8').read()
+    # remove file from the disc
+    # file.unlink()
+    return file
 
 
 create_sessions_network()
