@@ -19,15 +19,19 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
     for session in sessions:
         g = session.generation
         s_num = session.session_num_in_generation
-        label = f'{session.current_trial_num}'
+        trial_num = session.current_trial_num
+        subject_in_the_session = True if session.subject_id else False
+        label = ' ' if trial_num == 0 else f'{trial_num}'
 
         if session.available:
             color = '#85D4E3'
         else:
             if session.finished_at:
                 color = '#81A88D'
+            elif subject_in_the_session:
+                color = '#F5A45D'  # '#FAD77B'
             else:
-                color = '#FAD77B'
+                color = '#F4B5BD'
 
         net.add_node(str(session.id), label, shape='circle', level=g, x=s_num,
                      color=color)

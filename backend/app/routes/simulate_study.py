@@ -16,11 +16,11 @@ simulation_router = APIRouter(tags=["Simulation"])
 
 
 @simulation_router.get('/{experiment_type}/{experiment_num}')
-async def get_study_simulation(# seconds_per_subject: float = 0.5,
-                               n_subjects: int = 10,
+async def get_study_simulation(n_subjects: int = 10,
                                experiment_type: str = 'reward_network_iii',
                                experiment_num: int = 0,
                                generate_new_sessions: bool = False,
+                               run_simulation: bool = True,
                                n_trials_per_session: int = 10,
                                n_gen: int = 5,
                                n_s_per_gen: int = 10,
@@ -35,21 +35,21 @@ async def get_study_simulation(# seconds_per_subject: float = 0.5,
                                 n_advise_per_session=n_adv,
                                 experiment_type=experiment_type,
                                 experiment_num=experiment_num)
+    if run_simulation:
+        base_url = "http://testserver/"
 
-    base_url = "http://testserver/"
-
-    headers = {
-        "Content-Type": "application/json",
-    }
-    tasks = []
-    for ii in range(2):
-        for i in range(n_subjects):
-            subj = i + 10 * ii
-            task = asyncio.create_task(
-                one_subject(base_url, headers, subj, n_trials_per_session))
-            tasks.append(task)
-            await asyncio.sleep(0.5)
-        [await t for t in tasks]
+        headers = {
+            "Content-Type": "application/json",
+        }
+        tasks = []
+        for ii in range(2):
+            for i in range(n_subjects):
+                subj = i + 10 * ii
+                task = asyncio.create_task(
+                    one_subject(base_url, headers, subj, n_trials_per_session))
+                tasks.append(task)
+                await asyncio.sleep(0.5)
+            [await t for t in tasks]
 
     return {'done': True}
 
@@ -79,4 +79,3 @@ async def one_subject_trial(base_url, headers, subj: int):
 
         response = await ac.put(url, json=trial, headers=headers)
         # print(response.json())
-
