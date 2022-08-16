@@ -79,6 +79,7 @@ class Network(BaseModel):
 
 
 class Trial(BaseModel):
+    trial_num_in_session: int
     started: Optional[datetime.datetime]
     finished: Optional[datetime.datetime]
     network: Optional[Network]

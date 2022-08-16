@@ -29,9 +29,9 @@ async def get_current_trial(prolific_id: str) -> Trial:
         # get session for the subject
         session = await Session.find_one(Session.subject_id == subject.id)
         # increase trial index by 1
-        session.current_trial_inx += 1
+        session.current_trial_num += 1
         await session.save()
-    trial = session.trials[session.current_trial_inx]
+    trial = session.trials[session.current_trial_num]
     # TODO: return model compatible with frontend
     return trial
 
@@ -44,7 +44,7 @@ async def initialize_session(subject: Subject) -> Session:
     # assign subject to session
     session.subject_id = subject.id
     # update trial index
-    session.current_trial_inx = 0
+    session.current_trial_num = 0
     # save session
     await session.save()
     # assign session to subject
