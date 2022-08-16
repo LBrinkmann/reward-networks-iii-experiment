@@ -7,3 +7,6 @@ build
 
 # Ignore JetBrains files
 .idea
+
+# Ignore html generated in backend folder
+backend/**/*.html
