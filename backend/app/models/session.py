@@ -16,10 +16,11 @@ class Session(Document):
     created_at: datetime.datetime = datetime.datetime.now()
     advise_ids:  Optional[Union[List[PydanticObjectId], None]]
     valid: Optional[bool] = False
+    finished: Optional[bool] = False
     available: Optional[bool] = False
     subject_id: Optional[str]
     started: Optional[datetime.datetime]
-    finished: Optional[datetime.datetime]
+    finished_at: Optional[datetime.datetime]
 
     class Config:
         # TODO: add example

@@ -10,7 +10,7 @@ async def generate_sessions(n_generations: int = 5,
                             n_sessions_per_generation: int = 10,
                             n_trials_per_session: int = 10,
                             trial_types: Union[List[str], str, None] = None,
-                            n_advise_per_session: int = 3,
+                            n_advise_per_session: int = 5,
                             experiment_type: str = 'reward_networks_iii',
                             experiment_num: int = 0
                             ):
@@ -72,7 +72,8 @@ async def create_generation(generation: int,
             experiment_type=experiment_type,
             generation=generation,
             session_num_in_generation=session_idx,
-            trials=trials
+            trials=trials,
+            available=True if generation == 0 else False,
         )
         # Add trials to session
         session.trials = trials
