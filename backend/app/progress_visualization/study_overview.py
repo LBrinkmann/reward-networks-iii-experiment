@@ -19,7 +19,7 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
     for session in sessions:
         g = session.generation
         s_num = session.session_num_in_generation
-        label = f'{g}_{s_num}'
+        label = f'{session.current_trial_num}'
 
         if session.available:
             color = '#85D4E3'
