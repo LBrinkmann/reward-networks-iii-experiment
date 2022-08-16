@@ -12,8 +12,14 @@ async def get_current_trial(prolific_id: str) -> Trial:
     """
     Get current trial from the session.
     """
-    subjects_with_id = await Subject.find_all(
-        Subject.prolific_id == prolific_id).to_list()
+    # check if collection Subject exists
+
+    if await Subject.find().count() > 0:
+        subjects_with_id = await Subject.find(
+            Subject.prolific_id == prolific_id).to_list()
+    else:
+        subjects_with_id = []
+
     if len(subjects_with_id) > 1:
         # TODO: raise exception and make proper error handling
         raise Exception("More than one subject with the same prolific id")
@@ -38,7 +44,7 @@ async def get_current_trial(prolific_id: str) -> Trial:
 
 async def initialize_session(subject: Subject) -> Session:
     # get any available session
-    session = await Session.find_one(Session.available)
+    session = await Session.find_one(Session.available == True)
     # session is not available anymore
     session.available = False
     # assign subject to session
