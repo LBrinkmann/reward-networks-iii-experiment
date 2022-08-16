@@ -18,6 +18,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # copy everything from the code directory to the container
 COPY . .
 
+# neccessary for Graphviz and Erdantic
+RUN apt-get install -y graphviz graphviz-dev
+
 # run setup.py file with development mode `-e`
 RUN pip --no-cache-dir install -e .[dev]
 

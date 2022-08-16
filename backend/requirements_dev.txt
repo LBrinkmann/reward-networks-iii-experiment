@@ -1,10 +1,12 @@
 autopep8
+erdantic
 flake8
 httpx
 ipdb
 ipykernel
 ipython
 pydantic-to-typescript
+pygraphviz
 pytest
 pytest-asyncio
 pyvis
