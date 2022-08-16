@@ -1,6 +1,7 @@
 import datetime
 from typing import Optional, List
 
+from beanie import PydanticObjectId
 from pydantic import BaseModel
 
 
@@ -56,8 +57,22 @@ class Network(BaseModel):
     edge_types: List[EdgeType]
 
 
+class Solution(BaseModel):
+    moves: List[int]
+    trial_id: Optional[PydanticObjectId]
+    finished_at: Optional[datetime.datetime]
+    network: Optional[Network]
+
+
 class Trial(BaseModel):
     trial_num_in_session: int
-    started: Optional[datetime.datetime]
-    finished: Optional[datetime.datetime]
+    finished: Optional[bool] = False
+    started_at: Optional[datetime.datetime]
+    finished_at: Optional[datetime.datetime]
     network: Optional[Network]
+    solution: Optional[Solution]
+
+    class Config:
+        orm_mode = True
+
+

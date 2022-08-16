@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.connection import Settings
 # from routes.advise import advise_router
 from routes.progress import progress_router
-# from routes.results import results_router
 from routes.session import session_router
 from routes.simulate_study import simulation_router
 
@@ -29,7 +28,6 @@ api.add_middleware(
 api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
 # api.include_router(advise_router, prefix="/advise")
-# api.include_router(results_router, prefix="")
 
 # Only for testing purposes
 api.include_router(simulation_router, prefix="/simulation")

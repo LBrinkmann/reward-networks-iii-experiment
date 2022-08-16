@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter
 
 from models.session import Session
@@ -12,14 +14,52 @@ async def get_current_trial(prolific_id: str) -> Trial:
     """
     Get current trial from the session.
     """
-    # check if collection Subject exists
+    # find session and trial for the subject
+    session, trial = await get_trial_session(prolific_id)
 
+    # save starting time
+    trial.started_at = datetime.now()
+
+    await session.save()
+    # TODO: return model compatible with frontend
+    return trial
+
+
+@session_router.put('/{prolific_id}')
+async def save_moves_in_trial(prolific_id: str, body: Trial) -> dict:
+    # find session and trial for the subject
+    session, trial = await get_trial_session(prolific_id)
+
+    # update current trial with the subject solution
+    trial.solution = body.solution
+    trial.finished_at = datetime.now()
+    trial.finished = True
+
+    # update session with the trial
+    session.trials[session.current_trial_num] = trial
+
+    if (session.current_trial_num + 1) == len(session.trials):
+        session.finished_at = datetime.now()
+        session.finished = True
+
+    # increase trial index by 1
+    session.current_trial_num += 1
+
+    # save session
+    await session.save()
+
+    return {
+        "message": "Trial saved"
+    }
+
+
+async def get_trial_session(prolific_id) -> (Session, Trial):
+    # check if collection Subject exists
     if await Subject.find().count() > 0:
         subjects_with_id = await Subject.find(
             Subject.prolific_id == prolific_id).to_list()
     else:
         subjects_with_id = []
-
     if len(subjects_with_id) > 1:
         # TODO: raise exception and make proper error handling
         raise Exception("More than one subject with the same prolific id")
@@ -34,12 +74,9 @@ async def get_current_trial(prolific_id: str) -> Trial:
         subject = subjects_with_id[0]
         # get session for the subject
         session = await Session.find_one(Session.subject_id == subject.id)
-        # increase trial index by 1
-        session.current_trial_num += 1
-        await session.save()
+
     trial = session.trials[session.current_trial_num]
-    # TODO: return model compatible with frontend
-    return trial
+    return session, trial
 
 
 async def initialize_session(subject: Subject) -> Session:
