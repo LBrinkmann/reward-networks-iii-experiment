@@ -35,7 +35,6 @@ api.include_router(progress_router, prefix="/progress")
 api.include_router(simulation_router, prefix="/simulation")
 
 
-
 @api.on_event("startup")
 async def startup_event():
     # initialize database

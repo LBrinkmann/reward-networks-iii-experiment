@@ -8,7 +8,7 @@ from models.trial import Trial
 
 class Session(Document):
     experiment_num: int
-    experiment_type: str = 'reward_networks_iii'
+    experiment_type: str = 'reward_network_iii'
     generation: int
     session_num_in_generation: int
     trials: List[Trial]
@@ -18,7 +18,7 @@ class Session(Document):
     valid: Optional[bool] = False
     finished: Optional[bool] = False
     available: Optional[bool] = False
-    subject_id: Optional[str]
+    subject_id: Optional[PydanticObjectId]
     started: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]
 

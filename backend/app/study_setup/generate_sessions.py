@@ -11,7 +11,7 @@ async def generate_sessions(n_generations: int = 5,
                             n_trials_per_session: int = 10,
                             trial_types: Union[List[str], str, None] = None,
                             n_advise_per_session: int = 5,
-                            experiment_type: str = 'reward_networks_iii',
+                            experiment_type: str = 'reward_network_iii',
                             experiment_num: int = 0
                             ):
     # Set random seed

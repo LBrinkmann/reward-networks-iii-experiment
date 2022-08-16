@@ -1,8 +1,8 @@
 from typing import Optional
 
-from beanie import Document
+from beanie import Document, PydanticObjectId
 
 
 class Subject(Document):
     prolific_id: str
-    session_id: Optional[str]
+    session_id: Optional[PydanticObjectId]

@@ -8,7 +8,7 @@ from models.session import Session
 ROOT = Path(__file__).parent
 
 
-async def create_sessions_network(experiment_type: str = 'reward_networks_iii',
+async def create_sessions_network(experiment_type: str = 'reward_network_iii',
                                   experiment_num: int = 0) -> Path:
     sessions = await Session.find(
         Session.experiment_num == experiment_num,
@@ -42,7 +42,6 @@ async def create_sessions_network(experiment_type: str = 'reward_networks_iii',
                 net.add_edge(str(advise_session.id), str(session.id),
                              opacity=opacity)
     net.set_options(open(ROOT / 'graph_settings.json').read())
-    # net.show('study_net.html')
     path = ROOT / 'tmp'
     path.mkdir(exist_ok=True)
     file = path / f'study_{experiment_type}_{experiment_num}_overview.html'

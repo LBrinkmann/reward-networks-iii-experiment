@@ -1,8 +1,9 @@
-ipdb
-ipython
 autopep8
-ipykernel
 flake8
+httpx
+ipdb
+ipykernel
+ipython
 pydantic-to-typescript
 pytest
 pytest-asyncio
