@@ -11,7 +11,7 @@ from models.subject import Subject
 class Settings(BaseSettings):
     # reading variables from the environment
     MONGO_URL: Optional[str] = 'mongodb://localhost:3002/'
-    APP_NAME = 'reward-network-ii'
+    APP_NAME = 'reward-network-iii'
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.MONGO_URL)
