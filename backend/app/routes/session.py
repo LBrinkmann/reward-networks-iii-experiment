@@ -41,16 +41,39 @@ async def save_moves_in_trial(prolific_id: str, body: Trial) -> dict:
     if (session.current_trial_num + 1) == len(session.trials):
         session.finished_at = datetime.now()
         session.finished = True
+        # save session
+        await session.save()
 
-    # increase trial index by 1
-    session.current_trial_num += 1
+        # check if child sessions are available
+        await update_available_status_child_sessions(session)
+    else:
+        # increase trial index by 1
+        session.current_trial_num += 1
 
-    # save session
-    await session.save()
+        # save session
+        await session.save()
 
     return {
         "message": "Trial saved"
     }
+
+
+async def update_available_status_child_sessions(session):
+    """ Check if child sessions are available"""
+    for c in session.child_ids:
+        child_session = await Session.get(c)
+        # TODO: check if child session exists
+        if child_session is None:
+            raise Exception("Child session does not exist")
+        available = True
+        for a in child_session.advise_ids:
+            advise_session = await Session.find_one(Session.id == a)
+            if advise_session.finished is False:
+                available = False
+                break
+        if available:
+            child_session.available = True
+            await child_session.save()
 
 
 async def get_trial_session(prolific_id) -> (Session, Trial):
@@ -82,6 +105,11 @@ async def get_trial_session(prolific_id) -> (Session, Trial):
 async def initialize_session(subject: Subject) -> Session:
     # get any available session
     session = await Session.find_one(Session.available == True)
+
+    if session is None:
+        # TODO: handle this situation
+        raise Exception("No available session")
+
     # session is not available anymore
     session.available = False
     # assign subject to session

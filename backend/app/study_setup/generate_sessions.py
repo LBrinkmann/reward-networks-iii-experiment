@@ -39,6 +39,9 @@ async def generate_sessions(n_generations: int = 5,
             advise_ids = []
             for i in advise_src:
                 advise_ids.append(sessions_n_0[i].id)
+                # record children of the session
+                sessions_n_0[i].child_ids.append(s_n_1.id)
+                await sessions_n_0[i].save()
 
             s_n_1.advise_ids = advise_ids
             await s_n_1.save()

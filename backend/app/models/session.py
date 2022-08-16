@@ -14,7 +14,8 @@ class Session(Document):
     trials: List[Trial]
     current_trial_num: Optional[int] = 0
     created_at: datetime.datetime = datetime.datetime.now()
-    advise_ids:  Optional[Union[List[PydanticObjectId], None]]
+    advise_ids:  Optional[Union[List[PydanticObjectId]]] = []
+    child_ids: Optional[Union[List[PydanticObjectId]]] = []
     valid: Optional[bool] = False
     finished: Optional[bool] = False
     available: Optional[bool] = False
