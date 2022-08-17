@@ -21,6 +21,9 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
         trial_num = session.current_trial_num
         subject_in_the_session = True if session.subject_id else False
         label = f'{trial_num + 1}' if subject_in_the_session else ' '
+        title = f'Session {s_num} in generation {g}\n'
+        title += f'Advise type: {session.advise_type}\n'
+        title += f'Created at: {session.created_at}\n'
 
         if session.available:
             color = '#85D4E3'
@@ -33,7 +36,7 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
                 color = '#F4B5BD'
 
         net.add_node(str(session.id), label, shape='circle', level=g, x=s_num,
-                     color=color)
+                     color=color, title=title)
         adv = session.advise_ids
         if adv is not None:
             for a in adv:
