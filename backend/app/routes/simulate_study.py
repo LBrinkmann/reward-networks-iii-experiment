@@ -25,6 +25,9 @@ async def get_study_simulation(n_subjects: int = 10,
                                n_gen: int = 5,
                                n_s_per_gen: int = 10,
                                n_adv: int = 5):
+    """http://localhost:5000/simulation/reward_network_iii/0
+    ?generate_new_sessions=true&run_simulation=true&n_adv=5&n_gen=5
+    &n_subjects=10&n_trials_per_session=3&n_s_per_gen=20 """
     random.seed(42)
     if generate_new_sessions:
         await Session.find().delete()
