@@ -42,13 +42,14 @@ async def get_study_simulation(n_subjects: int = 10,
             "Content-Type": "application/json",
         }
         tasks = []
-        for ii in range(2):
+        for ii in range(4):
             for i in range(n_subjects):
                 subj = i + 10 * ii
                 task = asyncio.create_task(
                     one_subject(base_url, headers, subj, n_trials_per_session))
                 tasks.append(task)
                 await asyncio.sleep(0.5)
+            # run all subjects in one batch in parallel
             [await t for t in tasks]
 
     return {'done': True}
