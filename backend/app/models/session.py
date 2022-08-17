@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Literal
 
 from beanie import Document, PydanticObjectId
 
@@ -14,7 +14,9 @@ class Session(Document):
     trials: List[Trial]
     current_trial_num: Optional[int] = 0
     created_at: datetime.datetime = datetime.datetime.now()
-    advise_ids:  Optional[Union[List[PydanticObjectId]]] = []
+    advise_ids: Optional[Union[List[PydanticObjectId]]] = []
+    advise_type: Optional[
+        Literal['table', 'text', 'expectedReward', 'replay']] = 'replay'
     child_ids: Optional[Union[List[PydanticObjectId]]] = []
     valid: Optional[bool] = False
     finished: Optional[bool] = False

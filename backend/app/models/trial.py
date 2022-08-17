@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List
+from typing import Optional, List, Literal
 
 from beanie import PydanticObjectId
 from pydantic import BaseModel
@@ -12,28 +12,10 @@ class Node(BaseModel):
     y: float
     source_edge_idx: List[int]
 
-    @classmethod
-    def parse(cls, node, edge):
-        source_edge_idx = [
-            e.edge_idx for e in edge if e.source_idx == node['id']]
-        return cls(
-            node_idx=node['id'],
-            display_name=node['displayName'],
-            x=node['x'],
-            y=node['y'],
-            action_idx=source_edge_idx)
-
 
 class EdgeType(BaseModel):
     action_type_idx: int
     reward: int
-
-    EDGE_TYPES = [
-        {'edgeType': 0, 'reward': -100},
-        {'edgeType': 1, 'reward': -20},
-        {'edgeType': 2, 'reward': 20},
-        {'edgeType': 3, 'reward': 140}
-    ]
 
 
 class Edge(BaseModel):
@@ -61,11 +43,11 @@ class Solution(BaseModel):
     moves: List[int]
     trial_id: Optional[PydanticObjectId]
     finished_at: Optional[datetime.datetime]
-    network: Optional[Network]
 
 
 class Trial(BaseModel):
     trial_num_in_session: int
+    trial_type: Optional[Literal['tutorial', 'main']] = 'main'
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]
