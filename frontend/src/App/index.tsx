@@ -12,8 +12,7 @@ import {v4 as uuid4} from "uuid";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {purple, teal} from "@mui/material/colors";
 
-import Experiment from "./experiment/experiment";
-import Admin from "./admin/admin";
+import Experiment from "../experiment/experiment";
 
 import config from "./configLoader";
 

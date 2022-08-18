@@ -14,7 +14,7 @@ import {
     EvaluatedAction,
 } from "../apiTypes";
 
-import Header from "../header";
+import Header from "../Header/header";
 import Steps from "./steps";
 import Game from "./game/game";
 

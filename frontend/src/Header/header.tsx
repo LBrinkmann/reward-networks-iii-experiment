@@ -1,6 +1,6 @@
 import React from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
-import TutorialTip from "./tutorial";
+import TutorialTip from "../Tutorial/tutorial";
 
 interface Props {
     totalPoints?: number;
