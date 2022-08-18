@@ -207,21 +207,23 @@ const Experiment = ({
                 totalPoints={game ? game.totalPoints : 0}
             />
             <Steps step={step} steps={steps}/>
-            {environment ? (
-                <Game
-                    environment={environment}
-                    stage={stage}
-                    explanations={explanations}
-                    onStageFinish={onStageFinish}
-                    showResults={showResults}
-                    showGame={showGame}
-                    gameActive={gameActive}
-                    evaluatedActions={evaluatedActions}
-                    onRequestAdvise={onRequestAdvise}
-                    tutorialIdx={tutorialIdx}
-                    onTutorialClose={onTutorialClose}
-                />
-            ) : null}
+            {
+                environment ? (
+                    <Game
+                        environment={environment}
+                        stage={stage}
+                        explanations={explanations}
+                        onStageFinish={onStageFinish}
+                        showResults={showResults}
+                        showGame={showGame}
+                        gameActive={gameActive}
+                        evaluatedActions={evaluatedActions}
+                        onRequestAdvise={onRequestAdvise}
+                        tutorialIdx={tutorialIdx}
+                        onTutorialClose={onTutorialClose}
+                    />
+                ) : null
+            }
         </>
     );
 };
