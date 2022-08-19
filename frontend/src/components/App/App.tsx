@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useTrial} from "../../apis";
-import Header from "../Header/header";
+import Header from "../Header";
 
 
 const App = () => {

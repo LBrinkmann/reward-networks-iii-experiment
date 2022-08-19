@@ -1,13 +1,30 @@
-import * as React from "react";
+import React, {useEffect, useState} from "react";
 import {useSpring, animated} from "react-spring";
 
-import _ from "lodash";
+import {Action, Node} from "../../apiTypes";
 
-import {
-    ParsedActionInterface,
-    ParsedNodeInterface,
-    actionTypeClasses,
-} from "./animated-network";
+type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
+
+export interface ParsedNodeInterface extends Node {
+    status: Status;
+}
+
+type LinkStyle = "normal" | "highlighted" | "animated" | "dashed";
+
+export interface ParsedActionInterface extends Action {
+    source: ParsedNodeInterface;
+    target: ParsedNodeInterface;
+    colorClass: string;
+    annotation: string;
+    linkStyle: LinkStyle;
+}
+
+export const actionTypeClasses = [
+    "large-negative",
+    "negative",
+    "positive",
+    "large-positive",
+];
 
 interface NodeInterface extends ParsedNodeInterface {
     nodeSize: number;
@@ -320,18 +337,18 @@ interface NetworkInterface {
     linkWidth?: number;
 }
 
-const NetworkComponent = ({
-                              actions,
-                              nodes,
-                              onNodeClick = (nodeIdx) => null,
-                              version = "",
-                              size = {width: 550, height: 550},
-                              nodeSize = 600 / 15,
-                              disabled = false,
-                              networkId = "default",
-                              linkCurvation,
-                              linkWidth = 5,
-                          }: NetworkInterface) => {
+const Network = ({
+                     actions,
+                     nodes,
+                     onNodeClick = (nodeIdx) => null,
+                     version = "",
+                     size = {width: 550, height: 550},
+                     nodeSize = 600 / 15,
+                     disabled = false,
+                     networkId = "default",
+                     linkCurvation,
+                     linkWidth = 5,
+                 }: NetworkInterface) => {
     const effNodeSize = nodeSize ? nodeSize : ((size.height / 550) * 600) / 15;
     return (
         <svg
@@ -371,4 +388,4 @@ const NetworkComponent = ({
     );
 };
 
-export default NetworkComponent;
+export default Network;
