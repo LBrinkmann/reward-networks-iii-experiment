@@ -37,6 +37,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
+      - /usr/frontend/node_modules
       - ./frontend/src:/frontend/src
     environment:
       BACKEND_URL: 'http://localhost:5000'
@@ -44,6 +45,18 @@ services:
     tty: true  # to replicate `-it` mode in docker run
     depends_on:
       - fastapi
+  react-storybook:  # frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-storybook
+    ports:
+      - '6006:6006'
+    restart: always
+    volumes:
+      - /usr/frontend/node_modules
+      - ./frontend/src:/frontend/src
+    depends_on:
+      - react
 
 volumes:
   data:

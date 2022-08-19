@@ -1,0 +1,15 @@
+FROM node
+
+WORKDIR /frontend
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+RUN npx storybook init --type react
+
+EXPOSE 6006
+
+CMD ["npm", "run", "storybook"]
