@@ -1,28 +1,54 @@
-# Python App Template
+## Development environment
 
-Python version >= 3.7 is required.
+Development environment is defined in `docker-compose-dev.yml` file. To simplify docker-compose usage, one can set `docker-compose-dev.yml` as an environmental variable in `.env` file: `COMPOSE_FILE=docker-compose-dev.yml`.
 
-## Setup
+Set up the development environment (it can take several minutes first time):
 
-```
-python3 -m venv .venv
-. .venv/bin/activate
-pip install --upgrade pip
-pip install wheel
-pip install -e ".[dev]"
-```
+```bash
 
-## Run Locally
+docker-compose -f docker-compose-dev.yml up
 
 ```
-export NETWORK_FILE="$(PWD)/app/data/test.json"
-export RN_FRONTEND="$(PWD)/../reward-networks-ii-frontend"
 
-./dev_server.sh
+NOTE: you can use `--build` flag to rebuild images and `-d` to run in detached mode.
+
+To run only the backend containers one can use the following command:
+
+```bash
+
+docker-compose -f docker-compose-dev.yml up -d database fastapi
+
 ```
+
+Stop everything and remove all volumes:
+
+```bash
+
+docker-compose -f docker-compose-dev.yml down --volumes
+
+```
+
+### `apiTypes.ts`
+
+`apiTypes.ts` file is generated in the `server.py` each time FastAPI server is restarted and then copied in frontend `src` folder.
+
+Useful commands to clean up the system:
+
+```bash
+
+docker system df # check disk usage
+docker system prune --all --force # clean up unused images and volumes
+docker system prune --volumes --force # clean up unused volumes
+
+```
+
 
 ## Deployment
 
 ### Logs
 
 https://onenr.io/0EPwJ0NDkj7
+
+
+
+

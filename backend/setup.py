@@ -7,7 +7,7 @@ def load_requirements(filename='requirements.txt'):
             lines = f.readlines()
         return lines
     except Exception:
-        return []
+        raise Exception(f'Could not load requirements from {filename}')
 
 
 setup(
@@ -22,7 +22,6 @@ setup(
               if package.startswith('app')],
     zip_safe=False,
     install_requires=load_requirements(),
-    extras_require={'dev': load_requirements('dev_requirements.txt')},
-    scripts=[
-    ]
+    extras_require={'dev': load_requirements('requirements_dev.txt')},
+    scripts=[]
 )
