@@ -19,10 +19,10 @@ services:
       PORT: 5000
       MONGO_URL: 'mongodb://database:27017/'
       # Environment variables used in app/server.py
-      GENERATE_FRONTEND_TYPES: 'true'
+      GENERATE_FRONTEND_TYPES: 'false'
       FOLDER_TO_SAVE_FRONTEND_TYPES: 'frontend'
       # Environment variables for official FastAPI docker image
-      APP_MODULE: 'app.server:api'
+      APP_MODULE: 'server:api'
       LOG_LEVEL: 'debug'
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'
