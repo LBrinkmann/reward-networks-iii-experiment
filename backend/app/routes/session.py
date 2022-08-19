@@ -58,6 +58,38 @@ async def save_moves_in_trial(prolific_id: str, body: Trial) -> dict:
     }
 
 
+# MOCK path to test frontend
+@session_router.post('/{prolific_id}')
+async def save_moves_in_trial(prolific_id: str) -> dict:
+    # find session and trial for the subject
+    session, trial = await get_trial_session(prolific_id)
+
+    # update current trial with the subject solution
+    trial.finished_at = datetime.now()
+    trial.finished = True
+
+    # update session with the trial
+    session.trials[session.current_trial_num] = trial
+
+    if (session.current_trial_num + 1) == len(session.trials):
+        session.finished_at = datetime.now()
+        session.finished = True
+        # save session
+        await session.save()
+
+        # check if child sessions are available
+        await update_available_status_child_sessions(session)
+    else:
+        # increase trial index by 1
+        session.current_trial_num += 1
+
+        # save session
+        await session.save()
+
+    return {
+        "message": "Trial saved"
+    }
+
 async def update_available_status_child_sessions(session):
     """ Check if child sessions are available"""
     for c in session.child_ids:
