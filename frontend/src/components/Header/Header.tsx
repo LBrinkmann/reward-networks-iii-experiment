@@ -2,17 +2,17 @@ import React from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
 import TutorialTip from "../Tutorial/tutorial";
 
-interface Props {
+interface HeaderInterface {
     totalPoints?: number;
     tutorialIdx?: number;
     onTutorialClose?: (tutorialIdx: number) => void;
 }
 
-const ButtonAppBar = ({
+const Header = ({
                           tutorialIdx,
                           onTutorialClose,
                           totalPoints = 0,
-                      }: Props) => {
+                      }: HeaderInterface) => {
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
@@ -43,4 +43,4 @@ const ButtonAppBar = ({
     );
 };
 
-export default ButtonAppBar;
+export default Header;
