@@ -1,10 +1,19 @@
 import React from "react";
-import {ParsedNodeInterface} from "../Network";
 
-interface NodeInterface extends ParsedNodeInterface {
+import "./NetworkNode.less";
+
+type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
+
+interface NetworkNodeInterface {
+    nodeIdx: number;
+    displayName: string;
+    x: number;
+    y: number;
+    actionIdx: number[];
     nodeSize: number;
     onNodeClick: (nodeIdx: number) => void;
     networkId: string;
+    status: Status;
 }
 
 const NetworkNode = ({
@@ -15,8 +24,7 @@ const NetworkNode = ({
                          nodeSize,
                          onNodeClick,
                          status,
-                         networkId,
-                     }: NodeInterface) => {
+                     }: NetworkNodeInterface) => {
     return (
         <g
             className={"node"}
