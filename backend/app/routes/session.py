@@ -90,6 +90,7 @@ async def save_moves_in_trial(prolific_id: str) -> dict:
         "message": "Trial saved"
     }
 
+
 async def update_available_status_child_sessions(session):
     """ Check if child sessions are available"""
     for c in session.child_ids:
