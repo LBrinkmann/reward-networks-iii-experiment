@@ -2,14 +2,14 @@ import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import Network from './Network';
+import StaticNetwork from './StaticNetwork';
 
 export default {
-    title: 'Network',
-    component: Network,
-} as ComponentMeta<typeof Network>;
+    title: 'Network/StaticNetwork',
+    component: StaticNetwork,
+} as ComponentMeta<typeof StaticNetwork>;
 
-const Template: ComponentStory<typeof Network> = (args) => <Network {...args}/>;
+const Template: ComponentStory<typeof StaticNetwork> = (args) => <StaticNetwork {...args}/>;
 
 export const FirstStory = Template.bind({});
 

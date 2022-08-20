@@ -1,4 +1,4 @@
-import {ParsedNodeInterface, Size} from "./Network";
+import {ParsedNodeInterface, Size} from "./StaticNetwork/StaticNetwork";
 
 export const scaleXY = (
     node: ParsedNodeInterface,

@@ -1,10 +1,10 @@
 import React from "react";
 
-import {Action, Node} from "../../apiTypes";
-import LinkMarker from "./LinkMarker";
-import Links from "./Links";
-import NetworkNode from "./NetworkNode";
-import {scaleXY} from "./utils";
+import {Action, Node} from "../../../apiTypes";
+import LinkMarker from "../LinkMarker";
+import Links from "../Links";
+import NetworkNode from "../NetworkNode";
+import {scaleXY} from "../utils";
 
 type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
 
@@ -36,7 +36,7 @@ export interface Size {
     height: number;
 }
 
-interface NetworkInterface {
+interface StaticNetworkInterface {
     actions: ParsedActionInterface[];
     nodes: ParsedNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
@@ -49,7 +49,7 @@ interface NetworkInterface {
     linkWidth?: number;
 }
 
-const Network = ({
+const StaticNetwork = ({
                      actions,
                      nodes,
                      onNodeClick = (nodeIdx) => null,
@@ -60,7 +60,7 @@ const Network = ({
                      networkId = "default",
                      linkCurvation,
                      linkWidth = 5,
-                 }: NetworkInterface) => {
+                 }: StaticNetworkInterface) => {
     const effNodeSize = nodeSize ? nodeSize : ((size.height / 550) * 600) / 15;
     return (
         <svg
@@ -100,4 +100,4 @@ const Network = ({
     );
 };
 
-export default Network;
+export default StaticNetwork;
