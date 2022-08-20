@@ -3,7 +3,6 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import Marker from '.';
-import { animated } from 'react-spring';
 
 export default {
     title: 'Network/Marker',
@@ -18,7 +17,8 @@ const Template: ComponentStory<typeof Marker> = (args) => {
                 stroke="black"
                 strokeWidth={args.linkWidth}
                 d="M30,150 L100,50"
-                markerEnd={`url(#${args.prefix}-${args.name})`} />
+                markerEnd={`url(#${args.prefix}-${args.name})`}
+            />
 
         </svg>
     )
