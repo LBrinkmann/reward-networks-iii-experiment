@@ -1,26 +1,35 @@
 import {animated, useSpring} from "react-spring";
 import React from "react";
-import {ParsedActionInterface} from "../Network";
+import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
-interface LinkInterface extends ParsedActionInterface {
+import "./Link.less";
+
+type colorClasses = "large-negative" | "negative" | "positive" | "large-positive";
+type LinkStyle = "normal" | "highlighted" | "animated" | "dashed";
+
+interface LinkInterface {
+    annotation: string;
+    source: NetworkNodeInterface;
+    target: NetworkNodeInterface;
+    actionIdx: number;
+    colorClass: colorClasses;
     width: number;
-    nodeSize: number;
     networkId: string;
     linkCurvation?: number;
+    linkStyle: LinkStyle;
 }
 
 const Link = ({
-                         actionIdx,
-                         colorClass,
-                         annotation,
-                         source,
-                         target,
-                         width,
-                         linkStyle,
-                         nodeSize,
-                         networkId,
-                         linkCurvation = 2.5,
-                     }: LinkInterface) => {
+                  actionIdx,
+                  colorClass,
+                  annotation,
+                  source,
+                  target,
+                  width,
+                  linkStyle,
+                  networkId,
+                  linkCurvation = 2.5,
+              }: LinkInterface) => {
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);

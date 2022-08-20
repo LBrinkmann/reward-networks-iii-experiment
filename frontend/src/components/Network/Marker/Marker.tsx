@@ -1,8 +1,6 @@
 import React from "react";
-import {Size} from "../Network";
 
 interface MarkerInterface {
-    size: Size;
     orient: string;
     prefix: string;
     name: string;
@@ -12,14 +10,13 @@ interface MarkerInterface {
 }
 
 const Marker = ({
-                           nodeSize,
-                           size,
-                           orient,
-                           prefix,
-                           name,
-                           linkWidth,
-                           linkCurvation,
-                       }: MarkerInterface) => (
+                    nodeSize,
+                    orient,
+                    prefix,
+                    name,
+                    linkWidth,
+                    linkCurvation,
+                }: MarkerInterface) => (
     <marker
         markerUnits="userSpaceOnUse"
         id={`${prefix}-${name}`}

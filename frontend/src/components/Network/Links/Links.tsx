@@ -1,12 +1,35 @@
 import Link from "../Link";
 import React from "react";
-import {ParsedActionInterface, Size} from "../Network";
-import {scaleXY} from "../utils";
+import {Size} from "../StaticNetwork/StaticNetwork";
+import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
+type colorClasses = "large-negative" | "negative" | "positive" | "large-positive";
+type LinkStyle = "normal" | "highlighted" | "animated" | "dashed";
+
+export interface Action {
+    actionIdx: number;
+    sourceIdx: number;
+    targetIdx: number;
+    actionTypeIdx: number;
+    source: NetworkNodeInterface;
+    target: NetworkNodeInterface;
+    colorClass: colorClasses;
+    annotation: string;
+    linkStyle: LinkStyle;
+}
+
+
+export const scaleXY = (
+    node: NetworkNodeInterface,
+    size: Size
+): NetworkNodeInterface => ({
+    ...node,
+    x: node.x * size.width,
+    y: node.y * size.height,
+});
 
 interface LinksInterface {
-    actions: ParsedActionInterface[];
-    nodeSize: number;
+    actions: Action[];
     size: Size;
     linkWidth: number;
     networkId: string;
@@ -15,7 +38,6 @@ interface LinksInterface {
 
 export const Links = ({
                           actions,
-                          nodeSize,
                           linkWidth,
                           size,
                           networkId,
@@ -24,19 +46,18 @@ export const Links = ({
     <>
         <g>
             {actions.map((action, idx) => {
-                const {actionIdx, source, target} = action;
-
                 return (
                     <Link
-                        {...action}
-                        source={scaleXY(source, size)}
-                        target={scaleXY(target, size)}
-                        nodeSize={nodeSize}
+                        annotation={action.annotation}
+                        source={scaleXY(action.source, size)}
+                        target={scaleXY(action.target, size)}
                         width={linkWidth}
                         linkCurvation={linkCurvation}
-                        key={"link-" + actionIdx}
+                        key={"link-" + action.actionIdx}
                         networkId={networkId}
-                    />
+                        actionIdx={action.actionIdx}
+                        colorClass={action.colorClass}
+                        linkStyle={action.linkStyle}/>
                 );
             })}
         </g>

@@ -22,21 +22,18 @@ FirstStory.args = {
             "colorClass": "large-negative",
             "linkStyle": "dashed"
         },
-        {"annotation": "20", "source": 0, "target": 5, "rewardId": 2},
-        {"annotation": "140", "source": 1, "target": 0, "rewardId": 3},
-        {"annotation": "-100", "source": 1, "target": 5, "rewardId": 0},
-        {"annotation": "140", "source": 5, "target": 4, "rewardId": 3},
-        {"annotation": "-100", "source": 5, "target": 1, "rewardId": 0},
-        {"annotation": "-20", "source": 2, "target": 4, "rewardId": 1},
-        {"annotation": "-100", "source": 2, "target": 3, "rewardId": 0},
-        {"annotation": "-20", "source": 4, "target": 2, "rewardId": 1},
-        {"annotation": "20", "source": 4, "target": 1, "rewardId": 2},
-        {"annotation": "20", "source": 3, "target": 0, "rewardId": 2},
-        {"annotation": "140", "source": 3, "target": 4, "rewardId": 3}
+        {
+            "annotation": "120",
+            "source": {"nodeIdx": 5, "displayName": "F", "x": 0.9, "y": 0.5},
+            "target": {"nodeIdx": 2, "displayName": "C", "x": 0.1, "y": 0.5},
+            "colorClass": "positive",
+            "linkStyle": "animated"
+        },
+
     ],
     nodes: [
-        {"nodeIdx": 0, "displayName": "A", "x": 0.7, "y": 0.2, disabled: true, status: 'active'},
-        {"nodeIdx": 1, "displayName": "B", "x": 0.3, "y": 0.2},
+        {"nodeIdx": 0, "displayName": "A", "x": 0.7, "y": 0.2, status: 'active'},
+        {"nodeIdx": 1, "displayName": "B", "x": 0.3, "y": 0.2, status: 'disabled'},
         {"nodeIdx": 5, "displayName": "F", "x": 0.9, "y": 0.5},
         {"nodeIdx": 2, "displayName": "C", "x": 0.1, "y": 0.5},
         {"nodeIdx": 4, "displayName": "E", "x": 0.7, "y": 0.8},

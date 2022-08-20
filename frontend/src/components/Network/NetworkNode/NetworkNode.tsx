@@ -4,7 +4,7 @@ import "./NetworkNode.less";
 
 type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
 
-interface NetworkNodeInterface {
+export interface NetworkNodeInterface {
     nodeIdx: number;
     displayName: string;
     x: number;

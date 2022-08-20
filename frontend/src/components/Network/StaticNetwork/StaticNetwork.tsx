@@ -1,35 +1,27 @@
 import React from "react";
 
-import {Action, Node} from "../../../apiTypes";
 import LinkMarker from "../LinkMarker";
 import Links from "../Links";
 import NetworkNode from "../NetworkNode";
-import {scaleXY} from "../utils";
+import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
-type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
+import "../../../main.less"
+import {scaleXY} from "../Links/Links";
 
-export interface ParsedNodeInterface extends Node {
-    status: Status;
-}
-
+type colorClasses = "large-negative" | "negative" | "positive" | "large-positive";
 type LinkStyle = "normal" | "highlighted" | "animated" | "dashed";
 
-export interface ParsedActionInterface extends Action {
-    source: ParsedNodeInterface;
-    target: ParsedNodeInterface;
-    colorClass: string;
+export interface Action {
+    actionIdx: number;
+    sourceIdx: number;
+    targetIdx: number;
+    actionTypeIdx: number;
+    source: NetworkNodeInterface;
+    target: NetworkNodeInterface;
+    colorClass: colorClasses;
     annotation: string;
     linkStyle: LinkStyle;
 }
-
-export const actionTypeClasses = [
-    "large-negative",
-    "negative",
-    "positive",
-    "large-positive",
-];
-
-// // we need to define a link marker for each link color
 
 export interface Size {
     width: number;
@@ -37,12 +29,11 @@ export interface Size {
 }
 
 interface StaticNetworkInterface {
-    actions: ParsedActionInterface[];
-    nodes: ParsedNodeInterface[];
+    actions: Action[];
+    nodes: NetworkNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
     version?: string;
     size?: Size;
-    disabled?: boolean;
     nodeSize?: number;
     networkId?: string;
     linkCurvation?: number;
@@ -56,7 +47,6 @@ const StaticNetwork = ({
                      version = "",
                      size = {width: 550, height: 550},
                      nodeSize = 600 / 15,
-                     disabled = false,
                      networkId = "default",
                      linkCurvation,
                      linkWidth = 5,
@@ -69,7 +59,6 @@ const StaticNetwork = ({
             height={size.height}
         >
             <LinkMarker
-                size={size}
                 networkId={networkId}
                 nodeSize={effNodeSize}
                 linkWidth={linkWidth}
@@ -77,7 +66,6 @@ const StaticNetwork = ({
             />
             <Links
                 actions={actions}
-                nodeSize={effNodeSize}
                 size={size}
                 networkId={networkId}
                 linkWidth={linkWidth}

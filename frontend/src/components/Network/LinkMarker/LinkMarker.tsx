@@ -1,9 +1,16 @@
-import {Marker} from "../Marker/Marker";
+import Marker from "../Marker";
 import React from "react";
-import {actionTypeClasses, Size} from "../Network";
 
-interface LinkMarker {
-    size: Size;
+import "./LinkMarker.less";
+
+export const colorClasses = [
+    "large-negative",
+    "negative",
+    "positive",
+    "large-positive",
+];
+
+interface LinkMarkerInterface {
     networkId: string;
     nodeSize: number;
     linkWidth: number;
@@ -11,33 +18,30 @@ interface LinkMarker {
 }
 
 const LinkMarker = ({
-                               networkId,
-                               size,
-                               nodeSize,
-                               linkWidth,
-                               linkCurvation,
-                           }: LinkMarker) => (
+                        networkId,
+                        nodeSize,
+                        linkWidth,
+                        linkCurvation,
+                    }: LinkMarkerInterface) => (
     <defs>
         {[
-            ...actionTypeClasses.map((name, idx) => (
+            ...colorClasses.map((name, idx) => (
                 <Marker
                     key={"marker-" + idx}
                     orient="auto"
                     prefix={"marker-arrow-end" + "-" + networkId}
                     name={name}
-                    size={size}
                     nodeSize={nodeSize}
                     linkWidth={linkWidth}
                     linkCurvation={linkCurvation}
                 />
             )),
-            ...actionTypeClasses.map((name, idx) => (
+            ...colorClasses.map((name, idx) => (
                 <Marker
                     key={"marker-reverse" + idx}
                     orient="auto-start-reverse"
                     prefix={"marker-arrow-start" + "-" + networkId}
                     name={name}
-                    size={size}
                     nodeSize={nodeSize}
                     linkWidth={linkWidth}
                     linkCurvation={linkCurvation}
