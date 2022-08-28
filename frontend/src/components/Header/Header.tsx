@@ -9,10 +9,10 @@ interface HeaderInterface {
 }
 
 const Header = ({
-                          tutorialIdx,
-                          onTutorialClose,
-                          totalPoints = 0,
-                      }: HeaderInterface) => {
+                    tutorialIdx,
+                    onTutorialClose,
+                    totalPoints = 0,
+                }: HeaderInterface) => {
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
