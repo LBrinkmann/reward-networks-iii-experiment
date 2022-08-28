@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
-import { TooltipProps } from '@mui/material';
 
 
 import TutorialTip from './TutorialTip';
@@ -34,7 +33,5 @@ export const DefaultStory = Template.bind({});
 DefaultStory.args = {
     idx: 0,
     tutorialIdx: 0,
-    arrow: true,
-    placement: "bottom",
-
+    arrow: true
 };

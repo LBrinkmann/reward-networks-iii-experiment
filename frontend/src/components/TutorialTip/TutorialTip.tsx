@@ -35,11 +35,19 @@ const tutorialTip = [
 ];
 
 interface TutorialTipProps {
+    /** children of the tutorial component */
     children: any;
+    /** index of the tutorial tip to render */
     idx: number;
+    /** index of the tutorial tip to show */
     tutorialIdx: number;
+    /** placement of the tip
+     * See more info here: https://mui.com/material-ui/api/tooltip/ */
     placement?: any;
+    /** If true, adds an arrow to the tooltip
+     * See more info here: https://mui.com/material-ui/api/tooltip/ */
     arrow?: boolean;
+    /** Callback to update parent tutorial index */
     onTutorialClose: (tutorialIdx: number) => void;
 }
 
@@ -51,8 +59,7 @@ const TutorialTip = ({
                          arrow = true,
                          onTutorialClose,
                      }: TutorialTipProps) => {
-    // TODO: === instead of == ?
-    const isTutorial = tutorialIdx == idx;
+    const isTutorial = tutorialIdx === idx;
 
     const onClose = () => {
         if (tutorialTip.length > idx + 1) {
