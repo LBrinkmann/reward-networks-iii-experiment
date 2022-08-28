@@ -1,6 +1,6 @@
 import React from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
-import TutorialTip from "../Tutorial/tutorial";
+import TutorialTip from "../TutorialTip";
 
 interface HeaderInterface {
     totalPoints?: number;
@@ -24,7 +24,7 @@ const Header = ({
                         onTutorialClose={onTutorialClose}
                     >
                         <Typography variant="h6" sx={{flexGrow: 1}}>
-                            Reward Networks II
+                            Reward Networks III
                         </Typography>
                     </TutorialTip>
                     <TutorialTip

@@ -24,6 +24,6 @@ HeaderInExperiment.args = {
 export const HeaderInTutorial = Template.bind({});
 
 HeaderInTutorial.args = {
-    totalPoints: 100,
+    totalPoints: 0,
     tutorialIdx: 0
 };
