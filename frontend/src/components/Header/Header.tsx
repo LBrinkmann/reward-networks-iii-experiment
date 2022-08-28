@@ -3,8 +3,11 @@ import {AppBar, Toolbar, Typography, Box} from "@mui/material";
 import TutorialTip from "../TutorialTip";
 
 interface HeaderInterface {
+    /** Collected in the experiment points */
     totalPoints?: number;
+    /** Index of the tutorial to show */
     tutorialIdx?: number;
+    /** Callback to update tutorial index in parents */
     onTutorialClose?: (tutorialIdx: number) => void;
 }
 
