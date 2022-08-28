@@ -5,17 +5,15 @@ import "./NetworkEdge.less";
 
 
 interface NetworkEdgeInterface {
-    /** Annotation of the edge */
-    reward: string;
+    /** Annotation of the edge - reward to select this action */
+    reward: number;
     /** Source Network Node coordinates */
     source: { x: number, y: number };
     /** Target Network Node coordinates */
     target: { x: number, y: number };
-    /** Color class of the edge */
-    colorClass: "large-negative" | "negative" | "positive" | "large-positive";
     /** Line style of the edge */
     linkStyle: "normal" | "highlighted" | "animated" | "dashed";
-    /** Line width of the edge */
+    /** Line width of the edge, default = 5 */
     width: number;
     actionIdx: number;
     networkId: string;
@@ -24,16 +22,28 @@ interface NetworkEdgeInterface {
 }
 
 const NetworkEdge = ({
-                         actionIdx,
-                         colorClass,
                          reward,
                          source,
                          target,
-                         width,
+                         width = 5,
                          linkStyle,
                          networkId,
+                         actionIdx,
                          linkCurvation = 2.5,
                      }: NetworkEdgeInterface) => {
+
+    /** Color class of the edge based on the reward */
+    let colorClass = '';
+    if (reward < -100) {
+        colorClass = 'large-negative';
+    } else if (reward < 0) {
+        colorClass = 'negative';
+    } else if (reward < 50) {
+        colorClass = 'positive';
+    } else {
+        colorClass = 'large-positive';
+    }
+
 
     const dx = target.x - source.x;
     const dy = target.y - source.y;

@@ -8,6 +8,11 @@ import NetworkEdge from './NetworkEdge';
 export default {
     title: 'Network/NetworkEdge',
     component: NetworkEdge,
+    argTypes: {
+        reward: {
+            control: { type: 'select', options: [-120, -20, 20, 120] },
+        }
+    }
 } as ComponentMeta<typeof NetworkEdge>;
 
 const Template: ComponentStory<typeof NetworkEdge> = (args) => {
@@ -21,10 +26,9 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
 export const FirstStory = Template.bind({});
 
 FirstStory.args = {
-    reward: '-20',
+    reward: -120,
     source: {x: 100, y: 100},
     target: {x: 500, y: 500},
-    colorClass: 'negative',
     width: 5,
     actionIdx: 0,
     networkId: '1234',
