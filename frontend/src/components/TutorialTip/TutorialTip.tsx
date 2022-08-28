@@ -1,7 +1,7 @@
-import * as React from "react";
 import {Divider, Typography, Tooltip, Button, Box} from "@mui/material";
+import React from "react";
 
-const tutorial = [
+const tutorialTip = [
     {
         id: "headerTitle",
         title: "Welcome",
@@ -51,24 +51,25 @@ const TutorialTip = ({
                          arrow = true,
                          onTutorialClose,
                      }: TutorialTipProps) => {
+    // TODO: === instead of == ?
     const isTutorial = tutorialIdx == idx;
 
     const onClose = () => {
-        if (tutorial.length > idx + 1) {
+        if (tutorialTip.length > idx + 1) {
             onTutorialClose(idx + 1);
         } else {
             onTutorialClose(null);
         }
     };
 
-    const {title, text, tip} = tutorial[idx];
+    const {title, text, tip} = tutorialTip[idx];
 
     return (
         <Tooltip
             placement={placement}
             arrow={arrow}
             disableHoverListener={isTutorial}
-            open={isTutorial ? true : false}
+            open={isTutorial}
             title={
                 isTutorial ? (
                     <Box sx={{textAlign: "center"}}>
