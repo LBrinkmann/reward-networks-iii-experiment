@@ -1,35 +1,40 @@
 import {animated, useSpring} from "react-spring";
 import React from "react";
-import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
-import "./Link.less";
+import "./NetworkEdge.less";
 
-type colorClasses = "large-negative" | "negative" | "positive" | "large-positive";
-type LinkStyle = "normal" | "highlighted" | "animated" | "dashed";
 
-interface LinkInterface {
-    annotation: string;
-    source: NetworkNodeInterface;
-    target: NetworkNodeInterface;
-    actionIdx: number;
-    colorClass: colorClasses;
+interface NetworkEdgeInterface {
+    /** Annotation of the edge */
+    reward: string;
+    /** Source Network Node coordinates */
+    source: { x: number, y: number };
+    /** Target Network Node coordinates */
+    target: { x: number, y: number };
+    /** Color class of the edge */
+    colorClass: "large-negative" | "negative" | "positive" | "large-positive";
+    /** Line style of the edge */
+    linkStyle: "normal" | "highlighted" | "animated" | "dashed";
+    /** Line width of the edge */
     width: number;
+    actionIdx: number;
     networkId: string;
+    /** Curvation of the edge */
     linkCurvation?: number;
-    linkStyle: LinkStyle;
 }
 
-const Link = ({
-                  actionIdx,
-                  colorClass,
-                  annotation,
-                  source,
-                  target,
-                  width,
-                  linkStyle,
-                  networkId,
-                  linkCurvation = 2.5,
-              }: LinkInterface) => {
+const NetworkEdge = ({
+                         actionIdx,
+                         colorClass,
+                         reward,
+                         source,
+                         target,
+                         width,
+                         linkStyle,
+                         networkId,
+                         linkCurvation = 2.5,
+                     }: NetworkEdgeInterface) => {
+
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -49,7 +54,6 @@ const Link = ({
 
     let strokeDasharray;
     let springConfig = {};
-    // let dashOffset;
 
     switch (linkStyle) {
         case "normal":
@@ -74,14 +78,12 @@ const Link = ({
             width *= 2.5;
             strokeDasharray = null;
             springConfig = {};
-        default:
-            break;
     }
 
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <g className={colorClass}>
+        <g className={`NetworkEdge ${colorClass}`}>
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                 style={{strokeWidth: width}}
@@ -92,10 +94,10 @@ const Link = ({
                 markerStart={markerStart}
                 markerUnits="userSpaceOnUse"
                 d={d}
-            ></animated.path>
+            />
             <text
                 id={`link-text-bg-${networkId}-${actionIdx}`}
-                className="link-text link-text-bg"
+                className="NetworkEdge-text NetworkEdge-text-bg"
                 x={textx}
                 dy={5}
             >
@@ -103,12 +105,12 @@ const Link = ({
                     alignmentBaseline="text-after-edge"
                     xlinkHref={`#link-${networkId}-${actionIdx}`}
                 >
-                    {annotation}
+                    {reward}
                 </textPath>
             </text>
             <text
                 id={`link-text-${networkId}-${actionIdx}`}
-                className="link-text colored-fill"
+                className="NetworkEdge-text colored-fill"
                 x={textx}
                 dy={5}
             >
@@ -116,11 +118,11 @@ const Link = ({
                     alignmentBaseline="text-after-edge"
                     xlinkHref={`#link-${networkId}-${actionIdx}`}
                 >
-                    {annotation}
+                    {reward}
                 </textPath>
             </text>
         </g>
     );
 };
 
-export default Link;
+export default NetworkEdge;
