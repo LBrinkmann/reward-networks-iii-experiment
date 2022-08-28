@@ -11,11 +11,11 @@ export interface Size {
 }
 
 interface StaticNetworkInterface {
-    edges: { reward: number; source_num: number; target_num: number}[];
+    edges: { reward: number; source_num: number; target_num: number }[];
     nodes: NetworkNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
-    version?: string;
     size?: Size;
+    nodeSize?: number;
     networkId?: string;
     linkCurvation?: number;
     linkWidth?: number;
@@ -25,12 +25,15 @@ const StaticNetwork = ({
                            edges,
                            nodes,
                            onNodeClick = (nodeIdx) => null,
-                           version = "",
                            size = {width: 550, height: 550},
                            networkId = "default",
                            linkCurvation,
+                           nodeSize = 40,
                            linkWidth = 5,
                        }: StaticNetworkInterface) => {
+    /* TODO: make it more generic */
+    // const nodeSize = ((size.height / 550) * 600) / 15;
+
     /* Scale node coordinates */
     const scaleXY = (
         node: { x: number; y: number },
@@ -47,17 +50,7 @@ const StaticNetwork = ({
     } as NetworkNodeInterface));
 
     return (
-        <svg
-            // className={`network-game ${version}`}
-            width={size.width}
-            height={size.height}
-        >
-            {/*<LinkMarker*/}
-            {/*    networkId={networkId}*/}
-            {/*    nodeSize={effNodeSize}*/}
-            {/*    linkWidth={linkWidth}*/}
-            {/*    linkCurvation={linkCurvation}*/}
-            {/*/>*/}
+        <svg width={size.width} height={size.height}>
             <g>
                 {edges.map((edge, idx) => {
                     return (
@@ -70,6 +63,7 @@ const StaticNetwork = ({
                             key={"link-" + idx}
                             networkId={networkId}
                             idx={idx}
+                            nodeSize={nodeSize}
                             // linkStyle={edge.linkStyle}
                         />
                     );
@@ -80,7 +74,7 @@ const StaticNetwork = ({
                     return (
                         <NetworkNode
                             {...node}
-                            node_size={((size.height / 550) * 600) / 15}
+                            node_size={nodeSize}
                             onNodeClick={onNodeClick}
                             key={"point-" + idx}
                         />
