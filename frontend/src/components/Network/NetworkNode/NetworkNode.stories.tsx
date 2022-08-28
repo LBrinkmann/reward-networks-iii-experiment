@@ -21,13 +21,11 @@ const Template: ComponentStory<typeof NetworkNode> = (args) => {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    nodeIdx: 0,
-    displayName: 'A',
+    node_num: 0,
+    display_name: 'A',
+    node_size: 100,
     x: 200,
     y: 200,
-    actionIdx: [0],
-    nodeSize: 100,
-    networkId: '1234',
     status: 'active'
 
 };

@@ -2,45 +2,56 @@ import React from "react";
 
 import "./NetworkNode.less";
 
-type Status = "starting" | "active" | "disabled" | "invalid-click" | "";
-
 export interface NetworkNodeInterface {
-    nodeIdx: number;
-    displayName: string;
+    /** Node index, fetched from backend */
+    node_num: number;
+    /** Node displayed name, fetched from backend */
+    display_name: string;
+    /** Node size, fetched from backend */
+    node_size: number;
+    /** Node level (property of the task solution strategy),
+     * fetched from backend */
+    level?: number;
+    /** Node x position, fetched from backend */
     x: number;
+    /** Node y position, fetched from backend*/
     y: number;
-    actionIdx: number[];
-    nodeSize: number;
+    /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
-    networkId: string;
-    status: Status;
+    /** Node action status */
+    status: "starting" | "active" | "disabled" | "invalid-click" | "";
 }
 
 const NetworkNode = ({
-                         nodeIdx,
+                         node_num,
                          x,
                          y,
-                         displayName,
-                         nodeSize,
+                         display_name,
+                         node_size,
                          onNodeClick,
                          status,
                      }: NetworkNodeInterface) => {
     return (
         <g
-            className={"node"}
+            className={"NetworkNode"}
             style={{cursor: status != "disabled" && "pointer"}}
-            onClick={() => onNodeClick(nodeIdx)}
+            onClick={() => onNodeClick(node_num)}
         >
-            <circle cx={x} cy={y} r={nodeSize} className={status}
-                    key={"circle"}/>
+            <circle
+                cx={x}
+                cy={y}
+                r={node_size}
+                className={status}
+                key={"circle"}
+            />
             <text
                 x={x}
-                y={y + nodeSize * 0.35}
+                y={y + node_size * 0.35}
                 textAnchor="middle"
-                style={{fontSize: nodeSize}}
+                style={{fontSize: node_size}}
                 key={"state-name"}
             >
-                {displayName}
+                {display_name}
             </text>
         </g>
     );
