@@ -2,6 +2,8 @@ import React from "react";
 
 import NetworkNodeStyled from "./NetworkNode.styled";
 
+export type NetworkNodeStatus = "starting" | "active" | "disabled" | "invalid-click" | "";
+
 export interface NetworkNodeInterface {
     /** Node index, fetched from backend */
     node_num: number;
@@ -19,7 +21,7 @@ export interface NetworkNodeInterface {
     /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
     /** Node action status */
-    status: "starting" | "active" | "disabled" | "invalid-click" | "";
+    status: NetworkNodeStatus;
 }
 
 const NetworkNode = ({

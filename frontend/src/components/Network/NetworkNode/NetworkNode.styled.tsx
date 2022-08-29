@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
+import {NetworkNodeStatus} from "./NetworkNode";
 
 type NetworkNodeProps = {
-    status: 'disabled' | 'invalid-click' | 'active' | 'starting' | '';
+    status: NetworkNodeStatus;
     fontSize: number;
 }
 
