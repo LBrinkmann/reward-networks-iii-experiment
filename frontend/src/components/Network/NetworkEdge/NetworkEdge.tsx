@@ -34,8 +34,8 @@ const NetworkEdge = ({
                          nodeSize = 20
                      }: NetworkEdgeInterface) => {
 
-    /** Color class of the edge based on the reward */
-    let colorClass = '';
+    // Color class of the edge based on the reward
+    let colorClass: 'large-negative' | 'negative' | 'positive' | 'large-positive';
     if (reward < -100) {
         colorClass = 'large-negative';
     } else if (reward < 0) {
@@ -46,26 +46,36 @@ const NetworkEdge = ({
         colorClass = 'large-positive';
     }
 
+    // Component indices
     const edgeId = `edge-${idx}`;
     const markerId = `marker-arrow-${idx}`;
     const textId = `edge-text-${idx}`;
     const textIdBg = `edge-text-bg-${idx}`;
 
+    // Calculate distance etc.
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     const arcR = dist * edgeCurvation;
 
+    // Draw path with arc
     // SEE more about the sweep flag: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
     const sweepFlag = dx >= 0 && dy >= 0 ? 1 : 0;
     const d = `M ${source.x} ${source.y} A ${arcR} ${arcR} 0 0 ${sweepFlag} ${target.x} ${target.y}`;
 
-    const textPositionShiftY = 5;
+    // Marker
     const markerPositionShiftY = 6;
     const arrowLength = 12;
     const markerOffset = `${((arcR - (nodeSize + arrowLength)) / arcR) * 100}%`;
+
+    // Text
+    const textPositionShiftY = 3;
     const nodePer = (nodeSize / arcR) * 100;
     const textOffset = `${nodePer + 10}%`;
+
+    // Text rotation
+    const textRotation = dx < 0 ? 180 : 0;
+    const rewardText = dx < 0 ? `${reward}`.split('').reverse().join('') : `${reward}`;
 
     let strokeDasharray, springConfig = {};
     switch (edgeStyle) {
@@ -108,13 +118,13 @@ const NetworkEdge = ({
             {/* Reward background */}
             <text id={textIdBg} className="edge-text-bg edge-text" dy={textPositionShiftY}>
                 <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    {reward}
+                    <tspan rotate={textRotation}>{rewardText}</tspan>
                 </textPath>
             </text>
             {/* Reward text */}
             <text id={textId} className="edge-text colored-fill" dy={textPositionShiftY}>
                 <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    {reward}
+                    <tspan rotate={textRotation}>{rewardText}</tspan>
                 </textPath>
             </text>
             {/* Marker ➤ */}
