@@ -6,7 +6,7 @@ import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 
 
-interface StaticNetworkInterface {
+export interface StaticNetworkInterface {
     /** Array of edges of the network */
     edges: { reward: number; source_num: number; target_num: number }[];
     /** Array of nodes of the network */
@@ -24,9 +24,9 @@ const StaticNetwork = ({
                            nodes,
                            onNodeClick = (nodeIdx) => null,
                            size = {width: 550, height: 550},
-                           edgeCurvation,
-                           nodeSize = 40,
-                           edgeWidth = 5,
+                           edgeCurvation = 1,
+                           nodeSize = 20,
+                           edgeWidth = 1,
                        }: StaticNetworkInterface) => {
     /* TODO: make it more generic */
     // const nodeSize = ((size.height / 550) * 600) / 15;

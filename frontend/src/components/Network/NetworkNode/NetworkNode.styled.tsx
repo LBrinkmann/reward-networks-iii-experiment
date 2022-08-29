@@ -13,7 +13,12 @@ const colors = {
 }
 
 const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
+  cursor: ${({status}) => status != "disabled" && "pointer"};
+  
   circle {
+    stroke-width: 1px;
+    stroke: rgba(30, 30, 30, 1);
+    
     fill: ${({status}) => colors[status] ? colors[status] : colors['disabled']};
     transition: ${({status}) => {
       switch (status) {
@@ -25,14 +30,11 @@ const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
           return 'fill 0.75s';
       }
     }};
-
-    text {
-      font-size: ${({fontSize}) => fontSize};
-    }
-
-    cursor: ${({status}) => status != "disabled" && "pointer"};
-
   }
+  text {
+    font-size: ${({fontSize}) => fontSize};
+  }
+
 `
 
 export default NetworkNodeStyled;
