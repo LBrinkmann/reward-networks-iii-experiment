@@ -3,6 +3,7 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import NetworkEdge from './NetworkEdge';
+import NetworkNode from "../NetworkNode";
 
 
 export default {
@@ -18,6 +19,15 @@ export default {
 const Template: ComponentStory<typeof NetworkEdge> = (args) => {
     return (
         <svg height={550} width={550}>
+            <NetworkNode
+                node_size={args.nodeSize}
+                x={500}
+                y={500}
+                display_name={'A'}
+                node_num={0}
+                status={'active'}
+                onNodeClick={() => {}}
+            />
             <NetworkEdge {...args}/>
         </svg>
     )
@@ -32,7 +42,8 @@ SixNodesNet.args = {
     edgeWidth: 5,
     actionIdx: 0,
     linkStyle: 'dashed',
-    nodeSize: 40
+    nodeSize: 40,
+    linkCurvation: 1,
 };
 
 export const TenNodesNet = Template.bind({});
@@ -44,5 +55,6 @@ TenNodesNet.args = {
     edgeWidth: 1,
     actionIdx: 0,
     linkStyle: 'dashed',
-    nodeSize: 10
+    nodeSize: 10,
+    linkCurvation: 1
 };

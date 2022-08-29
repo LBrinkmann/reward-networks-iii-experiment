@@ -1,7 +1,6 @@
 import {animated, useSpring} from "react-spring";
 import React from "react";
 
-import Marker from "../Marker";
 import NetworkEdgeStyled from "./NetworkEdge.styled";
 
 
@@ -18,7 +17,8 @@ export interface NetworkEdgeInterface {
     edgeWidth: number;
     /** index of the edge */
     idx: number;
-    /** Curvation of the edge */
+    /** Curvation of the edge
+     * the larger, the smaller curvature */
     linkCurvation?: number;
     nodeSize: number;
 }
@@ -27,11 +27,11 @@ const NetworkEdge = ({
                          reward,
                          source,
                          target,
-                         edgeWidth = 5,
+                         edgeWidth = 1,
                          linkStyle = "normal",
                          idx,
-                         linkCurvation = 2.5,
-                         nodeSize
+                         linkCurvation = 1,
+                         nodeSize = 20
                      }: NetworkEdgeInterface) => {
 
     /** Color class of the edge based on the reward */
@@ -47,32 +47,27 @@ const NetworkEdge = ({
     }
 
     const edgeId = `edge-${idx}`;
-    const markerIdStart = `marker-arrow-start-${idx}`;
-    const markerIdEnd = `marker-arrow-end-${idx}`;
+    const markerId = `marker-arrow-${idx}`;
     const textId = `edge-text-${idx}`;
     const textIdBg = `edge-text-bg-${idx}`;
 
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    let markerEnd, markerStart, textPositionX, textPositionShiftY, d;
-    textPositionShiftY = 5;
-    const dr = dist * linkCurvation;
+    const arcR = dist * linkCurvation;
 
-    // drawing direction must be adjusted, to keep text upright
-    if (dx >= 0) {
-        markerEnd = `url(#${markerIdEnd})`;
-        d = `M ${source.x} ${source.y} A ${dr} ${dr} 0 0 1 ${target.x} ${target.y}`;
-        textPositionX = 80;
-    } else {
-        markerStart = `url(#${markerIdStart})`;
-        d = `M ${target.x} ${target.y} A ${dr} ${dr} 0 0 0 ${source.x} ${source.y}`;
-        textPositionX = dist * 0.9 - 80;
-    }
+    // SEE more about the sweep flag: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+    const sweepFlag = dx >= 0 && dy >= 0 ? 1 : 0;
+    const d = `M ${source.x} ${source.y} A ${arcR} ${arcR} 0 0 ${sweepFlag} ${target.x} ${target.y}`;
 
-    let strokeDasharray;
-    let springConfig = {};
+    const textPositionShiftY = 5;
+    const markerPositionShiftY = 6;
+    const arrowLength = 12;
+    const markerOffset = `${((arcR - (nodeSize + arrowLength)) / arcR) * 100}%`;
+    const nodePer = (nodeSize / arcR) * 100;
+    const textOffset = `${nodePer + 10}%`;
 
+    let strokeDasharray, springConfig = {};
     switch (linkStyle) {
         case "normal":
             strokeDasharray = null;
@@ -102,54 +97,31 @@ const NetworkEdge = ({
 
     return (
         <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidth}>
-            <Marker
-                key={markerIdEnd}
-                orient="auto"
-                markerId={markerIdEnd}
-                className={'colored-fill'}
-                nodeSize={nodeSize}
-                edgeWidth={edgeWidth}
-                linkCurvation={linkCurvation}
-            />
-            <Marker
-                key={markerIdStart}
-                orient="auto-start-reverse"
-                markerId={`${markerIdStart}`}
-                className={'colored-fill'}
-                nodeSize={nodeSize}
-                edgeWidth={edgeWidth}
-                linkCurvation={linkCurvation}
-            />
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                 className="colored-stroke"
                 id={edgeId}
                 strokeDasharray={strokeDasharray ? strokeDasharray : null}
-                markerEnd={markerEnd}
-                markerStart={markerStart}
                 markerUnits="userSpaceOnUse"
                 d={d}
             />
-            <text
-                id={textIdBg}
-                className="network-edge-text-bg"
-                x={textPositionX}
-                dy={textPositionShiftY}
-            >
-                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}>
+            {/* Reward background */}
+            <text id={textIdBg} className="edge-text-bg edge-text" dy={textPositionShiftY}>
+                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
                     {reward}
                 </textPath>
             </text>
-            <text
-                id={textId}
-                className="network-edge-text colored-fill"
-                x={textPositionX}
-                dy={textPositionShiftY}
-            >
-                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}>
+            {/* Reward text */}
+            <text id={textId} className="edge-text colored-fill" dy={textPositionShiftY}>
+                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
                     {reward}
                 </textPath>
             </text>
+            {/* Marker ➤ */}
+            <text id={markerId} className="edge-marker colored-fill" dy={markerPositionShiftY} >
+                <textPath xlinkHref={`#${edgeId}`} startOffset={markerOffset}> {'➤'} </textPath>
+            </text>
+
         </NetworkEdgeStyled>
     );
 };

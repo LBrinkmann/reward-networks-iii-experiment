@@ -11,15 +11,18 @@ export default {
 
 const Template: ComponentStory<typeof StaticNetwork> = (args) => <StaticNetwork {...args}/>;
 
-export const FirstStory = Template.bind({});
+export const TenNodes = Template.bind({});
 
-FirstStory.args = {
+TenNodes.args = {
     edges: [
         {source_num: 0, target_num: 1, reward: -120},
         {source_num: 2, target_num: 3, reward: 20},
         {source_num: 3, target_num: 5, reward: -20},
         {source_num: 4, target_num: 3, reward: 120},
         {source_num: 5, target_num: 0, reward: 120},
+        {source_num: 2, target_num: 8, reward: -20},
+        {source_num: 4, target_num: 6, reward: 120},
+        {source_num: 4, target_num: 2, reward: 120},
     ],
     nodes: [
         {
@@ -96,7 +99,6 @@ FirstStory.args = {
     ],
     size: {width: 550, height: 550},
     nodeSize: 20,
-    linkWidth: 2
-
-
+    linkWidth: 1,
+    linkCurvation: 1
 };

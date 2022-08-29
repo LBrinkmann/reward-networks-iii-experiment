@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 type NetworkEdgeProps = {
     colorClass: string;
+    strokeWidth: number;
 }
 
 const colors = {
@@ -13,7 +14,7 @@ const colors = {
 
 const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   stroke-width: 3px;
-  
+
   & > .colored-stroke {
     ${({colorClass}) => {
       switch (colorClass) {
@@ -31,22 +32,26 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
     stroke-width: ${({strokeWidth}) => strokeWidth}px;
   }
 
-  & > .network-edge-text {
-    font-size: 20px;
+  & > .edge-text {
+    font-size: 10px;
     font-weight: 900;
     fill: rgb(0, 0, 0);
   }
 
-  & > .network-edge-text-bg {
+  & > .edge-text-bg {
     fill: none;
     fill-opacity: 1;
     stroke: #ffffff;
-    stroke-width: 5px;
+    stroke-width: ${({strokeWidth}) => strokeWidth}px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
     stroke-opacity: 1;
   }
-  
+
+  & > .edge-marker {
+    font-size: 16px;
+  }
+
   & > .colored-fill {
     ${({colorClass}) => {
       switch (colorClass) {
@@ -61,7 +66,7 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
       }
     }};
   }
-  
+
 
 `
 
