@@ -12,14 +12,14 @@ export interface NetworkEdgeInterface {
     /** Target Network Node coordinates */
     target: { x: number, y: number };
     /** Line style of the edge */
-    linkStyle?: "normal" | "highlighted" | "animated" | "dashed";
+    edgeStyle?: "normal" | "highlighted" | "animated" | "dashed";
     /** Line width of the edge, default = 5 */
     edgeWidth: number;
     /** index of the edge */
     idx: number;
     /** Curvation of the edge
      * the larger, the smaller curvature */
-    linkCurvation?: number;
+    edgeCurvation?: number;
     nodeSize: number;
 }
 
@@ -28,9 +28,9 @@ const NetworkEdge = ({
                          source,
                          target,
                          edgeWidth = 1,
-                         linkStyle = "normal",
+                         edgeStyle = "normal",
                          idx,
-                         linkCurvation = 1,
+                         edgeCurvation = 1,
                          nodeSize = 20
                      }: NetworkEdgeInterface) => {
 
@@ -54,7 +54,7 @@ const NetworkEdge = ({
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const arcR = dist * linkCurvation;
+    const arcR = dist * edgeCurvation;
 
     // SEE more about the sweep flag: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
     const sweepFlag = dx >= 0 && dy >= 0 ? 1 : 0;
@@ -68,7 +68,7 @@ const NetworkEdge = ({
     const textOffset = `${nodePer + 10}%`;
 
     let strokeDasharray, springConfig = {};
-    switch (linkStyle) {
+    switch (edgeStyle) {
         case "normal":
             strokeDasharray = null;
             springConfig = {};

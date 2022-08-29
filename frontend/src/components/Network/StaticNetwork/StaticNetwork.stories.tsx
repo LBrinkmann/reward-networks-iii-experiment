@@ -99,6 +99,6 @@ TenNodes.args = {
     ],
     size: {width: 550, height: 550},
     nodeSize: 20,
-    linkWidth: 1,
-    linkCurvation: 1
+    edgeWidth: 1,
+    edgeCurvation: 1
 };

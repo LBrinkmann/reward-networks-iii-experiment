@@ -5,20 +5,18 @@ import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
 import NetworkEdge from "../NetworkEdge";
 
-export interface Size {
-    width: number;
-    height: number;
-}
 
 interface StaticNetworkInterface {
+    /** Array of edges of the network */
     edges: { reward: number; source_num: number; target_num: number }[];
+    /** Array of nodes of the network */
     nodes: NetworkNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
-    size?: Size;
+    /** size of the SVG component */
+    size?: { width: number; height: number };
     nodeSize?: number;
-    networkId?: string;
-    linkCurvation?: number;
-    linkWidth?: number;
+    edgeCurvation?: number;
+    edgeWidth?: number;
 }
 
 const StaticNetwork = ({
@@ -26,10 +24,9 @@ const StaticNetwork = ({
                            nodes,
                            onNodeClick = (nodeIdx) => null,
                            size = {width: 550, height: 550},
-                           networkId = "default",
-                           linkCurvation,
+                           edgeCurvation,
                            nodeSize = 40,
-                           linkWidth = 5,
+                           edgeWidth = 5,
                        }: StaticNetworkInterface) => {
     /* TODO: make it more generic */
     // const nodeSize = ((size.height / 550) * 600) / 15;
@@ -46,7 +43,6 @@ const StaticNetwork = ({
     const scaledNodes = nodes.map((node) => ({
         ...node,
         ...scaleXY(node, size),  // scaled coordinates
-        // ... () => {node.node_size ? node.node_size : ((size.height / 550) * 600) / 15},
     } as NetworkNodeInterface));
 
     return (
@@ -58,13 +54,11 @@ const StaticNetwork = ({
                             reward={edge.reward}
                             source={scaledNodes[edge.source_num]}
                             target={scaledNodes[edge.target_num]}
-                            edgeWidth={linkWidth}
-                            linkCurvation={linkCurvation}
+                            edgeWidth={edgeWidth}
+                            edgeCurvation={edgeCurvation}
                             key={"link-" + idx}
-                            networkId={networkId}
                             idx={idx}
                             nodeSize={nodeSize}
-                            // linkStyle={edge.linkStyle}
                         />
                     );
                 })}

@@ -41,9 +41,9 @@ SixNodesNet.args = {
     target: {x: 500, y: 500},
     edgeWidth: 5,
     actionIdx: 0,
-    linkStyle: 'dashed',
+    edgeStyle: 'dashed',
     nodeSize: 40,
-    linkCurvation: 1,
+    edgeCurvation: 1,
 };
 
 export const TenNodesNet = Template.bind({});
@@ -54,7 +54,7 @@ TenNodesNet.args = {
     target: {x: 500, y: 500},
     edgeWidth: 1,
     actionIdx: 0,
-    linkStyle: 'dashed',
+    edgeStyle: 'dashed',
     nodeSize: 10,
-    linkCurvation: 1
+    edgeCurvation: 1
 };
