@@ -2,7 +2,7 @@ import React from "react";
 
 interface MarkerInterface {
     orient: string;
-    prefix: string;
+    markerId: string;
     className: string;
     nodeSize: number;
     linkWidth: number;
@@ -12,14 +12,14 @@ interface MarkerInterface {
 const Marker = ({
                     nodeSize,
                     orient,
-                    prefix,
-                    className,
+                    markerId,
+                    className = 'colored-fill',
                     linkWidth,
                     linkCurvation,
                 }: MarkerInterface) => (
     <marker
         markerUnits="userSpaceOnUse"
-        id={`${prefix}`}
+        id={markerId}
         className={className}
         markerWidth={linkWidth * 10}
         markerHeight={linkWidth * 10}
@@ -27,7 +27,7 @@ const Marker = ({
         refY={linkCurvation != 0 ? (11 * nodeSize) / 40 : (32 * nodeSize) / 40}
         orient={orient}
     >
-        <path className="colored-fill" d="M4,4 L4,22 L20,12 L4,4"/>
+        <path d="M4,4 L4,22 L20,12 L4,4"/>
     </marker>
 );
 

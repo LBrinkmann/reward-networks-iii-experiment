@@ -1,7 +1,6 @@
 import {animated, useSpring} from "react-spring";
 import React from "react";
 
-// import "./NetworkEdge.less";
 import Marker from "../Marker";
 import NetworkEdgeStyled from "./NetworkEdge.styled";
 
@@ -48,6 +47,11 @@ const NetworkEdge = ({
         colorClass = 'large-positive';
     }
 
+    const edgeId = `edge-${idx}`;
+    const markerIdStart = `marker-arrow-start-${idx}`;
+    const markerIdEnd = `marker-arrow-end-${idx}`;
+    const textId = `edge-text-${idx}`;
+    const textIdBg = `edge-text-bg-${idx}`;
 
     const dx = target.x - source.x;
     const dy = target.y - source.y;
@@ -56,16 +60,13 @@ const NetworkEdge = ({
     textPositionShiftY = 5;
     const dr = dist * linkCurvation;
 
-    const markerStartPrefix = 'marker-arrow-start';
-    const markerEndPrefix = 'marker-arrow-end';
-
     // drawing direction must be adjusted, to keep text upright
     if (dx >= 0) {
-        markerEnd = `url(#${markerEndPrefix}-${colorClass})`;
+        markerEnd = `url(#${markerIdEnd})`;
         d = `M ${source.x} ${source.y} A ${dr} ${dr} 0 0 1 ${target.x} ${target.y}`;
         textPositionX = 80;
     } else {
-        markerStart = `url(#${markerStartPrefix}-${colorClass})`;
+        markerStart = `url(#${markerIdStart})`;
         d = `M ${target.x} ${target.y} A ${dr} ${dr} 0 0 0 ${source.x} ${source.y}`;
         textPositionX = dist * 0.9 - 80;
     }
@@ -101,20 +102,20 @@ const NetworkEdge = ({
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <NetworkEdgeStyled colorClass={colorClass}>
+        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={width}>
             <Marker
-                key={"marker-auto-" + idx}
+                key={markerIdEnd}
                 orient="auto"
-                prefix={`${markerEndPrefix}-${colorClass}`}
+                markerId={markerIdEnd}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
                 linkWidth={width}
                 linkCurvation={linkCurvation}
             />
             <Marker
-                key={"marker-auto-start-reverse-" + idx}
+                key={markerIdStart}
                 orient="auto-start-reverse"
-                prefix={`${markerStartPrefix}-${colorClass}`}
+                markerId={`${markerIdStart}`}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
                 linkWidth={width}
@@ -123,8 +124,7 @@ const NetworkEdge = ({
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                 className="colored-stroke"
-                style={{strokeWidth: width}}
-                id={`link-${idx}`}
+                id={edgeId}
                 strokeDasharray={strokeDasharray ? strokeDasharray : null}
                 markerEnd={markerEnd}
                 markerStart={markerStart}
@@ -132,27 +132,27 @@ const NetworkEdge = ({
                 d={d}
             />
             <text
-                id={`link-text-bg-${idx}`}
+                id={`textIdBg`}
                 className="network-edge-text-bg"
                 x={textPositionX}
                 dy={textPositionShiftY}
             >
                 <textPath
                     alignmentBaseline="text-after-edge"
-                    xlinkHref={`#link-${idx}`}
+                    xlinkHref={`#${edgeId}`}
                 >
                     {reward}
                 </textPath>
             </text>
             <text
-                id={`link-text-${idx}`}
+                id={textId}
                 className="network-edge-text colored-fill"
                 x={textPositionX}
                 dy={textPositionShiftY}
             >
                 <textPath
                     alignmentBaseline="text-after-edge"
-                    xlinkHref={`#link-${idx}`}
+                    xlinkHref={`#${edgeId}`}
                 >
                     {reward}
                 </textPath>

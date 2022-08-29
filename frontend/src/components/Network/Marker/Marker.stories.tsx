@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof Marker> = (args) => {
                 stroke="black"
                 strokeWidth={args.linkWidth}
                 d="M30,150 L100,50"
-                markerEnd={`url(#${args.prefix}-${args.name})`}
+                markerEnd={`url(#${args.markerId}-${args.name})`}
             />
 
         </svg>
