@@ -6,9 +6,16 @@ import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 
 
+export interface StaticNetworkEdges {
+    reward: number;
+    source_num: number;
+    target_num: number;
+    edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
+}
+
 export interface StaticNetworkInterface {
     /** Array of edges of the network */
-    edges: { reward: number; source_num: number; target_num: number }[];
+    edges: StaticNetworkEdges[];
     /** Array of nodes of the network */
     nodes: NetworkNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
@@ -56,6 +63,7 @@ const StaticNetwork = ({
                             target={scaledNodes[edge.target_num]}
                             edgeWidth={edgeWidth}
                             edgeCurvation={edgeCurvation}
+                            edgeStyle={edge.edgeStyle}
                             key={"link-" + idx}
                             idx={idx}
                             nodeSize={nodeSize}
