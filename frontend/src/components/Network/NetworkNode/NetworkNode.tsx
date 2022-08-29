@@ -19,7 +19,7 @@ export interface NetworkNodeInterface {
     /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
     /** Node action status */
-    status: "starting" | "active" | "disabled" | "invalid-click";
+    status: "starting" | "active" | "disabled" | "invalid-click" | "";
 }
 
 const NetworkNode = ({

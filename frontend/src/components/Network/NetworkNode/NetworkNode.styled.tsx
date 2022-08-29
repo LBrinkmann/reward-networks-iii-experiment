@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 type NetworkNodeProps = {
-    status: 'disabled' | 'invalid-click' | 'active' | 'starting';
+    status: 'disabled' | 'invalid-click' | 'active' | 'starting' | '';
     fontSize: number;
 }
 
@@ -9,7 +9,8 @@ const colors = {
     'disabled': 'rgb(228, 227, 227)',
     'active': 'rgb(155, 155, 155)',
     'invalid-click': 'rgb(221, 44, 0)',
-    'starting': 'rgb(193, 145, 207)'
+    'starting': 'rgb(193, 145, 207)',
+    '': 'white'
 }
 
 const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
