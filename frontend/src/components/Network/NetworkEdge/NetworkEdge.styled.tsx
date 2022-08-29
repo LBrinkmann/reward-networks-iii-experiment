@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 type NetworkEdgeProps = {
-    colorClass: string;
+    colorClass: 'negative' | 'positive' | 'large-negative' | 'large-positive';
     strokeWidth: number;
 }
 
@@ -16,26 +16,18 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   stroke-width: 3px;
 
   & > .colored-stroke {
-    ${({colorClass}) => {
-      switch (colorClass) {
-        case 'large-negative':
-          return `stroke: ${colors["large-negative"]};`
-        case 'negative':
-          return `stroke: ${colors["negative"]};`
-        case 'positive':
-          return `stroke: ${colors["positive"]};`
-        case 'large-positive':
-          return `stroke: ${colors["large-positive"]};`
-      }
-    }};
+    stroke: ${({colorClass}) => colors[colorClass]};
     fill: none;
     stroke-width: ${({strokeWidth}) => strokeWidth}px;
+  }
+
+  & > .colored-fill {
+    fill: ${({colorClass}) => colors[colorClass]};
   }
 
   & > .edge-text {
     font-size: 10px;
     font-weight: 900;
-    fill: rgb(0, 0, 0);
   }
 
   & > .edge-text-bg {
@@ -51,23 +43,6 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   & > .edge-marker {
     font-size: 16px;
   }
-
-  & > .colored-fill {
-    ${({colorClass}) => {
-      switch (colorClass) {
-        case 'large-negative':
-          return `fill: ${colors["large-negative"]};`
-        case 'negative':
-          return `fill: ${colors["negative"]};`
-        case 'positive':
-          return `fill: ${colors["positive"]};`
-        case 'large-positive':
-          return `fill: ${colors["large-positive"]};`
-      }
-    }};
-  }
-
-
 `
 
 export default NetworkEdgeStyled;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./NetworkNode.less";
+import NetworkNodeStyled from "./NetworkNode.styled";
 
 export interface NetworkNodeInterface {
     /** Node index, fetched from backend */
@@ -19,7 +19,7 @@ export interface NetworkNodeInterface {
     /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
     /** Node action status */
-    status: "starting" | "active" | "disabled" | "invalid-click" | "";
+    status: "starting" | "active" | "disabled" | "invalid-click";
 }
 
 const NetworkNode = ({
@@ -32,28 +32,12 @@ const NetworkNode = ({
                          status,
                      }: NetworkNodeInterface) => {
     return (
-        <g
-            className={"NetworkNode"}
-            style={{cursor: status != "disabled" && "pointer"}}
-            onClick={() => onNodeClick(node_num)}
-        >
-            <circle
-                cx={x}
-                cy={y}
-                r={node_size}
-                className={status}
-                key={"circle"}
-            />
-            <text
-                x={x}
-                y={y + node_size * 0.35}
-                textAnchor="middle"
-                style={{fontSize: node_size}}
-                key={"state-name"}
-            >
+        <NetworkNodeStyled status={status} fontSize={node_size} onClick={() => onNodeClick(node_num)}>
+            <circle cx={x} cy={y} r={node_size} key={"circle"}/>
+            <text x={x} y={y + node_size * 0.35} textAnchor="middle" key={"state-name"}>
                 {display_name}
             </text>
-        </g>
+        </NetworkNodeStyled>
     );
 };
 
