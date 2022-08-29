@@ -3,7 +3,7 @@ import React from "react";
 interface MarkerInterface {
     orient: string;
     prefix: string;
-    name: string;
+    className: string;
     nodeSize: number;
     linkWidth: number;
     linkCurvation: number;
@@ -13,14 +13,14 @@ const Marker = ({
                     nodeSize,
                     orient,
                     prefix,
-                    name,
+                    className,
                     linkWidth,
                     linkCurvation,
                 }: MarkerInterface) => (
     <marker
         markerUnits="userSpaceOnUse"
-        id={`${prefix}-${name}`}
-        className={name}
+        id={`${prefix}`}
+        className={className}
         markerWidth={linkWidth * 10}
         markerHeight={linkWidth * 10}
         refX={linkCurvation != 0 ? nodeSize * 1.45 : nodeSize * 2.2}

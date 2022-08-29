@@ -1,10 +1,12 @@
 import {animated, useSpring} from "react-spring";
 import React from "react";
 
-import "./NetworkEdge.less";
+// import "./NetworkEdge.less";
+import Marker from "../Marker";
+import NetworkEdgeStyled from "./NetworkEdge.styled";
 
 
-interface NetworkEdgeInterface {
+export interface NetworkEdgeInterface {
     /** Annotation of the edge - reward to select this action */
     reward: number;
     /** Source Network Node coordinates */
@@ -12,13 +14,15 @@ interface NetworkEdgeInterface {
     /** Target Network Node coordinates */
     target: { x: number, y: number };
     /** Line style of the edge */
-    linkStyle: "normal" | "highlighted" | "animated" | "dashed";
+    linkStyle?: "normal" | "highlighted" | "animated" | "dashed";
     /** Line width of the edge, default = 5 */
     width: number;
-    actionIdx: number;
+    /** index of the edge */
+    idx: number;
     networkId: string;
     /** Curvation of the edge */
     linkCurvation?: number;
+    nodeSize: number;
 }
 
 const NetworkEdge = ({
@@ -26,10 +30,10 @@ const NetworkEdge = ({
                          source,
                          target,
                          width = 5,
-                         linkStyle,
-                         networkId,
-                         actionIdx,
+                         linkStyle = "normal",
+                         idx,
                          linkCurvation = 2.5,
+                         nodeSize
                      }: NetworkEdgeInterface) => {
 
     /** Color class of the edge based on the reward */
@@ -48,18 +52,22 @@ const NetworkEdge = ({
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    let markerEnd, markerStart, textx, d;
+    let markerEnd, markerStart, textPositionX, textPositionShiftY, d;
+    textPositionShiftY = 5;
     const dr = dist * linkCurvation;
+
+    const markerStartPrefix = 'marker-arrow-start';
+    const markerEndPrefix = 'marker-arrow-end';
 
     // drawing direction must be adjusted, to keep text upright
     if (dx >= 0) {
-        markerEnd = `url(#marker-arrow-end-${networkId}-${colorClass})`;
+        markerEnd = `url(#${markerEndPrefix}-${colorClass})`;
         d = `M ${source.x} ${source.y} A ${dr} ${dr} 0 0 1 ${target.x} ${target.y}`;
-        textx = 80;
+        textPositionX = 80;
     } else {
-        markerStart = `url(#marker-arrow-start-${networkId}-${colorClass})`;
+        markerStart = `url(#${markerStartPrefix}-${colorClass})`;
         d = `M ${target.x} ${target.y} A ${dr} ${dr} 0 0 0 ${source.x} ${source.y}`;
-        textx = dist * 0.9 - 80;
+        textPositionX = dist * 0.9 - 80;
     }
 
     let strokeDasharray;
@@ -93,12 +101,30 @@ const NetworkEdge = ({
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <g className={`NetworkEdge ${colorClass}`}>
+        <NetworkEdgeStyled colorClass={colorClass}>
+            <Marker
+                key={"marker-auto-" + idx}
+                orient="auto"
+                prefix={`${markerEndPrefix}-${colorClass}`}
+                className={'colored-fill'}
+                nodeSize={nodeSize}
+                linkWidth={width}
+                linkCurvation={linkCurvation}
+            />
+            <Marker
+                key={"marker-auto-start-reverse-" + idx}
+                orient="auto-start-reverse"
+                prefix={`${markerStartPrefix}-${colorClass}`}
+                className={'colored-fill'}
+                nodeSize={nodeSize}
+                linkWidth={width}
+                linkCurvation={linkCurvation}
+            />
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
+                className="colored-stroke"
                 style={{strokeWidth: width}}
-                id={`link-${networkId}-${actionIdx}`}
-                className="link colored-stroke"
+                id={`link-${idx}`}
                 strokeDasharray={strokeDasharray ? strokeDasharray : null}
                 markerEnd={markerEnd}
                 markerStart={markerStart}
@@ -106,32 +132,32 @@ const NetworkEdge = ({
                 d={d}
             />
             <text
-                id={`link-text-bg-${networkId}-${actionIdx}`}
-                className="NetworkEdge-text NetworkEdge-text-bg"
-                x={textx}
-                dy={5}
+                id={`link-text-bg-${idx}`}
+                className="network-edge-text-bg"
+                x={textPositionX}
+                dy={textPositionShiftY}
             >
                 <textPath
                     alignmentBaseline="text-after-edge"
-                    xlinkHref={`#link-${networkId}-${actionIdx}`}
+                    xlinkHref={`#link-${idx}`}
                 >
                     {reward}
                 </textPath>
             </text>
             <text
-                id={`link-text-${networkId}-${actionIdx}`}
-                className="NetworkEdge-text colored-fill"
-                x={textx}
-                dy={5}
+                id={`link-text-${idx}`}
+                className="network-edge-text colored-fill"
+                x={textPositionX}
+                dy={textPositionShiftY}
             >
                 <textPath
                     alignmentBaseline="text-after-edge"
-                    xlinkHref={`#link-${networkId}-${actionIdx}`}
+                    xlinkHref={`#link-${idx}`}
                 >
                     {reward}
                 </textPath>
             </text>
-        </g>
+        </NetworkEdgeStyled>
     );
 };
 

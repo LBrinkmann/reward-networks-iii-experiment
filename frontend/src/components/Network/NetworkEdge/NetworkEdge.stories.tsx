@@ -17,20 +17,34 @@ export default {
 
 const Template: ComponentStory<typeof NetworkEdge> = (args) => {
     return (
-        <svg height={500} width={500}>
+        <svg height={550} width={550}>
             <NetworkEdge {...args}/>
         </svg>
     )
 };
 
-export const FirstStory = Template.bind({});
+export const SixNodesNet = Template.bind({});
 
-FirstStory.args = {
+SixNodesNet.args = {
     reward: -120,
     source: {x: 100, y: 100},
     target: {x: 500, y: 500},
     width: 5,
     actionIdx: 0,
     networkId: '1234',
-    linkStyle: 'dashed'
+    linkStyle: 'dashed',
+    nodeSize: 40
+};
+
+export const TenNodesNet = Template.bind({});
+
+TenNodesNet.args = {
+    reward: -120,
+    source: {x: 100, y: 100},
+    target: {x: 500, y: 500},
+    width: 1,
+    actionIdx: 0,
+    networkId: '1234',
+    linkStyle: 'dashed',
+    nodeSize: 10
 };
