@@ -12,7 +12,7 @@ export interface NetworkEdgeInterface {
     /** Target Network Node coordinates */
     target: { x: number, y: number };
     /** Line style of the edge */
-    edgeStyle?: "normal" | "highlighted" | "animated" | "dashed";
+    edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
     /** Line width of the edge, default = 5 */
     edgeWidth: number;
     /** index of the edge */
