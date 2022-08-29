@@ -14,10 +14,6 @@ const colors = {
 const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   stroke-width: 3px;
   
-  & > path {
-    stroke-width: ${({strokeWidth}) => strokeWidth}px;
-  }
-  
   & > .colored-stroke {
     ${({colorClass}) => {
       switch (colorClass) {
@@ -32,6 +28,7 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
       }
     }};
     fill: none;
+    stroke-width: ${({strokeWidth}) => strokeWidth}px;
   }
 
   & > .network-edge-text {

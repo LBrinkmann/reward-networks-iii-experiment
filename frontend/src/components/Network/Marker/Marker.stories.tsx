@@ -2,11 +2,23 @@ import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import Marker from '.';
+import Marker from './Marker';
+import NetworkNode from "../NetworkNode";
 
 export default {
     title: 'Network/Marker',
     component: Marker,
+    argTypes: {
+        orient: {
+            control: {type: 'select', options: ["auto", "auto-start-reverse"]},
+        },
+        nodeSize: {
+            control: {type: 'select', options: [10, 20, 30, 40, 50, 60]},
+        },
+        edgeWidth: {
+            control: {type: 'select', options: [1, 2, 3, 4, 5]},
+        }
+    }
 } as ComponentMeta<typeof Marker>;
 
 const Template: ComponentStory<typeof Marker> = (args) => {
@@ -15,23 +27,30 @@ const Template: ComponentStory<typeof Marker> = (args) => {
             <Marker {...args}/>
             <path
                 stroke="black"
-                strokeWidth={args.linkWidth}
-                d="M30,150 L100,50"
-                markerEnd={`url(#${args.markerId}-${args.name})`}
+                strokeWidth={args.edgeWidth}
+                d="M10,10 L300,300"
+                markerEnd={`url(#${args.markerId})`}
+            />
+            <NetworkNode
+                node_size={args.nodeSize}
+                x={300}
+                y={300}
+                display_name={'A'}
+                node_num={0}
+                status={'active'}
+                onNodeClick={() => {}}
             />
 
         </svg>
     )
 };
 
-export const FirstStory = Template.bind({});
+export const Default = Template.bind({});
 
-FirstStory.args = {
+Default.args = {
     orient: "auto",
-    nodeSize: 600 / 15,
-    linkWidth: 5,
-    linkCurvation: 2.5,
-    prefix: "marker-arrow-end-1",
-    name: "positive",
-
+    markerId: 'marker-id',
+    nodeSize: 10,
+    edgeWidth: 1,
+    linkCurvation: 2.5
 };

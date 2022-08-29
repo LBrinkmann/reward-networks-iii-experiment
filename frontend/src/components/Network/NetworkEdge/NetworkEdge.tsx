@@ -18,7 +18,6 @@ export interface NetworkEdgeInterface {
     edgeWidth: number;
     /** index of the edge */
     idx: number;
-    networkId: string;
     /** Curvation of the edge */
     linkCurvation?: number;
     nodeSize: number;
@@ -109,7 +108,7 @@ const NetworkEdge = ({
                 markerId={markerIdEnd}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
-                linkWidth={edgeWidth}
+                edgeWidth={edgeWidth}
                 linkCurvation={linkCurvation}
             />
             <Marker
@@ -118,7 +117,7 @@ const NetworkEdge = ({
                 markerId={`${markerIdStart}`}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
-                linkWidth={edgeWidth}
+                edgeWidth={edgeWidth}
                 linkCurvation={linkCurvation}
             />
             <animated.path

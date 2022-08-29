@@ -29,9 +29,8 @@ SixNodesNet.args = {
     reward: -120,
     source: {x: 100, y: 100},
     target: {x: 500, y: 500},
-    width: 5,
+    edgeWidth: 5,
     actionIdx: 0,
-    networkId: '1234',
     linkStyle: 'dashed',
     nodeSize: 40
 };
@@ -42,9 +41,8 @@ TenNodesNet.args = {
     reward: -120,
     source: {x: 100, y: 100},
     target: {x: 500, y: 500},
-    width: 1,
+    edgeWidth: 1,
     actionIdx: 0,
-    networkId: '1234',
     linkStyle: 'dashed',
     nodeSize: 10
 };
