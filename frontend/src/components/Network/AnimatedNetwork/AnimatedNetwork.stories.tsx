@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof AnimatedNetwork> = (args) => <AnimatedNetw
 export const TenNodes = Template.bind({});
 
 TenNodes.args = {
-    startNode: 0,
+    startNode: 3,
     edges: [
         {source_num: 0, target_num: 1, reward: -120},
         {source_num: 2, target_num: 3, reward: 20},
