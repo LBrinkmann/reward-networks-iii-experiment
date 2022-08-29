@@ -15,7 +15,7 @@ export interface NetworkEdgeInterface {
     /** Line style of the edge */
     linkStyle?: "normal" | "highlighted" | "animated" | "dashed";
     /** Line width of the edge, default = 5 */
-    width: number;
+    edgeWidth: number;
     /** index of the edge */
     idx: number;
     networkId: string;
@@ -28,7 +28,7 @@ const NetworkEdge = ({
                          reward,
                          source,
                          target,
-                         width = 5,
+                         edgeWidth = 5,
                          linkStyle = "normal",
                          idx,
                          linkCurvation = 2.5,
@@ -94,7 +94,7 @@ const NetworkEdge = ({
             };
             break;
         case "highlighted":
-            width *= 2.5;
+            edgeWidth *= 2.5;
             strokeDasharray = null;
             springConfig = {};
     }
@@ -102,14 +102,14 @@ const NetworkEdge = ({
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={width}>
+        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidth}>
             <Marker
                 key={markerIdEnd}
                 orient="auto"
                 markerId={markerIdEnd}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
-                linkWidth={width}
+                linkWidth={edgeWidth}
                 linkCurvation={linkCurvation}
             />
             <Marker
@@ -118,7 +118,7 @@ const NetworkEdge = ({
                 markerId={`${markerIdStart}`}
                 className={'colored-fill'}
                 nodeSize={nodeSize}
-                linkWidth={width}
+                linkWidth={edgeWidth}
                 linkCurvation={linkCurvation}
             />
             <animated.path
@@ -132,15 +132,12 @@ const NetworkEdge = ({
                 d={d}
             />
             <text
-                id={`textIdBg`}
+                id={textIdBg}
                 className="network-edge-text-bg"
                 x={textPositionX}
                 dy={textPositionShiftY}
             >
-                <textPath
-                    alignmentBaseline="text-after-edge"
-                    xlinkHref={`#${edgeId}`}
-                >
+                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}>
                     {reward}
                 </textPath>
             </text>
@@ -150,10 +147,7 @@ const NetworkEdge = ({
                 x={textPositionX}
                 dy={textPositionShiftY}
             >
-                <textPath
-                    alignmentBaseline="text-after-edge"
-                    xlinkHref={`#${edgeId}`}
-                >
+                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}>
                     {reward}
                 </textPath>
             </text>
