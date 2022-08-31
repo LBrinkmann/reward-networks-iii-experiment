@@ -2,17 +2,15 @@ import React, {useEffect, useState} from "react";
 import StaticNetwork from "../StaticNetwork";
 import {StaticNetworkEdges, StaticNetworkInterface} from "../StaticNetwork/StaticNetwork";
 
-export interface AnimatedNetworkInterface extends StaticNetworkInterface {
+export interface DynamicNetworkInterface extends StaticNetworkInterface {
     startNode: number;
 }
 
-
-const DynamicNetwork = ({...props}: AnimatedNetworkInterface) => {
+const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNetworkInterface) => {
     // select edges starting from the node
     const selectCurrentEdges = (allEdges: StaticNetworkEdges[], currentNodeId: number) => {
         return allEdges.filter((edge) => edge.source_num === currentNodeId);
     }
-
 
     const [nodes, setNodes] = useState(props.nodes);
     const [edges, setEdges] = useState(props.edges);

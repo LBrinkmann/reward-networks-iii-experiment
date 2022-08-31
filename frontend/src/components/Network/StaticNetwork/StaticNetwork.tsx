@@ -26,7 +26,7 @@ export interface StaticNetworkInterface {
     edgeWidth?: number;
 }
 
-const StaticNetwork = ({
+const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                            edges,
                            nodes,
                            onNodeClick = (nodeIdx) => null,

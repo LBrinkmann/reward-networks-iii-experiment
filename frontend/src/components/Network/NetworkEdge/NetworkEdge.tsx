@@ -23,7 +23,7 @@ export interface NetworkEdgeInterface {
     nodeSize: number;
 }
 
-const NetworkEdge = ({
+const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
                          reward,
                          source,
                          target,

@@ -24,7 +24,7 @@ export interface NetworkNodeInterface {
     status: NetworkNodeStatus;
 }
 
-const NetworkNode = ({
+const NetworkNode: React.FC<NetworkNodeInterface> = ({
                          node_num,
                          x,
                          y,
