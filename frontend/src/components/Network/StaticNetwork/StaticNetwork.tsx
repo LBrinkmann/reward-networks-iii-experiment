@@ -18,6 +18,7 @@ export interface StaticNetworkInterface {
     edges: StaticNetworkEdgesInterface[];
     /** Array of nodes of the network */
     nodes: NetworkNodeInterface[];
+    /** Callback function to be called when a node is clicked */
     onNodeClick?: (nodeIdx: number) => void;
     /** size of the SVG component */
     size?: { width: number; height: number };
@@ -29,7 +30,7 @@ export interface StaticNetworkInterface {
 const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                            edges,
                            nodes,
-                           onNodeClick = (nodeIdx) => null,
+                           onNodeClick,
                            size = {width: 550, height: 550},
                            edgeCurvation = 1,
                            nodeSize = 20,
@@ -47,7 +48,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
         y: node.y * size.height,
     });
 
-    const scaledNodes = nodes.map((node) => ({
+    const scaledNodes = nodes.map((node: NetworkNodeInterface) => ({
         ...node,
         ...scaleXY(node, size),  // scaled coordinates
     } as NetworkNodeInterface));
@@ -55,7 +56,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
     return (
         <svg width={size.width} height={size.height}>
             <g>
-                {edges.map((edge, idx) => {
+                {edges.map((edge: StaticNetworkEdgesInterface, idx: number) => {
                     return (
                         <NetworkEdge
                             reward={edge.reward}
@@ -64,7 +65,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                             edgeWidth={edgeWidth}
                             edgeCurvation={edgeCurvation}
                             edgeStyle={edge.edgeStyle}
-                            key={"link-" + idx}
+                            key={"edge-" + idx}
                             idx={idx}
                             nodeSize={nodeSize}
                         />
@@ -72,13 +73,13 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                 })}
             </g>
             <g>
-                {scaledNodes.map((node, idx) => {
+                {scaledNodes.map((node: NetworkNodeInterface, idx: number) => {
                     return (
                         <NetworkNode
                             {...node}
                             node_size={nodeSize}
                             onNodeClick={onNodeClick}
-                            key={"point-" + idx}
+                            key={"node-" + idx}
                         />
                     );
                 })}

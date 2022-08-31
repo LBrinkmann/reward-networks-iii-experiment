@@ -8,24 +8,29 @@ export interface DynamicNetworkInterface extends StaticNetworkInterface {
 }
 
 const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNetworkInterface) => {
-    // select edges starting from the node
-    const selectCurrentEdges = (allEdges: StaticNetworkEdgesInterface[], currentNodeId: number) => {
-        return allEdges.filter((edge) => edge.source_num === currentNodeId);
-    }
-
     const [nodes, setNodes] = useState<NetworkNodeInterface[]>(props.nodes);
     const [edges, setEdges] = useState<StaticNetworkEdgesInterface[]>(props.edges);
-    const [currentEdges, setCurrentEdges] = useState<StaticNetworkEdgesInterface[]>(
-        selectCurrentEdges(props.edges, props.startNode));
+    const [moves, setMoves] = useState<number[]>([]);
+    const [possibleMoves, setPossibleMoves] = useState<number[]>([]);
     const [currentNodeInx, setCurrentNodeInx] = useState<number>(props.startNode);
 
-    const updateNodes = (currentNodeInx: number, validMove: boolean) => {
-        // update node status
-        setNodes(nodes.map((node, idx) => {
-            if (node.node_num === currentNodeInx && validMove) {
+    // select edges starting from the node with the `currentNodeId` index
+    const selectPossibleMoves = (allEdges: StaticNetworkEdgesInterface[], currentNodeId: number) => {
+        return allEdges
+            .filter((edge: StaticNetworkEdgesInterface) => edge.source_num === currentNodeId)
+            .map((edge: StaticNetworkEdgesInterface) => edge.target_num);
+    }
+
+    // update nodes with the new status
+    const updateNodes = (moveIdx: number, validMove: boolean) => {
+        setNodes(nodes.map((node: NetworkNodeInterface) => {
+            if (node.node_num === moveIdx && validMove) {
                 return {...node, status: 'active'};
-            } else if (node.node_num === currentNodeInx && !validMove) {
+            } else if (node.node_num === moveIdx && !validMove) {
                 return {...node, status: 'invalid-click'};
+            } else if (node.node_num === currentNodeInx && !validMove) {
+                // keep the current node active if the move is wrong
+                return {...node, status: 'active'};
             } else {
                 return {...node, status: ''};
             }
@@ -34,15 +39,16 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNe
 
     useEffect(() => {
         updateNodes(currentNodeInx, true);
-        setCurrentEdges(selectCurrentEdges(edges, currentNodeInx));
+        setPossibleMoves(selectPossibleMoves(edges, currentNodeInx));
+        // Useful console logs for development
         console.log("currentNode", currentNodeInx);
-        console.log("currentEdges", currentEdges);
+        console.log("possibleMoves", selectPossibleMoves(edges, currentNodeInx));
     }, [currentNodeInx]);
 
 
     const onNodeClick = (nodeIdx: number) => {
-        // check if node is in the current edges targets list
-        if (currentEdges.find((edge) => edge.target_num === nodeIdx)) {
+        // check if node is in the possible moves list
+        if (possibleMoves.includes(nodeIdx)) {
             setCurrentNodeInx(nodeIdx);
         } else {
             // TODO: add timeout 500ms
