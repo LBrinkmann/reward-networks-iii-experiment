@@ -7,12 +7,27 @@ export interface DynamicNetworkInterface extends StaticNetworkInterface {
     startNode: number;
 }
 
+export interface MovesInterface {
+    /** All possible valid nodes to choose */
+    possibleMoves: number[];
+    /** Current move (clicked node) */
+    move: number;
+    /** Is the current move valid? */
+    isMoveValid: boolean;
+}
+
 const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNetworkInterface) => {
     const [nodes, setNodes] = useState<NetworkNodeInterface[]>(props.nodes);
     const [edges, setEdges] = useState<StaticNetworkEdgesInterface[]>(props.edges);
-    const [moves, setMoves] = useState<number[]>([]);
-    const [possibleMoves, setPossibleMoves] = useState<number[]>([]);
     const [currentNodeInx, setCurrentNodeInx] = useState<number>(props.startNode);
+    const [moves, setMoves] = useState<MovesInterface>({possibleMoves: [], move: null, isMoveValid: null});
+
+    useEffect(() => {
+        setMoves((moves) => ({...moves, possibleMoves: selectPossibleMoves(edges,currentNodeInx)}));
+        // Useful console logs for development
+        console.log("currentNode", currentNodeInx);
+        console.log("possibleMoves", selectPossibleMoves(edges, currentNodeInx));
+    }, [currentNodeInx, edges]);
 
     // select edges starting from the node with the `currentNodeId` index
     const selectPossibleMoves = (allEdges: StaticNetworkEdgesInterface[], currentNodeId: number) => {
@@ -37,19 +52,11 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNe
         }));
     }
 
-    useEffect(() => {
-        updateNodes(currentNodeInx, true);
-        setPossibleMoves(selectPossibleMoves(edges, currentNodeInx));
-        // Useful console logs for development
-        console.log("currentNode", currentNodeInx);
-        console.log("possibleMoves", selectPossibleMoves(edges, currentNodeInx));
-    }, [currentNodeInx]);
-
-
     const onNodeClick = (nodeIdx: number) => {
         // check if node is in the possible moves list
-        if (possibleMoves.includes(nodeIdx)) {
+        if (moves.possibleMoves.includes(nodeIdx)) {
             setCurrentNodeInx(nodeIdx);
+            updateNodes(currentNodeInx, true);
         } else {
             // TODO: add timeout 500ms
             updateNodes(nodeIdx, false);

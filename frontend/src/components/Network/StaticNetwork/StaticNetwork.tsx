@@ -19,7 +19,7 @@ export interface StaticNetworkInterface {
     /** Array of nodes of the network */
     nodes: NetworkNodeInterface[];
     /** Callback function to be called when a node is clicked */
-    onNodeClick?: (nodeIdx: number) => void;
+    onNodeClick: (nodeIdx: number) => void;
     /** size of the SVG component */
     size?: { width: number; height: number };
     nodeSize?: number;
@@ -36,10 +36,10 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                            nodeSize = 20,
                            edgeWidth = 1,
                        }: StaticNetworkInterface) => {
-    /* TODO: make it more generic */
+    // TODO: make it more generic
     // const nodeSize = ((size.height / 550) * 600) / 15;
 
-    /* Scale node coordinates */
+    // Scale node coordinates
     const scaleXY = (
         node: { x: number; y: number },
         size: { width: number; height: number }
