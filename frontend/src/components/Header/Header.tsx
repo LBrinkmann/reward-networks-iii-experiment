@@ -9,12 +9,14 @@ interface HeaderInterface {
     tutorialIdx?: number;
     /** Callback to update tutorial index in parents */
     onTutorialClose?: (tutorialIdx: number) => void;
+    title?: string;
 }
 
 const Header = ({
                     tutorialIdx,
                     onTutorialClose,
                     totalPoints = 0,
+                    title = "Reward Networks III"
                 }: HeaderInterface) => {
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
@@ -27,7 +29,7 @@ const Header = ({
                         onTutorialClose={onTutorialClose}
                     >
                         <Typography variant="h6" sx={{flexGrow: 1}}>
-                            Reward Networks III
+                            {title}
                         </Typography>
                     </TutorialTip>
                     <TutorialTip
