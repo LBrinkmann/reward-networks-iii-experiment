@@ -5,13 +5,13 @@ import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
 import NetworkEdge from "../NetworkEdge";
 
-
 export interface StaticNetworkEdgesInterface {
     reward: number;
     source_num: number;
     target_num: number;
     edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
 }
+
 
 export interface StaticNetworkInterface {
     /** Array of edges of the network */
@@ -20,6 +20,8 @@ export interface StaticNetworkInterface {
     nodes: NetworkNodeInterface[];
     /** Callback function to be called when a node is clicked */
     onNodeClick: (nodeIdx: number) => void;
+    currentNodeId: number;
+    possibleMoves: number[];
     /** size of the SVG component */
     size?: { width: number; height: number };
     nodeSize?: number;
@@ -27,17 +29,18 @@ export interface StaticNetworkInterface {
     edgeWidth?: number;
 }
 
-const StaticNetwork: React.FC<StaticNetworkInterface> = ({
-                           edges,
-                           nodes,
-                           onNodeClick,
-                           size = {width: 550, height: 550},
-                           edgeCurvation = 1,
-                           nodeSize = 20,
-                           edgeWidth = 1,
-                       }: StaticNetworkInterface) => {
-    // TODO: make it more generic
-    // const nodeSize = ((size.height / 550) * 600) / 15;
+const StaticNetwork: React.FC<StaticNetworkInterface> = (
+    {
+        edges,
+        nodes,
+        onNodeClick,
+        currentNodeId,
+        possibleMoves,
+        size = {width: 550, height: 550},
+        edgeCurvation = 1,
+        nodeSize = 20,
+        edgeWidth = 1,
+    }: StaticNetworkInterface) => {
 
     // Scale node coordinates
     const scaleXY = (
@@ -79,6 +82,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = ({
                             {...node}
                             node_size={nodeSize}
                             onNodeClick={onNodeClick}
+                            isCurrentActiveNode={currentNodeId === idx}
+                            isValidMove={possibleMoves.includes(idx)}
                             key={"node-" + idx}
                         />
                     );

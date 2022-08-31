@@ -21,24 +21,24 @@ const Template: ComponentStory<typeof NetworkNode> = (args) => {
     )
 };
 
-export const ActiveNode = Template.bind({});
+export const DefaultNode = Template.bind({});
 
-ActiveNode.args = {
+DefaultNode.args = {
     node_num: 0,
     display_name: 'A',
     node_size: 100,
     x: 200,
     y: 200,
-    status: 'active'
+    status: ''
 };
 
-export const DisabledNode = Template.bind({});
+export const WrongClickNode = Template.bind({});
 
-DisabledNode.args = {
+WrongClickNode.args = {
     node_num: 0,
     display_name: 'A',
     node_size: 100,
     x: 200,
     y: 200,
-    status: 'disabled'
+    status: 'invalid-click'
 };
