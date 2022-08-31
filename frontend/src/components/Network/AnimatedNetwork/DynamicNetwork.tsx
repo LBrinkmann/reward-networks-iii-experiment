@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import StaticNetwork from "../StaticNetwork";
-import {StaticNetworkEdges, StaticNetworkInterface} from "../StaticNetwork/StaticNetwork";
+import {StaticNetworkEdgesInterface, StaticNetworkInterface} from "../StaticNetwork/StaticNetwork";
+import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 
 export interface DynamicNetworkInterface extends StaticNetworkInterface {
     startNode: number;
@@ -8,14 +9,15 @@ export interface DynamicNetworkInterface extends StaticNetworkInterface {
 
 const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNetworkInterface) => {
     // select edges starting from the node
-    const selectCurrentEdges = (allEdges: StaticNetworkEdges[], currentNodeId: number) => {
+    const selectCurrentEdges = (allEdges: StaticNetworkEdgesInterface[], currentNodeId: number) => {
         return allEdges.filter((edge) => edge.source_num === currentNodeId);
     }
 
-    const [nodes, setNodes] = useState(props.nodes);
-    const [edges, setEdges] = useState(props.edges);
-    const [currentEdges, setCurrentEdges] = useState(selectCurrentEdges(props.edges, props.startNode));
-    const [currentNodeInx, setCurrentNodeInx] = useState(props.startNode);
+    const [nodes, setNodes] = useState<NetworkNodeInterface[]>(props.nodes);
+    const [edges, setEdges] = useState<StaticNetworkEdgesInterface[]>(props.edges);
+    const [currentEdges, setCurrentEdges] = useState<StaticNetworkEdgesInterface[]>(
+        selectCurrentEdges(props.edges, props.startNode));
+    const [currentNodeInx, setCurrentNodeInx] = useState<number>(props.startNode);
 
     const updateNodes = (currentNodeInx: number, validMove: boolean) => {
         // update node status

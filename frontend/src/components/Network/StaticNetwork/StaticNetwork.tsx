@@ -6,7 +6,7 @@ import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 
 
-export interface StaticNetworkEdges {
+export interface StaticNetworkEdgesInterface {
     reward: number;
     source_num: number;
     target_num: number;
@@ -15,7 +15,7 @@ export interface StaticNetworkEdges {
 
 export interface StaticNetworkInterface {
     /** Array of edges of the network */
-    edges: StaticNetworkEdges[];
+    edges: StaticNetworkEdgesInterface[];
     /** Array of nodes of the network */
     nodes: NetworkNodeInterface[];
     onNodeClick?: (nodeIdx: number) => void;
