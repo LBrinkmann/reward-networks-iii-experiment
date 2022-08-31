@@ -27,7 +27,6 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges}: Dynam
                 previousMoves: moves.previousMoves.concat([currentNodeInx])
             })
         );
-        console.log(moves);
     }, [currentNodeInx]);
 
 
