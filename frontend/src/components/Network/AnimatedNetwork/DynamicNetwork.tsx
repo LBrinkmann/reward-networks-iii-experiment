@@ -7,7 +7,7 @@ export interface AnimatedNetworkInterface extends StaticNetworkInterface {
 }
 
 
-const AnimatedNetwork = ({...props}: AnimatedNetworkInterface) => {
+const DynamicNetwork = ({...props}: AnimatedNetworkInterface) => {
     // select edges starting from the node
     const selectCurrentEdges = (allEdges: StaticNetworkEdges[], currentNodeId: number) => {
         return allEdges.filter((edge) => edge.source_num === currentNodeId);
@@ -61,4 +61,4 @@ const AnimatedNetwork = ({...props}: AnimatedNetworkInterface) => {
 }
 
 
-export default AnimatedNetwork;
+export default DynamicNetwork;

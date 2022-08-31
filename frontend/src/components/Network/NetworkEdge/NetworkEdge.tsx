@@ -75,6 +75,7 @@ const NetworkEdge = ({
 
     // Text rotation
     const textRotation = dx < 0 ? 180 : 0;
+    // TODO: fix text position for different browsers
     const rewardText = dx < 0 ? `${reward}`.split('').reverse().join('') : `${reward}`;
 
     let strokeDasharray, springConfig = {};

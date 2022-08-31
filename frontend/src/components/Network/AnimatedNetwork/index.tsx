@@ -1,2 +1,2 @@
-export { default } from './AnimatedNetwork';
+export { default } from './DynamicNetwork';
 

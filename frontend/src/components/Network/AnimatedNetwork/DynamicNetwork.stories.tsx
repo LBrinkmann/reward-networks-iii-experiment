@@ -2,14 +2,14 @@ import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import AnimatedNetwork from './AnimatedNetwork';
+import DynamicNetwork from './DynamicNetwork';
 
 export default {
-    title: 'Network/AnimatedNetwork',
-    component: AnimatedNetwork,
-} as ComponentMeta<typeof AnimatedNetwork>;
+    title: 'Network/DynamicNetwork',
+    component: DynamicNetwork,
+} as ComponentMeta<typeof DynamicNetwork>;
 
-const Template: ComponentStory<typeof AnimatedNetwork> = (args) => <AnimatedNetwork {...args}/>;
+const Template: ComponentStory<typeof DynamicNetwork> = (args) => <DynamicNetwork {...args}/>;
 
 export const TenNodes = Template.bind({});
 
