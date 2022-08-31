@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import StaticNetwork from "../StaticNetwork";
-import {StaticNetworkEdgesInterface, StaticNetworkInterface} from "../StaticNetwork/StaticNetwork";
-import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
+import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 
-export interface DynamicNetworkInterface extends StaticNetworkInterface {
-    startNode: number;
+export interface DynamicNetworkInterface {
+    nodes: StaticNetworkNodeInterface[];
+    edges: StaticNetworkEdgeInterface[];
 }
 
 export interface MovesInterface {
@@ -14,9 +14,11 @@ export interface MovesInterface {
     previousMoves: number[];
 }
 
-const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNetworkInterface) => {
-    const [edges, setEdges] = useState<StaticNetworkEdgesInterface[]>(props.edges);
-    const [currentNodeInx, setCurrentNodeInx] = useState<number>(props.startNode);
+const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges}: DynamicNetworkInterface) => {
+    // get starting node
+    const startingNode = nodes.filter(node => node.is_starting)[0];
+
+    const [currentNodeInx, setCurrentNodeInx] = useState<number>(startingNode.node_num);
     const [moves, setMoves] = useState<MovesInterface>({possibleMoves: [], previousMoves: []});
 
     useEffect(() => {
@@ -25,13 +27,15 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNe
                 previousMoves: moves.previousMoves.concat([currentNodeInx])
             })
         );
+        console.log(moves);
     }, [currentNodeInx]);
 
+
     // select edges starting from the node with the `currentNodeId` index
-    const selectPossibleMoves = (allEdges: StaticNetworkEdgesInterface[], currentNodeId: number) => {
+    const selectPossibleMoves = (allEdges: StaticNetworkEdgeInterface[], currentNodeId: number) => {
         return allEdges
-            .filter((edge: StaticNetworkEdgesInterface) => edge.source_num === currentNodeId)
-            .map((edge: StaticNetworkEdgesInterface) => edge.target_num);
+            .filter((edge) => edge.source_num === currentNodeId)
+            .map((edge) => edge.target_num);
     }
 
     const onNodeClickHandler = (nodeIdx: number) => {
@@ -44,10 +48,10 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({...props}: DynamicNe
     return (
         <StaticNetwork
             edges={edges}
-            nodes={props.nodes}
+            nodes={nodes}
             currentNodeId={currentNodeInx}
             possibleMoves={moves.possibleMoves}
-            onNodeClick={onNodeClickHandler}
+            onNodeClickHandler={onNodeClickHandler}
         />
     )
 }

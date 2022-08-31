@@ -9,7 +9,7 @@ export default {
     title: 'Network/NetworkNode',
     component: NetworkNode,
     argTypes: {
-        display_name: {control: 'select', options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']},
+        Text: {control: 'select', options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']},
     }
 } as ComponentMeta<typeof NetworkNode>;
 

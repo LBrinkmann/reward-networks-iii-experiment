@@ -5,52 +5,49 @@ import NetworkNodeStyled from "./NetworkNode.styled";
 export type NetworkNodeStatus = "starting" | "active" | "disabled" | "invalid-click" | "";
 
 export interface NetworkNodeInterface {
-    /** Node index, fetched from backend */
-    node_num: number;
-    /** Node displayed name, fetched from backend */
-    display_name: string;
+    /** Node index */
+    nodeInx: number;
+    /** Text inside the node */
+    Text: string;
     /** Node size, fetched from backend */
-    node_size: number;
-    /** Node level (property of the task solution strategy),
-     * fetched from backend */
-    level?: number;
-    /** Node x position, fetched from backend */
+    Size: number;
+    /** Node x position */
     x: number;
-    /** Node y position, fetched from backend*/
+    /** Node y position */
     y: number;
     /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
     isValidMove: boolean;
-    isCurrentActiveNode: boolean;
+    isActive: boolean;
 }
 
 const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInterface) => {
-    const [status, setStatus] = useState<NetworkNodeStatus>(() => props.isCurrentActiveNode ? 'active' : '');
+    const [status, setStatus] = useState<NetworkNodeStatus>(() => props.isActive ? 'active' : '');
 
     useEffect(() => {
         if (status === "invalid-click") {
             setTimeout(() => {
                 setStatus("");
             }, 300);
-        } else if (status === "active" && !props.isCurrentActiveNode) {
+        } else if (status === "active" && !props.isActive) {
             setStatus("");
         }
-    }, [status, props.isCurrentActiveNode]);
+    }, [status, props.isActive]);
 
     const onNodeClick = () => {
-        props.onNodeClick(props.node_num);
+        props.onNodeClick(props.nodeInx);
         if (props.isValidMove) {
             setStatus("active");
-        } else if (!props.isValidMove && !props.isCurrentActiveNode) {
+        } else if (!props.isValidMove && !props.isActive) {
             setStatus("invalid-click");
         }
     }
 
     return (
-        <NetworkNodeStyled status={status} fontSize={props.node_size} onClick={onNodeClick}>
-            <circle cx={props.x} cy={props.y} r={props.node_size} key={"circle"}/>
-            <text x={props.x} y={props.y + props.node_size * 0.35} textAnchor="middle" key={"state-name"}>
-                {props.display_name}
+        <NetworkNodeStyled status={status} fontSize={props.Size} onClick={onNodeClick}>
+            <circle cx={props.x} cy={props.y} r={props.Size} key={"circle"}/>
+            <text x={props.x} y={props.y + props.Size * 0.35} textAnchor="middle" key={"state-name"}>
+                {props.Text}
             </text>
         </NetworkNodeStyled>
     );

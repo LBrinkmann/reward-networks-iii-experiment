@@ -1,26 +1,40 @@
 import React from "react";
-
 import NetworkNode from "../NetworkNode";
-import {NetworkNodeInterface} from "../NetworkNode/NetworkNode";
-
 import NetworkEdge from "../NetworkEdge";
 
-export interface StaticNetworkEdgesInterface {
+export interface StaticNetworkEdgeInterface {
     reward: number;
     source_num: number;
     target_num: number;
     edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
 }
 
+export interface StaticNetworkNodeInterface {
+    /** Node index, fetched from backend */
+    node_num: number;
+    /** Node displayed name, fetched from backend */
+    display_name: string;
+    /** Node x position */
+    x: number;
+    /** Node y position */
+    y: number;
+    is_starting: boolean;
+    /** Node level (property of the task solution strategy),
+     * fetched from backend */
+    level?: number;
+}
+
 
 export interface StaticNetworkInterface {
     /** Array of edges of the network */
-    edges: StaticNetworkEdgesInterface[];
+    edges: StaticNetworkEdgeInterface[];
     /** Array of nodes of the network */
-    nodes: NetworkNodeInterface[];
+    nodes: StaticNetworkNodeInterface[];
     /** Callback function to be called when a node is clicked */
-    onNodeClick: (nodeIdx: number) => void;
+    onNodeClickHandler: (nodeIdx: number) => void;
+    /** Current active node */
     currentNodeId: number;
+    /** Node indices that could be potential next move (have connection through edge) */
     possibleMoves: number[];
     /** size of the SVG component */
     size?: { width: number; height: number };
@@ -33,9 +47,9 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
     {
         edges,
         nodes,
-        onNodeClick,
-        currentNodeId,
-        possibleMoves,
+        onNodeClickHandler,
+        currentNodeId=null,
+        possibleMoves = [],
         size = {width: 550, height: 550},
         edgeCurvation = 1,
         nodeSize = 20,
@@ -51,20 +65,20 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         y: node.y * size.height,
     });
 
-    const scaledNodes = nodes.map((node: NetworkNodeInterface) => ({
+    const transformedNodes = nodes.map((node: StaticNetworkNodeInterface) => ({
         ...node,
         ...scaleXY(node, size),  // scaled coordinates
-    } as NetworkNodeInterface));
+    } as StaticNetworkNodeInterface));
 
     return (
         <svg width={size.width} height={size.height}>
             <g>
-                {edges.map((edge: StaticNetworkEdgesInterface, idx: number) => {
+                {edges.map((edge: StaticNetworkEdgeInterface, idx: number) => {
                     return (
                         <NetworkEdge
                             reward={edge.reward}
-                            source={scaledNodes[edge.source_num]}
-                            target={scaledNodes[edge.target_num]}
+                            source={transformedNodes[edge.source_num]}
+                            target={transformedNodes[edge.target_num]}
                             edgeWidth={edgeWidth}
                             edgeCurvation={edgeCurvation}
                             edgeStyle={edge.edgeStyle}
@@ -76,13 +90,16 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                 })}
             </g>
             <g>
-                {scaledNodes.map((node: NetworkNodeInterface, idx: number) => {
+                {transformedNodes.map((node: StaticNetworkNodeInterface, idx: number) => {
                     return (
                         <NetworkNode
-                            {...node}
-                            node_size={nodeSize}
-                            onNodeClick={onNodeClick}
-                            isCurrentActiveNode={currentNodeId === idx}
+                            x={node.x}
+                            y={node.y}
+                            nodeInx={node.node_num}
+                            Text={node.display_name}
+                            Size={nodeSize}
+                            onNodeClick={onNodeClickHandler}
+                            isActive={(node.is_starting && currentNodeId === idx) || (currentNodeId === idx)}
                             isValidMove={possibleMoves.includes(idx)}
                             key={"node-" + idx}
                         />

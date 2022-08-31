@@ -20,13 +20,14 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
     return (
         <svg height={550} width={550}>
             <NetworkNode
-                node_size={args.nodeSize}
+                Size={args.nodeSize}
                 x={500}
                 y={500}
-                display_name={'A'}
-                node_num={0}
-                status={'active'}
+                Text={'A'}
+                nodeInx={0}
                 onNodeClick={() => {}}
+                isActive={true}
+                isValidMove={false}
             />
             <NetworkEdge {...args}/>
         </svg>
