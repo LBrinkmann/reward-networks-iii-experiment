@@ -21,24 +21,37 @@ const Template: ComponentStory<typeof NetworkNode> = (args) => {
     )
 };
 
-export const DefaultNode = Template.bind({});
+export const ActiveNode = Template.bind({});
 
-DefaultNode.args = {
-    node_num: 0,
-    display_name: 'A',
-    node_size: 100,
+ActiveNode.args = {
+    nodeInx: 0,
+    Text: 'A',
+    Size: 100,
     x: 200,
     y: 200,
-    status: ''
+    isActive: true
 };
 
-export const WrongClickNode = Template.bind({});
+export const ValidClickNode = Template.bind({});
 
-WrongClickNode.args = {
-    node_num: 0,
-    display_name: 'A',
-    node_size: 100,
+ValidClickNode.args = {
+    nodeInx: 0,
+    Text: 'A',
+    Size: 100,
     x: 200,
     y: 200,
-    status: 'invalid-click'
+    isActive: false,
+    isValidMove: true
+};
+
+export const InvalidClickNode = Template.bind({});
+
+InvalidClickNode.args = {
+    nodeInx: 0,
+    Text: 'A',
+    Size: 100,
+    x: 200,
+    y: 200,
+    isActive: false,
+    isValidMove: false
 };
