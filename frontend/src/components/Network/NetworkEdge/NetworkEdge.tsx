@@ -57,6 +57,10 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     const dy = target.y - source.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     const arcR = dist * edgeCurvation;
+    // law of cosines
+    const circleAngle = Math.acos((2 * arcR * arcR - dist * dist) / (2*arcR*arcR))
+    // Arc Length
+    const arcL = arcR * circleAngle;
 
     // Draw path with arc
     // Draw the line in opposite direction when dx < 0 to keep text correctly rotated
@@ -69,13 +73,13 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     const d = `M ${sx} ${sy} A ${arcR} ${arcR} 0 0 ${sweepFlag} ${tx} ${ty}`;
 
     // Calculate percent of the path behind the node
-    const nodePer = (nodeSize / arcR) * 100;
+    const nodePer = (nodeSize / arcL) * 100;
     // Calculate percent of the path behind the marker
-    const arrowLengthPX = 10;
-    const markerPer = (arrowLengthPX / arcR) * 100;
+    const arrowLengthPX = nodeSize < 20 ? nodeSize / 1.7 : 10;
+    const markerPer = (arrowLengthPX / arcL) * 100;
 
     // Marker
-    const markerPositionShiftY = 6;
+    const markerPositionShiftY = nodeSize < 20 ? nodeSize / 3 : 6;
     const markerSymbol = dx < 0 ? '◄' : '►';  // ︎◄ U+25C4 and U+25BA ►
     const markerOffset = `${dx < 0 ? nodePer - markerPer / 2: 100 - nodePer - markerPer}%`;
 
@@ -112,7 +116,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidth}>
+        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidth} nodeSize={nodeSize}>
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                 className="colored-stroke"

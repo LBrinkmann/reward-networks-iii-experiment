@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 type NetworkEdgeProps = {
     colorClass: 'negative' | 'positive' | 'large-negative' | 'large-positive';
     strokeWidth: number;
+    nodeSize: number;
 }
 
 const colors = {
@@ -26,7 +27,7 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   }
 
   & > .edge-text {
-    font-size: 10px;
+    font-size: ${({strokeWidth}) => strokeWidth > 1 ? 10 + strokeWidth * 2 : strokeWidth * 10}px;
     font-weight: 900;
   }
 
@@ -41,7 +42,7 @@ const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
   }
 
   & > .edge-marker {
-    font-size: 16px;
+    font-size: ${({nodeSize}) => nodeSize < 20 ? nodeSize : 16}px;
   }
 `
 
