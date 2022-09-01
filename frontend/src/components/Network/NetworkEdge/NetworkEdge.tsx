@@ -59,24 +59,29 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     const arcR = dist * edgeCurvation;
 
     // Draw path with arc
+    // Draw the line in opposite direction when dx < 0 to keep text correctly rotated
+    const sx = dx < 0 ? target.x : source.x;
+    const sy = dx < 0 ? target.y : source.y;
+    const tx = dx < 0 ? source.x : target.x;
+    const ty = dx < 0 ? source.y : target.y;
     // SEE more about the sweep flag: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-    const sweepFlag = dx >= 0 && dy >= 0 ? 1 : 0;
-    const d = `M ${source.x} ${source.y} A ${arcR} ${arcR} 0 0 ${sweepFlag} ${target.x} ${target.y}`;
+    const sweepFlag = (tx - sx) >= 0 && (ty - sy) >= 0 ? 1 : 0;
+    const d = `M ${sx} ${sy} A ${arcR} ${arcR} 0 0 ${sweepFlag} ${tx} ${ty}`;
+
+    // Calculate percent of the path behind the node
+    const nodePer = (nodeSize / arcR) * 100;
+    // Calculate percent of the path behind the marker
+    const arrowLengthPX = 10;
+    const markerPer = (arrowLengthPX / arcR) * 100;
 
     // Marker
     const markerPositionShiftY = 6;
-    const arrowLength = 12;
-    const markerOffset = `${((arcR - (nodeSize + arrowLength)) / arcR) * 100}%`;
+    const markerSymbol = dx < 0 ? '◄' : '►';  // ︎◄ U+25C4 and U+25BA ►
+    const markerOffset = `${dx < 0 ? nodePer - markerPer / 2: 100 - nodePer - markerPer}%`;
 
     // Text
-    const textPositionShiftY = 3;
-    const nodePer = (nodeSize / arcR) * 100;
-    const textOffset = `${nodePer + 10}%`;
-
-    // Text rotation
-    const textRotation = dx < 0 ? 180 : 0;
-    // TODO: fix text position for different browsers
-    const rewardText = dx < 0 ? `${reward}`.split('').reverse().join('') : `${reward}`;
+    const textPositionShiftY = '0.5%';
+    const textOffset = `${dx < 0 ? 100 - nodePer - 20 : nodePer + 10}%`;
 
     let strokeDasharray, springConfig = {};
     switch (edgeStyle) {
@@ -117,20 +122,20 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
                 d={d}
             />
             {/* Reward background */}
-            <text id={textIdBg} className="edge-text-bg edge-text" dy={textPositionShiftY}>
+            <text id={textIdBg} className="edge-text-bg edge-text" >
                 <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    <tspan rotate={textRotation}>{rewardText}</tspan>
+                    <tspan dy={textPositionShiftY}>{reward}</ tspan>
                 </textPath>
             </text>
             {/* Reward text */}
-            <text id={textId} className="edge-text colored-fill" dy={textPositionShiftY}>
+            <text id={textId} className="edge-text colored-fill">
                 <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    <tspan rotate={textRotation} y={textRotation == 0 ? textPositionShiftY : -1 * textPositionShiftY}>{rewardText}</tspan>
+                    <tspan dy={textPositionShiftY}>{reward}</ tspan>
                 </textPath>
             </text>
             {/* Marker ➤ */}
             <text id={markerId} className="edge-marker colored-fill" dy={markerPositionShiftY} >
-                <textPath xlinkHref={`#${edgeId}`} startOffset={markerOffset}> {'➤'} </textPath>
+                <textPath xlinkHref={`#${edgeId}`} startOffset={markerOffset}> {markerSymbol} </textPath>
             </text>
 
         </NetworkEdgeStyled>
