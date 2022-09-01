@@ -21,8 +21,8 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
         <svg height={550} width={550}>
             <NetworkNode
                 Size={args.nodeSize}
-                x={500}
-                y={500}
+                x={args.target.x}
+                y={args.target.y}
                 Text={'A'}
                 nodeInx={0}
                 onNodeClick={() => {}}
@@ -34,22 +34,9 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
     )
 };
 
-export const SixNodesNet = Template.bind({});
+export const DefaultEdge = Template.bind({});
 
-SixNodesNet.args = {
-    reward: -120,
-    source: {x: 100, y: 100},
-    target: {x: 500, y: 500},
-    edgeWidth: 5,
-    actionIdx: 0,
-    edgeStyle: 'dashed',
-    nodeSize: 40,
-    edgeCurvation: 1,
-};
-
-export const TenNodesNet = Template.bind({});
-
-TenNodesNet.args = {
+DefaultEdge.args = {
     reward: -120,
     source: {x: 100, y: 100},
     target: {x: 500, y: 500},
@@ -59,3 +46,17 @@ TenNodesNet.args = {
     nodeSize: 10,
     edgeCurvation: 1
 };
+
+export const ReverseDirectionEdge = Template.bind({});
+
+ReverseDirectionEdge.args = {
+    reward: -120,
+    source: {x: 500, y: 100},
+    target: {x: 100, y: 500},
+    edgeWidth: 1,
+    actionIdx: 0,
+    edgeStyle: 'dashed',
+    nodeSize: 10,
+    edgeCurvation: 1
+};
+
