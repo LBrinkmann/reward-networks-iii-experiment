@@ -1,7 +1,12 @@
 import React from "react";
 import {Button, Grid, Typography} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 
-const ConsentForm: React.FC = () => {
+interface ConsentFormProps {
+    onClickHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
+
+const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
     return (
         <div>
             <Grid container spacing={4}>
@@ -22,7 +27,13 @@ const ConsentForm: React.FC = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} textAlign={"center"}>
-                    <Button variant="contained" color="success">️I Agree</Button>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={props.onClickHandler}
+                        startIcon={<CheckIcon/>}>️
+                        I Agree
+                    </Button>
                 </Grid>
             </Grid>
         </div>

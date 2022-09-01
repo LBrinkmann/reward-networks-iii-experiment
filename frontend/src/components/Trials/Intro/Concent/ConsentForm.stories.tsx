@@ -21,4 +21,5 @@ const Template: ComponentStory<typeof ConsentForm> = function (args) {
 
 export const DefaultStory = Template.bind({});
 
-DefaultStory.args = {};
+DefaultStory.args = {
+};
