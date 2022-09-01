@@ -125,7 +125,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
             {/* Reward text */}
             <text id={textId} className="edge-text colored-fill" dy={textPositionShiftY}>
                 <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    <tspan rotate={textRotation}>{rewardText}</tspan>
+                    <tspan rotate={textRotation} y={textRotation == 0 ? textPositionShiftY : -1 * textPositionShiftY}>{rewardText}</tspan>
                 </textPath>
             </text>
             {/* Marker ➤ */}
