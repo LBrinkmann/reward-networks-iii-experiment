@@ -5,9 +5,13 @@ import {Button, Grid} from "@mui/material";
 import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
 
 export interface AnimatedNetworkInterface {
+    /** Array of nodes of the network */
     nodes: StaticNetworkNodeInterface[];
+    /** Array of edges of the network */
     edges: StaticNetworkEdgeInterface[];
+    /** The list of moves with the starting node as the first element */
     moves: number[];
+    /** Delay in ms between each played move */
     delayBetweenMoves: number;
 }
 
@@ -25,14 +29,19 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
             return;
         }
         setTimeout(() => {
-            setCurrentNodeId(props.moves[currentMoveInx]);
-            if (currentMoveInx !== 0) {
-                setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
-            }
-            setCurrentMoveInx(currentMoveInx + 1);
-        }, delayBetweenMoves);
+                setCurrentNodeId(props.moves[currentMoveInx]);
+                // Skip edge highlight for the first move
+                if (currentMoveInx !== 0) {
+                    setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
+                }
+                setCurrentMoveInx(currentMoveInx + 1);
+            },
+            // Skip delay for the first move
+            currentMoveInx === 0 ? 0 : delayBetweenMoves
+        );
     }, [currentMoveInx]);
 
+    // Highlight the edge between the current node and the next node
     const updateEdges = (sourceInx: number, targetInx: number) => {
         return edges.map((edge: StaticNetworkEdgeInterface) => {
             if (edge.source_num === sourceInx && edge.target_num === targetInx) {
@@ -43,10 +52,10 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
         });
     }
 
+    // Trigger the replay animation
     const startReplayHandler = () => {
         if (currentMoveInx === null) {
             setCurrentMoveInx(0);
-            console.log("start replay");
         }
     }
 
