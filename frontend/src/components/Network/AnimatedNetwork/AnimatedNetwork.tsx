@@ -25,20 +25,20 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
     const [edges, setEdges] = useState<StaticNetworkEdgeInterface[]>(props.edges);
 
     useEffect(() => {
-        if (currentMoveInx === null) {
-            return;
+        // Do nothing before the replay button is clicked
+        if (currentMoveInx !== null) {
+            setTimeout(() => {
+                    setCurrentNodeId(props.moves[currentMoveInx]);
+                    // Skip edge highlight for the first move
+                    if (currentMoveInx !== 0) {
+                        setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
+                    }
+                    setCurrentMoveInx(currentMoveInx + 1);
+                },
+                // Skip delay for the first move
+                currentMoveInx < 2 ? 100 : delayBetweenMoves
+            );
         }
-        setTimeout(() => {
-                setCurrentNodeId(props.moves[currentMoveInx]);
-                // Skip edge highlight for the first move
-                if (currentMoveInx !== 0) {
-                    setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
-                }
-                setCurrentMoveInx(currentMoveInx + 1);
-            },
-            // Skip delay for the first move
-            currentMoveInx === 0 ? 0 : delayBetweenMoves
-        );
     }, [currentMoveInx]);
 
     // Highlight the edge between the current node and the next node
