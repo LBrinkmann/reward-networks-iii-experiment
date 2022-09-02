@@ -31,6 +31,9 @@ const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInte
             }, 300);
         } else if (status === "active" && !props.isActive) { // override status with the props value
             setStatus("");
+        } else if (props.isActive)
+        {
+            setStatus("active");
         }
     }, [status, props.isActive]);
 
