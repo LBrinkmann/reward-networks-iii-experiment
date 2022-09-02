@@ -1,12 +1,14 @@
 import React from "react";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
+import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
 
 export interface StaticNetworkEdgeInterface {
     reward: number;
     source_num: number;
     target_num: number;
-    edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
+    /** Edge style */
+    edgeStyle: NetworkEdgeStyle;
 }
 
 export interface StaticNetworkNodeInterface {
