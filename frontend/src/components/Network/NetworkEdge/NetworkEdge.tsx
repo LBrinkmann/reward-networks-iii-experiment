@@ -3,6 +3,7 @@ import React from "react";
 
 import NetworkEdgeStyled from "./NetworkEdge.styled";
 
+export type NetworkEdgeStyle = "normal" | "highlighted" | "animated" | "dashed";
 
 export interface NetworkEdgeInterface {
     /** Annotation of the edge - reward to select this action */
@@ -12,7 +13,7 @@ export interface NetworkEdgeInterface {
     /** Target Network Node coordinates */
     target: { x: number, y: number };
     /** Line style of the edge */
-    edgeStyle: "normal" | "highlighted" | "animated" | "dashed";
+    edgeStyle: NetworkEdgeStyle;
     /** Line width of the edge, default = 5 */
     edgeWidth: number;
     /** index of the edge */
@@ -85,7 +86,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
 
     // Text
     const textPositionShiftY = '0.5%';
-    const textOffset = `${dx < 0 ? 100 - nodePer - 20 : nodePer + 10}%`;
+    const textOffset = `${dx < 0 ? 100 - nodePer - 25 : nodePer + 10}%`;
 
     let strokeDasharray, springConfig = {};
     switch (edgeStyle) {
