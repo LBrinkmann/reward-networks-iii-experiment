@@ -18,22 +18,27 @@ export interface NetworkEdgeInterface {
     edgeWidth: number;
     /** index of the edge */
     idx: number;
+    nodeSize: number;
     /** Curvation of the edge
      * the larger, the smaller curvature */
     edgeCurvation?: number;
-    nodeSize: number;
+    /** Show reward text */
+    showRewardText?: boolean;
+
 }
 
-const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
-                         reward,
-                         source,
-                         target,
-                         edgeWidth = 1,
-                         edgeStyle = "normal",
-                         idx,
-                         edgeCurvation = 1,
-                         nodeSize = 20
-                     }: NetworkEdgeInterface) => {
+const NetworkEdge: React.FC<NetworkEdgeInterface> = (
+    {
+        reward,
+        source,
+        target,
+        edgeWidth = 1,
+        edgeStyle = "normal",
+        idx,
+        edgeCurvation = 1,
+        nodeSize = 20,
+        showRewardText = true,
+    }: NetworkEdgeInterface) => {
 
     // Color class of the edge based on the reward
     let colorClass: 'large-negative' | 'negative' | 'positive' | 'large-positive';
@@ -59,7 +64,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     const dist = Math.sqrt(dx * dx + dy * dy);
     const arcR = dist * edgeCurvation;
     // law of cosines
-    const circleAngle = Math.acos((2 * arcR * arcR - dist * dist) / (2*arcR*arcR))
+    const circleAngle = Math.acos((2 * arcR * arcR - dist * dist) / (2 * arcR * arcR))
     // Arc Length
     const arcL = arcR * circleAngle;
 
@@ -82,7 +87,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
     // Marker
     const markerPositionShiftY = nodeSize < 20 ? nodeSize / 3 : 6;
     const markerSymbol = dx < 0 ? '◄' : '►';  // ︎◄ U+25C4 and U+25BA ►
-    const markerOffset = `${dx < 0 ? nodePer - markerPer / 2: 100 - nodePer - markerPer}%`;
+    const markerOffset = `${dx < 0 ? nodePer - markerPer / 2 : 100 - nodePer - markerPer}%`;
 
     // Text
     const textPositionShiftY = '0.5%';
@@ -126,20 +131,24 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = ({
                 markerUnits="userSpaceOnUse"
                 d={d}
             />
-            {/* Reward background */}
-            <text id={textIdBg} className="edge-text-bg edge-text" >
-                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    <tspan dy={textPositionShiftY}>{reward}</ tspan>
-                </textPath>
-            </text>
-            {/* Reward text */}
-            <text id={textId} className="edge-text colored-fill">
-                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
-                    <tspan dy={textPositionShiftY}>{reward}</ tspan>
-                </textPath>
-            </text>
+            {showRewardText ? (
+                <>
+                    {/* Text text background */}
+                    <text id={textIdBg} className="edge-text-bg edge-text">
+                        <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
+                            <tspan dy={textPositionShiftY}>{reward}</ tspan>
+                        </textPath>
+                    </text>
+                    {/* Reward text */}
+                    <text id={textId} className="edge-text colored-fill">
+                        <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>
+                            <tspan dy={textPositionShiftY}>{reward}</ tspan>
+                        </textPath>
+                    </text>
+
+                </>) : null}
             {/* Marker ➤ */}
-            <text id={markerId} className="edge-marker colored-fill" dy={markerPositionShiftY} >
+            <text id={markerId} className="edge-marker colored-fill" dy={markerPositionShiftY}>
                 <textPath xlinkHref={`#${edgeId}`} startOffset={markerOffset}> {markerSymbol} </textPath>
             </text>
 

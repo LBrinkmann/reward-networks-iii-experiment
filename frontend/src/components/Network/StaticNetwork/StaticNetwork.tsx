@@ -40,6 +40,8 @@ export interface StaticNetworkInterface {
     possibleMoves: number[];
     /** size of the SVG component */
     size?: { width: number; height: number };
+    /** Show reward text on the edges */
+    showRewardText?: boolean;
     nodeSize?: number;
     edgeCurvation?: number;
     edgeWidth?: number;
@@ -56,6 +58,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         edgeCurvation = 1,
         nodeSize = 20,
         edgeWidth = 1,
+        showRewardText = false,
     }: StaticNetworkInterface) => {
 
     // Scale node coordinates
@@ -87,6 +90,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             key={"edge-" + idx}
                             idx={idx}
                             nodeSize={nodeSize}
+                            showRewardText={showRewardText}
                         />
                     );
                 })}

@@ -47,9 +47,7 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
                 >
                     {
                         data.map((net: any, inx: number) => (
-                            <MenuItem key={inx} value={inx}>
-                                {`${inx} - ${net.network_id}`}
-                            </MenuItem>
+                            <MenuItem key={inx} value={inx}> {`${inx} - ${net.network_id}`} </MenuItem>
                         ))
                     }
                 </TextField>
