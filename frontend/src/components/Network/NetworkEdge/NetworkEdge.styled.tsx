@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 type NetworkEdgeProps = {
-    colorClass: 'negative' | 'positive' | 'large-negative' | 'large-positive';
+    colorClass: 'negative' | 'positive' | 'neutral' | 'large-negative' | 'large-positive';
     strokeWidth: number;
     nodeSize: number;
 }
@@ -9,6 +9,7 @@ type NetworkEdgeProps = {
 const colors = {
     'large-negative': '#de0000',
     'negative': '#de6500',
+    'neutral': '#cbcbcb',
     'positive': '#008585',
     'large-positive': '#00b200'
 }

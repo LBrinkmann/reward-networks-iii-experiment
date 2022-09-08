@@ -61,12 +61,13 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
 export const TenNodes = Template.bind({});
 
 TenNodes.args = {
+    nodeSize: 15,
+    edgeWidth: 4,
+    edgeCurvation: 1,
+    showRewardText: false,
     edges: data[0].edges,
     nodes: data[0].nodes,
     size: {width: 550, height: 550},
-    nodeSize: 20,
-    edgeWidth: 1,
-    edgeCurvation: 1
 };
 
 export const TenNodesWindnig = Template.bind({});
