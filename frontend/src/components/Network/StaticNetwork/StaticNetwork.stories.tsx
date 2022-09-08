@@ -29,7 +29,7 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
     };
 
     return (
-        <Grid sx={{flexGrow: 1}} direction="column" container spacing={1} justifyContent="center" alignItems="center">
+        <Grid sx={{flexGrow: 1}} direction="row" container spacing={1}>
             <Grid item>
                 <StaticNetwork
                     {...args}
@@ -38,8 +38,13 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
                 />
             </Grid>
             <Grid item>
-                <TextField id="outlined-basic" select label="Select" variant="outlined" onChange={handleChange}
-                           value={currentExample} sx={{width: '40ch'}} helperText="Please select network">
+                <TextField
+                    id="outlined-basic"
+                    select label="Select Network to show"
+                    variant="outlined"
+                    onChange={handleChange}
+                    value={currentExample} sx={{width: '40ch'}}
+                >
                     {
                         data.map((net: any, inx: number) => (
                             <MenuItem key={inx} value={inx}>
