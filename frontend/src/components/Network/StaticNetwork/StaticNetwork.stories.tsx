@@ -62,7 +62,7 @@ export const TenNodes = Template.bind({});
 
 TenNodes.args = {
     nodeSize: 15,
-    edgeWidth: 4,
+    edgeWidth: 2,
     edgeCurvation: 1,
     showRewardText: false,
     edges: data[0].edges,

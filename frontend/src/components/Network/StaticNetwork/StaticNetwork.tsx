@@ -75,6 +75,9 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         ...scaleXY(node, size),  // scaled coordinates
     } as StaticNetworkNodeInterface));
 
+    // Adjust edge curvature
+    // const adjustedCurvature =  Math.max(dist / 200, 0.7);
+
     return (
         <svg width={size.width} height={size.height}>
             <g>
