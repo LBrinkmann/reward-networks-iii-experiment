@@ -5,17 +5,9 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import IndividualTrial from "./IndividualTrial";
 import Header from "../../Header";
 
-const data = require('../../Network/examples/train.json');
+import data from "../../Network/examples";
 
-data.forEach((d: any) => {
-    d.nodes.forEach((n: any, inx: number) => {
-        n.x = (Math.cos(36 * n.node_num * (Math.PI / 180)) + 1) / 3 + 0.1;
-        n.y = (Math.sin(36 * n.node_num * (Math.PI / 180)) + 1) / 3 + 0.1;
-        if (inx === 0) {
-            n.is_starting = true;
-        }
-    });
-});
+const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
 export default {
     title: 'Trials/IndividualTrial',
@@ -31,9 +23,42 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
     );
 };
 
-export const DefaultStory = Template.bind({});
+export const tenSeconds = Template.bind({});
 
-DefaultStory.args = {
-    edges: data[0].edges,
-    nodes: data[0].nodes
+tenSeconds.args = {
+    timer: 10,
+    edges: data[examples_rand[0]].edges,
+    nodes: data[examples_rand[0]].nodes
+};
+
+export const oneMinuteExampleOne = Template.bind({});
+
+oneMinuteExampleOne.args = {
+    timer: 60,
+    edges: data[examples_rand[0]].edges,
+    nodes: data[examples_rand[0]].nodes
+};
+
+export const oneMinuteExampleTwo = Template.bind({});
+
+oneMinuteExampleTwo.args = {
+    timer: 60,
+    edges: data[examples_rand[1]].edges,
+    nodes: data[examples_rand[1]].nodes
+};
+
+export const twoMinutesExampleOne = Template.bind({});
+
+twoMinutesExampleOne.args = {
+    timer: 2 * 60,
+    edges: data[examples_rand[0]].edges,
+    nodes: data[examples_rand[0]].nodes
+};
+
+export const twoMinutesExample2 = Template.bind({});
+
+twoMinutesExample2.args = {
+    timer: 2 * 60,
+    edges: data[examples_rand[1]].edges,
+    nodes: data[examples_rand[1]].nodes
 };
