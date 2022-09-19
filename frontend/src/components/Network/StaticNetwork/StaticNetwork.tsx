@@ -61,7 +61,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         currentNodeId=null,
         possibleMoves = [],
         size = 400,
-        nodeSize = 12,
+        nodeSize = 18,
         edgeWidth = 2,
         showRewardText = false,
     }: StaticNetworkInterface) => {
@@ -75,8 +75,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         y: node.y * (size / 4) + size / 2,
     });
 
-    const scaleSizeX = (val: number) => (val + 100) + size / 2 - 100;
-    const scaleSizeY = (val: number) => (-1 * val + 100) + size / 2 - 100;
+    const scaleSizeX = (val: number) => (val + 100) * 1.5 + size / 2 - 100 * 1.5;
+    const scaleSizeY = (val: number) => (-1 * val + 100) * 1.5 + size / 2 - 100 * 1.5;
 
     return (
         <svg width={size} height={size}>

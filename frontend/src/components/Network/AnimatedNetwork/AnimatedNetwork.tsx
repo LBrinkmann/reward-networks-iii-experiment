@@ -67,7 +67,7 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
                     nodes={props.nodes}
                     currentNodeId={currentNodeId}
                     possibleMoves={[]}
-                    size={{width: 550, height: 550}}
+                    size={400}
                     onNodeClickHandler={null}
                 />
             </Grid>
