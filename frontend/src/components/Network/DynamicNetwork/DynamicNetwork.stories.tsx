@@ -4,7 +4,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import DynamicNetwork from './DynamicNetwork';
 
-import data from "../../Network/examples";
+import data from '../../Network/examples';
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 

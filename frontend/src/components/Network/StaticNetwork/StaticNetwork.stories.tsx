@@ -5,7 +5,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import StaticNetwork from './StaticNetwork';
 import {Grid, MenuItem, TextField} from "@mui/material";
 
-import data from "../../Network/examples";
+import data from '../../Network/examples';
 
 export default {
     title: 'Network/StaticNetwork',
@@ -54,47 +54,10 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
 export const TenNodes = Template.bind({});
 
 TenNodes.args = {
-    nodeSize: 15,
+    nodeSize: 12,
     edgeWidth: 2,
-    edgeCurvation: 1,
     showRewardText: false,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    size: {width: 550, height: 550},
-};
-
-export const TenNodesWindnig = Template.bind({});
-
-TenNodesWindnig.args = {
-    exampleNum: 0,
-    edges: data[0].edges,
-    nodes: data[0].nodes,
-    size: {width: 550, height: 550},
-    nodeSize: 20,
-    edgeWidth: 1,
-    edgeCurvation: 0.6
-};
-
-export const TenNodesSmall = Template.bind({});
-
-TenNodesSmall.args = {
-    exampleNum: 0,
-    edges: data[0].edges,
-    nodes: data[0].nodes,
-    size: {width: 350, height: 350},
-    nodeSize: 12,
-    edgeWidth: 0.7,
-    edgeCurvation: 1
-};
-
-export const TenNodesExtraSmall = Template.bind({});
-
-TenNodesExtraSmall.args = {
-    exampleNum: 0,
-    edges: data[0].edges,
-    nodes: data[0].nodes,
-    size: {width: 250, height: 250},
-    nodeSize: 10,
-    edgeWidth: 0.5,
-    edgeCurvation: 1
+    size: 400,
 };

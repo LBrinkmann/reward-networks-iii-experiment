@@ -9,6 +9,13 @@ export interface StaticNetworkEdgeInterface {
     target_num: number;
     /** Edge style */
     edgeStyle: NetworkEdgeStyle;
+    arc_type: 'straight' | 'curved';
+    source_x: number;
+    source_y: number;
+    arc_x: number;
+    arc_y: number;
+    target_x: number;
+    target_y: number;
 }
 
 export interface StaticNetworkNodeInterface {
@@ -39,11 +46,10 @@ export interface StaticNetworkInterface {
     /** Node indices that could be potential next move (have connection through edge) */
     possibleMoves: number[];
     /** size of the SVG component */
-    size?: { width: number; height: number };
+    size?: number;
     /** Show reward text on the edges */
     showRewardText?: boolean;
     nodeSize?: number;
-    edgeCurvation?: number;
     edgeWidth?: number;
 }
 
@@ -54,56 +60,53 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         onNodeClickHandler,
         currentNodeId=null,
         possibleMoves = [],
-        size = {width: 550, height: 550},
-        edgeCurvation = 1,
-        nodeSize = 20,
-        edgeWidth = 1,
+        size = 400,
+        nodeSize = 12,
+        edgeWidth = 2,
         showRewardText = false,
     }: StaticNetworkInterface) => {
 
     // Scale node coordinates
     const scaleXY = (
         node: { x: number; y: number },
-        size: { width: number; height: number }
+        size: number
     ) => ({
-        x: node.x * size.width,
-        y: node.y * size.height,
+        x: node.x * (size / 4) + size / 2,
+        y: node.y * (size / 4) + size / 2,
     });
 
-    const transformedNodes = nodes.map((node: StaticNetworkNodeInterface) => ({
-        ...node,
-        ...scaleXY(node, size),  // scaled coordinates
-    } as StaticNetworkNodeInterface));
-
-    // Adjust edge curvature
-    // const adjustedCurvature =  Math.max(dist / 200, 0.7);
+    const scaleSizeX = (val: number) => (val + 100) + size / 2 - 100;
+    const scaleSizeY = (val: number) => (-1 * val + 100) + size / 2 - 100;
 
     return (
-        <svg width={size.width} height={size.height}>
+        <svg width={size} height={size}>
             <g>
                 {edges.map((edge: StaticNetworkEdgeInterface, idx: number) => {
                     return (
                         <NetworkEdge
                             reward={edge.reward}
-                            source={transformedNodes[edge.source_num]}
-                            target={transformedNodes[edge.target_num]}
                             edgeWidth={edgeWidth}
-                            edgeCurvation={edgeCurvation}
                             edgeStyle={edge.edgeStyle}
                             key={"edge-" + idx}
                             idx={idx}
-                            nodeSize={nodeSize}
                             showRewardText={showRewardText}
+                            arc_type={edge.arc_type}
+                            source_x={scaleSizeX(edge.source_x)}
+                            source_y={scaleSizeY(edge.source_y)}
+                            arc_x={scaleSizeX(edge.arc_x)}
+                            arc_y={scaleSizeY(edge.arc_y)}
+                            target_x={scaleSizeX(edge.target_x)}
+                            target_y={scaleSizeY(edge.target_y)}
                         />
                     );
                 })}
             </g>
             <g>
-                {transformedNodes.map((node: StaticNetworkNodeInterface, idx: number) => {
+                {nodes.map((node: StaticNetworkNodeInterface, idx: number) => {
                     return (
                         <NetworkNode
-                            x={node.x}
-                            y={node.y}
+                            x={scaleSizeX(node.x)}
+                            y={scaleSizeY(node.y)}
                             nodeInx={node.node_num}
                             Text={node.display_name}
                             Size={nodeSize}
