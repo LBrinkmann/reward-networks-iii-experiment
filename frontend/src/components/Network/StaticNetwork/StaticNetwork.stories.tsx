@@ -5,14 +5,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import StaticNetwork from './StaticNetwork';
 import {Grid, MenuItem, TextField} from "@mui/material";
 
-const data = require('../examples/train.json');
-
-data.forEach((d: any) => {
-    d.nodes.forEach((n: any) => {
-        n.x = (Math.cos(36 * n.node_num * (Math.PI / 180)) + 1) / 3 + 0.1;
-        n.y = (Math.sin(36 * n.node_num * (Math.PI / 180)) + 1) / 3 + 0.1;
-    });
-});
+import data from "../../Network/examples";
 
 export default {
     title: 'Network/StaticNetwork',
