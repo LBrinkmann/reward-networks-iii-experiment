@@ -3,10 +3,10 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import WrittenStrategy from "./WrittenStrategy";
-import Header from "../../../Header";
+import Header from "../../Header";
 
 export default {
-    title: 'Trials/SocialLearning/WrittenStrategy',
+    title: 'Trials/WrittenStrategy',
     component: WrittenStrategy,
 } as ComponentMeta<typeof WrittenStrategy>;
 
