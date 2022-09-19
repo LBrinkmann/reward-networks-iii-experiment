@@ -7,6 +7,8 @@ export interface DynamicNetworkInterface {
     edges: StaticNetworkEdgeInterface[];
     /** Function to update parent state from child component */
     onNodeClickParentHandler?: (currentNode: number, nextNode: number) => void;
+    /** Control weather subject can interact with the network */
+    isDisabled?: boolean;
 }
 
 export interface MovesInterface {
@@ -16,7 +18,14 @@ export interface MovesInterface {
     previousMoves: number[];
 }
 
-const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges, ...props}: DynamicNetworkInterface) => {
+const DynamicNetwork: React.FC<DynamicNetworkInterface> = (
+    {
+        nodes,
+        edges,
+        onNodeClickParentHandler,
+        isDisabled = false,
+    }: DynamicNetworkInterface) => {
+
     // get starting node
     const startingNode = nodes.filter(node => node.is_starting)[0];
 
@@ -42,7 +51,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges, ...pro
     const onNodeClickHandler = (nodeIdx: number) => {
         // check if node is in the possible moves list
         if (moves.possibleMoves.includes(nodeIdx)) {
-            props.onNodeClickParentHandler(currentNodeInx, nodeIdx);
+            onNodeClickParentHandler(currentNodeInx, nodeIdx);
             setCurrentNodeInx(nodeIdx);
         }
     }
@@ -53,7 +62,9 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges, ...pro
             nodes={nodes}
             currentNodeId={currentNodeInx}
             possibleMoves={moves.possibleMoves}
-            onNodeClickHandler={onNodeClickHandler}
+            onNodeClickHandler={
+                isDisabled ? null : onNodeClickHandler
+            }
         />
     )
 }
