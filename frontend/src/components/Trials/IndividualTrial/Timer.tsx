@@ -4,34 +4,58 @@ import React, {useEffect, useState} from "react";
 interface TimerInterface {
     /** Time in seconds */
     time: number;
+    /** Callback to handle timer end */
+    OnTimeEndHandler?: () => void;
 }
 
-const Timer: React.FC<TimerInterface> = ({time}) => {
+const Timer: React.FC<TimerInterface> = ({time, OnTimeEndHandler}) => {
     const [timePassed, setTimePassed] = useState<number>(0);
+    const [isDone, setIsDone] = useState<boolean>(false);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setTimePassed(prevTime => prevTime + 1)
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        if (isDone) {
+            OnTimeEndHandler();
+        } else {
+            const interval = setInterval(() => {
+                setTimePassed(prevTime => prevTime + 1)
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [isDone]);
 
+    useEffect(() => {
+        if (timePassed >= time) {
+            setIsDone(true);
+        }
+    }, [timePassed]);
+
+    // Convert seconds to minutes and seconds
     const fmtMSS = (s: number) => {
         return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
 
+    // Change the color of the progress circle based on the time left in percent
+    const selectColor = (timeLeft: number) => {
+        if (timeLeft > 0.9) {
+            return "error";
+        } else if (timeLeft > 0.6) {
+            return "warning";
+        } else {
+            return "success";
+        }
+    }
+
     return (
         <Box display='flex' justifyContent='center' alignItems='center'>
-                <Typography
-                    position="absolute"
-                    variant="caption"
-                    component="div"
-                    color="text.secondary"
-                >
-                    {fmtMSS(time - timePassed)}
-                </Typography>
+            <Typography position="absolute" variant="h5" component="div" color="text.secondary">
+                {fmtMSS(time - timePassed)}
+            </Typography>
 
-            <CircularProgress variant="determinate" value={((timePassed + time) / time) * 100} size={120}/>
+            <CircularProgress
+                color={selectColor(timePassed / time)}
+                variant="determinate"
+                value={((timePassed + time) / time) * 100}
+                size={120}/>
         </Box>
     );
 
