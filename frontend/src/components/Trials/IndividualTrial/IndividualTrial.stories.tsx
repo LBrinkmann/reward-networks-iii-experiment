@@ -23,14 +23,6 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
     );
 };
 
-export const tenSeconds = Template.bind({});
-
-tenSeconds.args = {
-    timer: 10,
-    edges: data[examples_rand[0]].edges,
-    nodes: data[examples_rand[0]].nodes
-};
-
 export const oneMinuteExampleOne = Template.bind({});
 
 oneMinuteExampleOne.args = {
@@ -55,9 +47,9 @@ twoMinutesExampleOne.args = {
     nodes: data[examples_rand[0]].nodes
 };
 
-export const twoMinutesExample2 = Template.bind({});
+export const twoMinutesExampleTwo = Template.bind({});
 
-twoMinutesExample2.args = {
+twoMinutesExampleTwo.args = {
     timer: 2 * 60,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes
