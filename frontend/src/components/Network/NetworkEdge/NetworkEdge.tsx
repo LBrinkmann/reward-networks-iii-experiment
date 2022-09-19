@@ -42,7 +42,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
 
     // Color class of the edge based on the reward
     let colorClass: 'large-negative' | 'negative' | 'neutral' | 'positive' | 'large-positive';
-    if (reward < -100) {
+    if (reward <= -100) {
         colorClass = 'large-negative';
     } else if (reward < 0) {
         colorClass = 'negative';
