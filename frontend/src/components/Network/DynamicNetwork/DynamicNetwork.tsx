@@ -5,6 +5,8 @@ import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticN
 export interface DynamicNetworkInterface {
     nodes: StaticNetworkNodeInterface[];
     edges: StaticNetworkEdgeInterface[];
+    /** Function to update parent state from child component */
+    onNodeClickParentHandler?: (currentNode: number, nextNode: number) => void;
 }
 
 export interface MovesInterface {
@@ -14,7 +16,7 @@ export interface MovesInterface {
     previousMoves: number[];
 }
 
-const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges}: DynamicNetworkInterface) => {
+const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges, ...props}: DynamicNetworkInterface) => {
     // get starting node
     const startingNode = nodes.filter(node => node.is_starting)[0];
 
@@ -40,6 +42,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = ({nodes, edges}: Dynam
     const onNodeClickHandler = (nodeIdx: number) => {
         // check if node is in the possible moves list
         if (moves.possibleMoves.includes(nodeIdx)) {
+            props.onNodeClickParentHandler(currentNodeInx, nodeIdx);
             setCurrentNodeInx(nodeIdx);
         }
     }
