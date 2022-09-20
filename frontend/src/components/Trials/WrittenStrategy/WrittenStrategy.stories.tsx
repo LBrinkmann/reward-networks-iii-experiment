@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof WrittenStrategy> = function (args) {
     return (
         <>
             <Header totalPoints={0} title={"Written Strategy"}/>
-            <WrittenStrategy/>
+            <WrittenStrategy {...args}/>
         </>
     );
 };
@@ -22,4 +22,5 @@ const Template: ComponentStory<typeof WrittenStrategy> = function (args) {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
+    onClickContinue: null
 };
