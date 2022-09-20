@@ -54,10 +54,10 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
 export const TenNodes = Template.bind({});
 
 TenNodes.args = {
-    nodeSize: 12,
-    edgeWidth: 2,
+    nodeSize: 28,
+    edgeWidth: 2.5,
     showRewardText: false,
+    size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    size: 400,
 };
