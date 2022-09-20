@@ -74,9 +74,6 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
         d = `M ${source_x} ${source_y} Q ${arc_x} ${arc_y} ${target_x} ${target_y}`;
     }
 
-    // Marker
-    const markerSymbol = '►';  // ︎◄ U+25C4 and U+25BA ►
-
     let strokeDasharray, springConfig = {};
     switch (edgeStyle) {
         case "normal":
@@ -92,7 +89,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
             springConfig = {
                 loop: true,
                 from: {dashOffset: 0},
-                dashOffset: 0,
+                dashOffset: source_x - target_x < 0 || source_y - target_y < 0 ? 100 : -100,
                 delay: 0,
                 config: {duration: 10000},
             };
@@ -116,26 +113,26 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
                 markerUnits="userSpaceOnUse"
                 d={d}
             />
-            {/*{showRewardText ? (*/}
-            {/*    <>*/}
-            {/*        /!* Text text background *!/*/}
-            {/*        <text id={textIdBg} className="edge-text-bg edge-text">*/}
-            {/*            <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>*/}
-            {/*                <tspan dy={textPositionShiftY}>{reward}</ tspan>*/}
-            {/*            </textPath>*/}
-            {/*        </text>*/}
-            {/*        /!* Reward text *!/*/}
-            {/*        <text id={textId} className="edge-text colored-fill">*/}
-            {/*            <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={textOffset}>*/}
-            {/*                <tspan dy={textPositionShiftY}>{reward}</ tspan>*/}
-            {/*            </textPath>*/}
-            {/*        </text>*/}
+            {showRewardText ? (
+                <>
+                    {/* Text text background */}
+                    <text id={textIdBg} className="edge-text-bg edge-text">
+                        <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={'35%'}>
+                            <tspan dy={3}>{reward}</ tspan>
+                        </textPath>
+                    </text>
+                    {/* Reward text */}
+                    <text id={textId} className="edge-text colored-fill">
+                        <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={'35%'}>
+                            <tspan dy={3}>{reward}</ tspan>
+                        </textPath>
+                    </text>
 
-            {/*    </>) : null}*/}
+                </>) : null}
             {/* Marker ➤ */}
-            <marker id={markerId} markerWidth="4" markerHeight="3" className="edge-marker colored-fill"
-                    refX="3" refY="1.5" orient="auto">
-                <polygon points="0 0, 4 1.5, 0 3" />
+            <marker id={markerId} markerWidth="5" markerHeight="4" className="colored-fill"
+                    refX="4" refY="2" orient="auto">
+                <polygon points="0 0, 5 2, 0 4" />
             </marker>
 
         </NetworkEdgeStyled>
