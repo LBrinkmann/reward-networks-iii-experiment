@@ -2,9 +2,9 @@ import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
-import config from ".././config";
+import config from "./configLoader";
 
-axios.defaults.baseURL = config.backend_url + '/session/';
+axios.defaults.baseURL = config.backendUrl + '/session/';
 
 export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
     const [trialData, setTrialData] = useState<any>();
