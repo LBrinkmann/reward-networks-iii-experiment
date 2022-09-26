@@ -1,1 +1,1 @@
-export { useTrial } from './apis';
+export { useTrialAPI } from './apis';

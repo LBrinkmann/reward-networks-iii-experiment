@@ -5,13 +5,14 @@ import {v4 as uuid4} from "uuid";
 
 axios.defaults.baseURL = 'http://localhost:5000/session/';
 
-export const useTrial = (axiosParamsGet: AxiosRequestConfig) => {
+export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
     const [trialData, setTrialData] = useState<any>();
-    const [error, setError] = useState<AxiosError>();
-    const [loading, setLoading] = useState(axiosParamsGet.method === "GET" || axiosParamsGet.method === "get");
+    const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [error, setError] = useState<AxiosError>();
 
-    const fetchData = async (params: AxiosRequestConfig) => {
+    const axiosRequest = async (params: AxiosRequestConfig) => {
+        setLoading(true);
         try {
             params.url = searchParams.get("userId");
             params.headers = {
@@ -27,20 +28,20 @@ export const useTrial = (axiosParamsGet: AxiosRequestConfig) => {
     };
 
     const sendData = (axiosParamsPost: AxiosRequestConfig) => {
-        fetchData(axiosParamsPost);
+        axiosRequest(axiosParamsPost);
     }
 
-    useEffect(() => {
-        if (!searchParams.get("userId")) {
-            setSearchParams({...searchParams, userId: uuid4()});
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!searchParams.get("userId")) {
+    //         setSearchParams({...searchParams, userId: uuid4().toString()});
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
-            fetchData(axiosParamsGet);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
+    //         fetchData(axiosParamsGet);
+    //     }
+    // }, []);
 
     return {trialData, error, loading, sendData};
 }
