@@ -59,7 +59,7 @@ async def create_generation(generation: int,
                             experiment_type: str,
                             experiment_num: int
                             ) -> List[Session]:
-    data = json.load(open(Path.cwd() / 'data' / 'examples.json'))
+    data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
     sessions = []
     for session_idx in range(n_sessions_per_generation):
         trials = []
@@ -73,7 +73,8 @@ async def create_generation(generation: int,
                 network=Network.parse_obj(data[trial_idx])
             )
             # TODO: read the starting node from the file
-            trial.network.nodes[0].starting_node = True
+            trial.network.nodes[
+                trial.network.starting_node].starting_node = True
             trials.append(trial)
         # create session
         # TODO: check if session already exists
