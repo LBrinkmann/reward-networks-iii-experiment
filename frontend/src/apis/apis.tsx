@@ -15,12 +15,10 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
     useEffect(() => {
         if (!searchParams.get("userId")) {
             setSearchParams({...searchParams, userId: uuid4().toString()});
-            console.log("first");
         }
     }, []);
 
     useEffect(() => {
-        console.log(searchParams);
         if (searchParams.get("userId")) {
             if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
                 axiosRequest(axiosParamsGet);
