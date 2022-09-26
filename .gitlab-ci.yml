@@ -1,5 +1,9 @@
+stages:
+  - start child pipelines
+
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
+  stage: start child pipelines
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
@@ -7,6 +11,7 @@ backend:
     strategy: depend
 
 frontend:
+  stage: start child pipelines
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
