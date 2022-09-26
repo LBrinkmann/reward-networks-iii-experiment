@@ -57,5 +57,7 @@ module.exports = {
     historyApiFallback: true,
     allowedHosts: "all",
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+      new webpack.HotModuleReplacementPlugin()
+  ],
 };
