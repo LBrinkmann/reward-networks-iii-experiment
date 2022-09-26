@@ -1,12 +1,8 @@
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
   trigger:
-    include: 
-      - backend/.gitlab-ci-backend.yml
-      - backend/app.yml
+    project: backend
 
 frontend:
   trigger:
-    include: 
-      - frontend/.gitlab-ci-frontend.yml
-      - frontend/app.yml
+    project: frontend
