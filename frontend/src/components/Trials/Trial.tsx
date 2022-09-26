@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useTrialAPI} from "../../apis";
 import Header from "../Header";
+import WrittenStrategy from "./WrittenStrategy";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -24,6 +25,20 @@ const Trial: React.FC<TrialInterface> = (props) => {
             }
         )
     }
+    const renderTrial = (type: string, data: any) => {
+        switch (type) {
+            case 'intro':
+                return <> </>; // <Intro />
+            case 'learning':
+                return <> </>; // <Learning />
+            case  'main':
+                return <WrittenStrategy onClickContinue={OnNextTrial}/>;
+            case  'written_strategy':
+                return <WrittenStrategy onClickContinue={OnNextTrial}/>;
+            default:
+                return <> </>;
+        }
+    }
 
     return (
         <>
@@ -32,28 +47,14 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 (
                     <>
                         <Header title={trialType + " – " + trialNumber}/>
+                        {renderTrial(trialType, trialData)}
                     </>
                 )
             }
-
-            <button onClick={OnNextTrial}>
-                Next Trial
-            </button>
         </>
     );
 
-    // switch (trialType) {
-    //     case 'intro':
-    //         return <> </>; // <Intro />
-    //     case 'tutorial':
-    //         return <> </>; // <Tutorial />
-    //     case 'learning':
-    //         return <> </>; // <Learning />
-    //     case  'advise':
-    //         return <> </>; // <Advise />
-    //     default:
-    //         return <> </>;
-    // }
+
 };
 
 
