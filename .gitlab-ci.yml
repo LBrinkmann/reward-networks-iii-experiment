@@ -7,6 +7,7 @@ backend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
+    extends: .change_folder
     include: .sub-gitlab-ci.yml
     strategy: depend
 
@@ -15,5 +16,6 @@ frontend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "frontend"
   trigger:
+    extends: .change_folder
     include: .sub-gitlab-ci.yml
     strategy: depend
