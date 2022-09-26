@@ -3,6 +3,9 @@ backend:
   trigger:
     include: backend/.gitlab-ci-backend.yml
     strategy: depend
+    artifacts:
+      path:
+        - backend/
   rules:
     - changes: [backend/*]
 
@@ -10,5 +13,8 @@ frontend:
   trigger:
     include: frontend/.gitlab-ci-frontend.yml
     strategy: depend
+    artifacts:
+      path:
+        - frontend/
   rules:
     - changes: [frontend/*]
