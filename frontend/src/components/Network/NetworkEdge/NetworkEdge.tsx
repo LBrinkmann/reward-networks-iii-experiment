@@ -109,7 +109,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
                 className="colored-stroke"
                 id={edgeId}
                 strokeDasharray={strokeDasharray ? strokeDasharray : null}
-                marker-end={`url(#${markerId})`}
+                markerEnd={`url(#${markerId})`}
                 markerUnits="userSpaceOnUse"
                 d={d}
             />

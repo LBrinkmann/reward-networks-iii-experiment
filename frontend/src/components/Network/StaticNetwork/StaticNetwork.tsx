@@ -68,8 +68,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
 
     // Scale node coordinates
     const multiplier = 2;
-    const scaleSizeX = (val: number) => val * multiplier + size / 2 - 100 * multiplier;
-    const scaleSizeY = (val: number) => val * multiplier + size / 2 - 100 * multiplier;
+    const scaleSizeX = (val: number) => val * multiplier + size / 2;
+    const scaleSizeY = (val: number) => val * multiplier + size / 2;
 
     return (
         <svg width={size} height={size}>

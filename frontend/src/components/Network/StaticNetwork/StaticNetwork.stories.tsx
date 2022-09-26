@@ -18,7 +18,6 @@ const Template: ComponentStory<typeof StaticNetwork> = args => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentExample(parseInt(event.target.value));
-        console.log(event.target.value, parseInt(event.target.value), currentExample);
     };
 
     return (
