@@ -1,11 +1,6 @@
 variables:
   APP_NAME: rn-iii-backend
 
-pre-init:
-  script:
-    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
-    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
-
 include:
   - project: "mpib/chm/common/deploy-pipeline"
     ref: "1.5.0"
