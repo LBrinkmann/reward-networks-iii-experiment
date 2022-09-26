@@ -11,7 +11,7 @@ from models.trial import Trial
 
 async def generate_sessions(n_generations: int = 5,
                             n_sessions_per_generation: int = 10,
-                            n_trials_per_session: int = 10,
+                            n_trials_per_session: int = 5,
                             trial_types: Union[List[str], str, None] = None,
                             n_advise_per_session: int = 5,
                             experiment_type: str = 'reward_network_iii',
@@ -59,36 +59,72 @@ async def create_generation(generation: int,
                             experiment_type: str,
                             experiment_num: int
                             ) -> List[Session]:
-    data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
     sessions = []
     for session_idx in range(n_sessions_per_generation):
-        trials = []
-        # TODO: add trial types
-        # create trials for this session
-        for trial_idx in range(n_trials_per_session):
-            # TODO: read Networks
-            # create trial
-            trial = Trial(
-                trial_num_in_session=trial_idx,
-                network=Network.parse_obj(data[trial_idx])
-            )
-            # TODO: read the starting node from the file
-            trial.network.nodes[
-                trial.network.starting_node].starting_node = True
-            trials.append(trial)
-        # create session
-        # TODO: check if session already exists
-        session = Session(
-            experiment_num=experiment_num,
-            experiment_type=experiment_type,
-            generation=generation,
-            session_num_in_generation=session_idx,
-            trials=trials,
-            available=True if generation == 0 else False,
-        )
-        # Add trials to session
-        session.trials = trials
+        session = await generate_session(experiment_num, experiment_type,
+                                         generation, n_trials_per_session,
+                                         session_idx)
         # save session
         await session.save()
         sessions.append(session)
     return sessions
+
+
+async def generate_session(experiment_num, experiment_type, generation,
+                           n_trials_per_session, session_idx):
+    networks_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
+    trial_n = 0
+
+    # Consent form
+    trials = [Trial(trial_num_in_session=trial_n, trial_type='consent')]
+    trial_n += 1
+
+    # Social learning
+    # trials.append(Trial(
+    #     trial_num_in_session=trial_n,
+    #     trial_type='social_learning_selection'))
+    # trial_n += 1
+
+    # Individual trials
+    for _ in range(n_trials_per_session):
+        # TODO: read Networks
+        # create trial
+        trial = Trial(
+            trial_type='individual',
+            trial_num_in_session=trial_n,
+            network=Network.parse_obj(
+                networks_data[random.randint(0, networks_data.__len__() - 1)]),
+        )
+        # update the starting node
+        trial.network.nodes[
+            trial.network.starting_node].starting_node = True
+        trials.append(trial)
+        trial_n += 1
+
+    # Demonstration trial
+    trials.append(Trial(
+        trial_num_in_session=trial_n,
+        trial_type='demonstration'))
+    trial_n += 1
+
+    # Written strategy
+    trials.append(Trial(
+        trial_num_in_session=trial_n,
+        trial_type='written_strategy'))
+    trial_n += 1
+
+    # Debriefing
+
+    # create session
+    # TODO: check if session already exists
+    session = Session(
+        experiment_num=experiment_num,
+        experiment_type=experiment_type,
+        generation=generation,
+        session_num_in_generation=session_idx,
+        trials=trials,
+        available=True if generation == 0 else False,
+    )
+    # Add trials to session
+    session.trials = trials
+    return session

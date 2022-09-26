@@ -14,7 +14,14 @@ class Solution(BaseModel):
 
 class Trial(BaseModel):
     trial_num_in_session: int
-    trial_type: Optional[Literal['tutorial', 'main']] = 'main'
+    trial_type: Literal[
+        'consent',
+        'social_learning_selection',
+        'social_learning',
+        'individual',
+        'demonstration',
+        'written_strategy'
+    ]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]
