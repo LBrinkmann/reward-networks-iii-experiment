@@ -43,7 +43,12 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     onNextTrialHandler={OnNextTrial}
                 />;
             case 'demonstration':
-                return <> </>;
+                return <IndividualTrial
+                    timer={2 * 60}
+                    nodes={trialData.network.nodes}
+                    edges={trialData.network.edges}
+                    onNextTrialHandler={OnNextTrial}
+                />;
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
             default:
@@ -57,7 +62,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error &&
                 (
                     <>
-                        <Header title={trialType + " – " + trialNumber}/>
+                        <Header title={"Trial " + trialNumber + ": " + trialType}/>
                         {renderTrial(trialType, trialData)}
                     </>
                 )
