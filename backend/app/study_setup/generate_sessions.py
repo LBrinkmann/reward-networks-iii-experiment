@@ -103,9 +103,16 @@ async def generate_session(experiment_num, experiment_type, generation,
         trial_n += 1
 
     # Demonstration trial
-    trials.append(Trial(
+    dem_trial = Trial(
         trial_num_in_session=trial_n,
-        trial_type='demonstration'))
+        trial_type='demonstration',
+        network=Network.parse_obj(
+            network_data[random.randint(0, network_data.__len__() - 1)]),
+    )
+    # update the starting node
+    dem_trial.network.nodes[
+        dem_trial.network.starting_node].starting_node = True
+    trials.append(dem_trial)
     trial_n += 1
 
     # Written strategy

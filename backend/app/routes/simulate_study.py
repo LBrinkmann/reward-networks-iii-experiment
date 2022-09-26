@@ -21,7 +21,6 @@ async def get_study_simulation(n_subjects: int = 10,
                                experiment_num: int = 0,
                                generate_new_sessions: bool = False,
                                run_simulation: bool = True,
-                               n_trials_per_session: int = 10,
                                n_gen: int = 5,
                                n_s_per_gen: int = 10,
                                n_adv: int = 5):
@@ -34,7 +33,6 @@ async def get_study_simulation(n_subjects: int = 10,
         await Subject.find().delete()
         await generate_sessions(n_generations=n_gen,
                                 n_sessions_per_generation=n_s_per_gen,
-                                n_trials_per_session=n_trials_per_session,
                                 n_advise_per_session=n_adv,
                                 experiment_type=experiment_type,
                                 experiment_num=experiment_num)
@@ -49,7 +47,7 @@ async def get_study_simulation(n_subjects: int = 10,
             for i in range(n_subjects):
                 subj = i + 10 * ii
                 task = asyncio.create_task(
-                    one_subject(base_url, headers, subj, n_trials_per_session))
+                    one_subject(base_url, headers, subj, 3))
                 tasks.append(task)
                 await asyncio.sleep(0.5)
             # run all subjects in one batch in parallel
