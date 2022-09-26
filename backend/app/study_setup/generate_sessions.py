@@ -2,7 +2,7 @@ import json
 import random
 from pathlib import Path
 
-from typing import List, Union
+from typing import List
 
 from models.network import Network
 from models.session import Session
@@ -11,26 +11,26 @@ from models.trial import Trial
 
 async def generate_sessions(n_generations: int = 5,
                             n_sessions_per_generation: int = 10,
-                            n_trials_per_session: int = 5,
-                            trial_types: Union[List[str], str, None] = None,
                             n_advise_per_session: int = 5,
                             experiment_type: str = 'reward_network_iii',
                             experiment_num: int = 0
                             ):
+    """
+    Generate one experiment.
+    """
     # Set random seed
     random.seed(42)
 
     # create sessions for the first generation
     sessions_n_0 = await create_generation(
-        0, n_sessions_per_generation, n_trials_per_session, trial_types,
-        experiment_type, experiment_num)
+        0, n_sessions_per_generation, experiment_type, experiment_num)
 
     # iterate over generations
     for generation in range(n_generations - 1):
         # create sessions for the next generation
         sessions_n_1 = await create_generation(
-            generation + 1, n_sessions_per_generation, n_trials_per_session,
-            trial_types, experiment_type, experiment_num)
+            generation + 1, n_sessions_per_generation, experiment_type,
+            experiment_num)
 
         # randomly link sessions of the previous generation to the sessions of
         # the next generation
@@ -54,16 +54,13 @@ async def generate_sessions(n_generations: int = 5,
 
 async def create_generation(generation: int,
                             n_sessions_per_generation: int,
-                            n_trials_per_session: int,
-                            trial_types: Union[List[str], str, None],
                             experiment_type: str,
                             experiment_num: int
                             ) -> List[Session]:
     sessions = []
     for session_idx in range(n_sessions_per_generation):
         session = await generate_session(experiment_num, experiment_type,
-                                         generation, n_trials_per_session,
-                                         session_idx)
+                                         generation, session_idx)
         # save session
         await session.save()
         sessions.append(session)
@@ -71,8 +68,11 @@ async def create_generation(generation: int,
 
 
 async def generate_session(experiment_num, experiment_type, generation,
-                           n_trials_per_session, session_idx):
-    networks_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
+                           session_idx):
+    """
+    Generate one session.
+    """
+    network_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
     trial_n = 0
 
     # Consent form
@@ -86,14 +86,15 @@ async def generate_session(experiment_num, experiment_type, generation,
     # trial_n += 1
 
     # Individual trials
-    for _ in range(n_trials_per_session):
+    n_individual_trials = 3
+    for _ in range(n_individual_trials):
         # TODO: read Networks
         # create trial
         trial = Trial(
             trial_type='individual',
             trial_num_in_session=trial_n,
             network=Network.parse_obj(
-                networks_data[random.randint(0, networks_data.__len__() - 1)]),
+                network_data[random.randint(0, network_data.__len__() - 1)]),
         )
         # update the starting node
         trial.network.nodes[
