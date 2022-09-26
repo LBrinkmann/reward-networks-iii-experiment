@@ -12,14 +12,25 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [error, setError] = useState<AxiosError>();
 
+    useEffect(() => {
+        if (!searchParams.get("userId")) {
+            setSearchParams({...searchParams, userId: uuid4().toString()});
+            console.log("first");
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log(searchParams);
+        if (searchParams.get("userId")) {
+            if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
+                axiosRequest(axiosParamsGet);
+            }
+        }
+    }, [searchParams]);
+
     const axiosRequest = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
-
-            // if (!searchParams.get("userId")) {
-            //     setSearchParams({...searchParams, userId: uuid4().toString()});
-            // }
-
             params.url = searchParams.get("userId");
             params.headers = {
                 accept: '*/*'
@@ -32,18 +43,6 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
             setLoading(false);
         }
     };
-
-    // useEffect(() => {
-    //     if (!searchParams.get("userId")) {
-    //         setSearchParams({...searchParams, userId: uuid4().toString()});
-    //     }
-    // }, []);
-
-    useEffect(() => {
-        if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
-            axiosRequest(axiosParamsGet);
-        }
-    }, []);
 
     return {trialData, error, loading, axiosRequest};
 }
