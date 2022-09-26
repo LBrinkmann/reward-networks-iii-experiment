@@ -4,9 +4,6 @@ stages:
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
   stage: start child pipelines
-  before_script:
-    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
-    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
@@ -15,9 +12,6 @@ backend:
 
 frontend:
   stage: start child pipelines
-  before_script:
-    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
-    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "frontend"
   trigger:
