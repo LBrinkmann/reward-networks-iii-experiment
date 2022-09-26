@@ -1,8 +1,14 @@
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
   trigger:
-    project: backend
+    include: backend/.gitlab-ci-backend.yml
+    strategy: depend
+  rules:
+    - changes: [backend/*]
 
 frontend:
   trigger:
-    project: frontend
+    include: frontend/.gitlab-ci-frontend.yml
+    strategy: depend
+  rules:
+    - changes: [frontend/*]
