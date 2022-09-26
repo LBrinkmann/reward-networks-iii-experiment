@@ -1,5 +1,6 @@
 variables:
   APP_NAME: rn-iii-frontend
+  CI_PROJECT_DIR : $CI_PROJECT_DIR/$CHILD_PIPELINE_EXECUTION_CONTEXT
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
