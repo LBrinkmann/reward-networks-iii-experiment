@@ -27,7 +27,7 @@ export interface StaticNetworkNodeInterface {
     x: number;
     /** Node y position */
     y: number;
-    is_starting: boolean;
+    starting_node: boolean;
     /** Node level (property of the task solution strategy),
      * fetched from backend */
     level?: number;
@@ -104,7 +104,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             Text={node.display_name}
                             Size={nodeSize}
                             onNodeClick={onNodeClickHandler}
-                            isActive={(node.is_starting && currentNodeId === idx) || (currentNodeId === idx)}
+                            isActive={(node.starting_node && currentNodeId === idx) || (currentNodeId === idx)}
                             isValidMove={possibleMoves.includes(idx)}
                             key={"node-" + idx}
                         />

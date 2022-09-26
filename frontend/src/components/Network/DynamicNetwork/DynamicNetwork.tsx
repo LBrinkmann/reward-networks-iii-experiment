@@ -27,7 +27,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = (
     }: DynamicNetworkInterface) => {
 
     // get starting node
-    const startingNode = nodes.filter(node => node.is_starting)[0];
+    const startingNode = nodes.filter(node => node.starting_node)[0];
 
     const [currentNodeInx, setCurrentNodeInx] = useState<number>(startingNode.node_num);
     const [moves, setMoves] = useState<MovesInterface>({possibleMoves: [], previousMoves: []});
