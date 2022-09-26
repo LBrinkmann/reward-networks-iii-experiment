@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import {DynamicNetworkInterface} from "../../Network/DynamicNetwork/DynamicNetwork";
@@ -6,15 +6,23 @@ import Timer from "./Timer";
 
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
-    /** Timer duration in seconds */
-    timer?: number
+    /** Handle the end of the trial */
+    onNextTrialHandler: () => void;
+    /** Timer duration in seconds; 30 seconds by default */
+    timer?: number;
 }
 
-const IndividualTrial: React.FC<IndividualTrialInterface> = ({timer = 2 * 60, ...props}) => {
+const IndividualTrial: React.FC<IndividualTrialInterface> = ({timer = 30, ...props}) => {
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
-    const [isDone, setIsDone] = useState<boolean>(false);
+    const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
 
+    // Go to the next trial when the timer is done or the subject has done all the steps
+    useEffect(() => {
+        if (isTimerDone || step === 8) {
+            props.onNextTrialHandler();
+        }
+    }, [step, isTimerDone]);
 
     const onNodeClickHandler = (currentNode: number, nextNode: number) => {
         // Update state
@@ -35,14 +43,14 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = ({timer = 2 * 60, ..
                         nodes={props.nodes}
                         edges={props.edges}
                         onNodeClickParentHandler={onNodeClickHandler}
-                        isDisabled={isDone}
+                        isDisabled={isTimerDone}
                     />
                 </Grid>
                 <Grid item sm container>
                     <Grid sx={{flexGrow: 1}} direction="column" container spacing={2}>
                         {/* Timer */}
                         <Box sx={{margin: "10px"}} justifyContent="center">
-                            <Timer time={timer} OnTimeEndHandler={() => setIsDone(true)}/>
+                            <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
                         </Box>
                         {/* Information */}
                         <Box sx={{p: 2, margin: "10px"}} justifyContent="center">

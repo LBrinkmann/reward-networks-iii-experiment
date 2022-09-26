@@ -28,7 +28,8 @@ export const oneMinuteExampleOne = Template.bind({});
 oneMinuteExampleOne.args = {
     timer: 60,
     edges: data[examples_rand[0]].edges,
-    nodes: data[examples_rand[0]].nodes
+    nodes: data[examples_rand[0]].nodes,
+    onNextTrialHandler: () => { }
 };
 
 export const oneMinuteExampleTwo = Template.bind({});
@@ -36,21 +37,24 @@ export const oneMinuteExampleTwo = Template.bind({});
 oneMinuteExampleTwo.args = {
     timer: 60,
     edges: data[examples_rand[1]].edges,
-    nodes: data[examples_rand[1]].nodes
+    nodes: data[examples_rand[1]].nodes,
+    onNextTrialHandler: () => { }
 };
 
-export const twoMinutesExampleOne = Template.bind({});
+export const halfMinutesExampleOne = Template.bind({});
 
-twoMinutesExampleOne.args = {
-    timer: 2 * 60,
+halfMinutesExampleOne.args = {
+    timer: 30,
     edges: data[examples_rand[0]].edges,
-    nodes: data[examples_rand[0]].nodes
+    nodes: data[examples_rand[0]].nodes,
+    onNextTrialHandler: () => { }
 };
 
-export const twoMinutesExampleTwo = Template.bind({});
+export const halfMinutesExampleTwo = Template.bind({});
 
-twoMinutesExampleTwo.args = {
-    timer: 2 * 60,
+halfMinutesExampleTwo.args = {
+    timer: 30,
     edges: data[examples_rand[1]].edges,
-    nodes: data[examples_rand[1]].nodes
+    nodes: data[examples_rand[1]].nodes,
+    onNextTrialHandler: () => { }
 };

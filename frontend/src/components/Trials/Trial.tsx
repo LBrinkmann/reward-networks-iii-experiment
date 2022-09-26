@@ -4,7 +4,6 @@ import Header from "../Header";
 import WrittenStrategy from "./WrittenStrategy";
 import ConsentForm from "./Intro/Concent";
 import Selection from "./SocialLearning/Selection";
-import DynamicNetwork from "../Network/DynamicNetwork";
 import IndividualTrial from "./IndividualTrial";
 
 interface TrialInterface {
@@ -33,10 +32,18 @@ const Trial: React.FC<TrialInterface> = (props) => {
         switch (type) {
             case 'consent':
                 return <ConsentForm onClickHandler={OnNextTrial} />;
-            case 'learning_selection':
+            case 'social_learning_selection':
                 return <Selection advisors={trialData.advisors} onClickHandler={OnNextTrial}/>;
-            case  'main':
-                return <IndividualTrial nodes={trialData.network.nodes} edges={trialData.network.edges}/>;
+            case 'social_learning':
+                return <> </>;
+            case  'individual':
+                return <IndividualTrial
+                    nodes={trialData.network.nodes}
+                    edges={trialData.network.edges}
+                    onNextTrialHandler={OnNextTrial}
+                />;
+            case 'demonstration':
+                return <> </>;
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
             default:
