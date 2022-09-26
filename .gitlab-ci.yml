@@ -1,14 +1,16 @@
 stages:
   - start child pipelines
 
+default:
+  before_script:
+    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
+    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
+
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
   stage: start child pipelines
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
-  script:
-    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
-    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
   trigger:
     include: $CHILD_PIPELINE_EXECUTION_CONTEXT/.gitlab-ci.yml
     strategy: depend
@@ -17,9 +19,6 @@ frontend:
   stage: start child pipelines
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "frontend"
-  script:
-    - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
-    - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
   trigger:
     include: $CHILD_PIPELINE_EXECUTION_CONTEXT/.gitlab-ci.yml
     strategy: depend
