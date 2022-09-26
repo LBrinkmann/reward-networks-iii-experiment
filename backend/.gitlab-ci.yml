@@ -2,7 +2,7 @@ variables:
   APP_NAME: rn-iii-backend
 
 pre-init:
-  before_script:
+  script:
     - "echo Running child pipeline in subdirectory: $CHILD_PIPELINE_EXECUTION_CONTEXT"
     - cd $CHILD_PIPELINE_EXECUTION_CONTEXT
 
