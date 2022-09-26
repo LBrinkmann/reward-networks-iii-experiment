@@ -14,6 +14,11 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
     const axiosRequest = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
+
+            // if (!searchParams.get("userId")) {
+            //     setSearchParams({...searchParams, userId: uuid4().toString()});
+            // }
+
             params.url = searchParams.get("userId");
             params.headers = {
                 accept: '*/*'
@@ -27,21 +32,17 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
         }
     };
 
-    const sendData = (axiosParamsPost: AxiosRequestConfig) => {
-        axiosRequest(axiosParamsPost);
-    }
-
     // useEffect(() => {
     //     if (!searchParams.get("userId")) {
     //         setSearchParams({...searchParams, userId: uuid4().toString()});
     //     }
     // }, []);
 
-    // useEffect(() => {
-    //     if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
-    //         fetchData(axiosParamsGet);
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
+            axiosRequest(axiosParamsGet);
+        }
+    }, []);
 
-    return {trialData, error, loading, sendData};
+    return {trialData, error, loading, axiosRequest};
 }

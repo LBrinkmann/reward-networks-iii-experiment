@@ -1,13 +1,29 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {useTrialAPI} from "../../apis";
+import Header from "../Header";
 
 interface TrialInterface {
-
+    nextTrialHandler: () => null;
 }
 
 const Trial: React.FC<TrialInterface> = (props) => {
-    const {trialData, loading, error, sendData} = useTrialAPI({method: 'GET'});
+    const {trialData, loading, error, axiosRequest} = useTrialAPI({method: 'GET'});
+    const [trialType, setTrialType] = useState<string>('');
+    const [trialNumber, setTrialNumber] = useState<number>(0);
+
+    useEffect(() => {
+        setTrialType(trialData?.trial_type);
+        setTrialNumber(trialData?.trial_num_in_session);
+    }, [trialData]);
+
+    const OnNextTrial = () => {
+        axiosRequest({method: 'POST'}).then(
+            () => {
+                props.nextTrialHandler();
+                axiosRequest({method: 'GET'});
+            }
+        )
+    }
 
     return (
         <>
@@ -15,20 +31,13 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error &&
                 (
                     <>
-                        <h3>
-                            Trial type: {trialData.trial_type}
-                        </h3>
-                        <h2>
-                            Trial number: {trialData.trial_num_in_session}
-                        </h2>
+                        <Header title={trialType + " – " + trialNumber}/>
                     </>
                 )
             }
-            <button onClick={() => sendData({method: 'GET'})}>
-                Get Trial
-            </button>
-            <button onClick={() => sendData({method: 'POST'})}>
-                Post Trial
+
+            <button onClick={OnNextTrial}>
+                Next Trial
             </button>
         </>
     );
