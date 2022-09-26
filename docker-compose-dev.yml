@@ -38,6 +38,7 @@ services:
       - '9000:9000'
     volumes:
       - /usr/frontend/node_modules
+      - ./frontend/static:/frontend/static
       - ./frontend/src:/frontend/src
     environment:
       BACKEND_URL: 'http://localhost:5000'
