@@ -1,7 +1,10 @@
+import json
 import random
+from pathlib import Path
 
 from typing import List, Union
 
+from models.network import Network
 from models.session import Session
 from models.trial import Trial
 
@@ -56,6 +59,7 @@ async def create_generation(generation: int,
                             experiment_type: str,
                             experiment_num: int
                             ) -> List[Session]:
+    data = json.load(open(Path.cwd() / 'data' / 'examples.json'))
     sessions = []
     for session_idx in range(n_sessions_per_generation):
         trials = []
@@ -65,8 +69,11 @@ async def create_generation(generation: int,
             # TODO: read Networks
             # create trial
             trial = Trial(
-                trial_num_in_session=trial_idx
+                trial_num_in_session=trial_idx,
+                network=Network.parse_obj(data[trial_idx])
             )
+            # TODO: read the starting node from the file
+            trial.network.nodes[0].starting_node = True
             trials.append(trial)
         # create session
         # TODO: check if session already exists
