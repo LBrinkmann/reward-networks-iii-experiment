@@ -13,7 +13,7 @@ backend:
 frontend:
   stage: start child pipelines
   variables:
-    CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
+    CHILD_PIPELINE_EXECUTION_CONTEXT: "frontend"
   trigger:
     include: .sub-gitlab-ci.yml
     strategy: depend

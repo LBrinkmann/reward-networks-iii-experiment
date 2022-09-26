@@ -1,6 +1,7 @@
+variables:
+  APP_NAME: rn-iii-backend
+
 include:
   - project: "mpib/chm/common/deploy-pipeline"
     ref: "1.5.0"
     file: "python-app.yml"
-
-  - local: "app.yml"
