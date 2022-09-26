@@ -1,19 +1,14 @@
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
-
 backend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
-    include: backend/.gitlab-ci-backend.yml
+    include: .sub-gitlab-ci.yml
     strategy: depend
-  rules:
-    - changes: [backend/*]
 
 frontend:
   variables:
     CHILD_PIPELINE_EXECUTION_CONTEXT: "backend"
   trigger:
-    include: frontend/.gitlab-ci-frontend.yml
+    include: .sub-gitlab-ci.yml
     strategy: depend
-  rules:
-    - changes: [frontend/*]
