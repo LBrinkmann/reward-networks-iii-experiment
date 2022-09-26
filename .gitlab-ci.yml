@@ -1,5 +1,7 @@
 # SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
 backend:
+  variables:
+    CONTEXT: "backend"
   trigger:
     include: backend/.gitlab-ci-backend.yml
     strategy: depend
@@ -7,6 +9,8 @@ backend:
     - changes: [backend/*]
 
 frontend:
+  variables:
+    CONTEXT: "frontend"
   trigger:
     include: frontend/.gitlab-ci-frontend.yml
     strategy: depend
