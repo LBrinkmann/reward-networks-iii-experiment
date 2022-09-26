@@ -1,5 +1,8 @@
-include:
-  # backend
-  - local: '/backend/.gitlab-ci-backend.yml'
-  # frontend
-  - local: '/frontend/.gitlab-ci-frontend.yml'
+# SEE: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
+backend:
+  trigger:
+    include: backend/.gitlab-ci-backend.yml
+
+frontend:
+    trigger:
+        include: frontend/.gitlab-ci-frontend.yml
