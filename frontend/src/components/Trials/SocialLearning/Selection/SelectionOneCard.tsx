@@ -15,7 +15,7 @@ const SelectionOneCard: React.FC<SocialLearningSelectionOneCardProps> = (props: 
             <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <PersonIcon sx={{height: 120, width: 120}} color="action"/>
                 <Typography gutterBottom variant="h5" component="div">
-                    Person {props.personInx}
+                    Player {props.personInx}
                 </Typography>
                 <Typography variant="h6">
                     Average Score: {props.averageScore}
