@@ -7,8 +7,8 @@ include:
     file: "python-app.yml"
 
 init:
-  extends: .init-stage
-  script:
+  extends: .docker
+  before_script:
     - cp $CI_PROJECT_PATH/$CHILD_PIPELINE_EXECUTION_CONTEXT $CI_PROJECT_PATH
   artifacts:
     paths:
