@@ -1,0 +1,15 @@
+init:
+  stage: .pre
+  script:
+    - cp $CI_PROJECT_PATH/$CHILD_PIPELINE_EXECUTION_CONTEXT $CI_PROJECT_PATH
+  artifacts:
+    paths:
+      - $CI_PROJECT_PATH
+
+variables:
+  APP_NAME: rn-iii-frontend
+
+include:
+  - project: "mpib/chm/common/deploy-pipeline"
+    ref: "1.5.0"
+    file: "react-app.yml"
