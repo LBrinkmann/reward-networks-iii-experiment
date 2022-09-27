@@ -6,9 +6,12 @@ include:
     ref: "1.5.0"
     file: "python-app.yml"
 
-docker:
-  extends: .docker-stage
-  before_script:
+init:
+  extends: .init-stage
+  after_script:
     - echo "Copying files from subdirectory to root directory"
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
-#    - ls -R
+    - ls -R
+  artifacts:
+    paths:
+      - ./

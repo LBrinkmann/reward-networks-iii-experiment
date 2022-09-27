@@ -19,4 +19,4 @@ const config_js = [
   "export default config;\n"
 ].join("");
 
-fs.writeFileSync("./src/apis/config.js", config_js, "utf8");
+fs.writeFileSync("src/apis/config.js", config_js, "utf8");
