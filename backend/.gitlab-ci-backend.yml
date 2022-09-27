@@ -9,4 +9,5 @@ include:
 docker:
   extends: .docker-stage
   before_script:
-    - ls -R
+    - cp ./$CHILD_PIPELINE_EXECUTION_CONTEXT .
+    # - ls -R
