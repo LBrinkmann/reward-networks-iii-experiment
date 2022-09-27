@@ -7,6 +7,8 @@ include:
     file: "react-app.yml"
 
 build:
-  extends: .build
+  extends: .build-stage
   before_script:
-    - cp $CI_PROJECT_DIR/$CHILD_PIPELINE_EXECUTION_CONTEXT $CI_PROJECT_DIR
+    - echo "Copying files from subdirectory to root directory"
+    - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
+#    - ls -R

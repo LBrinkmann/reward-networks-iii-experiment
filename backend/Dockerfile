@@ -23,9 +23,7 @@ RUN useradd --create-home server -s /bin/bash
 ADD app ./app
 
 COPY app.yml .
-COPY setup.py .
 COPY run_server.sh .
-RUN pip install --no-deps .
 
 USER server
 CMD ["./run_server.sh"]
