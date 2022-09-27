@@ -17,3 +17,8 @@ init:
   artifacts:
     paths:
       - ./
+
+docker:
+  extends: .docker-stage
+  script:
+    - ls -R
