@@ -19,6 +19,6 @@ init:
       - ./
 
 docker:
-  extends: .init-stage
+  extends: .docker-stage
   script:
     - ls -R
