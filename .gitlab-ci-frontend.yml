@@ -12,7 +12,7 @@ init:
   after_script:
     - echo "Copying files from subdirectory to root directory"
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
-    - cp ./config.js src/apis/config.js
+    - rm -rf $CHILD_PIPELINE_EXECUTION_CONTEXT
     - ls -R
   artifacts:
     paths:
