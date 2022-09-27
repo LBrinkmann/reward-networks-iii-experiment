@@ -7,9 +7,6 @@ include:
     file: "react-app.yml"
 
 build:
-  extends: .build-stage
+  extends: .build
   before_script:
     - cp $CI_PROJECT_DIR/$CHILD_PIPELINE_EXECUTION_CONTEXT $CI_PROJECT_DIR
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR
