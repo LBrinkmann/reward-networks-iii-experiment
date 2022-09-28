@@ -69,4 +69,4 @@ Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
 
 - Frontend and backend pipelines are triggered by the parent pipeline [`.gitlab-ci.yml`](.gitlab-ci.yml).
 - In order to run two separate pipelines from the same repo, we need to copy the content of [`frontend`](frontend) and [`backend`](backend) folders to the root of the repo before running the corresponding child pipeline ([`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) or [`.gitlab-ci-backend.yml`](.gitlab-ci-backend.yml)).
-- [`frontend`](frontend) should be deleted at the `build` stage of the [`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) pipeline.
+- [`frontend`](frontend) folder should be deleted before the `build` stage of the [`.gitlab-ci-frontend.yml`](.gitlab-ci-frontend.yml) pipeline. This is necessary to avoid typescript errors when building the frontend.
