@@ -22,7 +22,6 @@ RUN useradd --create-home server -s /bin/bash
 
 ADD app ./app
 
-COPY app.yml .
 COPY run_server.sh .
 
 USER server
