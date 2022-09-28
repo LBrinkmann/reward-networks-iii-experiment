@@ -1,7 +1,6 @@
 autopep8
 erdantic
 flake8
-httpx
 ipdb
 ipykernel
 ipython

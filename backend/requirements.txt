@@ -1,5 +1,6 @@
 beanie
 fastapi==0.72.0
+httpx
 motor
 numpy
 pydantic==1.9.0
