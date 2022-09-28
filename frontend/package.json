@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node gen_config.js && npx webpack-dev-server --mode development --open --hot",
     "build-dev": "node gen_config.js && webpack --mode development && cp -R static/* dist/",
-    "build-prod": "node gen_config.js && rm -rf frontend && webpack --mode production && cp -R static/* dist/",
+    "build-prod": "node gen_config.js && webpack --mode production && cp -R static/* dist/",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic --project-token=f12ca4a31d56"
