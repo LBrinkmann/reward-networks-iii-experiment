@@ -62,7 +62,3 @@ Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-ii
 
 Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
 Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
-
-
-
-
