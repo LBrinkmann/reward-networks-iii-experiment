@@ -2,6 +2,13 @@ variables:
   APP_NAME: rn-iii-frontend
   BACKEND_URL: https://rn-iii-backend.eks-test-default.mpg-chm.com
 
+stages:
+  - init
+  - build-stage
+  - docker
+  - deploy
+  - undeploy
+
 include:
   - project: "mpib/chm/common/deploy-pipeline"
     ref: "1.5.0"
