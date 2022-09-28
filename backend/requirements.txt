@@ -2,9 +2,9 @@ beanie
 fastapi==0.72.0
 motor
 numpy
-pandas
 pydantic==1.9.0
 pymongo
+pyvis
 pyyaml
 stringcase
 uvicorn
