@@ -11,7 +11,8 @@ init:
   after_script:
     - echo "Copying files from subdirectory to root directory"
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
-    - rm -rf $CHILD_PIPELINE_EXECUTION_CONTEXT
+    - rm -rf frontend
+    - rm -rf backend
 #    - ls -R
   artifacts:
     paths:
