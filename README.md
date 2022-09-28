@@ -52,10 +52,16 @@ docker system prune --volumes --force # clean up unused volumes
 ## Deployment
 
 Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
+Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
+
+### Check the study progress
+
+- https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/reward_network_iii/0
 
 ### Logs
 
-https://onenr.io/0EPwJ0NDkj7
+Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
+Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
 
 
 
