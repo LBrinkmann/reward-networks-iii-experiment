@@ -18,11 +18,33 @@ init:
     paths:
       - ./
 
-.build:
-  extends: build
+# Replace the build stage from the template `react-app.yml`
+# https://gitlab.gwdg.de/mpib/chm/common/deploy-pipeline/-/blob/master/react-app.yml
+build:
+  stage: build
+
+  extends:
+    - .tags
+    - .services
+
+  image: node:12
+
+  cache:
+    paths:
+      - node_modules/
+
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+
   before_script:
     - rm -rf frontend
     - rm -rf backend
+
+  script:
+    - npm ci
+    - npm run build-prod
 
 docker:
   extends: .docker-stage
