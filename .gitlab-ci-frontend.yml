@@ -7,13 +7,6 @@ include:
     ref: "1.5.0"
     file: "react-app.yml"
 
-stages:
-  - init
-  - build-stage
-  - docker
-  - deploy
-  - undeploy
-
 init:
   extends: .init-stage
   after_script:
@@ -25,7 +18,7 @@ init:
     paths:
       - ./
 
-build-stage:
+.build:
   extends: build
   before_script:
     - rm -rf frontend
