@@ -1,10 +1,10 @@
 beanie
-pyyaml
-pymongo
+fastapi==0.72.0
+motor
 numpy
 pandas
-fastapi==0.72.0
 pydantic==1.9.0
+pymongo
+pyyaml
 stringcase
 uvicorn
-motor
