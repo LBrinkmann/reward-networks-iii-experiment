@@ -42,7 +42,7 @@ docker system prune --volumes --force # clean up unused volumes
 
 ```
 
-### Browser windows for development
+### Links for development
 - React: http://localhost:9000/?userId=f643102a-c56d-4a3a-be39-de467351275f
 - Storybook: http://localhost:6006/
 - Swagger UI FastAPI: http://localhost:5000/docs
@@ -50,6 +50,8 @@ docker system prune --volumes --force # clean up unused volumes
 - New session simulation: http://localhost:5000/simulation/reward_network_iii/0?generate_new_sessions=true&run_simulation=false
 
 ## Deployment
+
+Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
 
 ### Logs
 
