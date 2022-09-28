@@ -51,6 +51,8 @@ docker system prune --volumes --force # clean up unused volumes
 
 ## Deployment
 
+GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii](https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii)
+
 Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
 Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
 
@@ -62,3 +64,9 @@ Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-ii
 
 Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
 Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
+
+### Deployment notes
+
+- Frontend and backend pipelines are triggered by the parent pipeline [`.gitlab-ci.yml`](.gitlab-ci.yml).
+- In order to run two separate pipelines from the same repo, we need to copy the content of [`frontend`](frontend) and [`backend`](backend) folders to the root of the repo before running the corresponding child pipeline ([`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) or [`.gitlab-ci-backend.yml`](.gitlab-ci-backend.yml)).
+- [`frontend`](frontend) should be deleted at the `build` stage of the [`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) pipeline.
