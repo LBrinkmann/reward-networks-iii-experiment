@@ -53,8 +53,8 @@ docker system prune --volumes --force # clean up unused volumes
 
 GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii](https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii)
 
-Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
-Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
+- Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
+- Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
 
 ### Check the study progress
 
@@ -62,8 +62,8 @@ Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-ii
 
 ### Logs
 
-Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
-Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
+- Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
+- Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
 
 ### Deployment notes
 
