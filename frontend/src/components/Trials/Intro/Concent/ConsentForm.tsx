@@ -13,16 +13,15 @@ interface ConsentFormProps {
 const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
     return (
         <>
-            <Header
-                totalPoints={0}
-                title={"Study Information and Statement of Informed Consent"}/>
-
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Paper
                         sx={{p: 5, margin: 'auto', width: '75%', maxWidth: 800, flexGrow: 1}}
                         style={{maxHeight: '80vh', overflow: 'auto', paddingTop: '20px'}}
                     >
+                        <Typography variant="h4" gutterBottom align={'center'}>
+                            Study Information and Statement of Informed Consent
+                        </Typography>
                         <Typography paragraph align={'justify'}>
                             Thank you for your interest in participating in our “Reward Network” study. Please take your
                             time to read this text carefully. If you have any questions, we are happy to answer them
