@@ -51,41 +51,42 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
 
     return (
         <>
-            {(!isBlankScreen) ? (<Paper sx={{p: 2, margin: 'auto', maxWidth: 700, flexGrow: 1}}>
-                <Grid sx={{flexGrow: 1}} direction="row" container spacing={2}>
-                    {/* Network */}
-                    <Grid item>
-                        <DynamicNetwork
-                            nodes={props.nodes}
-                            edges={props.edges}
-                            onNodeClickParentHandler={onNodeClickHandler}
-                            isDisabled={isTimerDone}
-                        />
-                    </Grid>
-                    <Grid item sm container>
-                        <Grid sx={{flexGrow: 1}} direction="column" container spacing={2}>
-                            {/* Timer */}
-                            <Box sx={{margin: "10px"}} justifyContent="center">
-                                <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
-                            </Box>
-                            {/* Information */}
-                            <Box sx={{p: 2, margin: "10px"}} justifyContent="center">
-                                <Grid item>
-                                    <Typography variant="h5" component="div">
-                                        Step {step}
-                                    </Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="h5" component="div">
-                                        Points {points}
-                                    </Typography>
-                                </Grid>
-                            </Box>
+            {(!isBlankScreen) ? (
+                <Paper sx={{p: 2, margin: 'auto', maxWidth: 700, flexGrow: 1}}>
+                    <Grid sx={{flexGrow: 1}} direction="row" container spacing={2}>
+                        {/* Network */}
+                        <Grid item>
+                            <DynamicNetwork
+                                nodes={props.nodes}
+                                edges={props.edges}
+                                onNodeClickParentHandler={onNodeClickHandler}
+                                isDisabled={isTimerDone}
+                            />
                         </Grid>
+                        <Grid item sm container>
+                            <Grid sx={{flexGrow: 1}} direction="column" container spacing={2}>
+                                {/* Timer */}
+                                <Box sx={{margin: "10px"}} justifyContent="center">
+                                    <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
+                                </Box>
+                                {/* Information */}
+                                <Box sx={{p: 2, margin: "10px"}} justifyContent="center">
+                                    <Grid item>
+                                        <Typography variant="h5" component="div">
+                                            Step {step}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography variant="h5" component="div">
+                                            Points {points}
+                                        </Typography>
+                                    </Grid>
+                                </Box>
+                            </Grid>
 
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Paper>) : (
+                </Paper>) : (
                 <Box
                     sx={{width: '25%'}}
                     style={{margin: 'auto', marginTop: '20%'}}
