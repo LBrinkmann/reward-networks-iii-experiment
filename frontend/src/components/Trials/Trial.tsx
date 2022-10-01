@@ -31,7 +31,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
     const renderTrial = (type: string, data: any) => {
         switch (type) {
             case 'consent':
-                return <ConsentForm onClickHandler={OnNextTrial} />;
+                return <ConsentForm onClickAgreeHandler={OnNextTrial} />;
             case 'social_learning_selection':
                 return <Selection advisors={trialData.advisors} onClickHandler={OnNextTrial}/>;
             case 'social_learning':
