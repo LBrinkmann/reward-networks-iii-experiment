@@ -39,7 +39,7 @@ const Header = ({
                         placement={"bottom-start"}
                     >
                         <Typography variant="h6" sx={{mr: 2}}>
-                            {totalPoints} points
+                            {totalPoints > 0 && (<>{totalPoints} points</>)}
                         </Typography>
                     </TutorialTip>
                 </Toolbar>
