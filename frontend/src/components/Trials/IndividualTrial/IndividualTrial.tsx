@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, CircularProgress, Grid, Paper, Typography} from "@mui/material";
+import {Box, CircularProgress, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import {DynamicNetworkInterface} from "../../Network/DynamicNetwork/DynamicNetwork";
 import Timer from "./Timer";
@@ -14,15 +14,17 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
     maxSteps?: number;
     /** number of seconds to wait before the next trial starts. Default 2 seconds*/
     waitBeforeNextTrial?: number;
+    /** Hide the trial. Default false */
+    hideTrial?: boolean;
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
-    const {timer = 30, maxSteps = 8, waitBeforeNextTrial=2} = props;
+    const {timer = 30, maxSteps = 8, waitBeforeNextTrial = 2, hideTrial = false} = props;
 
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
     const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
-    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(false);
+    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
 
     // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {
@@ -33,7 +35,7 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
             setTimeout(() => {
                 // go to the next trial
                 props.onNextTrialHandler();
-            } , waitBeforeNextTrial * 1000);
+            }, waitBeforeNextTrial * 1000);
         }
     }, [step, isTimerDone]);
 
@@ -48,8 +50,8 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
     }
 
     return (
-        <Paper sx={{p: 2, margin: 'auto', maxWidth: 700, flexGrow: 1}}>
-            {(!isBlankScreen) ? (
+        <>
+            {(!isBlankScreen) ? (<Paper sx={{p: 2, margin: 'auto', maxWidth: 700, flexGrow: 1}}>
                 <Grid sx={{flexGrow: 1}} direction="row" container spacing={2}>
                     {/* Network */}
                     <Grid item>
@@ -82,10 +84,23 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
                         </Grid>
 
                     </Grid>
-                </Grid>) : (
-                <CircularProgress/>
-            )}
-        </Paper>
+                </Grid>
+            </Paper>) : (
+                <Box
+                    sx={{width: '25%'}}
+                    style={{margin: 'auto', marginTop: '20%'}}
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight="90vh"
+                >
+                    <Typography variant="h6" align={'center'}>
+                        Waiting for the next trial...
+                    </Typography>
+                    <LinearProgress/>
+                </Box>
+            )
+            }
+        </>
     );
 };
 

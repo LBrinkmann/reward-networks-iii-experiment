@@ -23,31 +23,14 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
     );
 };
 
-export const oneMinuteExampleOne = Template.bind({});
-
-oneMinuteExampleOne.args = {
-    timer: 60,
-    edges: data[examples_rand[0]].edges,
-    nodes: data[examples_rand[0]].nodes,
-    onNextTrialHandler: () => { }
-};
-
-export const oneMinuteExampleTwo = Template.bind({});
-
-oneMinuteExampleTwo.args = {
-    timer: 60,
-    edges: data[examples_rand[1]].edges,
-    nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { }
-};
-
 export const halfMinutesExampleOne = Template.bind({});
 
 halfMinutesExampleOne.args = {
     timer: 30,
     edges: data[examples_rand[0]].edges,
     nodes: data[examples_rand[0]].nodes,
-    onNextTrialHandler: () => { }
+    onNextTrialHandler: () => { },
+    hideTrial: false
 };
 
 export const halfMinutesExampleTwo = Template.bind({});
@@ -56,5 +39,16 @@ halfMinutesExampleTwo.args = {
     timer: 30,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { }
+    onNextTrialHandler: () => { },
+    hideTrial: false
+};
+
+export const ScreenAfterTrialIsFinished = Template.bind({});
+
+ScreenAfterTrialIsFinished.args = {
+    timer: 30,
+    edges: data[examples_rand[1]].edges,
+    nodes: data[examples_rand[1]].nodes,
+    onNextTrialHandler: () => { },
+    hideTrial: true
 };
