@@ -18,7 +18,7 @@ const Template: ComponentStory<typeof LinearSolution> = (args) => {
             sx={{
                 p: 2,
                 margin: 'auto',
-                maxWidth: 550,
+                maxWidth: 850,
                 flexGrow: 1
             }}
         >
@@ -27,10 +27,10 @@ const Template: ComponentStory<typeof LinearSolution> = (args) => {
     )
 };
 
-export const TenNodes = Template.bind({});
+export const EightSteps = Template.bind({});
 
-TenNodes.args = {
-    edges:  data[0].edges,
+EightSteps.args = {
+    edges: data[0].edges,
     nodes: data[0].nodes,
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
 };
