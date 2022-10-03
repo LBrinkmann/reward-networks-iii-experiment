@@ -2,6 +2,7 @@ import React, {FC} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
+import {Grid, Typography} from "@mui/material";
 
 interface LinearSolutionInterface {
     /** Array of nodes of the network */
@@ -10,7 +11,9 @@ interface LinearSolutionInterface {
     edges: StaticNetworkEdgeInterface[];
     /** The list of moves with the starting node as the first element */
     moves: number[];
-    /** Size of the SVG component. Default width = 800, height = 100 */
+    /** Title of the solution */
+    title?: string;
+    /** Size of the SVG component. Default width = 800, height = 50 */
     size?: { width: number, height: number };
     /** Node size. Default = 20 */
     nodeRadius?: number;
@@ -18,17 +21,17 @@ interface LinearSolutionInterface {
     edgeWidth?: number;
     /** Gap between nodes. Default = 70 */
     gap?: number;
-    /** Onset of the first node. Default = 100 */
+    /** Onset of the first node. Default = 24 */
     onset?: number;
 }
 
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     const {
-        size = {width: 600, height: 100},
+        size = {width: 600, height: 50},
         nodeRadius = 20,
         gap = 60,
-        onset = 60,
+        onset = 24,
         edgeWidth = 3,
         nodes,
         edges,
@@ -68,30 +71,39 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     }
 
     return (
-        <svg width={size.width} height={size.height}>
-            <g>
-                {moves.map((move, idx) => {
-                    const node = nodes[move];
-                    return (
-                        <>
-                            <NetworkNode
-                                x={onset + idx * gap}
-                                y={size.height / 2}
-                                nodeInx={node.node_num}
-                                Text={node.display_name}
-                                Radius={nodeRadius}
-                                onNodeClick={() => null}
-                                isActive={false}
-                                isValidMove={false}
-                                key={"node-" + idx}
-                            />
-                            {plotEdge(idx)}
-                        </>
-                    );
-                })};
-            </g>
+        <Grid container spacing={1}>
+            <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom align={'left'}>
+                    {props.title ? props.title : ""}
+                </Typography>
 
-        </svg>
+            </Grid>
+            <Grid item xs={12}>
+            <svg width={size.width} height={size.height}>
+                <g>
+                    {moves.map((move, idx) => {
+                        const node = nodes[move];
+                        return (
+                            <>
+                                <NetworkNode
+                                    x={onset + idx * gap}
+                                    y={size.height / 2}
+                                    nodeInx={node.node_num}
+                                    Text={node.display_name}
+                                    Radius={nodeRadius}
+                                    onNodeClick={null}
+                                    isActive={false}
+                                    isValidMove={false}
+                                    key={"node-" + idx}
+                                />
+                                {plotEdge(idx)}
+                            </>
+                        );
+                    })};
+                </g>
+            </svg>
+            </Grid>
+        </Grid>
     )
 }
 

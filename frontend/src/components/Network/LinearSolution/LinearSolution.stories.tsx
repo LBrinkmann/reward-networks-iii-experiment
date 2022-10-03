@@ -33,10 +33,11 @@ EightSteps.args = {
     edges: data[0].edges,
     nodes: data[0].nodes,
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
-    size: {width: 600, height: 100},
+    title: "Player 3 solution",
+    size: {width: 600, height: 50},
     nodeRadius: 20,
     gap: 60,
-    onset: 60
+    onset: 24
 };
 
 
@@ -46,8 +47,9 @@ FourSteps.args = {
     edges: data[0].edges,
     nodes: data[0].nodes,
     moves: [0, 5, 3, 4],
-    size: {width: 600, height: 100},
+    title: "Player 3 solution",
+    size: {width: 600, height: 50},
     nodeRadius: 20,
     gap: 60,
-    onset: 60
+    onset: 24
 };
