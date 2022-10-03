@@ -1,7 +1,8 @@
-import React, {FC} from "react"
+import React, {FC, useEffect, useState} from "react"
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
+import PlayerInformation from "../PlayerInformation";
 
 interface LinearSolutionTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -12,40 +13,50 @@ interface LinearSolutionTrialInterface extends AnimatedNetworkInterface {
 
 
 export const ObservationTrial: FC<LinearSolutionTrialInterface> = (props) => {
+    const [step, setStep] = useState<number>(0);
+    const [points, setPoints] = useState<number>(0);
+    const [startAnimation, setStartAnimation] = useState<boolean>(false);
+
+    // wait for 2 seconds before starting the animation
+    useEffect(() => {
+        setTimeout(() => {
+            setStartAnimation(true);
+        }, 2000);
+    }, []);
+
+    const onNextStepHandler = (stepNumber: number, cumulativeScore: number) => {
+        setStep(stepNumber);
+        setPoints(cumulativeScore);
+    }
+
     return (
         <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
             <Grid item xs={7}>
-                <AnimatedNetwork nodes={props.nodes} edges={props.edges} moves={props.moves}/>
+                <AnimatedNetwork
+                    nodes={props.nodes}
+                    edges={props.edges}
+                    moves={props.moves}
+                    onNextStepHandler={onNextStepHandler}
+                    startAnimation={startAnimation}
+                />
             </Grid>
 
             <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
-                <Paper sx={{p: 2}} variant="outlined">
-                    <Typography gutterBottom variant="h4" component="div" align={'center'}>
-                        Player {props.teacherId}
-                    </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Step {0}
-                    </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Cumulative points {0}
-                    </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Total points {0}
-                    </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Comment:
-                    </Typography>
-                    <Paper sx={{p: 2, maxHeight: "200px", overflow: 'auto'}}>
-                        <Typography variant="body1">
-                            {props.comment ? props.comment : "No comment"}
-                        </Typography>
-                    </Paper>
-                </Paper>
+                <PlayerInformation
+                    step={step}
+                    cumulativePoints={points}
+                    id={props.teacherId}
+                    comment={props.comment}/>
             </Grid>
 
             <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
                 <Paper sx={{p: 2, margin: 2}}>
-                    <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}/>
+                    <LinearSolution
+                        nodes={props.nodes}
+                        edges={props.edges}
+                        moves={props.moves}
+                        title={"Player " + props.teacherId + " total score"}
+                    />
                 </Paper>
             </Grid>
         </Grid>

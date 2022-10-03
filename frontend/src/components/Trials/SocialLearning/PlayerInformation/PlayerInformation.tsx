@@ -6,7 +6,6 @@ interface PlayerInformationProps {
     id: number;
     step: number;
     cumulativePoints: number;
-    totalPoints: number;
     /** Player's comment */
     comment?: string;
 }
@@ -24,9 +23,6 @@ export const PlayerInformation:FC<PlayerInformationProps> = (props) => {
                 </Typography>
                 <Typography gutterBottom variant="h6" component="div">
                     Cumulative points {props.cumulativePoints}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    Total points {props.totalPoints}
                 </Typography>
                 <Typography gutterBottom variant="h6" component="div">
                     Comment:

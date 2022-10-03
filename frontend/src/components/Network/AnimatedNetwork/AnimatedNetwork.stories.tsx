@@ -32,6 +32,7 @@ export const ExampleOne = Template.bind({});
 ExampleOne.args = {
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
     playOnClick: true,
+    startAnimation: false,
     edges:  data[0].edges,
     nodes: data[0].nodes
 };

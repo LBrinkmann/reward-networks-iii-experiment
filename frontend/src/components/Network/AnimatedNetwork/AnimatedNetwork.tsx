@@ -13,38 +13,47 @@ export interface AnimatedNetworkInterface {
     moves: number[];
     /** Delay in ms between each played move. Default is 1000ms. */
     delayBetweenMoves?: number;
+    /** Hook to handle parent states on new step */
+    onNextStepHandler?: (stepNumber: number, cumulativeScore: number) => void;
     /** Control whether the animation can be played on button click. Default is false. */
     playOnClick?: boolean;
+    /** Start the animation from the parent component. Default is false. */
+    startAnimation?: boolean;
 }
 
 const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInterface) => {
-    const {playOnClick = false, delayBetweenMoves = 1000 } = props;
+    const {playOnClick = false, delayBetweenMoves = 1000} = props;
 
     const [currentNodeId, setCurrentNodeId] = useState<number>(props.moves[0]);
     const [currentMoveInx, setCurrentMoveInx] = useState<number>(null);
     const [edges, setEdges] = useState<StaticNetworkEdgeInterface[]>(props.edges);
+    const [cumulativeScore, setCumulativeScore] = useState<number>(0);
 
     useEffect(() => {
-        // Do nothing before the replay button is clicked
-        if (currentMoveInx !== null) {
+        // Do nothing before the replay button is clicked or startAnimation is false
+        if ((currentMoveInx !== null || props.startAnimation)) {
             setTimeout(() => {
                     setCurrentNodeId(props.moves[currentMoveInx]);
                     // Skip edge highlight for the first move
                     if (currentMoveInx !== 0) {
                         setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
+                        props.onNextStepHandler(currentMoveInx, cumulativeScore);
                     }
-                    setCurrentMoveInx(currentMoveInx + 1);
+                    if (currentMoveInx < props.moves.length - 1) {
+                        setCurrentMoveInx(currentMoveInx + 1);
+                    }
                 },
                 // Skip delay for the first move
                 currentMoveInx < 2 ? 100 : delayBetweenMoves
             );
         }
-    }, [currentMoveInx]);
+    }, [currentMoveInx, props.startAnimation]);
 
     // Highlight the edge between the current node and the next node
     const updateEdges = (sourceInx: number, targetInx: number) => {
         return edges.map((edge: StaticNetworkEdgeInterface) => {
             if (edge.source_num === sourceInx && edge.target_num === targetInx) {
+                setCumulativeScore(cumulativeScore + edge.reward);
                 return {...edge, edgeStyle: "highlighted" as NetworkEdgeStyle};
             } else {
                 return {...edge, edgeStyle: "normal" as NetworkEdgeStyle};
