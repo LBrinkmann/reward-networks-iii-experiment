@@ -27,9 +27,9 @@ const Template: ComponentStory<typeof AnimatedNetwork> = (args) => {
     )
 };
 
-export const TenNodes = Template.bind({});
+export const ExampleOne = Template.bind({});
 
-TenNodes.args = {
+ExampleOne.args = {
     edges:  data[0].edges,
     nodes: data[0].nodes,
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]

@@ -26,7 +26,7 @@ export const ActiveNode = Template.bind({});
 ActiveNode.args = {
     nodeInx: 0,
     Text: 'A',
-    Size: 100,
+    Radius: 100,
     x: 200,
     y: 200,
     isActive: true
@@ -37,7 +37,7 @@ export const ValidClickNode = Template.bind({});
 ValidClickNode.args = {
     nodeInx: 0,
     Text: 'A',
-    Size: 100,
+    Radius: 100,
     x: 200,
     y: 200,
     isActive: false,
@@ -49,7 +49,7 @@ export const InvalidClickNode = Template.bind({});
 InvalidClickNode.args = {
     nodeInx: 0,
     Text: 'A',
-    Size: 100,
+    Radius: 100,
     x: 200,
     y: 200,
     isActive: false,
