@@ -37,7 +37,6 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetw
                     // Skip edge highlight for the first move
                     if (currentMoveInx !== 0) {
                         setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
-                        props.onNextStepHandler(currentMoveInx, cumulativeScore);
                     }
                     if (currentMoveInx < props.moves.length - 1) {
                         setCurrentMoveInx(currentMoveInx + 1);
@@ -48,6 +47,14 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetw
             );
         }
     }, [currentMoveInx, props.startAnimation]);
+
+    // Update parent information on next step
+    useEffect(() => {
+        if (props.onNextStepHandler) {
+            props.onNextStepHandler(currentMoveInx ? currentMoveInx - 1 : 0, cumulativeScore);
+        }
+    }, [cumulativeScore, currentMoveInx]);
+
 
     // Highlight the edge between the current node and the next node
     const updateEdges = (sourceInx: number, targetInx: number) => {
