@@ -18,7 +18,7 @@ const Template: ComponentStory<typeof LinearSolution> = (args) => {
             sx={{
                 p: 2,
                 margin: 'auto',
-                maxWidth: 850,
+                maxWidth: 650,
                 flexGrow: 1
             }}
         >
@@ -32,5 +32,22 @@ export const EightSteps = Template.bind({});
 EightSteps.args = {
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
+    size: {width: 600, height: 100},
+    nodeRadius: 20,
+    gap: 60,
+    onset: 60
+};
+
+
+export const FourSteps = Template.bind({});
+
+FourSteps.args = {
+    edges: data[0].edges,
+    nodes: data[0].nodes,
+    moves: [0, 5, 3, 4],
+    size: {width: 600, height: 100},
+    nodeRadius: 20,
+    gap: 60,
+    onset: 60
 };

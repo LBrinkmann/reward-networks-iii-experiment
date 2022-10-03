@@ -10,11 +10,13 @@ interface LinearSolutionInterface {
     edges: StaticNetworkEdgeInterface[];
     /** The list of moves with the starting node as the first element */
     moves: number[];
-    /** Size of the SVG component. Default width = 700, height = 100 */
+    /** Size of the SVG component. Default width = 800, height = 100 */
     size?: { width: number, height: number };
-    /** Node size. Default = 25 */
+    /** Node size. Default = 20 */
     nodeRadius?: number;
-    /** Gap between nodes. Default = 80 */
+    /** Edge width. Default = 3 */
+    edgeWidth?: number;
+    /** Gap between nodes. Default = 70 */
     gap?: number;
     /** Onset of the first node. Default = 100 */
     onset?: number;
@@ -22,7 +24,16 @@ interface LinearSolutionInterface {
 
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
-    const {size = {width: 800, height: 100}, nodeRadius = 20, gap = 70, onset = 100, nodes, edges, moves} = props;
+    const {
+        size = {width: 600, height: 100},
+        nodeRadius = 20,
+        gap = 60,
+        onset = 60,
+        edgeWidth = 3,
+        nodes,
+        edges,
+        moves
+    } = props;
 
     const plotEdge = (moveIdx: number) => {
         if (moveIdx < moves.length - 1) {
@@ -37,7 +48,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             return (
                 <NetworkEdge
                     reward={edge.reward}
-                    edgeWidth={2}
+                    edgeWidth={edgeWidth}
                     edgeStyle={edge.edgeStyle}
                     key={"edge-" + moveIdx}
                     idx={moveIdx}
