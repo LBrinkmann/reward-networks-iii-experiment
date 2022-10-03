@@ -1,4 +1,4 @@
-import React, {FC} from "react"
+import React, {FC, useEffect, useState} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
@@ -38,6 +38,19 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         moves
     } = props;
 
+    const [score, setScore] = useState<number>(0);
+
+    useEffect(() => {
+        let score = 0;
+        for (let i = 0; i < moves.length - 1; i++) {
+            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
+            if (edge) {
+                score += edge.reward;
+            }
+        }
+        setScore(score);
+    }, [moves]);
+
     const plotEdge = (moveIdx: number) => {
         if (moveIdx < moves.length - 1) {
             const edge = edges.filter((edge) =>
@@ -74,34 +87,34 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         <Grid container spacing={1}>
             <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom align={'left'}>
-                    {props.title ? props.title : ""}
+                    {props.title ? props.title : ""}: {score}
                 </Typography>
 
             </Grid>
             <Grid item xs={12}>
-            <svg width={size.width} height={size.height}>
-                <g>
-                    {moves.map((move, idx) => {
-                        const node = nodes[move];
-                        return (
-                            <>
-                                <NetworkNode
-                                    x={onset + idx * gap}
-                                    y={size.height / 2}
-                                    nodeInx={node.node_num}
-                                    Text={node.display_name}
-                                    Radius={nodeRadius}
-                                    onNodeClick={null}
-                                    isActive={false}
-                                    isValidMove={false}
-                                    key={"node-" + idx}
-                                />
-                                {plotEdge(idx)}
-                            </>
-                        );
-                    })};
-                </g>
-            </svg>
+                <svg width={size.width} height={size.height}>
+                    <g>
+                        {moves.map((move, idx) => {
+                            const node = nodes[move];
+                            return (
+                                <>
+                                    <NetworkNode
+                                        x={onset + idx * gap}
+                                        y={size.height / 2}
+                                        nodeInx={node.node_num}
+                                        Text={node.display_name}
+                                        Radius={nodeRadius}
+                                        onNodeClick={null}
+                                        isActive={false}
+                                        isValidMove={false}
+                                        key={"node-" + idx}
+                                    />
+                                    {plotEdge(idx)}
+                                </>
+                            );
+                        })};
+                    </g>
+                </svg>
             </Grid>
         </Grid>
     )
