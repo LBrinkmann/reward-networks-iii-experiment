@@ -30,7 +30,8 @@ const Template: ComponentStory<typeof AnimatedNetwork> = (args) => {
 export const ExampleOne = Template.bind({});
 
 ExampleOne.args = {
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
+    playOnClick: true,
     edges:  data[0].edges,
-    nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    nodes: data[0].nodes
 };

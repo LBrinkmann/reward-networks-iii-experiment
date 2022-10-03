@@ -12,46 +12,42 @@ interface LinearSolutionTrialInterface extends AnimatedNetworkInterface {
 
 
 export const ObservationTrial: FC<LinearSolutionTrialInterface> = (props) => {
-    const playerInfo = (title: string, content: string) => {
-        return (
-            <Paper sx={{p: 2, margin: 2}} variant="outlined">
-                <Typography gutterBottom variant="h6" component="div">
-                    {title}
-                </Typography>
-                <Typography>
-                    {content}
-                </Typography>
-            </Paper>
-        )
-    }
-
     return (
-        <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent={"space-around"}>
-            {/*<Grid item xs={12}>*/}
-            {/*    <Typography variant="h4" gutterBottom align={'center'}>*/}
-            {/*        You see now the 1st solution of the player 3*/}
-            {/*    </Typography>*/}
-            {/*</Grid>*/}
-            <Grid item xs={6}>
+        <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
+            <Grid item xs={7}>
                 <AnimatedNetwork nodes={props.nodes} edges={props.edges} moves={props.moves}/>
             </Grid>
 
-            <Grid item xs={5}>
-                <Box>
+            <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
+                <Paper sx={{p: 2}} variant="outlined">
                     <Typography gutterBottom variant="h4" component="div" align={'center'}>
                         Player {props.teacherId}
                     </Typography>
-                    {playerInfo("Total score: - 230", "")}
-                    {playerInfo("Step: 1", "")}
-                    {playerInfo("Cumulative score: 20", "")}
-                    {playerInfo("Comment", props.comment)}
-
-                </Box>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Step {0}
+                    </Typography>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Cumulative points {0}
+                    </Typography>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Total points {0}
+                    </Typography>
+                    <Typography gutterBottom variant="h6" component="div">
+                        Comment:
+                    </Typography>
+                    <Paper sx={{p: 2, maxHeight: "200px", overflow: 'auto'}}>
+                        <Typography variant="body1">
+                            {props.comment ? props.comment : "No comment"}
+                        </Typography>
+                    </Paper>
+                </Paper>
             </Grid>
 
-            {/*<Grid item xs={6} style={{margin: "auto"}}>*/}
-            {/*    <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}/>*/}
-            {/*</Grid>*/}
+            <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
+                <Paper sx={{p: 2, margin: 2}}>
+                    <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}/>
+                </Paper>
+            </Grid>
         </Grid>
     );
 }

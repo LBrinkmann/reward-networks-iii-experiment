@@ -11,15 +11,15 @@ export interface AnimatedNetworkInterface {
     edges: StaticNetworkEdgeInterface[];
     /** The list of moves with the starting node as the first element */
     moves: number[];
-    /** Delay in ms between each played move */
+    /** Delay in ms between each played move. Default is 1000ms. */
     delayBetweenMoves?: number;
+    /** Control whether the animation can be played on button click. Default is false. */
+    playOnClick?: boolean;
 }
 
-const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
-    {
-        delayBetweenMoves = 1000,
-        ...props
-    }: AnimatedNetworkInterface) => {
+const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInterface) => {
+    const {playOnClick = false, delayBetweenMoves = 1000 } = props;
+
     const [currentNodeId, setCurrentNodeId] = useState<number>(props.moves[0]);
     const [currentMoveInx, setCurrentMoveInx] = useState<number>(null);
     const [edges, setEdges] = useState<StaticNetworkEdgeInterface[]>(props.edges);
@@ -71,14 +71,15 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
                     onNodeClickHandler={null}
                 />
             </Grid>
-            <Grid item>
-                {currentMoveInx !== null ? (
-                    <Button variant="contained" color="primary" disabled>Start Replay</Button>
-                ) : (
-                    <Button onClick={startReplayHandler} variant="contained" color="primary">Start Replay</Button>
-                )}
-            </Grid>
-
+            {playOnClick &&
+                <Grid item>
+                    {currentMoveInx !== null ? (
+                        <Button variant="contained" color="primary" disabled>Start Replay</Button>
+                    ) : (
+                        <Button onClick={startReplayHandler} variant="contained" color="primary">Start Replay</Button>
+                    )}
+                </Grid>
+            }
         </Grid>
     )
 }

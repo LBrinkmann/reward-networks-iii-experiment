@@ -31,6 +31,17 @@ ShortComment.args = {
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
 };
 
+export const NoComment = Template.bind({});
+
+NoComment.args = {
+    teacherId: 1,
+    comment: "",
+    edges: data[0].edges,
+    nodes: data[0].nodes,
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+};
+
+
 export const LongComment = Template.bind({});
 
 LongComment.args = {
