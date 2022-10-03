@@ -66,8 +66,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                     reward={edge.reward}
                     edgeWidth={edgeWidth}
                     edgeStyle={edge.edgeStyle}
-                    key={"edge-" + moveIdx}
-                    idx={moveIdx}
+                    idx={moveIdx + 100} // add 100 to avoid conflict with edge idx in other components
                     showRewardText={false}
                     arc_type={edge.arc_type}
                     source_x={sourceX}

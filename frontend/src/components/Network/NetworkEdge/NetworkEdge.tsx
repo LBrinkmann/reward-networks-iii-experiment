@@ -29,12 +29,11 @@ export interface NetworkEdgeInterface {
 
 }
 
-const NetworkEdge: React.FC<NetworkEdgeInterface> = (
-    {
+const NetworkEdge: React.FC<NetworkEdgeInterface> = (props) => {
+    const {
         reward,
         edgeWidth = 1,
         edgeStyle = "normal",
-        idx,
         showRewardText = true,
         arc_type,
         source_x,
@@ -43,7 +42,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
         arc_y,
         target_x,
         target_y
-    }: NetworkEdgeInterface) => {
+    } = props;
 
     // Color class of the edge based on the reward
     let colorClass: 'large-negative' | 'negative' | 'neutral' | 'positive' | 'large-positive';
@@ -60,10 +59,10 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
     }
 
     // Component indices
-    const edgeId = `edge-${idx}`;
-    const markerId = `marker-arrow-${idx}`;
-    const textId = `edge-text-${idx}`;
-    const textIdBg = `edge-text-bg-${idx}`;
+    const edgeId = `edge-${props.idx}`;
+    const markerId = `marker-arrow-${props.idx}`;
+    const textId = `edge-text-${props.idx}`;
+    const textIdBg = `edge-text-bg-${props.idx}`;
 
     // Draw path
     // SEE: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
@@ -75,6 +74,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
     }
 
     let strokeDasharray, springConfig = {};
+    let edgeWidthFinal = edgeWidth;
     switch (edgeStyle) {
         case "normal":
             strokeDasharray = null;
@@ -95,7 +95,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
             };
             break;
         case "highlighted":
-            edgeWidth *= 2.5;
+            edgeWidthFinal = edgeWidth * 2.5;
             strokeDasharray = null;
             springConfig = {};
     }
@@ -103,7 +103,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidth}>
+        <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
             <animated.path
                 strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                 className="colored-stroke"

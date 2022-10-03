@@ -80,7 +80,6 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             reward={edge.reward}
                             edgeWidth={edgeWidth}
                             edgeStyle={edge.edgeStyle}
-                            key={"edge-" + idx}
                             idx={idx}
                             showRewardText={showRewardText}
                             arc_type={edge.arc_type}
@@ -106,7 +105,6 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             onNodeClick={onNodeClickHandler}
                             isActive={(node.starting_node && currentNodeId === idx) || (currentNodeId === idx)}
                             isValidMove={possibleMoves.includes(idx)}
-                            key={"node-" + idx}
                         />
                     );
                 })}
