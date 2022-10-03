@@ -12,7 +12,7 @@ export interface AnimatedNetworkInterface {
     /** The list of moves with the starting node as the first element */
     moves: number[];
     /** Delay in ms between each played move */
-    delayBetweenMoves: number;
+    delayBetweenMoves?: number;
 }
 
 const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (
