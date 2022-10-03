@@ -26,7 +26,7 @@ export const ObservationTrial: FC<LinearSolutionTrialInterface> = (props) => {
     }
 
     return (
-        <Grid container sx={{p: 1, margin: 'auto', width: '85%'}}>
+        <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent={"space-around"}>
             {/*<Grid item xs={12}>*/}
             {/*    <Typography variant="h4" gutterBottom align={'center'}>*/}
             {/*        You see now the 1st solution of the player 3*/}
@@ -36,14 +36,14 @@ export const ObservationTrial: FC<LinearSolutionTrialInterface> = (props) => {
                 <AnimatedNetwork nodes={props.nodes} edges={props.edges} moves={props.moves}/>
             </Grid>
 
-            <Grid item xs={6} style={{marginTop: "20px"}}>
-                <Box sx={{margin: "auto", minHeight: 300}}>
-                    <Typography gutterBottom variant="h5" component="div" align={'center'}>
+            <Grid item xs={5}>
+                <Box>
+                    <Typography gutterBottom variant="h4" component="div" align={'center'}>
                         Player {props.teacherId}
                     </Typography>
-                    {playerInfo("Total score", "- 230")}
-                    {playerInfo("Step", "1")}
-                    {playerInfo("Cumulative score", "20")}
+                    {playerInfo("Total score: - 230", "")}
+                    {playerInfo("Step: 1", "")}
+                    {playerInfo("Cumulative score: 20", "")}
                     {playerInfo("Comment", props.comment)}
 
                 </Box>
