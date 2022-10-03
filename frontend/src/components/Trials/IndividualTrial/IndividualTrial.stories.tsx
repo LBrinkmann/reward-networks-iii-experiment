@@ -23,9 +23,9 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
     );
 };
 
-export const halfMinutesExampleOne = Template.bind({});
+export const halfMinuteExampleOne = Template.bind({});
 
-halfMinutesExampleOne.args = {
+halfMinuteExampleOne.args = {
     timer: 30,
     edges: data[examples_rand[0]].edges,
     nodes: data[examples_rand[0]].nodes,
@@ -33,9 +33,9 @@ halfMinutesExampleOne.args = {
     hideTrial: false
 };
 
-export const halfMinutesExampleTwo = Template.bind({});
+export const ExampleTwo = Template.bind({});
 
-halfMinutesExampleTwo.args = {
+ExampleTwo.args = {
     timer: 30,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
@@ -43,9 +43,9 @@ halfMinutesExampleTwo.args = {
     hideTrial: false
 };
 
-export const ScreenAfterTrialIsFinished = Template.bind({});
+export const ScreenAfterTrialEnd = Template.bind({});
 
-ScreenAfterTrialIsFinished.args = {
+ScreenAfterTrialEnd.args = {
     timer: 30,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
