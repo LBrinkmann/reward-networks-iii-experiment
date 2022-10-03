@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
     return (
         <svg height={550} width={550}>
             <NetworkNode
-                Size={10}
+                Radius={10}
                 x={1 * 150 + 300}
                 y={1.4702742047251475e-8 * -150 + 300}
                 Text={'0'}
@@ -30,7 +30,7 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
                 isValidMove={false}
             />
             <NetworkNode
-                Size={10}
+                Radius={10}
                 x={0.30901697689880736 * 150 + 300}
                 y={0.9510565490463628 * -150 + 300}
                 Text={'2'}

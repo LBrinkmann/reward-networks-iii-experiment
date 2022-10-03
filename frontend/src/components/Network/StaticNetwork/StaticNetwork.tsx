@@ -102,7 +102,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             y={scaleSizeY(node.y)}
                             nodeInx={node.node_num}
                             Text={node.display_name}
-                            Size={nodeSize}
+                            Radius={nodeSize}
                             onNodeClick={onNodeClickHandler}
                             isActive={(node.starting_node && currentNodeId === idx) || (currentNodeId === idx)}
                             isValidMove={possibleMoves.includes(idx)}

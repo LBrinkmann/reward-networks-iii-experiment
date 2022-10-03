@@ -9,8 +9,8 @@ export interface NetworkNodeInterface {
     nodeInx: number;
     /** Text inside the node */
     Text: string;
-    /** Node size, fetched from backend */
-    Size: number;
+    /** Node radius, fetched from backend */
+    Radius: number;
     /** Node x position */
     x: number;
     /** Node y position */
@@ -47,9 +47,9 @@ const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInte
     }
 
     return (
-        <NetworkNodeStyled status={status} fontSize={props.Size} onClick={onNodeClick}>
-            <circle cx={props.x} cy={props.y} r={props.Size} key={"circle"}/>
-            <text x={props.x} y={props.y + props.Size * 0.35} textAnchor="middle" key={"state-name"}>
+        <NetworkNodeStyled status={status} fontSize={props.Radius} onClick={onNodeClick}>
+            <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
+            <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>
                 {props.Text}
             </text>
         </NetworkNodeStyled>
