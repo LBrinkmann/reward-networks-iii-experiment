@@ -2,17 +2,17 @@ import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-import AnimatedNetwork from './AnimatedNetwork';
+import LinearSolution from './LinearSolution';
 import {Paper} from "@mui/material";
 
 import data from '../../Network/examples';
 
 export default {
-    title: 'Network/AnimatedNetwork',
-    component: AnimatedNetwork,
-} as ComponentMeta<typeof AnimatedNetwork>;
+    title: 'Network/LinearSolution',
+    component: LinearSolution,
+} as ComponentMeta<typeof LinearSolution>;
 
-const Template: ComponentStory<typeof AnimatedNetwork> = (args) => {
+const Template: ComponentStory<typeof LinearSolution> = (args) => {
     return (
         <Paper
             sx={{
@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof AnimatedNetwork> = (args) => {
                 flexGrow: 1
             }}
         >
-            <AnimatedNetwork {...args}/>
+            <LinearSolution {...args}/>
         </Paper>
     )
 };
