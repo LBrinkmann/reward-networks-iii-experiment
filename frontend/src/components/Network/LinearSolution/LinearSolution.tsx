@@ -84,12 +84,14 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
 
     return (
         <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom align={'left'}>
-                    {props.title ? props.title : ""}: {score}
-                </Typography>
+            {props.title &&
+                (<Grid item xs={12}>
+                    <Typography variant="h6" gutterBottom align={'left'}>
+                        {props.title ? props.title : ""}: {score}
+                    </Typography>
 
-            </Grid>
+                </Grid>)
+            }
             <Grid item xs={12}>
                 <svg width={size.width} height={size.height}>
                     <g>
