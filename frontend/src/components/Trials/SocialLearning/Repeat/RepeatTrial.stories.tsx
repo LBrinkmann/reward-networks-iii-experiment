@@ -15,7 +15,7 @@ export default {
 const Template: ComponentStory<typeof RepeatTrial> = (args) => {
     return (
         <>
-            <Header totalPoints={0} title={"Learning 1"}/>
+            <Header totalPoints={0} title={"Learning 2"}/>
             <RepeatTrial {...args}/>
         </>
     )

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, CircularProgress, Grid, LinearProgress, Paper, Typography} from "@mui/material";
+import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import {DynamicNetworkInterface} from "../../Network/DynamicNetwork/DynamicNetwork";
 import Timer from "./Timer";
@@ -7,7 +7,8 @@ import Timer from "./Timer";
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
     /** Handle the end of the trial */
-    onNextTrialHandler: () => void;
+    onNextTrialHandler: (moves?: number[]) => void;
+    onTrialEndHandler?: (moves?: number[]) => void;
     /** Timer duration in seconds; 30 seconds by default */
     timer?: number;
     /** The maximum number of steps in the trial. Default is 8 steps*/
@@ -16,6 +17,7 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
     waitBeforeNextTrial?: number;
     /** Hide the trial. Default false */
     hideTrial?: boolean;
+
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
@@ -25,21 +27,26 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
     const [points, setPoints] = useState<number>(0);
     const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
     const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
+    const [moves, setMoves] = useState<number[]>([]);
 
     // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {
         if (isTimerDone || step === maxSteps) {
+            props.onTrialEndHandler(moves);
             // hide the trial content
             setIsBlankScreen(true);
             // wait for `waitBeforeNextTrial` second
             setTimeout(() => {
                 // go to the next trial
-                props.onNextTrialHandler();
+                props.onNextTrialHandler(moves);
             }, waitBeforeNextTrial * 1000);
         }
     }, [step, isTimerDone]);
 
     const onNodeClickHandler = (currentNode: number, nextNode: number) => {
+        // Update moves
+        if(moves===[]) setMoves([currentNode]);
+        setMoves([...moves, nextNode]);
         // Update state
         setStep(step + 1);
         // Select current edge
