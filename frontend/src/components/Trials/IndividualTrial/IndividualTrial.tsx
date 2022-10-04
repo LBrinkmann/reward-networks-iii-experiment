@@ -32,7 +32,7 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
     // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {
         if (isTimerDone || step === maxSteps) {
-            props.onTrialEndHandler(moves);
+            if(props.onTrialEndHandler) props.onTrialEndHandler(moves);
             // hide the trial content
             setIsBlankScreen(true);
             // wait for `waitBeforeNextTrial` second
