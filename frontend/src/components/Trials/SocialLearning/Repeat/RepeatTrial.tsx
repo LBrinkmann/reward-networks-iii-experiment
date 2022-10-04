@@ -1,10 +1,11 @@
 import React, {FC, useEffect, useState} from "react"
 import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
-import LinearSolution from "../../../Network/LinearSolution";
-import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
+import LinearSolution from "../../../Network/LinearSolution";
+import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/HighlightedNetwork/HighlightedNetwork";
 
-interface ObservationTrialInterface extends AnimatedNetworkInterface {
+
+interface RepeatTrialInterface extends HighlightedNetworkInterface {
     /** Teacher's ID */
     teacherId: number;
     /** Teacher's comment */
@@ -12,26 +13,18 @@ interface ObservationTrialInterface extends AnimatedNetworkInterface {
     maxSteps?: number;
     hideTrial?: boolean;
     waitBeforeNextTrial?: number;
-    waitAfterTheEndOfAnimation?: number;
+    waitAfterTheEndOfTrial?: number;
     /** Handle the end of the trial */
     onNextTrialHandler: () => void;
 }
 
 
-export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
-    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfAnimation = 3, waitBeforeNextTrial = 2} = props;
+export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
+    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfTrial = 2, waitBeforeNextTrial = 2} = props;
 
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
-    const [startAnimation, setStartAnimation] = useState<boolean>(false);
     const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
-
-    // wait for 2 seconds before starting the animation
-    useEffect(() => {
-        setTimeout(() => {
-            setStartAnimation(true);
-        }, 2000);
-    }, []);
 
     // Go to the next trial when all the steps are done
     useEffect(() => {
@@ -40,7 +33,7 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
             setTimeout(() => {
                 // hide the trial content
                 setIsBlankScreen(true);
-            }, waitAfterTheEndOfAnimation * 1000);
+            }, waitAfterTheEndOfTrial * 1000);
 
             // wait for `waitBeforeNextTrial` second
             setTimeout(() => {
@@ -60,12 +53,11 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
             {(!isBlankScreen) ? (
                 <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
                     <Grid item xs={7}>
-                        <AnimatedNetwork
+                        <HighlightedNetwork
                             nodes={props.nodes}
                             edges={props.edges}
                             moves={props.moves}
                             onNextStepHandler={onNextStepHandler}
-                            startAnimation={startAnimation}
                         />
                     </Grid>
 
@@ -106,4 +98,4 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     );
 }
 
-export default ObservationTrial;
+export default RepeatTrial;

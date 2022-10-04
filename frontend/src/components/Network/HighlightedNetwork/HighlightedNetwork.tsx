@@ -11,6 +11,8 @@ export interface HighlightedNetworkInterface {
     edges: StaticNetworkEdgeInterface[];
     /** The list of moves with the starting node as the first element */
     moves: number[];
+    /** Hook to handle parent states on new step */
+    onNextStepHandler?: (stepNumber: number, cumulativeScore: number) => void;
 
 }
 
@@ -40,6 +42,7 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
 
     const OnNodeClick = (nodeId: number) => {
         if((currentMoveInx < moves.length) && (nodeId === moves[currentMoveInx + 1])) {
+            props.onNextStepHandler(currentMoveInx + 1, cumulativeScore);
             setCurrentNodeId(nodeId);
             setCurrentMoveInx(currentMoveInx + 1);
         }
