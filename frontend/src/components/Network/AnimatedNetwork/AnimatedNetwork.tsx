@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import StaticNetwork from "../StaticNetwork";
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import {Button, Grid} from "@mui/material";
@@ -21,7 +21,7 @@ export interface AnimatedNetworkInterface {
     startAnimation?: boolean;
 }
 
-const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInterface) => {
+const AnimatedNetwork: FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInterface) => {
     const {playOnClick = false, delayBetweenMoves = 1000} = props;
 
     const [currentNodeId, setCurrentNodeId] = useState<number>(props.moves[0]);

@@ -66,7 +66,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (props) => {
 
     // Draw path
     // SEE: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-    let d = ``;
+    let d: string;
     if (arc_type == 'straight') {
         d = `M ${source_x} ${source_y} ${target_x} ${target_y}`;
     } else {
@@ -86,10 +86,11 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (props) => {
             break;
         case "animated":
             strokeDasharray = "4,4";
+            edgeWidthFinal = edgeWidth * 1.5;
             springConfig = {
                 loop: true,
                 from: {dashOffset: 0},
-                dashOffset: source_x - target_x < 0 || source_y - target_y < 0 ? 100 : -100,
+                dashOffset: source_x - target_x < 0 || source_y - target_y < 0 ? -100 : 100,
                 delay: 0,
                 config: {duration: 10000},
             };
