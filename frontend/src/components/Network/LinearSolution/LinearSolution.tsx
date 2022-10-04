@@ -23,6 +23,8 @@ interface LinearSolutionInterface {
     gap?: number;
     /** Onset of the first node. Default = 24 */
     onset?: number;
+    /** unique id of the component */
+    id?: number;
 }
 
 
@@ -35,7 +37,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         edgeWidth = 3,
         nodes,
         edges,
-        moves
+        moves,
+        id = 100,
     } = props;
 
     const [score, setScore] = useState<number>(0);
@@ -66,7 +69,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                     reward={edge.reward}
                     edgeWidth={edgeWidth}
                     edgeStyle={edge.edgeStyle}
-                    idx={moveIdx + 100} // add 100 to avoid conflict with edge idx in other components
+                    idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
                     showRewardText={false}
                     arc_type={edge.arc_type}
                     source_x={sourceX}

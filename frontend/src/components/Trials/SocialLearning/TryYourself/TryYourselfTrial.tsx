@@ -45,12 +45,17 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
                 ) : (
                     <>
                         {(!isBlankScreen) ? (
-                            <>
+                            <Box
+                                sx={{width: '600px'}}
+                                justifyContent="center"
+                                alignItems="center"
+                                style={{margin: 'auto', marginTop: '15%'}}
+                            >
                                 <LinearSolution nodes={props.nodes} edges={props.edges} moves={currentPlayerMoves}
-                                                title={"Your solution total score"}/>
+                                                title={"Your solution total score"} id={200}/>
                                 <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}
                                                 title={"Player " + props.teacherId + " total score"}/>
-                            </>
+                            </Box>
                         ) : (
                             <Box
                                 sx={{width: '25%'}}

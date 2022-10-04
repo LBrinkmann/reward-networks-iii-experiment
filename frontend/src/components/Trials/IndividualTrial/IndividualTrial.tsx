@@ -45,8 +45,11 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
 
     const onNodeClickHandler = (currentNode: number, nextNode: number) => {
         // Update moves
-        if(moves===[]) setMoves([currentNode]);
-        setMoves([...moves, nextNode]);
+        if (moves.length === 0) {
+            setMoves([currentNode, nextNode]);
+        } else {
+            setMoves([...moves, nextNode]);
+        }
         // Update state
         setStep(step + 1);
         // Select current edge
