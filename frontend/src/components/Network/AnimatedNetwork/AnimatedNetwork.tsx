@@ -38,7 +38,7 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetw
                     if (currentMoveInx !== 0) {
                         setEdges(updateEdges(props.moves[currentMoveInx - 1], props.moves[currentMoveInx]));
                     }
-                    if (currentMoveInx < props.moves.length - 1) {
+                    if (currentMoveInx < props.moves.length) {
                         setCurrentMoveInx(currentMoveInx + 1);
                     }
                 },
@@ -51,7 +51,7 @@ const AnimatedNetwork: React.FC<AnimatedNetworkInterface> = (props: AnimatedNetw
     // Update parent information on next step
     useEffect(() => {
         if (props.onNextStepHandler) {
-            props.onNextStepHandler(currentMoveInx ? currentMoveInx - 1 : 0, cumulativeScore);
+            props.onNextStepHandler(currentMoveInx ? currentMoveInx - 1: 0, cumulativeScore);
         }
     }, [cumulativeScore, currentMoveInx]);
 
