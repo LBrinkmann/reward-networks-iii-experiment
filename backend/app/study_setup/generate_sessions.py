@@ -13,17 +13,29 @@ async def generate_sessions(n_generations: int = 5,
                             n_sessions_per_generation: int = 10,
                             n_advise_per_session: int = 5,
                             experiment_type: str = 'reward_network_iii',
-                            experiment_num: int = 0
-                            ):
+                            experiment_num: int = 0,
+                            num_ai_players: int = 3,
+                            seed: int = 42):
     """
     Generate one experiment.
     """
     # Set random seed
-    random.seed(42)
+    random.seed(seed)
+
+    # check that n_sessions_per_generation is even
+    # this is to ensure that there are an equal number of sessions with and
+    # without AI player advisors
+    assert n_sessions_per_generation % 2 == 0, \
+        "n_sessions_per_generation must be even"
 
     # create sessions for the first generation
+    # the last `num_ai_players` sessions are for AI players
     sessions_n_0 = await create_generation(
-        0, n_sessions_per_generation, experiment_type, experiment_num)
+        0, n_sessions_per_generation, experiment_type, experiment_num,
+        num_ai_players)
+
+    sessions_n_0_with_ai = sessions_n_0[-num_ai_players:]
+    sessions_n_0_without_ai = sessions_n_0[:-num_ai_players]
 
     # iterate over generations
     for generation in range(n_generations - 1):
@@ -32,43 +44,70 @@ async def generate_sessions(n_generations: int = 5,
             generation + 1, n_sessions_per_generation, experiment_type,
             experiment_num)
 
-        # randomly link sessions of the previous generation to the sessions of
-        # the next generation
-        for s_n_1 in sessions_n_1:
-            # get n numbers between 0 and n_sessions_per_generation - 1
-            # without replacement
-            advise_src = random.sample(range(n_sessions_per_generation),
-                                       n_advise_per_session)
-            advise_ids = []
-            for i in advise_src:
-                advise_ids.append(sessions_n_0[i].id)
-                # record children of the session
-                sessions_n_0[i].child_ids.append(s_n_1.id)
-                await sessions_n_0[i].save()
+        # split sessions into two streams (with and without AI player
+        # advisors or offsprings of AI player advisors)
+        sessions_n_1_with_ai = sessions_n_1[:n_sessions_per_generation // 2]
+        sessions_n_1_without_ai = sessions_n_1[n_sessions_per_generation // 2:]
 
-            s_n_1.advise_ids = advise_ids
-            await s_n_1.save()
+        await create_connections(sessions_n_0_with_ai,
+                                 sessions_n_1_with_ai,
+                                 n_advise_per_session)
+
+        await create_connections(sessions_n_0_without_ai,
+                                 sessions_n_1_without_ai,
+                                 n_advise_per_session)
+
         # now sessions_n_0 is the previous generation
-        sessions_n_0 = sessions_n_1
+        # NOTE: the very first generation is different from the rest
+        sessions_n_0_with_ai = sessions_n_1_with_ai
+        sessions_n_0_without_ai = sessions_n_1_without_ai
+
+
+async def create_connections(gen0, gen1, n_advise_per_session):
+    # randomly link sessions of the previous generation to the sessions of
+    # the next generation
+    for s_n_1 in gen1:
+        # get n numbers between 0 and len(gen0) - 1 without replacement
+        advise_src = random.sample(range(len(gen0)), n_advise_per_session)
+        advise_ids = []
+        for i in advise_src:
+            advise_ids.append(gen0[i].id)
+            # record children of the session
+            gen0[i].child_ids.append(s_n_1.id)
+            await gen0[i].save()
+
+        s_n_1.advise_ids = advise_ids
+        await s_n_1.save()
 
 
 async def create_generation(generation: int,
                             n_sessions_per_generation: int,
                             experiment_type: str,
-                            experiment_num: int
+                            experiment_num: int,
+                            num_ai_players: int = 0
                             ) -> List[Session]:
     sessions = []
-    for session_idx in range(n_sessions_per_generation):
-        session = await generate_session(experiment_num, experiment_type,
-                                         generation, session_idx)
+    for session_idx in range(n_sessions_per_generation - num_ai_players):
+        session = await create_trials(experiment_num, experiment_type,
+                                      generation, session_idx)
         # save session
         await session.save()
         sessions.append(session)
+
+    # if there are AI players, create sessions for them
+    if num_ai_players > 0:
+        for session_idx in range(n_sessions_per_generation - num_ai_players):
+            session = await create_ai_trials(experiment_num, experiment_type,
+                                             generation, session_idx)
+            # save session
+            await session.save()
+            sessions.append(session)
+
     return sessions
 
 
-async def generate_session(experiment_num, experiment_type, generation,
-                           session_idx):
+async def create_trials(experiment_num, experiment_type, generation,
+                        session_idx):
     """
     Generate one session.
     """
@@ -135,4 +174,29 @@ async def generate_session(experiment_num, experiment_type, generation,
     )
     # Add trials to session
     session.trials = trials
+    return session
+
+
+async def create_ai_trials(experiment_num, experiment_type, generation,
+                           session_idx):
+    # TODO: create AI player trials with solutions
+    network_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
+    trial_n = 0
+
+    # Demonstration trial
+    dem_trial = Trial(
+        trial_num_in_session=trial_n,
+        trial_type='demonstration',
+        network=Network.parse_obj(
+            network_data[random.randint(0, network_data.__len__() - 1)]),
+    )
+
+    session = Session(
+        experiment_num=experiment_num,
+        experiment_type=experiment_type,
+        generation=generation,
+        session_num_in_generation=session_idx,
+        trials=[dem_trial],
+        available=False,
+    )
     return session
