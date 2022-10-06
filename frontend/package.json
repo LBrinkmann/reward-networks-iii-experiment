@@ -4,13 +4,24 @@
   "scripts": {
     "start": "node gen_config.js && npx webpack-dev-server --mode development --open --hot",
     "build-dev": "node gen_config.js && webpack --mode development && cp -R static/* dist/",
-    "build-prod": "node gen_config.js && webpack --mode production && cp -R static/* dist/"
+    "build-prod": "node gen_config.js && webpack --mode production && cp -R static/* dist/",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "chromatic": "npx chromatic --project-token=f12ca4a31d56"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/builder-webpack5": "^6.5.10",
+    "@storybook/manager-webpack5": "^6.5.10",
+    "@storybook/react": "^6.5.10",
+    "@storybook/testing-library": "^0.0.13",
     "@types/lodash": "^4.14.178",
     "@types/react-dom": "^17.0.11",
     "@types/shortid": "^0.0.29",
@@ -20,6 +31,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "chromatic": "^6.8.0",
     "css-loader": "^6.5.1",
     "file-loader": "^6.2.0",
     "less": "^4.1.2",
@@ -37,6 +49,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.3.1",
     "axios": "^0.25.0",
     "react": "^17.0.2",

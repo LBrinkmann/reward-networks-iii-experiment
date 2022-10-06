@@ -34,6 +34,31 @@ export interface AdviseRequest {
   totalReward: number;
   phase: string;
 }
+export interface Explanation {
+  type: "table" | "text" | "playout" | "expectedReward" | "placeholder" | "replay" | "title";
+  content?: Table | string | number[];
+}
+export interface Table {
+  columns: string[];
+  index: string[];
+  columnName: string;
+  indexName: string;
+  data: number[][];
+}
+export interface ExtBaseModel {
+  _id?: string;
+  createdAt?: string;
+}
+export interface HumanExplanation {
+  _id?: string;
+  createdAt?: string;
+  explanationId?: string;
+  userId: string;
+  gameId: string;
+  type: "text";
+  content: string;
+}
+export interface SnakeModel {}
 export interface Environment {
   environmentId: string;
   startingNodeIdx: number;
@@ -60,38 +85,6 @@ export interface ActionType {
   actionTypeIdx: number;
   reward: number;
 }
-export interface Experiment {
-  _id?: string;
-  createdAt?: string;
-  experimentId?: string;
-  experimentName?: string;
-  treatments?: {
-    [k: string]: Treatment;
-  };
-  nChainsPerTreatment?: number;
-  nGamesPerChain?: number;
-  nStepsPerPhase?: number;
-  qTablePath?: string;
-  environmentsPath?: string;
-  active?: boolean;
-}
-export interface Treatment {
-  name?: string;
-  playout?: boolean;
-  explanationType?: "table" | "rule" | "replay" | "playout" | "expectedReward";
-  advisor: "human" | "qtable";
-}
-export interface Explanation {
-  type: "table" | "text" | "playout" | "expectedReward" | "placeholder" | "replay" | "title";
-  content?: Table | string | number[];
-}
-export interface Table {
-  columns: string[];
-  index: string[];
-  columnName: string;
-  indexName: string;
-  data: number[][];
-}
 export interface Game {
   _id?: string;
   createdAt?: string;
@@ -108,6 +101,14 @@ export interface Game {
   finished?: string;
   environmentIds: string[];
   totalPoints?: number;
+}
+export interface Solution {
+  _id?: string;
+  createdAt?: string;
+  solutionId?: string;
+  environmentId: string;
+  stepId: string;
+  actions: Action[];
 }
 export interface State {
   environment?: Environment;
@@ -144,6 +145,12 @@ export interface User {
   experimentId: string;
   prolificId: string;
 }
+export interface Treatment {
+  name?: string;
+  playout?: boolean;
+  explanationType?: "table" | "rule" | "replay" | "playout" | "expectedReward";
+  advisor: "human" | "qtable";
+}
 export interface StepPreview {
   stepId: string;
   phase: string;
@@ -164,20 +171,26 @@ export interface StepResult {
   solution?: Solution;
   explanation?: HumanExplanation;
 }
-export interface Solution {
+export interface Chain {
   _id?: string;
   createdAt?: string;
-  solutionId?: string;
-  environmentId: string;
-  stepId: string;
-  actions: Action[];
+  chainId?: string;
+  experimentId: string;
+  treatmentName: string;
+  environmentIds: string[];
 }
-export interface HumanExplanation {
+export interface Experiment {
   _id?: string;
   createdAt?: string;
-  explanationId?: string;
-  userId: string;
-  gameId: string;
-  type: "text";
-  content: string;
+  experimentId?: string;
+  experimentName?: string;
+  treatments?: {
+    [k: string]: Treatment;
+  };
+  nChainsPerTreatment?: number;
+  nGamesPerChain?: number;
+  nStepsPerPhase?: number;
+  qTablePath?: string;
+  environmentsPath?: string;
+  active?: boolean;
 }

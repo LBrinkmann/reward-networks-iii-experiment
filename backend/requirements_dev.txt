@@ -1,6 +1,11 @@
-ipdb
-ipython
 autopep8
-ipykernel
+erdantic
 flake8
+ipdb
+ipykernel
+ipython
 pydantic-to-typescript
+pygraphviz
+pytest
+pytest-asyncio
+pyvis

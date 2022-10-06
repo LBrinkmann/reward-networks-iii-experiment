@@ -1,0 +1,23 @@
+{
+  "layout": {
+    "hierarchical": {
+      "enabled": true,
+      "levelSeparation": 245
+    }
+  },
+  "interaction": {
+    "hover": true,
+    "navigationButtons": true
+  },
+  "edges": {
+    "hoverWidth": 2,
+    "selectionWidth": 4
+  },
+  "physics": {
+    "hierarchicalRepulsion": {
+      "nodeDistance": 205,
+      "damping": 1,
+      "avoidOverlap": 0.2
+    }
+  }
+}

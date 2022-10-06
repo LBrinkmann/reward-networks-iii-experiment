@@ -42,13 +42,31 @@ docker system prune --volumes --force # clean up unused volumes
 
 ```
 
+### Links for development
+- React: http://localhost:9000/?userId=f643102a-c56d-4a3a-be39-de467351275f
+- Storybook: http://localhost:6006/
+- Swagger UI FastAPI: http://localhost:5000/docs
+- Backend progress: http://localhost:5000/progress/reward_network_iii/0
+- New session simulation: http://localhost:5000/simulation/reward_network_iii/0?generate_new_sessions=true&run_simulation=false
 
 ## Deployment
 
+GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii](https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii)
+
+- Frontend URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
+- Backend URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
+
+### Check the study progress
+
+- https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/reward_network_iii/0
+
 ### Logs
 
-https://onenr.io/0EPwJ0NDkj7
+- Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
+- Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
 
+### Deployment notes
 
-
-
+- Frontend and backend pipelines are triggered by the parent pipeline [`.gitlab-ci.yml`](.gitlab-ci.yml).
+- In order to run two separate pipelines from the same repo, we need to copy the content of [`frontend`](frontend) and [`backend`](backend) folders to the root of the repo before running the corresponding child pipeline ([`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) or [`.gitlab-ci-backend.yml`](.gitlab-ci-backend.yml)).
+- [`frontend`](frontend) folder should be deleted before the `build` stage of the [`.gitlab-ci-frontend.yml`](.gitlab-ci-frontend.yml) pipeline. This is necessary to avoid typescript errors when building the frontend.

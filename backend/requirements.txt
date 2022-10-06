@@ -1,8 +1,11 @@
-pyyaml
-pymongo
-numpy
-pandas
+beanie
 fastapi==0.72.0
+httpx
+motor
+numpy
 pydantic==1.9.0
+pymongo
+pyvis
+pyyaml
 stringcase
 uvicorn

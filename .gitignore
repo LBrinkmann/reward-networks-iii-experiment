@@ -6,4 +6,9 @@ __pycache__
 build
 
 # Ignore JetBrains files
-.idea
+# .idea
+# frontend/.idea
+# !.idea/runConfigurations
+
+# Ignore html generated in backend folder
+backend/**/*.html

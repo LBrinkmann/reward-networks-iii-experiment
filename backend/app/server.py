@@ -2,23 +2,24 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import HTTPException
 
-from app.models import (
-    Environment, AdviseRequest, Step, User, Game, Experiment, Treatment,
-    StepResult, StateUpdate, State, Advise, Explanation, experiment)
-
-from app.advisor import init_advisor
-from app.create_experiment import create_chains
-
-from app.utils import load_yaml
+from database.connection import Settings
+from models.session import Session
+from models.subject import Subject
+# from routes.advise import advise_router
+from routes.progress import progress_router
+from routes.session import session_router
+from routes.simulate_study import simulation_router
+from study_setup.generate_sessions import generate_sessions
 
 if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
     from pydantic2ts import generate_typescript_defs
 
-app = FastAPI()
+api = FastAPI()
 
-app.add_middleware(
+settings = Settings()
+
+api.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_credentials=True,
@@ -26,152 +27,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-EXPERIMENT = None
-ADVISOR = None
-ENVIRONMENTS = None
+# Register routes
+api.include_router(session_router, prefix="/session")
+api.include_router(progress_router, prefix="/progress")
+# api.include_router(advise_router, prefix="/advise")
+
+# Only for testing purposes
+api.include_router(simulation_router, prefix="/simulation")
 
 
-def set_globals(experiment):
-    global EXPERIMENT, ADVISOR, ENVIRONMENTS
-    EXPERIMENT = experiment
-    ADVISOR = init_advisor(experiment)
-    ENVIRONMENTS = Environment.read_file(experiment.environments_path)
-
-
-def reset_all():
-    for m in (User, Game, Experiment, Advise):
-        m.reset()
-
-
-def load_experiments():
-    experiments = load_yaml('experiments.yml')
-    experiments = [{**exp, 'experimentName': name} for name, exp in
-                   experiments.items()]
-
-    for exp in experiments:
-        exp = Experiment(**exp).flush()
-        environments = Environment.read_file(exp.environments_path)
-        create_chains(exp, environments=environments)
-
-
-@app.on_event("startup")
+@api.on_event("startup")
 async def startup_event():
-    reset_all()
-    load_experiments()
-    experiment = Experiment.get(active=True)
-    if experiment:
-        set_globals(experiment)
+    # initialize database
+    await settings.initialize_database()
+
+    # generate frontend types
     if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
-            'app.server', os.path.join(path, 'apiTypes.ts'))
+            'app.models', os.path.join(path, 'apiTypes.ts'))
 
-
-def check_experiment():
-    experiment = Experiment.get(active=True)
-    if not EXPERIMENT or (experiment.id != EXPERIMENT.id):
-        if experiment:
-            set_globals(experiment)
-
-
-@app.get('/experiment')
-async def get_experiments():
-    return Experiment.get_many()
-
-
-@app.post('/experiment', status_code=201)
-async def post_experiment(experiment: Experiment):
-    experiment = experiment.flush()
-    environments = Environment.read_file(experiment.environments_path)
-    create_chains(experiment, environments=environments)
-    return experiment.experiment_name
-
-
-@app.put('/experiment/{experiment_name}/active')
-async def put_experiment_active(experiment_name):
-    experiment = Experiment.get(experiment_name=experiment_name).set_active()
-    set_globals(experiment)
-    return experiment
-
-
-@app.get('/games/{experiment_name}')
-async def get_games(experiment_name):
-    experiment = Experiment.get(experiment_name=experiment_name)
-    return Game.get_many(experiment_id=experiment.id)
-
-
-@app.get('/game/{prolific_id}', response_model_by_alias=False)
-async def get_game(prolific_id):
-    check_experiment()
-    user = User.get(prolific_id=prolific_id, experiment_id=EXPERIMENT.id)
-    if not user:
-        user = User(prolific_id=prolific_id,
-                    experiment_id=EXPERIMENT.id).flush()
-        game = Game.assign(experiment_id=EXPERIMENT.id, user_id=user.id)
-    else:
-        game = Game.get(experiment_id=EXPERIMENT.id, user_id=user.id)
-    steps = Step.get_many(game_id=game.id)
-    step = Step.get(game_id=game.id, current=True)
-    treatment = EXPERIMENT.treatments[game.treatment_name]
-
-    return State(**{
-        "user": user,
-        "game": game,
-        "treatment": treatment,
-        "steps": [{'stepId': s.id, 'phase': s.phase, 'phaseStep': s.phase_step}
-                  for s in steps],
-        "step": step,
-        **argument_step(game, treatment, step)
-    })
-
-
-def argument_step(game: Game, treatment: Treatment, step: Step):
-    if step is None:
-        return {}
-    data = {}
-    if step.phase == 'tutorial':
-        environment = ENVIRONMENTS[game.environment_ids[0]]
-        data['environment'] = environment
-        data['explanations'] = [
-            Explanation(type='text', content='Some explanation.')]
-    else:
-        environment = ENVIRONMENTS[step.environment_id]
-        expanation = ADVISOR[treatment.advisor].explanation(
-            game=game, environment=environment, explanation_type=step.phase)
-        data['explanations'] = expanation
-        data['environment'] = environment
-    return data
-
-
-@app.post('/step_result')
-async def post_step_result(s_result: StepResult):
-    check_experiment()
-    current_step = Step.get(s_result.step_id)
-    if not current_step.current:
-        raise HTTPException(status_code=404,
-                            detail='Posted step is not the current step.')
-    if s_result.solution:
-        s_result.solution.flush()
-    if s_result.explanation:
-        s_result.explanation.flush()
-
-    next_step = Step.next(current_step)
-    game = Game.get(current_step.game_id)
-    game.total_points += s_result.points
-    game.flush()
-    if next_step:
-        treatment = EXPERIMENT.treatments[game.treatment_name]
-        resp = argument_step(game, treatment, next_step)
-        return StateUpdate(step=next_step, game=game, **resp)
-    else:
-        raise HTTPException(status_code=404, detail='No further step avaible.')
-
-
-@app.post('/advise')
-async def post_advise(ad_request: AdviseRequest) -> Advise:
-    if ad_request.phase == 'none':
-        return None
-    else:
-        environment = ENVIRONMENTS[ad_request.environment_id]
-        advise = ADVISOR[ad_request.advisor].advise(environment, ad_request)
-        return advise
+    # run the study simulation
+    await Session.find().delete()
+    await Subject.find().delete()
+    await generate_sessions(n_generations=5,
+                            n_sessions_per_generation=10,
+                            n_advise_per_session=5,
+                            experiment_type='reward_network_iii',
+                            experiment_num=0)
