@@ -33,5 +33,5 @@ async def default_client():
         yield client
 
         # Clean up resources
-        # await Session.find().delete()
-        # await Subject.find().delete()
+        await Session.find().delete()
+        await Subject.find().delete()

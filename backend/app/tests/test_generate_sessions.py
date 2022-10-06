@@ -6,13 +6,23 @@ from study_setup.generate_sessions import generate_sessions
 
 
 @pytest.mark.asyncio
-async def test_generate_sessions(default_client: httpx.AsyncClient):
-    url = '/simulation/reward_network_iii/0?' \
-          'generate_new_sessions=true&run_simulation=false'
-    response = await default_client.get(url)
+async def test_generate_sessions(default_client: httpx.AsyncClient,
+                                 experiment_type='reward_network_iii',
+                                 n_advise_per_session=5,
+                                 n_generations=5,
+                                 n_sessions_per_generation=20
+                                 ):
+    await generate_sessions(experiment_type=experiment_type,
+                            n_advise_per_session=n_advise_per_session,
+                            n_generations=n_generations,
+                            n_sessions_per_generation=n_sessions_per_generation)
+    sessions = await Session.find().to_list(100)
 
-    await generate_sessions(experiment_type="reward_network_iii-test",
-                            n_sessions_per_generation=30)
+    for s in sessions:
+        assert s.experiment_type == "reward_network_iii"
+        if s.generation != 0:
+            # check the number of parents
+            assert len(s.advise_ids) == n_advise_per_session
 
 
 def test_create_trials():
