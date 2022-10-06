@@ -25,5 +25,6 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
             assert len(s.advise_ids) == n_advise_per_session
 
 
+@pytest.mark.ignore
 def test_create_trials():
     pass
