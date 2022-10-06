@@ -10,12 +10,12 @@ from models.trial import Trial
 
 
 async def generate_sessions(n_generations: int = 5,
-                            n_sessions_per_generation: int = 10,
+                            n_sessions_per_generation: int = 20,
                             n_advise_per_session: int = 5,
                             experiment_type: str = 'reward_network_iii',
                             experiment_num: int = 0,
                             num_ai_players: int = 3,
-                            seed: int = 42):
+                            seed: int = 4242):
     """
     Generate one experiment.
     """
@@ -34,8 +34,9 @@ async def generate_sessions(n_generations: int = 5,
         0, n_sessions_per_generation, experiment_type, experiment_num,
         num_ai_players)
 
-    sessions_n_0_with_ai = sessions_n_0[-num_ai_players:]
-    sessions_n_0_without_ai = sessions_n_0[:-num_ai_players]
+    sessions_n_0_with_ai = sessions_n_0[num_ai_players:]
+    sessions_n_0_without_ai = sessions_n_0[
+                              :n_sessions_per_generation - num_ai_players]
 
     # iterate over generations
     for generation in range(n_generations - 1):
@@ -46,13 +47,16 @@ async def generate_sessions(n_generations: int = 5,
 
         # split sessions into two streams (with and without AI player
         # advisors or offsprings of AI player advisors)
-        sessions_n_1_with_ai = sessions_n_1[:n_sessions_per_generation // 2]
-        sessions_n_1_without_ai = sessions_n_1[n_sessions_per_generation // 2:]
-
+        sessions_n_1_with_ai = sessions_n_1[n_sessions_per_generation // 2:]
+        print(f"len(sessions_n_0_with_ai): {len(sessions_n_0_with_ai)}")
+        print(f"len(sessions_n_1_with_ai): {len(sessions_n_1_with_ai)}")
         await create_connections(sessions_n_0_with_ai,
                                  sessions_n_1_with_ai,
                                  n_advise_per_session)
 
+        sessions_n_1_without_ai = sessions_n_1[:n_sessions_per_generation // 2]
+        print(f"len(sessions_n_0_without_ai): {len(sessions_n_0_without_ai)}")
+        print(f"len(sessions_n_1_without_ai): {len(sessions_n_1_without_ai)}")
         await create_connections(sessions_n_0_without_ai,
                                  sessions_n_1_without_ai,
                                  n_advise_per_session)
@@ -96,9 +100,11 @@ async def create_generation(generation: int,
 
     # if there are AI players, create sessions for them
     if num_ai_players > 0:
-        for session_idx in range(n_sessions_per_generation - num_ai_players):
+        for session_idx in range(n_sessions_per_generation - num_ai_players,
+                                 n_sessions_per_generation):
             session = await create_ai_trials(experiment_num, experiment_type,
-                                             generation, session_idx)
+                                             generation,
+                                             session_idx)
             # save session
             await session.save()
             sessions.append(session)
@@ -198,5 +204,6 @@ async def create_ai_trials(experiment_num, experiment_type, generation,
         session_num_in_generation=session_idx,
         trials=[dem_trial],
         available=False,
+        ai_player=True
     )
     return session

@@ -22,7 +22,7 @@ async def get_study_simulation(n_subjects: int = 10,
                                generate_new_sessions: bool = False,
                                run_simulation: bool = True,
                                n_gen: int = 5,
-                               n_s_per_gen: int = 10,
+                               n_s_per_gen: int = 20,
                                n_adv: int = 5):
     """http://localhost:5000/simulation/reward_network_iii/0
     ?generate_new_sessions=true&run_simulation=true&n_adv=5&n_gen=5

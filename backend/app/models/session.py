@@ -19,6 +19,7 @@ class Session(Document):
     valid: Optional[bool] = False
     finished: Optional[bool] = False
     available: Optional[bool] = False
+    ai_player: Optional[bool] = False
     subject_id: Optional[PydanticObjectId]
     started: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]

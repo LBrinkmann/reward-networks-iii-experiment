@@ -20,9 +20,9 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
         s_num = session.session_num_in_generation
         trial_num = session.current_trial_num
         subject_in_the_session = True if session.subject_id else False
+        is_ai_player = session.ai_player
         label = f'{trial_num + 1}' if subject_in_the_session else ' '
         title = f'Session {s_num} in generation {g}\n'
-        title += f'Advise type: {session.advise_type}\n'
         title += f'Created at: {session.created_at}\n'
 
         if session.available:
@@ -34,6 +34,10 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
                 color = '#F5A45D'  # '#FAD77B'
             else:
                 color = '#F4B5BD'
+
+        if is_ai_player:
+            color = '#FAD77B'
+            label = 'AI'
 
         net.add_node(str(session.id), label, shape='circle', level=g, x=s_num,
                      color=color, title=title)

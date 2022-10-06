@@ -48,10 +48,10 @@ async def startup_event():
             'app.models', os.path.join(path, 'apiTypes.ts'))
 
     # run the study simulation
-    await Session.find().delete()
-    await Subject.find().delete()
-    await generate_sessions(n_generations=5,
-                            n_sessions_per_generation=10,
-                            n_advise_per_session=5,
-                            experiment_type='reward_network_iii',
-                            experiment_num=0)
+    # await Session.find().delete()
+    # await Subject.find().delete()
+    # await generate_sessions(n_generations=5,
+    #                         n_sessions_per_generation=10,
+    #                         n_advise_per_session=5,
+    #                         experiment_type='reward_network_iii',
+    #                         experiment_num=0)
