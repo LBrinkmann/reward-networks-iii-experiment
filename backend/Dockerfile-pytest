@@ -1,0 +1,15 @@
+FROM python:3.9
+
+ENV VIRTUAL_ENV=/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY . .
+
+RUN apt-get update
+# neccessary for Graphviz and Erdantic
+RUN apt-get install -y graphviz graphviz-dev
+
+RUN pip --no-cache-dir install -e .[dev]
+
+CMD ["uvicorn", "server:api", "--host", "0.0.0.0", "--port", "5001"]

@@ -48,15 +48,11 @@ async def generate_sessions(n_generations: int = 5,
         # split sessions into two streams (with and without AI player
         # advisors or offsprings of AI player advisors)
         sessions_n_1_with_ai = sessions_n_1[n_sessions_per_generation // 2:]
-        print(f"len(sessions_n_0_with_ai): {len(sessions_n_0_with_ai)}")
-        print(f"len(sessions_n_1_with_ai): {len(sessions_n_1_with_ai)}")
         await create_connections(sessions_n_0_with_ai,
                                  sessions_n_1_with_ai,
                                  n_advise_per_session)
 
         sessions_n_1_without_ai = sessions_n_1[:n_sessions_per_generation // 2]
-        print(f"len(sessions_n_0_without_ai): {len(sessions_n_0_without_ai)}")
-        print(f"len(sessions_n_1_without_ai): {len(sessions_n_1_without_ai)}")
         await create_connections(sessions_n_0_without_ai,
                                  sessions_n_1_without_ai,
                                  n_advise_per_session)
@@ -117,7 +113,7 @@ async def create_trials(experiment_num, experiment_type, generation,
     """
     Generate one session.
     """
-    network_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
+    network_data = json.load(open(Path('data') / 'train_viz.json'))
     trial_n = 0
 
     # Consent form
@@ -186,7 +182,7 @@ async def create_trials(experiment_num, experiment_type, generation,
 async def create_ai_trials(experiment_num, experiment_type, generation,
                            session_idx):
     # TODO: create AI player trials with solutions
-    network_data = json.load(open(Path.cwd() / 'data' / 'train_viz.json'))
+    network_data = json.load(open(Path('data') / 'train_viz.json'))
     trial_n = 0
 
     # Demonstration trial

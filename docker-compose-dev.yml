@@ -30,6 +30,21 @@ services:
       - '5000:5000'
     depends_on:
       - database
+  backend-pytest:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-pytest
+    volumes:
+      - ./backend:/backend
+    environment:
+      PORT: 5001
+      MONGO_URL: 'mongodb://database:27017/'
+      # Environment variables used in app/server.py
+      GENERATE_FRONTEND_TYPES: 'false'
+    ports:
+      - '5001:5001'
+    depends_on:
+      - database
   react:  # frontend
     build:
       context: ./frontend
