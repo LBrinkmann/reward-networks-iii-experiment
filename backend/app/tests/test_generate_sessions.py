@@ -6,6 +6,7 @@ from study_setup.generate_sessions import generate_sessions
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  experiment_type='reward_network_iii',
                                  n_advise_per_session=5,
@@ -23,6 +24,9 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
         if s.generation != 0:
             # check the number of parents
             assert len(s.advise_ids) == n_advise_per_session
+
+    # Clean up resources
+    await Session.find().delete()
 
 
 @pytest.mark.skip

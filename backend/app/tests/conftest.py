@@ -9,6 +9,7 @@ from database.connection import Settings
 from models.session import Session
 from models.subject import Subject
 from server import api
+from study_setup.generate_sessions import generate_sessions
 
 
 @pytest.fixture(scope="session")
@@ -35,3 +36,12 @@ async def default_client():
         # Clean up resources
         await Session.find().delete()
         await Subject.find().delete()
+
+
+@pytest.fixture(scope="function")
+async def create_empty_experiment(default_client: httpx.AsyncClient):
+    await generate_sessions(experiment_type='reward_network_iii',
+                            n_advise_per_session=5,
+                            n_generations=2,
+                            n_sessions_per_generation=20,
+                            num_ai_players=3)

@@ -2,21 +2,44 @@ import asyncio
 
 import httpx
 import pytest
+from beanie import PydanticObjectId
+from beanie.odm.operators.find.comparison import In
+
+from models.session import Session
+from models.subject import Subject
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip
-async def test_one_subject(default_client: httpx.AsyncClient):
+async def test_one_subject(default_client: httpx.AsyncClient,
+                           create_empty_experiment):
     await one_subject(default_client, 0)
 
+    # Clean up resources
+    await Session.find().delete()
+    await Subject.find().delete()
+
 
 @pytest.mark.asyncio
-async def test_multiple_subjects(default_client: httpx.AsyncClient):
+async def test_multiple_subjects(default_client: httpx.AsyncClient,
+                                 create_empty_experiment):
     tasks = []
-    for i in range(1, 30):
+    for i in range(30):
         task = asyncio.create_task(one_subject(default_client, i))
         tasks.append(task)
     [await t for t in tasks]
+
+    subjects = await Subject.find().to_list()
+
+    assert len(subjects) == 30
+
+    sessions = await Session.find(
+        In(Session.subject_id, [s.id for s in subjects])).to_list()
+
+    assert len(sessions) == 17
+
+    # Clean up resources
+    await Session.find().delete()
+    await Subject.find().delete()
 
 
 async def one_subject(default_client, subj):
