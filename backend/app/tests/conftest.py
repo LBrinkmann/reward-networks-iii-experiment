@@ -20,7 +20,7 @@ def event_loop():
 
 async def init_db():
     test_settings = Settings()
-    #test_settings.MONGO_URL = "mongodb://localhost:27017/testdb"
+    test_settings.MONGO_URL = "mongodb://localhost:27017"
     test_settings.APP_NAME = "reward-network-iii-test"
 
     await test_settings.initialize_database()

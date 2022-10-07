@@ -1,34 +1,17 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
-    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="ignoredPackages">
         <value>
-          <list size="15">
-            <item index="0" class="java.lang.String" itemvalue="nilearn" />
-            <item index="1" class="java.lang.String" itemvalue="mne" />
-            <item index="2" class="java.lang.String" itemvalue="pooch" />
-            <item index="3" class="java.lang.String" itemvalue="numpy" />
-            <item index="4" class="java.lang.String" itemvalue="torch" />
-            <item index="5" class="java.lang.String" itemvalue="torchaudio" />
-            <item index="6" class="java.lang.String" itemvalue="librosa" />
-            <item index="7" class="java.lang.String" itemvalue="tensorflow" />
-            <item index="8" class="java.lang.String" itemvalue="matplotlib" />
-            <item index="9" class="java.lang.String" itemvalue="pydub" />
-            <item index="10" class="java.lang.String" itemvalue="AudioSegment" />
-            <item index="11" class="java.lang.String" itemvalue="tensorflow-cpu" />
-            <item index="12" class="java.lang.String" itemvalue="pysoundfile" />
-            <item index="13" class="java.lang.String" itemvalue="pandas" />
-            <item index="14" class="java.lang.String" itemvalue="alphacsc" />
-          </list>
+          <list size="0" />
         </value>
       </option>
     </inspection_tool>
     <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
         <list>
-          <option value="N812" />
-          <option value="N803" />
+          <option value="N801" />
         </list>
       </option>
     </inspection_tool>

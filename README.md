@@ -28,6 +28,38 @@ docker-compose -f docker-compose-dev.yml down --volumes
 
 ```
 
+### Run pytest
+
+Create the virtual environment in the backend folder:
+
+```zsh
+
+# cd backend
+
+python3 -m venv venv
+ 
+source venv/bin/activate
+
+python3 -m pip install --upgrade pip
+
+pip --no-cache-dir install -e .
+
+pip install -r requirements_pytest.txt
+
+```
+
+Run pytest:
+
+```zsh
+
+cd backend/app
+
+python -m pytest -vv -s
+
+```
+See [pytest docs](https://docs.pytest.org/en/7.1.x/how-to/usage.html#invoke-python) for more details.
+
+
 ### `apiTypes.ts`
 
 `apiTypes.ts` file is generated in the `server.py` each time FastAPI server is restarted and then copied in frontend `src` folder.
