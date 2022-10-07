@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Union
 
+from beanie.odm.operators.update.general import Set
 from fastapi import APIRouter
 
 from models.session import Session
@@ -22,6 +23,8 @@ async def get_current_trial(prolific_id: str) -> Trial:
     trial.started_at = datetime.now()
 
     await session.save()
+
+    # TODO: send waiting message if session is not available
     return trial
 
 
@@ -121,23 +124,22 @@ async def get_trial_session(prolific_id) -> (Session, Trial):
 
 
 async def initialize_session(subject: Subject) -> Session:
-    # get any available session
-    session = await Session.find_one(Session.available == True)
+    # if session is None:
+    #     # TODO: handle this situation
+    #     raise Exception("No available session")
 
-    if session is None:
-        # TODO: handle this situation
-        raise Exception("No available session")
+    # update any available session
+    await Session.find_one(Session.available == True).update(
+        Set({
+            Session.available: False,
+            Session.subject_id: subject.id,
+            Session.current_trial_num: 0
+        })
+    )
 
-    # session is not available anymore
-    session.available = False
-    # assign subject to session
-    session.subject_id = subject.id
-    # update trial index
-    session.current_trial_num = 0
-    # save session
-    await session.save()
-    # assign session to subject
-    subject.session_id = session.id
-    # save subject
-    await subject.save()
+    # get session for the subject
+    session = await Session.find_one(Session.subject_id == subject.id)
+    # update subject
+    await subject.update(Set({Subject.session_id: session.id}))
+
     return session
