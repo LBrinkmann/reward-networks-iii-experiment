@@ -4,20 +4,25 @@ from typing import Union
 from beanie.odm.operators.update.general import Set
 from fastapi import APIRouter
 
-from models.session import Session
+from models.session import Session, SessionError
 from models.subject import Subject
-from models.trial import Trial, Solution
+from models.trial import Trial, Solution, TrialSaved
 
 session_router = APIRouter(tags=["Session"])
 
 
 @session_router.get('/{prolific_id}', response_model_by_alias=False)
-async def get_current_trial(prolific_id: str) -> Trial:
+async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     """
     Get current trial from the session.
     """
     # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
+    session = await get_trial_session(prolific_id)
+
+    if isinstance(session, str):
+        return SessionError(message=session)
+
+    trial = session.trials[session.current_trial_num]
 
     # save starting time
     trial.started_at = datetime.now()
@@ -29,11 +34,17 @@ async def get_current_trial(prolific_id: str) -> Trial:
 
 
 @session_router.post('/{prolific_id}/{trial_type}')
-async def save_moves_in_trial(prolific_id: str,
-                              trial_type: str,
-                              body: Union[Solution, None] = None) -> dict:
+async def save_moves_in_trial(
+        prolific_id: str,
+        trial_type: str,
+        body: Union[Solution, None] = None) -> Union[TrialSaved, SessionError]:
     # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
+    session = await get_trial_session(prolific_id)
+
+    if isinstance(session, str):
+        return SessionError(message=session)
+
+    trial = session.trials[session.current_trial_num]
 
     # check if trial type is correct
     if trial.trial_type != trial_type:
@@ -63,9 +74,52 @@ async def save_moves_in_trial(prolific_id: str,
         # save session
         await session.save()
 
-    return {
-        "message": "Trial saved"
-    }
+    return TrialSaved()
+
+
+async def get_trial_session(prolific_id) -> Union[Session, str]:
+    # check if collection Subject exists
+    if await Subject.find().count() > 0:
+        subjects_with_id = await Subject.find(
+            Subject.prolific_id == prolific_id).to_list()
+    else:
+        subjects_with_id = []
+
+    if len(subjects_with_id) == 0:
+        # subject does not exist
+        # creat a new subject
+        subject = Subject(prolific_id=prolific_id)
+        # save subject to database
+        await subject.save()
+        # session initialization
+        await initialize_session(subject)
+    elif len(subjects_with_id) > 1:
+        return "Multiple subjects with the same prolific id"
+    else:
+        subject = subjects_with_id[0]
+
+    # get session for the subject
+    session = await Session.find_one(Session.subject_id == subject.id)
+    if session is None:
+        return "No available session for the subject"
+
+    # this will happen only for the new subject
+    if subject.session_id is None:
+        # update Subject.session_id field if it is empty
+        await subject.update(Set({Subject.session_id: session.id}))
+
+    return session
+
+
+async def initialize_session(subject: Subject):
+    # assign subject to any available session
+    await Session.find_one(Session.available == True).update(
+        Set({
+            Session.available: False,
+            Session.subject_id: subject.id,
+            Session.current_trial_num: 0
+        })
+    )
 
 
 def save_trial_solution(trial_type: str, trial: Trial,
@@ -95,51 +149,3 @@ async def update_available_status_child_sessions(session: Session):
         if available:
             child_session.available = True
             await child_session.save()
-
-
-async def get_trial_session(prolific_id) -> (Session, Trial):
-    # check if collection Subject exists
-    if await Subject.find().count() > 0:
-        subjects_with_id = await Subject.find(
-            Subject.prolific_id == prolific_id).to_list()
-    else:
-        subjects_with_id = []
-    if len(subjects_with_id) > 1:
-        # TODO: raise exception and make proper error handling
-        raise Exception("More than one subject with the same prolific id")
-    elif len(subjects_with_id) == 0:
-        # creat a new subject
-        subject = Subject(prolific_id=prolific_id)
-        # save subject to database
-        await subject.save()
-        # session initialization
-        session = await initialize_session(subject)
-    else:
-        subject = subjects_with_id[0]
-        # get session for the subject
-        session = await Session.find_one(Session.subject_id == subject.id)
-
-    trial = session.trials[session.current_trial_num]
-    return session, trial
-
-
-async def initialize_session(subject: Subject) -> Session:
-    # if session is None:
-    #     # TODO: handle this situation
-    #     raise Exception("No available session")
-
-    # update any available session
-    await Session.find_one(Session.available == True).update(
-        Set({
-            Session.available: False,
-            Session.subject_id: subject.id,
-            Session.current_trial_num: 0
-        })
-    )
-
-    # get session for the subject
-    session = await Session.find_one(Session.subject_id == subject.id)
-    # update subject
-    await subject.update(Set({Subject.session_id: session.id}))
-
-    return session

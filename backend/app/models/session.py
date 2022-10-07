@@ -1,7 +1,8 @@
 import datetime
-from typing import Optional, List, Union, Literal
+from typing import Optional, List, Union
 
 from beanie import Document, PydanticObjectId
+from pydantic import BaseModel
 
 from models.trial import Trial
 
@@ -29,3 +30,7 @@ class Session(Document):
         schema_extra = {
             "example": {}
         }
+
+
+class SessionError(BaseModel):
+    message: str

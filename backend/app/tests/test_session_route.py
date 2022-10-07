@@ -13,7 +13,7 @@ async def test_one_subject(default_client: httpx.AsyncClient):
 @pytest.mark.asyncio
 async def test_multiple_subjects(default_client: httpx.AsyncClient):
     tasks = []
-    for i in range(1, 10):
+    for i in range(1, 30):
         task = asyncio.create_task(one_subject(default_client, i))
         tasks.append(task)
     [await t for t in tasks]
@@ -40,7 +40,17 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     # get trial
     response = await client.get(url)
     assert response.status_code == 200
-    trial = response.json()
+
+    data = response.json()
+
+    if 'message' in data:
+        assert data['message'] in [
+            "Multiple subjects with the same prolific id",
+            "No available session for the subject"]
+        return
+    else:
+        trial = data
+
     assert trial['id'] == t_id
     assert trial['trial_type'] == trial_type
 

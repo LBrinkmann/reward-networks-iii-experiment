@@ -29,3 +29,7 @@ class Trial(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TrialSaved(BaseModel):
+    message: Optional[Literal['Trial saved']] = 'Trial saved'
