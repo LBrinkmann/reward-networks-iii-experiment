@@ -19,7 +19,7 @@ async def test_get_post_trials(default_client: httpx.AsyncClient):
     assert trial['id'] == 0
     assert trial['trial_type'] == 'consent'
 
-    response = await default_client.post(url, json=solution, headers=headers)
+    response = await default_client.post(url)
     assert response.status_code == 200
     assert response.json()['message'] == 'Trial saved'
 
@@ -31,6 +31,3 @@ async def test_get_post_trials(default_client: httpx.AsyncClient):
     assert trial['trial_type'] == 'individual'
 
     response = await default_client.post(url, json=solution, headers=headers)
-
-
-

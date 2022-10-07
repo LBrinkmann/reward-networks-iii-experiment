@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 from fastapi import APIRouter
 
@@ -26,15 +27,12 @@ async def get_current_trial(prolific_id: str) -> Trial:
 
 
 @session_router.post('/{prolific_id}')
-async def save_moves_in_trial(prolific_id: str, body: Solution) -> dict:
+async def save_moves_in_trial(prolific_id: str,
+                              body: Union[Solution, None] = None) -> dict:
     # find session and trial for the subject
     session, trial = await get_trial_session(prolific_id)
 
-    trial.solution = Solution(
-        moves=body.moves,
-        trial_id=trial.id,
-        finished_at=datetime.now()
-    )
+    save_trial_solution(body, trial)
 
     # update current trial with the subject solution
     trial.finished_at = datetime.now()
@@ -63,7 +61,17 @@ async def save_moves_in_trial(prolific_id: str, body: Solution) -> dict:
     }
 
 
-async def update_available_status_child_sessions(session):
+def save_trial_solution(body: Union[Solution, None], trial: Trial):
+    if trial.trial_type not in ['individual', 'demonstration'] or body is None:
+        return
+    trial.solution = Solution(
+        moves=body.moves,
+        trial_id=trial.id,
+        finished_at=datetime.now()
+    )
+
+
+async def update_available_status_child_sessions(session: Session):
     """ Check if child sessions are available"""
     for c in session.child_ids:
         child_session = await Session.get(c)

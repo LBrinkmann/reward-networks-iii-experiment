@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 class Solution(BaseModel):
     moves: List[int]
-    trial_id: Optional[int] # trial number in session
+    trial_id: Optional[int]  # trial number in session
     finished_at: Optional[datetime.datetime]
 
 
