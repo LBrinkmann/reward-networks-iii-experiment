@@ -33,20 +33,20 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case 'consent':
                 return <ConsentForm onClickAgreeHandler={OnNextTrial}  onClickDisagreeHandler={() => null}/>;
             case 'social_learning_selection':
-                return <Selection advisors={trialData.advisors} onClickHandler={OnNextTrial}/>;
+                return <Selection advisors={data.advisors} onClickHandler={OnNextTrial}/>;
             case 'social_learning':
                 return <> </>;
             case  'individual':
                 return <IndividualTrial
-                    nodes={trialData.network.nodes}
-                    edges={trialData.network.edges}
+                    nodes={data.network.nodes}
+                    edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
                 />;
             case 'demonstration':
                 return <IndividualTrial
                     timer={2 * 60}
-                    nodes={trialData.network.nodes}
-                    edges={trialData.network.edges}
+                    nodes={data.network.nodes}
+                    edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
                 />;
             case  'written_strategy':

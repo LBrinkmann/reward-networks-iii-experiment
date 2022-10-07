@@ -22,17 +22,21 @@ async def get_current_trial(prolific_id: str) -> Trial:
     trial.started_at = datetime.now()
 
     await session.save()
-    # TODO: return model compatible with frontend
     return trial
 
 
-@session_router.post('/{prolific_id}')
+@session_router.post('/{prolific_id}/{trial_type}')
 async def save_moves_in_trial(prolific_id: str,
+                              trial_type: str,
                               body: Union[Solution, None] = None) -> dict:
     # find session and trial for the subject
     session, trial = await get_trial_session(prolific_id)
 
-    save_trial_solution(body, trial)
+    # check if trial type is correct
+    if trial.trial_type != trial_type:
+        raise Exception("Trial type is not correct")
+
+    save_trial_solution(trial_type, trial, body)
 
     # update current trial with the subject solution
     trial.finished_at = datetime.now()
@@ -61,8 +65,9 @@ async def save_moves_in_trial(prolific_id: str,
     }
 
 
-def save_trial_solution(body: Union[Solution, None], trial: Trial):
-    if trial.trial_type not in ['individual', 'demonstration'] or body is None:
+def save_trial_solution(trial_type: str, trial: Trial,
+                        body: Union[Solution, None]):
+    if trial_type not in ['individual', 'demonstration'] or body is None:
         return
     trial.solution = Solution(
         moves=body.moves,

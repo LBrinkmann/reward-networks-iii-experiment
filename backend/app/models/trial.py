@@ -2,7 +2,6 @@ import datetime
 from typing import Optional, List, Literal
 
 from models.network import Network
-from beanie import PydanticObjectId
 from pydantic import BaseModel
 
 
