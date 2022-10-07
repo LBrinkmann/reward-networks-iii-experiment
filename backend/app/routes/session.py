@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from models.session import Session
 from models.subject import Subject
-from models.trial import Trial
+from models.trial import Trial, Solution
 
 session_router = APIRouter(tags=["Session"])
 
@@ -25,44 +25,16 @@ async def get_current_trial(prolific_id: str) -> Trial:
     return trial
 
 
-@session_router.put('/{prolific_id}')
-async def save_moves_in_trial(prolific_id: str, body: Trial) -> dict:
-    # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
-
-    # update current trial with the subject solution
-    trial.solution = body.solution
-    trial.finished_at = datetime.now()
-    trial.finished = True
-
-    # update session with the trial
-    session.trials[session.current_trial_num] = trial
-
-    if (session.current_trial_num + 1) == len(session.trials):
-        session.finished_at = datetime.now()
-        session.finished = True
-        # save session
-        await session.save()
-
-        # check if child sessions are available
-        await update_available_status_child_sessions(session)
-    else:
-        # increase trial index by 1
-        session.current_trial_num += 1
-
-        # save session
-        await session.save()
-
-    return {
-        "message": "Trial saved"
-    }
-
-
-# MOCK path to test frontend
 @session_router.post('/{prolific_id}')
-async def save_moves_in_trial(prolific_id: str) -> dict:
+async def save_moves_in_trial(prolific_id: str, body: Solution) -> dict:
     # find session and trial for the subject
     session, trial = await get_trial_session(prolific_id)
+
+    trial.solution = Solution(
+        moves=body.moves,
+        trial_id=trial.id,
+        finished_at=datetime.now()
+    )
 
     # update current trial with the subject solution
     trial.finished_at = datetime.now()

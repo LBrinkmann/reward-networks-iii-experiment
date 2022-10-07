@@ -8,12 +8,12 @@ from pydantic import BaseModel
 
 class Solution(BaseModel):
     moves: List[int]
-    trial_id: Optional[PydanticObjectId]
+    trial_id: Optional[int] # trial number in session
     finished_at: Optional[datetime.datetime]
 
 
 class Trial(BaseModel):
-    trial_num_in_session: int
+    id: int  # trial number in session
     trial_type: Literal[
         'consent',
         'social_learning_selection',

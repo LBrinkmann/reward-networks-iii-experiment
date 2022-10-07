@@ -8,15 +8,18 @@ async def test_get_post_trials(default_client: httpx.AsyncClient):
     headers = {
         "Content-Type": "application/json",
     }
+    solution = {
+        'moves': [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    }
     url = f'/session/prolific_id_{subj}'
 
     response = await default_client.get(url)
     assert response.status_code == 200
     trial = response.json()
-    assert trial['trial_num_in_session'] == 0
+    assert trial['id'] == 0
     assert trial['trial_type'] == 'consent'
 
-    response = await default_client.post(url)
+    response = await default_client.post(url, json=solution, headers=headers)
     assert response.status_code == 200
     assert response.json()['message'] == 'Trial saved'
 
@@ -24,14 +27,10 @@ async def test_get_post_trials(default_client: httpx.AsyncClient):
     response = await default_client.get(url)
     assert response.status_code == 200
     trial = response.json()
-    assert trial['trial_num_in_session'] == 1
+    assert trial['id'] == 1
     assert trial['trial_type'] == 'individual'
 
-    moves = {
-        'moves': [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    }
-
-    response = await default_client.post(url, json=moves, headers=headers)
+    response = await default_client.post(url, json=solution, headers=headers)
 
 
 

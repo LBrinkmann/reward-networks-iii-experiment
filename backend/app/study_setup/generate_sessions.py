@@ -117,7 +117,7 @@ async def create_trials(experiment_num, experiment_type, generation,
     trial_n = 0
 
     # Consent form
-    trials = [Trial(trial_num_in_session=trial_n, trial_type='consent')]
+    trials = [Trial(id=trial_n, trial_type='consent')]
     trial_n += 1
 
     # Social learning
@@ -133,7 +133,7 @@ async def create_trials(experiment_num, experiment_type, generation,
         # create trial
         trial = Trial(
             trial_type='individual',
-            trial_num_in_session=trial_n,
+            id=trial_n,
             network=Network.parse_obj(
                 network_data[random.randint(0, network_data.__len__() - 1)]),
         )
@@ -145,7 +145,7 @@ async def create_trials(experiment_num, experiment_type, generation,
 
     # Demonstration trial
     dem_trial = Trial(
-        trial_num_in_session=trial_n,
+        id=trial_n,
         trial_type='demonstration',
         network=Network.parse_obj(
             network_data[random.randint(0, network_data.__len__() - 1)]),
@@ -158,7 +158,7 @@ async def create_trials(experiment_num, experiment_type, generation,
 
     # Written strategy
     trials.append(Trial(
-        trial_num_in_session=trial_n,
+        id=trial_n,
         trial_type='written_strategy'))
     trial_n += 1
 
@@ -187,7 +187,7 @@ async def create_ai_trials(experiment_num, experiment_type, generation,
 
     # Demonstration trial
     dem_trial = Trial(
-        trial_num_in_session=trial_n,
+        id=trial_n,
         trial_type='demonstration',
         network=Network.parse_obj(
             network_data[random.randint(0, network_data.__len__() - 1)]),
