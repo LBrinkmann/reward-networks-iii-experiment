@@ -77,6 +77,10 @@ async def create_connections(gen0, gen1, n_advise_per_session):
             await gen0[i].save()
 
         s_n_1.advise_ids = advise_ids
+
+        # remove AI from the count of unfinished parents
+        n_ai_advisors = sum([1 for i in advise_src if gen0[i].ai_player])
+        s_n_1.unfinished_parents = len(advise_ids) - n_ai_advisors
         await s_n_1.save()
 
 
@@ -185,7 +189,7 @@ async def create_trials(experiment_num: int, experiment_type: str,
         generation=generation,
         session_num_in_generation=session_idx,
         trials=trials,
-        available=True if generation == 0 else False,
+        available=True if generation == 0 else False
     )
     # Add trials to session
     session.trials = trials
@@ -213,6 +217,7 @@ async def create_ai_trials(experiment_num, experiment_type, generation,
         session_num_in_generation=session_idx,
         trials=[dem_trial],
         available=False,
-        ai_player=True
+        ai_player=True,
+        finished=True
     )
     return session

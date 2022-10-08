@@ -6,7 +6,7 @@ from study_setup.generate_sessions import generate_sessions, create_trials
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip  # long-running test
+# @pytest.mark.skip  # long-running test
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  experiment_type='reward_network_iii',
                                  n_advise_per_session=5,

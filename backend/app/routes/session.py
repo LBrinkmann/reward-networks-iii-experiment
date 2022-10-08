@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Union
 
+from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 from fastapi import APIRouter
 
@@ -34,7 +35,7 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 
 
 @session_router.post('/{prolific_id}/{trial_type}')
-async def save_moves_in_trial(
+async def save_current_trial_results(
         prolific_id: str,
         trial_type: str,
         body: Union[Solution, WrittenStrategy, None] = None) -> Union[
@@ -66,8 +67,8 @@ async def save_moves_in_trial(
         # save session
         await session.save()
 
-        # check if child sessions are available
-        await update_available_status_child_sessions(session)
+        # update child sessions
+        await update_availability_status_child_sessions(session)
     else:
         # increase trial index by 1
         session.current_trial_num += 1
@@ -150,19 +151,16 @@ def save_trial_results(trial_type: str, trial: Trial,
         )
 
 
-async def update_available_status_child_sessions(session: Session):
-    """ Check if child sessions are available"""
-    for c in session.child_ids:
-        child_session = await Session.get(c)
-        # TODO: check if child session exists
-        if child_session is None:
-            raise Exception("Child session does not exist")
-        available = True
-        for a in child_session.advise_ids:
-            advise_session = await Session.find_one(Session.id == a)
-            if advise_session.finished is False:
-                available = False
-                break
-        if available:
-            child_session.available = True
-            await child_session.save()
+async def update_availability_status_child_sessions(session: Session):
+    """ Update child sessions availability status """
+
+    # update `unfinished_parents` value for child sessions
+    await Session.find(
+        In(Session.id, session.child_ids)
+    ).inc({Session.unfinished_parents: -1})
+
+    # update child sessions status if all parent sessions are finished
+    await Session.find(
+        In(Session.id, session.child_ids),
+        Session.unfinished_parents == 0
+    ).update(Set({Session.available: True}))
