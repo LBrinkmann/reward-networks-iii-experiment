@@ -19,6 +19,7 @@ async def test_one_subject(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
+@pytest.mark.slow  # 38 seconds
 async def test_multiple_subjects(default_client: httpx.AsyncClient,
                                  create_empty_experiment):
     # generation 0
