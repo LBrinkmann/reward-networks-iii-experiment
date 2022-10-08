@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Literal
 
 from beanie import Document, PydanticObjectId
 from pydantic import BaseModel
@@ -33,4 +33,7 @@ class Session(Document):
 
 
 class SessionError(BaseModel):
-    message: str
+    message: Literal[
+        'No available session for the subject',
+        'Multiple subjects with the same prolific id'
+    ]

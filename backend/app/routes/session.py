@@ -6,7 +6,7 @@ from fastapi import APIRouter
 
 from models.session import Session, SessionError
 from models.subject import Subject
-from models.trial import Trial, Solution, TrialSaved
+from models.trial import Trial, Solution, TrialSaved, TrialError
 
 session_router = APIRouter(tags=["Session"])
 
@@ -29,7 +29,6 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 
     await session.save()
 
-    # TODO: send waiting message if session is not available
     return trial
 
 
@@ -37,18 +36,19 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 async def save_moves_in_trial(
         prolific_id: str,
         trial_type: str,
-        body: Union[Solution, None] = None) -> Union[TrialSaved, SessionError]:
+        body: Union[Solution, None] = None) -> Union[TrialSaved, SessionError,
+                                                     TrialError]:
     # find session and trial for the subject
     session = await get_trial_session(prolific_id)
 
-    if isinstance(session, str):
-        return SessionError(message=session)
+    if isinstance(session, SessionError):
+        return session
 
     trial = session.trials[session.current_trial_num]
 
     # check if trial type is correct
     if trial.trial_type != trial_type:
-        raise Exception("Trial type is not correct")
+        return TrialError(message='Trial type is not correct')
 
     save_trial_solution(trial_type, trial, body)
 
@@ -77,7 +77,7 @@ async def save_moves_in_trial(
     return TrialSaved()
 
 
-async def get_trial_session(prolific_id) -> Union[Session, str]:
+async def get_trial_session(prolific_id) -> Union[Session, SessionError]:
     # check if collection Subject exists
     if await Subject.find().count() > 0:
         subjects_with_id = await Subject.find(
@@ -94,14 +94,15 @@ async def get_trial_session(prolific_id) -> Union[Session, str]:
         # session initialization
         await initialize_session(subject)
     elif len(subjects_with_id) > 1:
-        return "Multiple subjects with the same prolific id"
+        return SessionError(
+            message='Multiple subjects with the same prolific id')
     else:
         subject = subjects_with_id[0]
 
     # get session for the subject
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
-        return "No available session for the subject"
+        return SessionError(message='No available session for the subject')
 
     # this will happen only for the new subject
     if subject.session_id is None:

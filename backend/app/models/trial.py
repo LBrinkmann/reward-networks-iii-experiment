@@ -33,3 +33,9 @@ class Trial(BaseModel):
 
 class TrialSaved(BaseModel):
     message: Optional[Literal['Trial saved']] = 'Trial saved'
+
+
+class TrialError(BaseModel):
+    message: Literal[
+        'Trial type is not correct',
+    ]
