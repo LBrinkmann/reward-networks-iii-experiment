@@ -6,7 +6,8 @@ from fastapi import APIRouter
 
 from models.session import Session, SessionError
 from models.subject import Subject
-from models.trial import Trial, Solution, TrialSaved, TrialError
+from models.trial import Trial, Solution, TrialSaved, TrialError, \
+    WrittenStrategy
 
 session_router = APIRouter(tags=["Session"])
 
@@ -19,8 +20,8 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     # find session and trial for the subject
     session = await get_trial_session(prolific_id)
 
-    if isinstance(session, str):
-        return SessionError(message=session)
+    if isinstance(session, SessionError):
+        return session
 
     trial = session.trials[session.current_trial_num]
 
@@ -36,8 +37,8 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 async def save_moves_in_trial(
         prolific_id: str,
         trial_type: str,
-        body: Union[Solution, None] = None) -> Union[TrialSaved, SessionError,
-                                                     TrialError]:
+        body: Union[Solution, WrittenStrategy, None] = None) -> Union[
+    TrialSaved, SessionError, TrialError]:
     # find session and trial for the subject
     session = await get_trial_session(prolific_id)
 
@@ -50,7 +51,7 @@ async def save_moves_in_trial(
     if trial.trial_type != trial_type:
         return TrialError(message='Trial type is not correct')
 
-    save_trial_solution(trial_type, trial, body)
+    save_trial_results(trial_type, trial, body)
 
     # update current trial with the subject solution
     trial.finished_at = datetime.now()
@@ -123,15 +124,30 @@ async def initialize_session(subject: Subject):
     )
 
 
-def save_trial_solution(trial_type: str, trial: Trial,
-                        body: Union[Solution, None]):
-    if trial_type not in ['individual', 'demonstration'] or body is None:
+def save_trial_results(trial_type: str, trial: Trial,
+                       body: Union[Solution, WrittenStrategy, None]):
+    if body is None:
         return
-    trial.solution = Solution(
-        moves=body.moves,
-        trial_id=trial.id,
-        finished_at=datetime.now()
-    )
+
+    if trial_type in ['individual', 'demonstration']:
+        if not isinstance(body, Solution):
+            return TrialError(message='Trial results are missing')
+
+        trial.solution = Solution(
+            moves=body.moves,
+            trial_id=trial.id,
+            finished_at=datetime.now()
+        )
+
+    if trial_type == 'written_strategy':
+        if not isinstance(body, WrittenStrategy):
+            return TrialError(message='Trial results are missing')
+
+        trial.written_strategy = WrittenStrategy(
+            strategy=body.strategy,
+            trial_id=trial.id,
+            finished_at=datetime.now()
+        )
 
 
 async def update_available_status_child_sessions(session: Session):

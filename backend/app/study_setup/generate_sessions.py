@@ -108,11 +108,15 @@ async def create_generation(generation: int,
     return sessions
 
 
-async def create_trials(experiment_num, experiment_type, generation,
-                        session_idx):
+async def create_trials(experiment_num: int, experiment_type: str,
+                        generation: int, session_idx: int,
+                        n_social_learning_trials: int = 3,
+                        n_individual_trials: int = 3,
+                        n_demonstration: int = 3) -> Session:
     """
     Generate one session.
     """
+    # load all networks
     network_data = json.load(open(Path('data') / 'train_viz.json'))
     trial_n = 0
 
@@ -120,17 +124,27 @@ async def create_trials(experiment_num, experiment_type, generation,
     trials = [Trial(id=trial_n, trial_type='consent')]
     trial_n += 1
 
-    # Social learning
-    # trials.append(Trial(
-    #     trial_num_in_session=trial_n,
-    #     trial_type='social_learning_selection'))
-    # trial_n += 1
+    # Social learning trials (not relevant for the very first generation)
+    if generation > 0:
+        for i in range(n_social_learning_trials):
+            # Social learning selection
+            trials.append(Trial(id=trial_n,
+                                trial_type='social_learning_selection'))
+            trial_n += 1
+
+            for ii in range(3):
+                # Social learning
+                trials.append(Trial(id=trial_n, trial_type='social_learning'))
+                trial_n += 1
+    else:
+        # Replace social learning trials with individual trials for the very
+        # first generation
+        n_individual_trials += n_social_learning_trials * 3
 
     # Individual trials
-    n_individual_trials = 3
-    for _ in range(n_individual_trials):
-        # TODO: read Networks
-        # create trial
+
+    for i in range(n_individual_trials):
+        # individual trial
         trial = Trial(
             trial_type='individual',
             id=trial_n,
@@ -138,34 +152,33 @@ async def create_trials(experiment_num, experiment_type, generation,
                 network_data[random.randint(0, network_data.__len__() - 1)]),
         )
         # update the starting node
-        trial.network.nodes[
-            trial.network.starting_node].starting_node = True
+        trial.network.nodes[trial.network.starting_node].starting_node = True
         trials.append(trial)
         trial_n += 1
 
-    # Demonstration trial
-    dem_trial = Trial(
-        id=trial_n,
-        trial_type='demonstration',
-        network=Network.parse_obj(
-            network_data[random.randint(0, network_data.__len__() - 1)]),
-    )
-    # update the starting node
-    dem_trial.network.nodes[
-        dem_trial.network.starting_node].starting_node = True
-    trials.append(dem_trial)
-    trial_n += 1
+    for i in range(n_demonstration):
+        # demonstration trial
+        dem_trial = Trial(
+            id=trial_n,
+            trial_type='demonstration',
+            network=Network.parse_obj(
+                network_data[random.randint(0, network_data.__len__() - 1)]),
+        )
+        # update the starting node
+        dem_trial.network.nodes[
+            dem_trial.network.starting_node].starting_node = True
+        trials.append(dem_trial)
+        trial_n += 1
 
     # Written strategy
-    trials.append(Trial(
-        id=trial_n,
-        trial_type='written_strategy'))
+    trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
 
     # Debriefing
+    trials.append(Trial(id=trial_n, trial_type='debriefing'))
+    trial_n += 1
 
     # create session
-    # TODO: check if session already exists
     session = Session(
         experiment_num=experiment_num,
         experiment_type=experiment_type,

@@ -11,6 +11,12 @@ class Solution(BaseModel):
     finished_at: Optional[datetime.datetime]
 
 
+class WrittenStrategy(BaseModel):
+    strategy: str
+    trial_id: Optional[int]  # trial number in session
+    finished_at: Optional[datetime.datetime]
+
+
 class Trial(BaseModel):
     id: int  # trial number in session
     trial_type: Literal[
@@ -19,13 +25,15 @@ class Trial(BaseModel):
         'social_learning',
         'individual',
         'demonstration',
-        'written_strategy'
+        'written_strategy',
+        'debriefing'
     ]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]
     network: Optional[Network]
     solution: Optional[Solution]
+    written_strategy: Optional[WrittenStrategy]
 
     class Config:
         orm_mode = True
@@ -38,4 +46,5 @@ class TrialSaved(BaseModel):
 class TrialError(BaseModel):
     message: Literal[
         'Trial type is not correct',
+        'Trial results are missing'
     ]

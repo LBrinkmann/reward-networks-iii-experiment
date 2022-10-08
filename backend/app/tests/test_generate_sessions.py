@@ -2,11 +2,11 @@ import httpx
 import pytest
 
 from models.session import Session
-from study_setup.generate_sessions import generate_sessions
+from study_setup.generate_sessions import generate_sessions, create_trials
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip
+@pytest.mark.skip  # long-running test
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  experiment_type='reward_network_iii',
                                  n_advise_per_session=5,
@@ -29,6 +29,36 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
     await Session.find().delete()
 
 
-@pytest.mark.skip
-def test_create_trials():
-    pass
+@pytest.mark.asyncio
+async def test_create_trials(default_client: httpx.AsyncClient):
+    n_consent = 1
+    n_soc_learning = 3
+    n_ind = 3
+    n_demonstration = 3
+    n_w_strategy = 1
+    n_debriefing = 1
+    n_all_trials = n_consent + n_demonstration + n_w_strategy + n_debriefing
+    n_all_trials += n_soc_learning * 3 + n_ind
+
+    session = await create_trials(
+        experiment_num=0, experiment_type='test', generation=0, session_idx=0,
+        n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind,
+        n_demonstration=n_demonstration)
+
+    assert len(session.trials) == n_all_trials
+    for t in session.trials:
+        assert t.trial_type not in ['social_learning_selection',
+                                    'social_learning']
+        assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
+                                'debriefing', 'individual']
+
+    session = await create_trials(
+        experiment_num=0, experiment_type='test', generation=1, session_idx=0,
+        n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind)
+
+    # add n_all_trials because social_learning_selection counts as a trial
+    assert len(session.trials) == n_all_trials + n_soc_learning
+    for t in session.trials:
+        assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
+                                'debriefing', 'individual', 'social_learning',
+                                'social_learning_selection']
