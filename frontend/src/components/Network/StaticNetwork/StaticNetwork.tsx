@@ -2,14 +2,15 @@ import React from "react";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
+import { Node, Edge } from "../../../apis/apiTypes";
 
-export interface StaticNetworkEdgeInterface {
+export interface StaticNetworkEdgeInterface extends Edge {
     reward: number;
     source_num: number;
     target_num: number;
     /** Edge style */
-    edgeStyle: NetworkEdgeStyle;
-    arc_type: 'straight' | 'curved';
+    edgeStyle?: NetworkEdgeStyle;
+    arc_type: string;
     source_x: number;
     source_y: number;
     arc_x: number;
@@ -18,7 +19,7 @@ export interface StaticNetworkEdgeInterface {
     target_y: number;
 }
 
-export interface StaticNetworkNodeInterface {
+export interface StaticNetworkNodeInterface extends Node {
     /** Node index, fetched from backend */
     node_num: number;
     /** Node displayed name, fetched from backend */
@@ -27,10 +28,10 @@ export interface StaticNetworkNodeInterface {
     x: number;
     /** Node y position */
     y: number;
-    starting_node: boolean;
+    starting_node?: boolean;
     /** Node level (property of the task solution strategy),
      * fetched from backend */
-    level?: number;
+    level: number;
 }
 
 

@@ -1,13 +1,14 @@
-import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosRequestConfig} from 'axios';
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
 import config from "./configLoader";
+import {Trial} from "./apiTypes";
 
 axios.defaults.baseURL = config.backendUrl + '/session/';
 
-export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
-    const [trialData, setTrialData] = useState<any>();
+export const useTrialAPI = () => {
+    const [trial, setTrial] = useState<Trial>();
     const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
     const [error, setError] = useState<AxiosError>();
@@ -18,23 +19,14 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (searchParams.get("userId")) {
-            if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
-                axiosRequest(axiosParamsGet);
-            }
-        }
-    }, [searchParams]);
-
-    const axiosRequest = async (params: AxiosRequestConfig) => {
+    const axiosGetRequest = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
             params.url = searchParams.get("userId");
-            params.headers = {
-                accept: '*/*'
-            }
+            params.headers = {accept: '*/*'}
             const result = await axios.request(params);
-            setTrialData(result.data);
+            setTrial(result.data);
+            console.log(result.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -42,5 +34,20 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
         }
     };
 
-    return {trialData, error, loading, axiosRequest};
+    const axiosPostRequest = async (params: AxiosRequestConfig) => {
+        setLoading(true);
+        try {
+            params.url = searchParams.get("userId") + '/' + trial.trial_type;
+            params.headers = {accept: '*/*'}
+            const result = await axios.request(params);
+            setTrial(result.data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    return {trial, error, loading, axiosGetRequest, axiosPostRequest};
 }

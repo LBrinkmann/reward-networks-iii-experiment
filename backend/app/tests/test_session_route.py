@@ -158,7 +158,8 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
             response = await client.post(url)
 
     assert response.status_code == 200
-    assert response.json()['message'] == 'Trial saved'
+    data = response.json()
+    assert data['message'] == 'Trial saved'
 
 
 def test_estimate_solution_score():

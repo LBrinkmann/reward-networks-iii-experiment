@@ -17,7 +17,6 @@ class Solution(BaseModel):
 class Advisor(BaseModel):
     advisor_id: PydanticObjectId  # advisor id
     demonstration_trial_id: int  # trial number in advisor's session
-    network: Optional[Network]
     solution: Optional[Solution]
     written_strategy: Optional[str]
 

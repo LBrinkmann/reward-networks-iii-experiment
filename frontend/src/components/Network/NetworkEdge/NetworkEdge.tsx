@@ -19,7 +19,7 @@ export interface NetworkEdgeInterface {
     edgeCurvation?: number;
     /** Show reward text */
     showRewardText?: boolean;
-    arc_type: 'straight' | 'curved';
+    arc_type: string;
     source_x: number;
     source_y: number;
     arc_x: number;

@@ -16,6 +16,7 @@ session_router = APIRouter(tags=["Session"])
 
 n_social_learning_trials = 3
 
+
 @session_router.get('/{prolific_id}', response_model_by_alias=False)
 async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     """
@@ -247,7 +248,6 @@ async def save_social_leaning_selection(trials: List[Trial],
         trial.advisor = Advisor(
             advisor_id=body.advisor_id,
             demonstration_trial_id=sl_trial.id,
-            network=sl_trial.network,
             solution=sl_trial.solution,
             written_strategy=wr_s.strategy
         )

@@ -45,7 +45,7 @@ async def startup_event():
     if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
-            'app.models', os.path.join(path, 'apiTypes.ts'))
+            'app.models.trial', os.path.join(path, 'apiTypes.ts'))
 
     # run the study simulation
     # await Session.find().delete()

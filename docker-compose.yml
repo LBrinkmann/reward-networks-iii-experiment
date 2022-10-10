@@ -14,7 +14,7 @@ services:
     volumes:
       - ./backend:/backend
       # this is necessary to copy apiTypes.ts in frontend folder
-      - ./frontend/src:/backend/frontend
+      - ./frontend/src/apis:/backend/frontend
     environment:
       PORT: 5000
       MONGO_URL: 'mongodb://database:27017/'

@@ -5,37 +5,91 @@ import WrittenStrategy from "./WrittenStrategy";
 import ConsentForm from "./Intro/Consent";
 import Selection from "./SocialLearning/Selection";
 import IndividualTrial from "./IndividualTrial";
+import ObservationTrial from "./SocialLearning/Observation";
+import RepeatTrial from "./SocialLearning/Repeat";
+import TryYourselfTrial from "./SocialLearning/TryYourself";
+import {Trial} from "../../apis/apiTypes";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
 }
 
 const Trial: React.FC<TrialInterface> = (props) => {
-    const {trialData, loading, error, axiosRequest} = useTrialAPI({method: 'GET'});
+    const {trial, loading, error, axiosGetRequest, axiosPostRequest} = useTrialAPI();
     const [trialType, setTrialType] = useState<string>('');
     const [trialNumber, setTrialNumber] = useState<number>(0);
+    const [socialLearningStage, setSocialLearningStage] = useState<number>(1);
+    const [moves, setMoves] = useState<number[]>([]);
+
+    useEffect(() => {axiosGetRequest({method: 'GET'})}, [])
 
     useEffect(() => {
-        setTrialType(trialData?.trial_type);
-        setTrialNumber(trialData?.trial_num_in_session);
-    }, [trialData]);
+        setTrialType(trial?.trial_type);
+        setTrialNumber(trial?.id);
+    }, [trial])
 
     const OnNextTrial = () => {
-        axiosRequest({method: 'POST'}).then(
+        axiosPostRequest({
+            method: 'POST',
+            data: {
+                moves: moves
+            }
+        }).then(
             () => {
                 props.nextTrialHandler();
-                axiosRequest({method: 'GET'});
+                axiosGetRequest({method: 'GET'});
             }
         )
     }
-    const renderTrial = (type: string, data: any) => {
+
+    const renderTrial = (type: string, data: Trial) => {
         switch (type) {
             case 'consent':
-                return <ConsentForm onClickAgreeHandler={OnNextTrial}  onClickDisagreeHandler={() => null}/>;
+                return <ConsentForm
+                    onClickAgreeHandler={OnNextTrial}
+                    onClickDisagreeHandler={() => null}
+                />;
             case 'social_learning_selection':
-                return <Selection advisors={data.advisors} onClickHandler={OnNextTrial}/>;
+                return <Selection
+                    advisors={
+                        data.advisor_selection.scores.map((score: number, inx: number) => {
+                            return {
+                                advisorInx: inx,
+                                averageScore: score
+                            }
+                        })
+                    }
+                    onClickHandler={OnNextTrial}
+                />;
             case 'social_learning':
-                return <> </>;
+                if (socialLearningStage === 1) {
+                    setSocialLearningStage(2);
+                    return <ObservationTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={1}  // TODO: set correct teacher id
+                        onNextTrialHandler={OnNextTrial}
+                    />;
+                } else if (socialLearningStage === 2) {
+                    setSocialLearningStage(3);
+                    return <RepeatTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={1}  // TODO: set correct teacher id
+                        onNextTrialHandler={OnNextTrial}
+                    />;
+                } else {
+                    setSocialLearningStage(1);
+                    return <TryYourselfTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={1}  // TODO: set correct teacher id
+                        onNextTrialHandler={OnNextTrial}
+                    />;
+                }
             case  'individual':
                 return <IndividualTrial
                     nodes={data.network.nodes}
@@ -59,12 +113,15 @@ const Trial: React.FC<TrialInterface> = (props) => {
     return (
         <>
             {error && (console.log(error))}
-            {!loading && !error &&
+            {!loading && !error ?
                 (
                     <>
                         <Header title={"Trial " + trialNumber + ": " + trialType}/>
-                        {renderTrial(trialType, trialData)}
+                        {renderTrial(trialType, trial)}
                     </>
+                ) : (
+                    // TODO: add loading screen
+                <div>Loading...</div>
                 )
             }
         </>
