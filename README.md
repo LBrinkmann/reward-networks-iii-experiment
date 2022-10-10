@@ -1,7 +1,7 @@
 ## Backend-Frontend interaction
 
 <p align="centre">
-<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="100%"/>
+<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
 </p>
 
 
