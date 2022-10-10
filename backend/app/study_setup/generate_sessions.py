@@ -6,7 +6,8 @@ from typing import List
 
 from models.network import Network
 from models.session import Session
-from models.trial import Trial
+from models.trial import Trial, Solution
+from routes.session import estimate_solution_score
 
 
 async def generate_sessions(n_generations: int = 5,
@@ -103,8 +104,7 @@ async def create_generation(generation: int,
         for session_idx in range(n_sessions_per_generation - num_ai_players,
                                  n_sessions_per_generation):
             session = await create_ai_trials(experiment_num, experiment_type,
-                                             generation,
-                                             session_idx)
+                                             generation, session_idx)
             # save session
             await session.save()
             sessions.append(session)
@@ -197,25 +197,34 @@ async def create_trials(experiment_num: int, experiment_type: str,
 
 
 async def create_ai_trials(experiment_num, experiment_type, generation,
-                           session_idx):
+                           session_idx, n_demonstration=3):
     # TODO: create AI player trials with solutions
     network_data = json.load(open(Path('data') / 'train_viz.json'))
-    trial_n = 0
+    trials = []
 
     # Demonstration trial
-    dem_trial = Trial(
-        id=trial_n,
-        trial_type='demonstration',
-        network=Network.parse_obj(
-            network_data[random.randint(0, network_data.__len__() - 1)]),
-    )
+    for i in range(n_demonstration):
+        # TODO: fix this
+        moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        network = Network.parse_obj(
+            network_data[random.randint(0, network_data.__len__() - 1)])
+        dem_trial = Trial(
+            id=i,
+            trial_type='demonstration',
+            network=network,
+            solution=Solution(
+                moves=moves,
+                score=estimate_solution_score(network, moves)
+            )
+        )
+        trials.append(dem_trial)
 
     session = Session(
         experiment_num=experiment_num,
         experiment_type=experiment_type,
         generation=generation,
         session_num_in_generation=session_idx,
-        trials=[dem_trial],
+        trials=trials,
         available=False,
         ai_player=True,
         finished=True
