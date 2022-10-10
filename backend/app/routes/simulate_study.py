@@ -60,6 +60,9 @@ async def simulate_data(generation):
                         score=estimate_solution_score(network, moves)
                     )
                 )
+                # update the starting node
+                dem_trial.network.nodes[
+                    dem_trial.network.starting_node].starting_node = True
                 trials.append(dem_trial)
 
             # Written strategy
