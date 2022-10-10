@@ -10,10 +10,11 @@ from models.network import Network
 from models.session import Session, SessionError
 from models.subject import Subject
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
-    WrittenStrategy, Advisor
+    WrittenStrategy, Advisor, AdvisorSelection
 
 session_router = APIRouter(tags=["Session"])
 
+n_social_learning_trials = 3
 
 @session_router.get('/{prolific_id}', response_model_by_alias=False)
 async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
@@ -29,7 +30,7 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     trial = session.trials[session.current_trial_num]
 
     # prepare social leaning selection trials
-    if trial.trial_type == 'social_leaning_selection':
+    if trial.trial_type == 'social_learning_selection':
         await prepare_social_leaning_selection_trial(trial, session)
 
     # save starting time
@@ -67,8 +68,9 @@ async def post_current_trial_results(
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'social_learning_selection':
         # select all social learning trials for one advisor
-        trials = session.trials[
-                 session.current_trial_num: session.current_trial_num + 3]
+        sl_start = session.current_trial_num
+        sl_end = sl_start + n_social_learning_trials + 1
+        trials = session.trials[sl_start:sl_end]
         await save_social_leaning_selection(trials, session.subject_id, body)
     elif trial_type == 'social_learning':
         save_individual_demonstration_trial(trial, body)
@@ -171,6 +173,10 @@ async def prepare_social_leaning_selection_trial(trial, session):
     """ Prepare social leaning selection trials """
     subject_id = session.subject_id
 
+    # initialize advisor selection
+    trial.advisor_selection = AdvisorSelection(
+        advisor_ids=[], advisor_demo_trial_ids=[], scores=[])
+
     for ad_id in session.advise_ids:
         # get advise
         adv = await Session.get(ad_id)
@@ -240,11 +246,13 @@ async def save_social_leaning_selection(trials: List[Trial],
     for trial in trials:
         trial.advisor = Advisor(
             advisor_id=body.advisor_id,
-            trial_id=sl_trial.id,
+            demonstration_trial_id=sl_trial.id,
             network=sl_trial.network,
             solution=sl_trial.solution,
             written_strategy=wr_s.strategy
         )
+        # assign advisor's network to the trial
+        trial.network = sl_trial.network
 
 
 def estimate_solution_score(network: Network, moves: List[int]) -> int:
@@ -252,6 +260,9 @@ def estimate_solution_score(network: Network, moves: List[int]) -> int:
     score = 0
     for m0, m1 in zip(moves[:-1], moves[1:]):
         edge = [e for e in network.edges
-                if e.source_num == m0 and e.target_num == m1][0]
-        score += edge.reward
+                if e.source_num == m0 and e.target_num == m1]
+        if len(edge) > 0:
+            score += edge[0].reward
+        else:
+            return -100_000  # invalid move sequence
     return score

@@ -13,6 +13,7 @@ from routes.session import estimate_solution_score
 @pytest.mark.asyncio
 async def test_one_subject(default_client: httpx.AsyncClient,
                            create_empty_experiment):
+    """Test one subject from the generation 0"""
     await one_subject(default_client, 0)
 
     # Clean up resources
@@ -21,9 +22,10 @@ async def test_one_subject(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
-@pytest.mark.slow  # 38 seconds
+@pytest.mark.very_slow  # > 1 minute
 async def test_multiple_subjects(default_client: httpx.AsyncClient,
                                  create_empty_experiment):
+    """Test multiple parallel subjects from the generation 0 and 1"""
     # generation 0
     tasks = []
     for i in range(30):
@@ -136,6 +138,7 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     assert trial['id'] == t_id
     assert trial['trial_type'] == trial_type
 
+    # wait for 0.05 seconds before post trial
     await asyncio.sleep(0.05)
 
     # post solution
@@ -143,7 +146,16 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     if solution is not None:
         response = await client.post(url, json=solution, headers=headers)
     else:
-        response = await client.post(url)
+        if trial_type == 'social_learning_selection':
+            # select the first advisor
+            payload = {
+                'advisor_id': trial['advisor_selection']['advisor_ids'][0],
+                'demonstration_trial_id': trial['advisor_selection'][
+                    'advisor_demo_trial_ids'][0]
+            }
+            response = await client.post(url, json=payload, headers=headers)
+        else:
+            response = await client.post(url)
 
     assert response.status_code == 200
     assert response.json()['message'] == 'Trial saved'

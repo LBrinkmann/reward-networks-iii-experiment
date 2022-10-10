@@ -50,10 +50,14 @@ class Trial(BaseModel):
     finished_at: Optional[datetime.datetime]
     network: Optional[Network]
     solution: Optional[Solution]
-    advisor: Optional[Advisor]  # social learning trial
-    advisor_selection: Optional[AdvisorSelection]  # social learning selection
-    selected_by_children: Optional[List[PydanticObjectId]]  # demo trial
-    written_strategy: Optional[WrittenStrategy]  # written strategy trial
+    # social learning trial related field
+    advisor: Optional[Advisor]
+    # social learning selection trial relevant field
+    advisor_selection: Optional[AdvisorSelection]
+    # demonstration trial relevant field
+    selected_by_children: Optional[List[PydanticObjectId]] = []
+    # written strategy trial relevant field
+    written_strategy: Optional[WrittenStrategy]
 
     class Config:
         orm_mode = True
