@@ -9,20 +9,22 @@ from pydantic import BaseModel
 
 class Solution(BaseModel):
     moves: List[int]
+    score: Optional[int]  # solution score
     trial_id: Optional[int]  # trial number in session
     finished_at: Optional[datetime.datetime]
 
 
 class Advisor(BaseModel):
     advisor_id: PydanticObjectId  # advisor id
-    trial_id: Optional[int]  # trial number in advisor's session
+    demonstration_trial_id: int  # trial number in advisor's session
     network: Optional[Network]
     solution: Optional[Solution]
     written_strategy: Optional[str]
 
 
 class AdvisorSelection(BaseModel):
-    advisor_id: List[PydanticObjectId]  # advisor ids
+    advisor_ids: List[PydanticObjectId]  # advisor ids
+    advisor_demo_trial_ids: List[int]  # advisor demonstration trial ids
     scores: List[int]  # scores for each advisor
 
 

@@ -6,6 +6,7 @@ from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 from fastapi import APIRouter
 
+from models.network import Network
 from models.session import Session, SessionError
 from models.subject import Subject
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
@@ -27,6 +28,10 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 
     trial = session.trials[session.current_trial_num]
 
+    # prepare social leaning selection trials
+    if trial.trial_type == 'social_leaning_selection':
+        await prepare_social_leaning_selection_trial(trial, session)
+
     # save starting time
     trial.started_at = datetime.now()
 
@@ -36,7 +41,7 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 
 
 @session_router.post('/{prolific_id}/{trial_type}')
-async def save_current_trial_results(
+async def post_current_trial_results(
         prolific_id: str,
         trial_type: str,
         body: Union[Solution, WrittenStrategy, Advisor, None] = None) -> Union[
@@ -61,11 +66,12 @@ async def save_current_trial_results(
     elif trial_type == 'individual':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'social_learning_selection':
+        # select all social learning trials for one advisor
         trials = session.trials[
                  session.current_trial_num: session.current_trial_num + 3]
         await save_social_leaning_selection(trials, session.subject_id, body)
     elif trial_type == 'social_learning':
-        pass
+        save_individual_demonstration_trial(trial, body)
     elif trial_type == 'demonstration':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'written_strategy':
@@ -161,12 +167,34 @@ async def update_availability_status_child_sessions(session: Session):
     ).update(Set({Session.available: True}))
 
 
+async def prepare_social_leaning_selection_trial(trial, session):
+    """ Prepare social leaning selection trials """
+    subject_id = session.subject_id
+
+    for ad_id in session.advise_ids:
+        # get advise
+        adv = await Session.get(ad_id)
+
+        # select advisor's demonstration trials
+        dem_trials = [t for t in adv.trials if t.trial_type == 'demonstration']
+
+        # select demonstration trial that was not previously seen by the current
+        # subject
+        sl_trial = [t for t in dem_trials if
+                    subject_id not in t.selected_by_children][0]
+
+        trial.advisor_selection.advisor_ids.append(ad_id)
+        trial.advisor_selection.advisor_demo_trial_ids.append(sl_trial.id)
+        trial.advisor_selection.scores.append(sl_trial.solution.score)
+
+
 def save_individual_demonstration_trial(trial: Trial, body: Solution):
     if not isinstance(body, Solution):
         return TrialError(message='Trial results are missing')
 
     trial.solution = Solution(
         moves=body.moves,
+        score=estimate_solution_score(trial.network, body.moves),
         trial_id=trial.id,
         finished_at=datetime.now()
     )
@@ -195,25 +223,19 @@ async def save_social_leaning_selection(trials: List[Trial],
 
     # get advisor session
     ad_s = await Session.get(body.advisor_id)
+
     if ad_s is None:
         return TrialError(message='Advisor session is not found')
 
-    # select advisor's demonstration trials
-    dem_trials = [t for t in ad_s.trials if t.trial_type == 'demonstration']
+    # select advisor's demonstration trial
+    sl_trial = ad_s.trials[body.demonstration_trial_id]
 
     # select advisor's written strategy
     wr_s = [t.written_strategy for t in ad_s.trials if
             t.trial_type == 'written_strategy'][0]
 
-    # select demonstration trial that was not previously seen by the current
-    # subject
-    sl_trial = [t for t in dem_trials if
-                subject_id not in t.selected_by_children][0]
-
     # update `selected_by_children` field for advisor's demonstration trial
     sl_trial.selected_by_children.append(subject_id)
-    # save advisor's session
-    await ad_s.save()
 
     for trial in trials:
         trial.advisor = Advisor(
@@ -225,5 +247,11 @@ async def save_social_leaning_selection(trials: List[Trial],
         )
 
 
-def estimate_trial_score():
-    pass
+def estimate_solution_score(network: Network, moves: List[int]) -> int:
+    """ Estimate solution score """
+    score = 0
+    for m0, m1 in zip(moves[:-1], moves[1:]):
+        edge = [e for e in network.edges
+                if e.source_num == m0 and e.target_num == m1][0]
+        score += edge.reward
+    return score
