@@ -8,7 +8,7 @@ import IndividualTrial from "./IndividualTrial";
 import ObservationTrial from "./SocialLearning/Observation";
 import RepeatTrial from "./SocialLearning/Repeat";
 import TryYourselfTrial from "./SocialLearning/TryYourself";
-import {Trial} from "../../apis/apiTypes";
+import {Advisor, Solution, Trial} from "../../apis/apiTypes";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -19,21 +19,32 @@ const Trial: React.FC<TrialInterface> = (props) => {
     const [trialType, setTrialType] = useState<string>('');
     const [trialNumber, setTrialNumber] = useState<number>(0);
     const [socialLearningStage, setSocialLearningStage] = useState<number>(1);
-    const [moves, setMoves] = useState<number[]>([]);
 
-    useEffect(() => {axiosGetRequest({method: 'GET'})}, [])
+    useEffect(() => {
+        axiosGetRequest({method: 'GET'})
+    }, [])
 
     useEffect(() => {
         setTrialType(trial?.trial_type);
         setTrialNumber(trial?.id);
     }, [trial])
 
-    const OnNextTrial = () => {
+    const OnNextTrial = (moves: number[] = [],
+                         selectedAdvisorId: string = '',
+                         selectedAdvisorDemoTrialId: number = 0) => {
+        let payload = {};
+        if (trialType === 'social_learning_selection') {
+            payload = {
+                advisor_id: selectedAdvisorId,
+                demonstration_trial_id: selectedAdvisorDemoTrialId
+            } as Advisor;
+        } else {
+            payload = {moves: moves} as Solution;
+        }
+
         axiosPostRequest({
             method: 'POST',
-            data: {
-                moves: moves
-            }
+            data: payload
         }).then(
             () => {
                 props.nextTrialHandler();
@@ -42,11 +53,19 @@ const Trial: React.FC<TrialInterface> = (props) => {
         )
     }
 
+    const onConsentFormClickAgreeHandler = () => {
+        OnNextTrial([], '', 0);
+    }
+
+    const onSocialLearningSelectionClickHandler = (advisorId: string, demoTrialId: number) => {
+        OnNextTrial([], advisorId, demoTrialId);
+    }
+
     const renderTrial = (type: string, data: Trial) => {
         switch (type) {
             case 'consent':
                 return <ConsentForm
-                    onClickAgreeHandler={OnNextTrial}
+                    onClickAgreeHandler={onConsentFormClickAgreeHandler}
                     onClickDisagreeHandler={() => null}
                 />;
             case 'social_learning_selection':
@@ -54,12 +73,13 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     advisors={
                         data.advisor_selection.scores.map((score: number, inx: number) => {
                             return {
-                                advisorInx: inx,
+                                advisorInx: data.advisor_selection.advisor_demo_trial_ids[inx],
+                                advisorId: data.advisor_selection.advisor_ids[inx],
                                 averageScore: score
                             }
                         })
                     }
-                    onClickHandler={OnNextTrial}
+                    onClickHandler={onSocialLearningSelectionClickHandler}
                 />;
             case 'social_learning':
                 if (socialLearningStage === 1) {
@@ -121,7 +141,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     </>
                 ) : (
                     // TODO: add loading screen
-                <div>Loading...</div>
+                    <div>Loading...</div>
                 )
             }
         </>

@@ -4,20 +4,23 @@ import {Grid} from "@mui/material";
 
 
 interface SocialLearningSelectionProps {
-    advisors: { advisorInx: number, averageScore: number }[];
-    onClickHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    advisors: { advisorInx: number, advisorId: string, averageScore: number }[];
+    onClickHandler: (advisorId: string, demoTrialId: number) => void;
 }
 
 const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearningSelectionProps) => {
     return (
         <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
             {props.advisors.map((advisor, inx) => {
+                const onClickHandler = () => {
+                    props.onClickHandler(advisor.advisorId, advisor.advisorInx);
+                }
                 return (
                     <Grid item key={inx}>
                         <SelectionOneCard
                             personInx={advisor.advisorInx}
                             averageScore={advisor.averageScore}
-                            onClickHandler={props.onClickHandler}/>
+                            onClickHandler={onClickHandler}/>
                     </Grid>
                 )
             })}
