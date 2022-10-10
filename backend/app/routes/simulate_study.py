@@ -1,83 +1,76 @@
-import datetime
+import json
 import random
+from pathlib import Path
 
 from fastapi import APIRouter
 
+from models.network import Network
 from models.session import Session
 from models.subject import Subject
+from models.trial import Trial, Solution, WrittenStrategy
+from routes.session import estimate_solution_score, \
+    update_availability_status_child_sessions
 from study_setup.generate_sessions import generate_sessions
 
-from httpx import AsyncClient
-import asyncio
-
-import server
-
 simulation_router = APIRouter(tags=["Simulation"])
+test_network_data = json.load(
+    open(Path('tests') / 'data' / 'test_network.json'))
+n_demonstration_trials = 3
 
 
-@simulation_router.get('/{experiment_type}/{experiment_num}')
-async def get_study_simulation(n_subjects: int = 10,
-                               experiment_type: str = 'reward_network_iii',
-                               experiment_num: int = 0,
-                               generate_new_sessions: bool = False,
-                               run_simulation: bool = True,
-                               n_gen: int = 5,
-                               n_s_per_gen: int = 20,
-                               n_adv: int = 5):
-    """http://localhost:5000/simulation/reward_network_iii/0
-    ?generate_new_sessions=true&run_simulation=true&n_adv=5&n_gen=5
-    &n_subjects=10&n_trials_per_session=3&n_s_per_gen=20 """
+@simulation_router.get('/{experiment_num}')
+async def get_study_simulation(experiment_num: int = 0,
+                               new_sessions: bool = False,
+                               generation: int = 0):
+    """ http://localhost:5000/simulation/0?new_sessions=true&generation=0 """
     random.seed(42)
-    if generate_new_sessions:
+    if new_sessions:
         await Session.find().delete()
         await Subject.find().delete()
-        await generate_sessions(n_generations=n_gen,
-                                n_sessions_per_generation=n_s_per_gen,
-                                n_advise_per_session=n_adv,
-                                experiment_type=experiment_type,
+        await generate_sessions(n_generations=5,
+                                n_sessions_per_generation=20,
+                                n_advise_per_session=5,
+                                experiment_type='reward_network_iii',
                                 experiment_num=experiment_num)
-    if run_simulation:
-        base_url = "http://testserver/"
+    if generation != 0:
+        # fill generations with mock sessions
+        for gen_ind in range(generation):
+            gen = await Session.find(Session.generation == gen_ind).to_list()
 
-        headers = {
-            "Content-Type": "application/json",
-        }
-        tasks = []
-        for ii in range(4):
-            for i in range(n_subjects):
-                subj = i + 10 * ii
-                task = asyncio.create_task(
-                    one_subject(base_url, headers, subj, 3))
-                tasks.append(task)
-                await asyncio.sleep(0.5)
-            # run all subjects in one batch in parallel
-            [await t for t in tasks]
+            for s in gen:
+
+                trials = []
+
+                # Demonstration trial
+                for i in range(n_demonstration_trials):
+                    moves = [0, 5, 3, 4, 0, 5, 6, 7, 9]
+                    network = Network.parse_obj(test_network_data)
+                    dem_trial = Trial(
+                        id=i,
+                        trial_type='demonstration',
+                        network=network,
+                        solution=Solution(
+                            moves=moves,
+                            score=estimate_solution_score(network, moves)
+                        )
+                    )
+                    trials.append(dem_trial)
+
+                # Written strategy
+                trials.append(Trial(
+                    id=n_demonstration_trials + 1,
+                    trial_type='written_strategy',
+                    written_strategy=WrittenStrategy(strategy=''))
+                )
+
+                s.trials = trials
+                s.finished = True
+                s.available = False
+                await s.save()
+
+        gen = await Session.find(Session.generation == generation).to_list()
+        for s in gen:
+            s.available = True
+            await s.save()
 
     return {'done': True}
-
-
-async def one_subject(base_url, headers, subj: int, n_trials_per_session: int):
-    for t in range(n_trials_per_session):
-        await one_subject_trial(base_url, headers, subj)
-
-
-async def one_subject_trial(base_url, headers, subj: int):
-    async with AsyncClient(app=server.api, base_url=base_url) as ac:
-        url = f'/session/prolific_id_{subj}'
-        print(f'subject: {subj}; time: {datetime.datetime.now().time()}')
-        response = await ac.get(url)
-        # TODO: fix this
-        # trial = Trial.parse_obj(response.json())
-        # trial.solution = Solution(moves=[0, 1, 2, 3])
-        # print(trial.json())
-        trial = response.json()
-
-        # wait for seconds_per_subject seconds
-        trial_time = random.randint(2, 5)
-        await asyncio.sleep(trial_time)
-        print(f'subject: {subj}; trial num:{trial["trial_num_in_session"]}; '
-              f'trial time {trial_time}; '
-              f'time: {datetime.datetime.now().time()}')
-
-        response = await ac.put(url, json=trial, headers=headers)
-        # print(response.json())
