@@ -1,7 +1,7 @@
 @startuml
 !include https://raw.githubusercontent.com/future-architect/puml-themes/master/themes/puml-theme-mars.puml
 skinparam backgroundColor white
-'skinparam dpi 150
+skinparam dpi 150
 
 autonumber
 group Consent [1 time]
@@ -79,6 +79,17 @@ group Demonstration trial [3 times]
 ... **after participant has finished the trial** ...
 
     Frontend -> Backend: <color red>**POST [Solution]**</color> //session/{prolific_id}/demonstration//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+autonumber
+group Written Strategy [1 time]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial []**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST [WrittenStrategy]**</color> //session/{prolific_id}/written_strategy//
     Backend --> Frontend: <color green>**TrialSaved**</color>
 end
 
