@@ -215,12 +215,16 @@ async def create_ai_trials(experiment_num, experiment_type, generation,
             solution=Solution(
                 moves=moves,
                 score=estimate_solution_score(network, moves)
-            ),
-            written_strategy=WrittenStrategy(
-                strategy='',
             )
         )
         trials.append(dem_trial)
+
+    # Written strategy
+    trials.append(Trial(
+        id=n_demonstration + 1,
+        trial_type='written_strategy',
+        written_strategy=WrittenStrategy(strategy=''))
+    )
 
     session = Session(
         experiment_num=experiment_num,
