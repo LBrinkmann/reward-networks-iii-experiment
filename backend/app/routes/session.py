@@ -73,6 +73,7 @@ async def post_current_trial_results(
         sl_end = sl_start + n_social_learning_trials + 1
         trials = session.trials[sl_start:sl_end]
         await save_social_leaning_selection(trials, session.subject_id, body)
+        session.trials[sl_start:sl_end] = trials
     elif trial_type == 'social_learning':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'demonstration':
@@ -253,6 +254,9 @@ async def save_social_leaning_selection(trials: List[Trial],
         )
         # assign advisor's network to the trial
         trial.network = sl_trial.network
+
+    trials[0].finished_at = datetime.now()
+    trials[0].finished = True
 
 
 def estimate_solution_score(network: Network, moves: List[int]) -> int:

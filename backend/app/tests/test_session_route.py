@@ -8,6 +8,7 @@ from models.network import Network
 from models.session import Session
 from models.subject import Subject
 from routes.session import estimate_solution_score
+from routes.simulate_study import simulate_data
 
 
 @pytest.mark.asyncio
@@ -15,6 +16,30 @@ async def test_one_subject(default_client: httpx.AsyncClient,
                            create_empty_experiment):
     """Test one subject from the generation 0"""
     await one_subject(default_client, 0)
+
+    # Clean up resources
+    await Session.find().delete()
+    await Subject.find().delete()
+
+
+@pytest.mark.asyncio
+async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
+                                 create_empty_experiment):
+    """Test one subject from the generation 0"""
+    # simulate data for generation 0
+    generation = 1
+    await simulate_data(generation)
+
+    await one_subject(default_client, 0, generation)
+
+    session = await Session.find_one(Session.generation == generation,
+                                     Session.finished == True)
+    assert session is not None
+
+    for t in session.trials:
+        if t.trial_type == 'social_learning':
+            assert t.advisor is not None
+            assert t.network is not None
 
     # Clean up resources
     await Session.find().delete()
