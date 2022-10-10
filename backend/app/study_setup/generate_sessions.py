@@ -6,7 +6,7 @@ from typing import List
 
 from models.network import Network
 from models.session import Session
-from models.trial import Trial, Solution
+from models.trial import Trial, Solution, WrittenStrategy
 from routes.session import estimate_solution_score
 
 
@@ -215,6 +215,9 @@ async def create_ai_trials(experiment_num, experiment_type, generation,
             solution=Solution(
                 moves=moves,
                 score=estimate_solution_score(network, moves)
+            ),
+            written_strategy=WrittenStrategy(
+                strategy='',
             )
         )
         trials.append(dem_trial)
