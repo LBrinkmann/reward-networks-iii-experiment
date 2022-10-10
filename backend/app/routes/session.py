@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Union
+from typing import Union, List
 
+from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 from fastapi import APIRouter
@@ -8,7 +9,7 @@ from fastapi import APIRouter
 from models.session import Session, SessionError
 from models.subject import Subject
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
-    WrittenStrategy
+    WrittenStrategy, Advisor
 
 session_router = APIRouter(tags=["Session"])
 
@@ -19,7 +20,7 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     Get current trial from the session.
     """
     # find session and trial for the subject
-    session = await get_trial_session(prolific_id)
+    session = await get_session(prolific_id)
 
     if isinstance(session, SessionError):
         return session
@@ -38,25 +39,41 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 async def save_current_trial_results(
         prolific_id: str,
         trial_type: str,
-        body: Union[Solution, WrittenStrategy, None] = None) -> Union[
+        body: Union[Solution, WrittenStrategy, Advisor, None] = None) -> Union[
     TrialSaved, SessionError, TrialError]:
-    # find session and trial for the subject
-    session = await get_trial_session(prolific_id)
+    # find session assigned to the subject
+    session = await get_session(prolific_id)
 
+    # return error if session is not available
     if isinstance(session, SessionError):
         return session
 
+    # get current trial
     trial = session.trials[session.current_trial_num]
 
     # check if trial type is correct
     if trial.trial_type != trial_type:
         return TrialError(message='Trial type is not correct')
 
-    save_trial_results(trial_type, trial, body)
-
-    # update current trial with the subject solution
-    trial.finished_at = datetime.now()
-    trial.finished = True
+    # save trial results
+    if trial_type == 'consent':
+        pass
+    elif trial_type == 'individual':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'social_learning_selection':
+        trials = session.trials[
+                 session.current_trial_num: session.current_trial_num + 3]
+        await save_social_leaning_selection(trials, session.subject_id, body)
+    elif trial_type == 'social_learning':
+        pass
+    elif trial_type == 'demonstration':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'written_strategy':
+        save_written_strategy(trial, body)
+    elif trial_type == 'debriefing':
+        pass
+    else:
+        return TrialError(message='Trial type is not correct')
 
     # update session with the trial
     session.trials[session.current_trial_num] = trial
@@ -79,7 +96,8 @@ async def save_current_trial_results(
     return TrialSaved()
 
 
-async def get_trial_session(prolific_id) -> Union[Session, SessionError]:
+async def get_session(prolific_id) -> Union[Session, SessionError]:
+    """ Get session for the subject """
     # check if collection Subject exists
     if await Subject.find().count() > 0:
         subjects_with_id = await Subject.find(
@@ -93,9 +111,11 @@ async def get_trial_session(prolific_id) -> Union[Session, SessionError]:
         subject = Subject(prolific_id=prolific_id)
         # save subject to database
         await subject.save()
-        # session initialization
+        # session initialization for the subject
+        # session will not be assigned to the subject if there is no available
         await initialize_session(subject)
     elif len(subjects_with_id) > 1:
+        # if more than one subject with the same prolific id return error
         return SessionError(
             message='Multiple subjects with the same prolific id')
     else:
@@ -104,6 +124,7 @@ async def get_trial_session(prolific_id) -> Union[Session, SessionError]:
     # get session for the subject
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
+        # this happens when all available sessions are taken
         return SessionError(message='No available session for the subject')
 
     # this will happen only for the new subject
@@ -125,32 +146,6 @@ async def initialize_session(subject: Subject):
     )
 
 
-def save_trial_results(trial_type: str, trial: Trial,
-                       body: Union[Solution, WrittenStrategy, None]):
-    if body is None:
-        return
-
-    if trial_type in ['individual', 'demonstration']:
-        if not isinstance(body, Solution):
-            return TrialError(message='Trial results are missing')
-
-        trial.solution = Solution(
-            moves=body.moves,
-            trial_id=trial.id,
-            finished_at=datetime.now()
-        )
-
-    if trial_type == 'written_strategy':
-        if not isinstance(body, WrittenStrategy):
-            return TrialError(message='Trial results are missing')
-
-        trial.written_strategy = WrittenStrategy(
-            strategy=body.strategy,
-            trial_id=trial.id,
-            finished_at=datetime.now()
-        )
-
-
 async def update_availability_status_child_sessions(session: Session):
     """ Update child sessions availability status """
 
@@ -164,3 +159,71 @@ async def update_availability_status_child_sessions(session: Session):
         In(Session.id, session.child_ids),
         Session.unfinished_parents == 0
     ).update(Set({Session.available: True}))
+
+
+def save_individual_demonstration_trial(trial: Trial, body: Solution):
+    if not isinstance(body, Solution):
+        return TrialError(message='Trial results are missing')
+
+    trial.solution = Solution(
+        moves=body.moves,
+        trial_id=trial.id,
+        finished_at=datetime.now()
+    )
+    trial.finished_at = datetime.now()
+    trial.finished = True
+
+
+def save_written_strategy(trial: Trial, body: WrittenStrategy):
+    if not isinstance(body, WrittenStrategy):
+        return TrialError(message='Trial results are missing')
+
+    trial.written_strategy = WrittenStrategy(
+        strategy=body.strategy,
+        trial_id=trial.id,
+        finished_at=datetime.now()
+    )
+    trial.finished_at = datetime.now()
+    trial.finished = True
+
+
+async def save_social_leaning_selection(trials: List[Trial],
+                                        subject_id: PydanticObjectId,
+                                        body: Advisor):
+    if not isinstance(body, Advisor):
+        return TrialError(message='Trial results are missing')
+
+    # get advisor session
+    ad_s = await Session.get(body.advisor_id)
+    if ad_s is None:
+        return TrialError(message='Advisor session is not found')
+
+    # select advisor's demonstration trials
+    dem_trials = [t for t in ad_s.trials if t.trial_type == 'demonstration']
+
+    # select advisor's written strategy
+    wr_s = [t.written_strategy for t in ad_s.trials if
+            t.trial_type == 'written_strategy'][0]
+
+    # select demonstration trial that was not previously seen by the current
+    # subject
+    sl_trial = [t for t in dem_trials if
+                subject_id not in t.selected_by_children][0]
+
+    # update `selected_by_children` field for advisor's demonstration trial
+    sl_trial.selected_by_children.append(subject_id)
+    # save advisor's session
+    await ad_s.save()
+
+    for trial in trials:
+        trial.advisor = Advisor(
+            advisor_id=body.advisor_id,
+            trial_id=sl_trial.id,
+            network=sl_trial.network,
+            solution=sl_trial.solution,
+            written_strategy=wr_s.strategy
+        )
+
+
+def estimate_trial_score():
+    pass
