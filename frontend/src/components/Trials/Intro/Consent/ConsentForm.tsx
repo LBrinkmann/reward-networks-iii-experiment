@@ -22,7 +22,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                         <Typography variant="h4" gutterBottom align={'center'}>
                             Study Information and Statement of Informed Consent
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             Thank you for your interest in participating in our “Reward Network” study. Please take your
                             time to read this text carefully. If you have any questions, we are happy to answer them
                             (simply
@@ -30,7 +30,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             information
                             presented and that you are willing to participate in the study.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 1. Aim of the study
                             </Typography>
@@ -41,7 +41,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             own
                             solutions can be passed on to subsequent generations of human participants later.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 2. Procedure and content of the study
                             </Typography>
@@ -49,13 +49,13 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             clicking
                             on adjacent nodes, associated with positive or negative rewards.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 3. Are there any risks involved?
                             </Typography>
                             There are no risks involved and no sensitive data will be collected.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 4. What will happen to the information and data
                                 collected?
@@ -87,7 +87,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             data. Data in which persons are identifiable can be made publicly accessible only if the
                             participant agrees to this use by signing a separate consent form.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 5. Participation is voluntary
                             </Typography>
@@ -101,7 +101,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             Section
                             4), it is no longer possible to link your contact data to your study data.
                         </Typography>
-                        <Typography paragraph align={'justify'}>
+                        <Typography component={'span'} align={'justify'}>
                             <Typography variant="h6" gutterBottom>
                                 6. Consent
                             </Typography>
