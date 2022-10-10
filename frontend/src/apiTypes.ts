@@ -5,192 +5,79 @@
 /* Do not modify it by hand - just update the pydantic models and then re-run the script
 */
 
-export interface Advise {
-  _id?: string;
-  createdAt?: string;
-  adviseId?: string;
-  environmentId: string;
-  move: number;
-  nodeIdx: number;
-  userId: string;
-  gameId: string;
-  actions: EvaluatedAction[];
-}
-export interface EvaluatedAction {
-  actionIdx: number;
-  advise: "not_recommended" | "indifferent" | "recommended";
-  expectedReward?: number;
-  playout?: number[];
-  move: number;
-}
-export interface AdviseRequest {
-  environmentId: string;
-  move: number;
-  nodeIdx: number;
-  userId: string;
-  gameId: string;
-  advisor: string;
-  playout: boolean;
-  totalReward: number;
-  phase: string;
-}
-export interface Explanation {
-  type: "table" | "text" | "playout" | "expectedReward" | "placeholder" | "replay" | "title";
-  content?: Table | string | number[];
-}
-export interface Table {
-  columns: string[];
-  index: string[];
-  columnName: string;
-  indexName: string;
-  data: number[][];
-}
-export interface ExtBaseModel {
-  _id?: string;
-  createdAt?: string;
-}
-export interface HumanExplanation {
-  _id?: string;
-  createdAt?: string;
-  explanationId?: string;
-  userId: string;
-  gameId: string;
-  type: "text";
-  content: string;
-}
-export interface SnakeModel {}
-export interface Environment {
-  environmentId: string;
-  startingNodeIdx: number;
-  nodes: Node[];
-  actions: Action[];
-  actionTypes: ActionType[];
-  nMoves: number;
-  maxReward: number;
-}
-export interface Node {
-  nodeIdx: number;
-  displayName: string;
-  x: number;
-  y: number;
-  actionIdx: number[];
-}
-export interface Action {
-  actionIdx: number;
-  sourceIdx: number;
-  targetIdx: number;
-  actionTypeIdx: number;
-}
-export interface ActionType {
-  actionTypeIdx: number;
-  reward: number;
-}
-export interface Game {
-  _id?: string;
-  createdAt?: string;
-  gameId?: string;
-  experimentId: string;
-  treatmentName: string;
-  generation: number;
-  locked: boolean;
-  childId?: string;
-  parentId?: string;
-  chainId: string;
-  userId?: string;
-  started?: string;
-  finished?: string;
-  environmentIds: string[];
-  totalPoints?: number;
+export interface Advisor {
+  advisor_id: string;
+  demonstration_trial_id: number;
+  solution?: Solution;
+  written_strategy?: string;
 }
 export interface Solution {
-  _id?: string;
-  createdAt?: string;
-  solutionId?: string;
-  environmentId: string;
-  stepId: string;
-  actions: Action[];
+  moves: number[];
+  score?: number;
+  trial_id?: number;
+  finished_at?: string;
 }
-export interface State {
-  environment?: Environment;
-  explanations?: Explanation[];
-  step: Step;
-  game: Game;
-  user: User;
-  treatment: Treatment;
-  steps: StepPreview[];
+export interface AdvisorSelection {
+  advisor_ids: string[];
+  advisor_demo_trial_ids: number[];
+  scores: number[];
 }
-export interface Step {
-  _id?: string;
-  createdAt?: string;
-  stepId?: string;
-  phase: string;
-  phaseStep: number;
-  gameId: string;
-  stepIdx: number;
-  finishedAt?: string;
-  current?: boolean;
-  trailIdx?: number;
-  environmentId?: string;
-  stages?: Stage[];
+export interface Network {
+  network_id: string;
+  nodes: Node[];
+  edges: Edge[];
+  starting_node: number;
+  max_reward: number;
 }
-export interface Stage {
-  stageIdx: number;
-  stageName: string;
-  timeout?: number;
+export interface Node {
+  node_num: number;
+  display_name: string;
+  node_size: number;
+  starting_node?: boolean;
+  level: number;
+  x: number;
+  y: number;
 }
-export interface User {
-  _id?: string;
-  createdAt?: string;
-  userId?: string;
-  experimentId: string;
-  prolificId: string;
+export interface Edge {
+  source_num: number;
+  target_num: number;
+  reward: number;
+  arc_type: string;
+  source_x: number;
+  source_y: number;
+  arc_x: number;
+  arc_y: number;
+  target_x: number;
+  target_y: number;
 }
-export interface Treatment {
-  name?: string;
-  playout?: boolean;
-  explanationType?: "table" | "rule" | "replay" | "playout" | "expectedReward";
-  advisor: "human" | "qtable";
-}
-export interface StepPreview {
-  stepId: string;
-  phase: string;
-  phaseStep: number;
-}
-export interface StateUpdate {
-  environment?: Environment;
-  explanations?: Explanation[];
-  step: Step;
-  game: Game;
-}
-export interface StepResult {
-  _id?: string;
-  createdAt?: string;
-  stepResultId?: string;
-  stepId: string;
-  points?: number;
+export interface Trial {
+  id: number;
+  trial_type:
+    | "consent"
+    | "social_learning_selection"
+    | "social_learning"
+    | "individual"
+    | "demonstration"
+    | "written_strategy"
+    | "debriefing";
+  finished?: boolean;
+  started_at?: string;
+  finished_at?: string;
+  network?: Network;
   solution?: Solution;
-  explanation?: HumanExplanation;
+  advisor?: Advisor;
+  advisor_selection?: AdvisorSelection;
+  selected_by_children?: string[];
+  written_strategy?: WrittenStrategy;
 }
-export interface Chain {
-  _id?: string;
-  createdAt?: string;
-  chainId?: string;
-  experimentId: string;
-  treatmentName: string;
-  environmentIds: string[];
+export interface WrittenStrategy {
+  strategy: string;
+  trial_id?: number;
+  finished_at?: string;
 }
-export interface Experiment {
-  _id?: string;
-  createdAt?: string;
-  experimentId?: string;
-  experimentName?: string;
-  treatments?: {
-    [k: string]: Treatment;
-  };
-  nChainsPerTreatment?: number;
-  nGamesPerChain?: number;
-  nStepsPerPhase?: number;
-  qTablePath?: string;
-  environmentsPath?: string;
-  active?: boolean;
+export interface TrialError {
+  message: "Trial type is not correct" | "Trial results are missing" | "Advisor session is not found";
+}
+export interface TrialSaved {
+  message?: "Trial saved";
 }

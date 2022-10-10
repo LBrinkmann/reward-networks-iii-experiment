@@ -19,7 +19,7 @@ services:
       PORT: 5000
       MONGO_URL: 'mongodb://database:27017/'
       # Environment variables used in app/server.py
-      GENERATE_FRONTEND_TYPES: 'false'
+      GENERATE_FRONTEND_TYPES: 'true'
       FOLDER_TO_SAVE_FRONTEND_TYPES: 'frontend'
       # Environment variables for official FastAPI docker image
       APP_MODULE: 'server:api'
