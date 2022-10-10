@@ -8,47 +8,59 @@ import IndividualTrial from "./IndividualTrial";
 import ObservationTrial from "./SocialLearning/Observation";
 import RepeatTrial from "./SocialLearning/Repeat";
 import TryYourselfTrial from "./SocialLearning/TryYourself";
-import {Advisor, Solution, Trial} from "../../apis/apiTypes";
+import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes, Trial} from "../../apis/apiTypes";
+import Debriefing from "./Outro/Debriefing";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
 }
 
 const Trial: React.FC<TrialInterface> = (props) => {
-    const {trial, loading, error, axiosGetRequest, axiosPostRequest} = useTrialAPI();
+    const {trial, loading, error, axiosGet, axiosPost} = useTrialAPI();
     const [trialType, setTrialType] = useState<string>('');
-    const [trialNumber, setTrialNumber] = useState<number>(0);
     const [socialLearningStage, setSocialLearningStage] = useState<number>(1);
 
     useEffect(() => {
-        axiosGetRequest({method: 'GET'})
-    }, [])
-
-    useEffect(() => {
         setTrialType(trial?.trial_type);
-        setTrialNumber(trial?.id);
     }, [trial])
 
     const OnNextTrial = (moves: number[] = [],
                          selectedAdvisorId: string = '',
-                         selectedAdvisorDemoTrialId: number = 0) => {
-        let payload = {};
-        if (trialType === 'social_learning_selection') {
-            payload = {
-                advisor_id: selectedAdvisorId,
-                demonstration_trial_id: selectedAdvisorDemoTrialId
-            } as Advisor;
-        } else {
-            payload = {moves: moves} as Solution;
+                         selectedAdvisorDemoTrialId: number = 0,
+                         writtenStrategy: string = '') => {
+        let payload: {};
+        switch (trialType) {
+            case 'consent':
+                payload = {moves: []};  // TODO: add {consent: true} to payload
+                break;
+            case 'social_learning_selection':
+                payload = {
+                    advisor_id: selectedAdvisorId,
+                    demonstration_trial_id: selectedAdvisorDemoTrialId
+                } as Advisor;
+                break;
+            case 'individual':
+                payload = {moves: moves} as Solution;
+                break;
+            case 'demonstration':
+                payload = {moves: moves} as Solution;
+                break;
+            case 'social_learning':
+                payload = {moves: moves} as Solution;
+                setSocialLearningStage(socialLearningStage > 2 ? 1 : socialLearningStage + 1);
+                break;
+            case 'written_strategy':
+                payload = {strategy: writtenStrategy} as WrittenStrategyApiTypes;
+                break;
+            case 'debriefing':
+                payload = {moves: []};
+                break;
         }
 
-        axiosPostRequest({
-            method: 'POST',
-            data: payload
-        }).then(
+        axiosPost({data: payload}).then(
             () => {
                 props.nextTrialHandler();
-                axiosGetRequest({method: 'GET'});
+                axiosGet({});
             }
         )
     }
@@ -83,7 +95,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 />;
             case 'social_learning':
                 if (socialLearningStage === 1) {
-                    setSocialLearningStage(2);
                     return <ObservationTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}
@@ -92,7 +103,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         onNextTrialHandler={OnNextTrial}
                     />;
                 } else if (socialLearningStage === 2) {
-                    setSocialLearningStage(3);
                     return <RepeatTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}
@@ -101,7 +111,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         onNextTrialHandler={OnNextTrial}
                     />;
                 } else {
-                    setSocialLearningStage(1);
+                    console.log(data.network.nodes);
                     return <TryYourselfTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}
@@ -125,6 +135,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 />;
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
+            case 'debriefing':
+                 return <Debriefing onClickHandler={OnNextTrial} />;
             default:
                 return <> </>;
         }
@@ -136,7 +148,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error ?
                 (
                     <>
-                        <Header title={"Trial " + trialNumber + ": " + trialType}/>
+                        <Header title={"Trial: " + trialType}/>
                         {renderTrial(trialType, trial)}
                     </>
                 ) : (

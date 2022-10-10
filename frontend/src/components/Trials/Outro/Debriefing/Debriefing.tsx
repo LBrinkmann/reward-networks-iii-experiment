@@ -4,17 +4,13 @@ import CheckIcon from "@mui/icons-material/Check";
 import Header from "../../../Header";
 
 interface DebriefingProps {
-    onClickHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    onClickHandler: () => void;
 }
 
 
 const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
     return (
         <>
-            <Header
-                totalPoints={0}
-                title={"Debriefing statement"}/>
-
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Box sx={{width: '75%'}}

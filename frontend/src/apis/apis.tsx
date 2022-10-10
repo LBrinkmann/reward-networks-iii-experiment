@@ -19,9 +19,17 @@ export const useTrialAPI = () => {
         }
     }, []);
 
-    const axiosGetRequest = async (params: AxiosRequestConfig) => {
+    useEffect(() => {
+        if (searchParams.get("userId")) {
+            const fetchData = async () => await axiosGet({});
+            fetchData().catch(console.error);
+        }
+    }, [searchParams]);
+
+    const axiosGet = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
+            params.method = 'GET';
             params.url = searchParams.get("userId");
             params.headers = {accept: '*/*'}
             const result = await axios.request(params);
@@ -34,11 +42,12 @@ export const useTrialAPI = () => {
         }
     };
 
-    const axiosPostRequest = async (params: AxiosRequestConfig) => {
+    const axiosPost = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
+            params.method = 'POST';
             params.url = searchParams.get("userId") + '/' + trial.trial_type;
-            params.headers = {accept: '*/*'}
+            params.headers = {"Content-Type": "application/json"}
             const result = await axios.request(params);
             setTrial(result.data);
         } catch (err) {
@@ -49,5 +58,5 @@ export const useTrialAPI = () => {
     };
 
 
-    return {trial, error, loading, axiosGetRequest, axiosPostRequest};
+    return {trial, error, loading, axiosGet, axiosPost};
 }
