@@ -21,10 +21,23 @@ export const useTrialAPI = () => {
 
     useEffect(() => {
         if (searchParams.get("userId")) {
-            const fetchData = async () => await axiosGet({});
-            fetchData().catch(console.error);
+            const t = JSON.parse(window.localStorage.getItem('trial'));
+            // make axios call to get trial only if there is no trial in local storage
+            if (t) {
+                setTrial(t);
+                setLoading(false);
+            } else {
+                const fetchData = async () => await axiosGet({});
+                fetchData().catch(console.error);
+            }
         }
     }, [searchParams]);
+
+    useEffect(() => {
+        if (trial) {
+            window.localStorage.setItem('trial', JSON.stringify(trial));
+        }
+    }, [trial]);
 
     const axiosGet = async (params: AxiosRequestConfig) => {
         setLoading(true);
