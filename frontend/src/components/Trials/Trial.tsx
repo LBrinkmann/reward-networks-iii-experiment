@@ -10,6 +10,7 @@ import RepeatTrial from "./SocialLearning/Repeat";
 import TryYourselfTrial from "./SocialLearning/TryYourself";
 import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes, Trial} from "../../apis/apiTypes";
 import Debriefing from "./Outro/Debriefing";
+import {Box, LinearProgress, Typography} from "@mui/material";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -136,7 +137,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
             case 'debriefing':
-                 return <Debriefing onClickHandler={OnNextTrial} />;
+                return <Debriefing onClickHandler={OnNextTrial}/>;
             default:
                 return <> </>;
         }
@@ -152,8 +153,18 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         {renderTrial(trialType, trial)}
                     </>
                 ) : (
-                    // TODO: add loading screen
-                    <div>Loading...</div>
+                    <Box
+                        sx={{width: '25%'}}
+                        style={{margin: 'auto', marginTop: '20%'}}
+                        justifyContent="center"
+                        alignItems="center"
+                        minHeight="90vh"
+                    >
+                        <Typography variant="h6" align={'center'}>
+                            Waiting for the next trial...
+                        </Typography>
+                        <LinearProgress/>
+                    </Box>
                 )
             }
         </>
