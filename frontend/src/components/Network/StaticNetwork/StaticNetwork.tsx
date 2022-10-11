@@ -90,6 +90,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             arc_y={scaleSizeY(edge.arc_y)}
                             target_x={scaleSizeX(edge.target_x)}
                             target_y={scaleSizeY(edge.target_y)}
+                            key={'edge-' + idx}
                         />
                     );
                 })}
@@ -106,6 +107,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             onNodeClick={onNodeClickHandler}
                             isActive={(node.starting_node && currentNodeId === idx) || (currentNodeId === idx)}
                             isValidMove={possibleMoves.includes(idx)}
+                            key={'node-' + idx}
                         />
                     );
                 })}
