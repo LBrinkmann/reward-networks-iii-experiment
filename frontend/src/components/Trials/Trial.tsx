@@ -111,7 +111,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         onNextTrialHandler={OnNextTrial}
                     />;
                 } else {  // tryyourself
-                    console.log(data.network.nodes);
                     return <TryYourselfTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}

@@ -47,7 +47,7 @@ export const useTrialAPI = () => {
             params.headers = {accept: '*/*'}
             const result = await axios.request(params);
             setTrial(result.data);
-            console.log(result.data);
+            // console.log(result.data);
         } catch (err) {
             setError(err);
         } finally {
