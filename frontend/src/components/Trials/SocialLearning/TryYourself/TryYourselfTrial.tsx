@@ -27,7 +27,7 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
             // wait for `waitBeforeNextTrial` second
             setTimeout(() => {
                 // go to the next trial
-                props.onNextTrialHandler();
+                props.onNextTrialHandler(currentPlayerMoves);
             }, waitBeforeNextTrial * 1000);
         }
     }, [showSolution]);
