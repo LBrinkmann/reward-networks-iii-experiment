@@ -5,7 +5,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Header from "../../../Header";
 
 interface ConsentFormProps {
-    onClickAgreeHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    onClickAgreeHandler: () => void;
     onClickDisagreeHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 

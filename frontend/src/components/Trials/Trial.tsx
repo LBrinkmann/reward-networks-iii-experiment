@@ -69,10 +69,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
         )
     }
 
-    const onConsentFormClickAgreeHandler = () => {
-        OnNextTrial([], '', 0);
-    }
-
     const onSocialLearningSelectionClickHandler = (advisorId: string, demoTrialId: number) => {
         OnNextTrial([], advisorId, demoTrialId);
     }
@@ -81,7 +77,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
         switch (type) {
             case 'consent':
                 return <ConsentForm
-                    onClickAgreeHandler={onConsentFormClickAgreeHandler}
+                    onClickAgreeHandler={OnNextTrial}
                     onClickDisagreeHandler={() => null}
                 />;
             case 'social_learning_selection':
