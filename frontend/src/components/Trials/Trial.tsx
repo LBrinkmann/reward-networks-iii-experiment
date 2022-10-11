@@ -19,10 +19,14 @@ interface TrialInterface {
 const Trial: React.FC<TrialInterface> = (props) => {
     const {trial, loading, error, axiosGet, axiosPost} = useTrialAPI();
     const [trialType, setTrialType] = useState<string>('');
-    const [socialLearningStage, setSocialLearningStage] = useState<number>(1);
+    const [socialLearningType, setSocialLearningType] = useState<string>('');
 
     useEffect(() => {
-        setTrialType(trial?.trial_type);
+        if (trial) {
+            // change the trial type only when the trial is changed
+            setTrialType(trial.trial_type);
+            setSocialLearningType(trial.social_learning_type);
+        }
     }, [trial])
 
     const OnNextTrial = (moves: number[] = [],
@@ -48,7 +52,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 break;
             case 'social_learning':
                 payload = {moves: moves} as Solution;
-                setSocialLearningStage(socialLearningStage > 2 ? 1 : socialLearningStage + 1);
                 break;
             case 'written_strategy':
                 payload = {strategy: writtenStrategy} as WrittenStrategyApiTypes;
@@ -95,7 +98,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     onClickHandler={onSocialLearningSelectionClickHandler}
                 />;
             case 'social_learning':
-                if (socialLearningStage === 1) {
+                if (socialLearningType === 'observation') {
                     return <ObservationTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}
@@ -103,7 +106,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         teacherId={1}  // TODO: set correct teacher id
                         onNextTrialHandler={OnNextTrial}
                     />;
-                } else if (socialLearningStage === 2) {
+                } else if (socialLearningType === 'repeat') {
                     return <RepeatTrial
                         nodes={data.network.nodes}
                         edges={data.network.edges}
@@ -111,7 +114,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         teacherId={1}  // TODO: set correct teacher id
                         onNextTrialHandler={OnNextTrial}
                     />;
-                } else {
+                } else {  // tryyourself
                     console.log(data.network.nodes);
                     return <TryYourselfTrial
                         nodes={data.network.nodes}

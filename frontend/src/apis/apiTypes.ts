@@ -60,6 +60,7 @@ export interface Trial {
     | "demonstration"
     | "written_strategy"
     | "debriefing";
+  social_learning_type?: "observation" | "repeat" | "tryyourself";
   finished?: boolean;
   started_at?: string;
   finished_at?: string;
