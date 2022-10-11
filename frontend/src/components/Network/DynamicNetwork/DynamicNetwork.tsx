@@ -32,12 +32,23 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = (
     const [currentNodeInx, setCurrentNodeInx] = useState<number>(startingNode.node_num);
     const [moves, setMoves] = useState<MovesInterface>({possibleMoves: [], previousMoves: []});
 
+    // get states from local storage to prevent losing state on refresh
+    useEffect(() => {
+        const n = JSON.parse(window.localStorage.getItem('currentNodeInx'))
+        if (n) setCurrentNodeInx(n);
+        const m = JSON.parse(window.localStorage.getItem('movesDynamicNetwork'))
+        if (m) setMoves(m);
+    }, []);
+
     useEffect(() => {
         setMoves((moves: MovesInterface) => ({
                 possibleMoves: selectPossibleMoves(edges, currentNodeInx),
                 previousMoves: moves.previousMoves.concat([currentNodeInx])
             })
         );
+        // save states to local storage to prevent losing state on refresh
+        window.localStorage.setItem('currentNodeInx', JSON.stringify(currentNodeInx));
+        window.localStorage.setItem('movesDynamicNetwork', JSON.stringify(moves));
     }, [currentNodeInx]);
 
 

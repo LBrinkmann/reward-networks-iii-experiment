@@ -29,8 +29,29 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
     const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
     const [moves, setMoves] = useState<number[]>([]);
 
+    // get states from local storage to prevent losing state on refresh
+    useEffect(() => {
+        const s = JSON.parse(window.localStorage.getItem('step'))
+        if (s) setStep(s);
+        const p = JSON.parse(window.localStorage.getItem('points'))
+        if (p) setPoints(p);
+        const m = JSON.parse(window.localStorage.getItem('moves'))
+        if (m) setMoves(m);
+        const t = JSON.parse(window.localStorage.getItem('isTimerDone'))
+        if (t) setIsTimerDone(t);
+        const b = JSON.parse(window.localStorage.getItem('isBlankScreen'))
+        if (b) setIsBlankScreen(b);
+    }, []);
+
     // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {
+        // save states to local storage to prevent losing state on refresh
+        window.localStorage.setItem('step', JSON.stringify(step));
+        window.localStorage.setItem('points', JSON.stringify(points));
+        window.localStorage.setItem('moves', JSON.stringify(moves));
+        window.localStorage.setItem('isTimerDone', JSON.stringify(isTimerDone));
+        window.localStorage.setItem('isBlankScreen', JSON.stringify(isBlankScreen));
+
         if (isTimerDone || step === maxSteps) {
             if(props.onTrialEndHandler) props.onTrialEndHandler(moves);
             // hide the trial content
@@ -39,6 +60,18 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
             setTimeout(() => {
                 // go to the next trial
                 props.onNextTrialHandler(moves);
+                // reset local storage
+                window.localStorage.removeItem('step');
+                window.localStorage.removeItem('points');
+                window.localStorage.removeItem('moves');
+                window.localStorage.removeItem('isTimerDone');
+                window.localStorage.removeItem('isBlankScreen');
+                // from dynamic network
+                window.localStorage.removeItem('currentNodeInx');
+                window.localStorage.removeItem('movesDynamicNetwork');
+                // from timer
+                window.localStorage.removeItem('timePassed');
+
             }, waitBeforeNextTrial * 1000);
         }
     }, [step, isTimerDone]);

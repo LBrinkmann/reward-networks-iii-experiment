@@ -12,6 +12,12 @@ const Timer: React.FC<TimerInterface> = ({time, OnTimeEndHandler}) => {
     const [timePassed, setTimePassed] = useState<number>(0);
     const [isDone, setIsDone] = useState<boolean>(false);
 
+    // get states from local storage to prevent losing state on refresh
+    useEffect(() => {
+        const t = JSON.parse(window.localStorage.getItem('timePassed'))
+        if (t) setTimePassed(t);
+    }, []);
+
     useEffect(() => {
         if (isDone) {
             OnTimeEndHandler();
@@ -24,7 +30,11 @@ const Timer: React.FC<TimerInterface> = ({time, OnTimeEndHandler}) => {
     }, [isDone]);
 
     useEffect(() => {
+        // save states to local storage to prevent losing state on refresh
+        window.localStorage.setItem('timePassed', JSON.stringify(timePassed + 1));
+
         if (timePassed >= time) {
+            window.localStorage.removeItem('timePassed');
             setIsDone(true);
         }
     }, [timePassed]);
