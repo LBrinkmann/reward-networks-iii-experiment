@@ -41,8 +41,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = (props) => {
         arc_x,
         arc_y,
         target_x,
-        target_y,
-        ...otherProps
+        target_y
     } = props;
 
     // Color class of the edge based on the reward

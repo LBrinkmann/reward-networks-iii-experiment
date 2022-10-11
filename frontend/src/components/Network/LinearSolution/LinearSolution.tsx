@@ -78,6 +78,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                     arc_y={size.height / 2}
                     target_x={targetX}
                     target_y={size.height / 2}
+                    key={'linear-solution-edge-' + moveIdx}
                 />
             );
         } else {
@@ -101,7 +102,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                         {moves.map((move, idx) => {
                             const node = nodes[move];
                             return (
-                                <>
+                                <React.Fragment key={"move" + idx}>
                                     <NetworkNode
                                         x={onset + idx * gap}
                                         y={size.height / 2}
@@ -111,10 +112,10 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         onNodeClick={null}
                                         isActive={false}
                                         isValidMove={false}
-                                        key={"node-" + idx}
+                                        key={"linear-solution-node-" + idx}
                                     />
                                     {plotEdge(idx)}
-                                </>
+                                </ React.Fragment>
                             );
                         })};
                     </g>
