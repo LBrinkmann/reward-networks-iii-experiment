@@ -44,6 +44,12 @@ class Trial(BaseModel):
         'written_strategy',
         'debriefing'
     ]
+    # social learning trial related field
+    social_learning_type: Optional[Literal[
+        'observation',
+        'repeat',
+        'tryyourself'
+    ]]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
     finished_at: Optional[datetime.datetime]

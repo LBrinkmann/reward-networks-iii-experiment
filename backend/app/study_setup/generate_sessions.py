@@ -136,10 +136,16 @@ async def create_trials(experiment_num: int, experiment_type: str,
                                 trial_type='social_learning_selection'))
             trial_n += 1
 
-            for ii in range(3):
-                # Social learning
-                trials.append(Trial(id=trial_n, trial_type='social_learning'))
-                trial_n += 1
+            # Social learning
+            trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                social_learning_type='observation'))
+            trial_n += 1
+            trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                social_learning_type='repeat'))
+            trial_n += 1
+            trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                social_learning_type='tryyourself'))
+            trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very
         # first generation
