@@ -74,6 +74,7 @@ async def simulate_data(generation):
             s.trials = trials
             s.finished = True
             s.available = False
+            s.unfinished_parents = 0
             await s.save()
     gen = await Session.find(Session.generation == generation).to_list()
     for s in gen:

@@ -23,7 +23,7 @@ class Session(Document):
     finished: Optional[bool] = False
     finished_at: Optional[datetime.datetime]
     available: Optional[bool] = False  # available for subject to play
-    started: Optional[datetime.datetime]  # when the first trial was started
+    started_at: Optional[datetime.datetime]  # when the first trial was started
     expired: Optional[bool] = False  # if the session is expired
 
     class Config:

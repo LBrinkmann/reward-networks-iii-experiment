@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Union
 
 from beanie.odm.operators.find.comparison import In
@@ -39,7 +39,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
         # this happens when all available sessions are taken
         return SessionError(message='No available session for the subject')
 
-    # this will happen only for the new subject
+    # this will happen only for a new subject
     if subject.session_id is None:
         # update Subject.session_id field if it is empty
         await subject.update(Set({Subject.session_id: session.id}))
@@ -53,12 +53,14 @@ async def initialize_session(subject: Subject):
         Set({
             Session.available: False,
             Session.subject_id: subject.id,
-            Session.current_trial_num: 0
+            Session.current_trial_num: 0,
+            Session.started_at: datetime.now()  # save session start time
         })
     )
 
 
 async def update_session(session):
+    # if this is the last trial
     if (session.current_trial_num + 1) == len(session.trials):
         await end_session(session)
     else:
@@ -92,3 +94,27 @@ async def update_availability_status_child_sessions(session: Session):
         Session.unfinished_parents == 0
     ).update(Set({Session.available: True}))
 
+
+async def replace_stale_session(time_delta: int = 30):
+    """
+    Replace the unfinished session so as not to break the social learning chains
+
+    Parameters
+    ----------
+    time_delta : int
+        Time in minutes after which the session is considered expired
+    """
+    # get all expired sessions (sessions that were started long ago)
+    # note there can be old expired sessions
+    new_expired = await Session.find(
+        Session.finished == False,  # not finished
+        Session.subject_id != None  # assigned to subject
+    ).find(
+        Session.started_at < datetime.now() - timedelta(minutes=time_delta)
+    ).to_list()
+
+    # make empty duplicates of the expired session
+
+    # .update(Set({Session.expired: True}))
+
+    pass

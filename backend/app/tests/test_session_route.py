@@ -1,11 +1,16 @@
 import asyncio
+from datetime import datetime, timedelta
 
 import httpx
 import pytest
+from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
+from beanie.odm.operators.update.general import Set
 
 from models.session import Session
 from models.subject import Subject
+from routes.session_utils.session_lifecycle import replace_stale_session, \
+    initialize_session, get_session
 from routes.simulate_study import simulate_data
 
 
@@ -185,3 +190,26 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     assert response.status_code == 200
     data = response.json()
     assert data['message'] == 'Trial saved'
+
+
+@pytest.mark.asyncio
+async def test_replace_stale_session(default_client: httpx.AsyncClient,
+                                     create_empty_experiment):
+
+    await initialize_session(Subject(prolific_id='test-1'))
+
+    # get session
+    session = await get_session('test-1')
+    session_id = session.id
+
+    session.started_at = datetime.now() - timedelta(minutes=10)
+
+    await session.save()
+
+    await replace_stale_session(10)
+
+    replaced_session = await Session.get(session_id)
+    assert replaced_session.expired == True
+    assert replaced_session.subject_id == session.subject_id
+
+
