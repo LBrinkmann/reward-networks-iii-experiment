@@ -6,6 +6,7 @@ from beanie.odm.operators.update.general import Set
 
 from models.session import Session, SessionError
 from models.subject import Subject
+from study_setup.generate_sessions import create_trials
 
 
 async def get_session(prolific_id) -> Union[Session, SessionError]:
@@ -48,6 +49,9 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
 
 
 async def initialize_session(subject: Subject):
+    # Check and remove expired sessions
+    await replace_stale_session()
+
     # assign subject to any available session
     await Session.find_one(Session.available == True).update(
         Set({
@@ -105,16 +109,34 @@ async def replace_stale_session(time_delta: int = 30):
         Time in minutes after which the session is considered expired
     """
     # get all expired sessions (sessions that were started long ago)
-    # note there can be old expired sessions
     new_expired = await Session.find(
-        Session.finished == False,  # not finished
-        Session.subject_id != None  # assigned to subject
+        Session.finished == False,  # session is not finished
+        Session.subject_id != None,  # session is assigned to subject
+        # there can be old expired and already replaces sessions
+        Session.expired != True
     ).find(
+        # find all sessions older than the specified time delta
         Session.started_at < datetime.now() - timedelta(minutes=time_delta)
     ).to_list()
 
-    # make empty duplicates of the expired session
+    # nothing to replace
+    if len(new_expired) == 0:
+        return
 
-    # .update(Set({Session.expired: True}))
+    # make empty duplicates of the expired sessions
+    for s in new_expired:
+        # create an empty session to replace the expired one
+        new_s = create_trials(s.experiment_num, s.experiment_type,
+                              s.generation, s.session_num_in_generation)
+        new_s.advise_ids = s.advise_ids
+        new_s.child_ids = s.child_ids
+        new_s.unfinished_parents = 0
+        new_s.available = True
+        new_s.id = s.id  # copy id
+        await new_s.replace()
 
-    pass
+        # mark the session as expired and delete id
+        s.expired = True
+        del s.id
+
+    await Session.insert_many(new_expired)

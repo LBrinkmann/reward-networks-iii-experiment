@@ -40,7 +40,7 @@ async def test_create_trials(default_client: httpx.AsyncClient):
     n_all_trials = n_consent + n_demonstration + n_w_strategy + n_debriefing
     n_all_trials += n_soc_learning * 3 + n_ind
 
-    session = await create_trials(
+    session = create_trials(
         experiment_num=0, experiment_type='test', generation=0, session_idx=0,
         n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind,
         n_demonstration=n_demonstration)
@@ -52,7 +52,7 @@ async def test_create_trials(default_client: httpx.AsyncClient):
         assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
                                 'debriefing', 'individual']
 
-    session = await create_trials(
+    session = create_trials(
         experiment_num=0, experiment_type='test', generation=1, session_idx=0,
         n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind)
 

@@ -93,8 +93,8 @@ async def create_generation(generation: int,
                             ) -> List[Session]:
     sessions = []
     for session_idx in range(n_sessions_per_generation - num_ai_players):
-        session = await create_trials(experiment_num, experiment_type,
-                                      generation, session_idx)
+        session = create_trials(experiment_num, experiment_type,
+                                generation, session_idx)
         # save session
         await session.save()
         sessions.append(session)
@@ -103,8 +103,8 @@ async def create_generation(generation: int,
     if num_ai_players > 0:
         for session_idx in range(n_sessions_per_generation - num_ai_players,
                                  n_sessions_per_generation):
-            session = await create_ai_trials(experiment_num, experiment_type,
-                                             generation, session_idx)
+            session = create_ai_trials(experiment_num, experiment_type,
+                                       generation, session_idx)
             # save session
             await session.save()
             sessions.append(session)
@@ -112,11 +112,11 @@ async def create_generation(generation: int,
     return sessions
 
 
-async def create_trials(experiment_num: int, experiment_type: str,
-                        generation: int, session_idx: int,
-                        n_social_learning_trials: int = 3,
-                        n_individual_trials: int = 3,
-                        n_demonstration: int = 3) -> Session:
+def create_trials(experiment_num: int, experiment_type: str,
+                  generation: int, session_idx: int,
+                  n_social_learning_trials: int = 3,
+                  n_individual_trials: int = 3,
+                  n_demonstration: int = 3) -> Session:
     """
     Generate one session.
     """
@@ -202,8 +202,8 @@ async def create_trials(experiment_num: int, experiment_type: str,
     return session
 
 
-async def create_ai_trials(experiment_num, experiment_type, generation,
-                           session_idx, n_demonstration=3):
+def create_ai_trials(experiment_num, experiment_type, generation,
+                     session_idx, n_demonstration=3):
     network_data = json.load(open(Path('data') / 'train_viz.json'))
     solutions = json.load(
         open(Path('data') / 'solution_moves_take_first_loss.json'))
