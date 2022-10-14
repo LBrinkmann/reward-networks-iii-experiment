@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
     WrittenStrategy, Advisor
-from routes.session_utils import get_session, \
+from routes.session.session_utils import get_session, \
     update_availability_status_child_sessions, \
     prepare_social_leaning_selection_trial, \
     save_individual_demonstration_trial, \
