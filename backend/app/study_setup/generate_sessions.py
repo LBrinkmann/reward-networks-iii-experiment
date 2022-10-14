@@ -7,7 +7,7 @@ from typing import List
 from models.network import Network
 from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
-from routes.session import estimate_solution_score
+from routes.session_utils import estimate_solution_score
 
 
 async def generate_sessions(n_generations: int = 5,
@@ -204,16 +204,20 @@ async def create_trials(experiment_num: int, experiment_type: str,
 
 async def create_ai_trials(experiment_num, experiment_type, generation,
                            session_idx, n_demonstration=3):
-    # TODO: create AI player trials with solutions
     network_data = json.load(open(Path('data') / 'train_viz.json'))
+    solutions = json.load(
+        open(Path('data') / 'solution_moves_take_first_loss.json'))
     trials = []
 
     # Demonstration trial
     for i in range(n_demonstration):
-        # TODO: fix this
-        moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         network = Network.parse_obj(
             network_data[random.randint(0, network_data.__len__() - 1)])
+        # moves = [s for s in solutions if s['network_id'] == network.network_id][
+        #     0]['moves']
+        # TODO: fix this
+        moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
         dem_trial = Trial(
             id=i,
             trial_type='demonstration',

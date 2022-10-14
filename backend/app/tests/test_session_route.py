@@ -7,7 +7,7 @@ from beanie.odm.operators.find.comparison import In
 from models.network import Network
 from models.session import Session
 from models.subject import Subject
-from routes.session import estimate_solution_score
+from routes.session_utils import estimate_solution_score
 from routes.simulate_study import simulate_data
 
 
@@ -48,6 +48,7 @@ async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
 
 @pytest.mark.asyncio
 @pytest.mark.very_slow  # > 1 minute
+@pytest.mark.skip
 async def test_multiple_subjects(default_client: httpx.AsyncClient,
                                  create_empty_experiment):
     """Test multiple parallel subjects from the generation 0 and 1"""
@@ -173,10 +174,11 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     else:
         if trial_type == 'social_learning_selection':
             # select the first advisor
+            id = str(trial['advisor_selection']['advisor_ids'][0])
+            n = int(trial['advisor_selection']['advisor_demo_trial_ids'][0])
             payload = {
-                'advisor_id': trial['advisor_selection']['advisor_ids'][0],
-                'demonstration_trial_id': trial['advisor_selection'][
-                    'advisor_demo_trial_ids'][0]
+                'advisor_id': id,
+                'demonstration_trial_id': n
             }
             response = await client.post(url, json=payload, headers=headers)
         else:
