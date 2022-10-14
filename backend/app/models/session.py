@@ -8,22 +8,23 @@ from models.trial import Trial
 
 
 class Session(Document):
+    created_at: datetime.datetime = datetime.datetime.now()
     experiment_num: int
     experiment_type: str = 'reward_network_iii'
     generation: int
     session_num_in_generation: int
-    trials: List[Trial]
-    current_trial_num: Optional[int] = 0
-    created_at: datetime.datetime = datetime.datetime.now()
-    advise_ids: Optional[Union[List[PydanticObjectId]]] = []
-    unfinished_parents: Optional[int] = 0
-    child_ids: Optional[Union[List[PydanticObjectId]]] = []
-    finished: Optional[bool] = False
-    available: Optional[bool] = False
     ai_player: Optional[bool] = False
     subject_id: Optional[PydanticObjectId]
-    started: Optional[datetime.datetime]
+    trials: List[Trial]
+    current_trial_num: Optional[int] = 0
+    advise_ids: Optional[Union[List[PydanticObjectId]]] = []
+    child_ids: Optional[Union[List[PydanticObjectId]]] = []
+    unfinished_parents: Optional[int] = 0
+    finished: Optional[bool] = False
     finished_at: Optional[datetime.datetime]
+    available: Optional[bool] = False  # available for subject to play
+    started: Optional[datetime.datetime]  # when the first trial was started
+    expired: Optional[bool] = False  # if the session is expired
 
     class Config:
         # TODO: add example
