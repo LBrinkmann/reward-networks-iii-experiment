@@ -5,14 +5,12 @@ from fastapi import APIRouter
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
     WrittenStrategy, Advisor
-from routes.session_utils.prepare_trial import prepare_trial
-from routes.session_utils.save_trial import save_trial
-from routes.session_utils.session_lifecycle import update_session
-from session_utils.session_lifecycle import get_session
+from .session_utils.prepare_trial import prepare_trial
+from .session_utils.save_trial import save_trial
+from .session_utils.session_lifecycle import update_session
+from .session_utils.session_lifecycle import get_session
 
 session_router = APIRouter(tags=["Session"])
-
-n_social_learning_trials = 3
 
 
 @session_router.get('/{prolific_id}', response_model_by_alias=False)

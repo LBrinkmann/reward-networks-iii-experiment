@@ -5,11 +5,11 @@ from beanie import PydanticObjectId
 
 from models.session import Session
 from models.trial import Trial, Solution, TrialError, WrittenStrategy, Advisor
-from routes.session import n_social_learning_trials
 from utils.utils import estimate_solution_score
 
 
-async def save_trial(body, session, trial, trial_type):
+async def save_trial(body, session, trial, trial_type,
+                     n_social_learning_trials: int = 3):
     # save trial results
     if trial_type == 'consent':
         pass
