@@ -5,9 +5,9 @@ from fastapi import APIRouter
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
     WrittenStrategy, Advisor
-from routes.session_utils.prepare_trial import get_check_trial, prepare_trial
+from routes.session_utils.prepare_trial import prepare_trial
 from routes.session_utils.save_trial import save_trial
-from routes.session_utils.session_lifecycle import save_session
+from routes.session_utils.session_lifecycle import update_session
 from session_utils.session_lifecycle import get_session
 
 session_router = APIRouter(tags=["Session"])
@@ -47,14 +47,15 @@ async def post_current_trial_results(
     if isinstance(session, SessionError):
         return session
 
-    trial = await get_check_trial(session, trial_type)
+    # get current trial
+    trial = session.trials[session.current_trial_num]
 
-    # return error if trial type is correct
-    if isinstance(session, TrialError):
-        return trial
+    # check if trial type is correct
+    if trial.trial_type != trial_type:
+        return TrialError(message='Trial type is not correct')
 
     await save_trial(body, session, trial, trial_type)
 
-    await save_session(session)
+    await update_session(session)
 
     return TrialSaved()

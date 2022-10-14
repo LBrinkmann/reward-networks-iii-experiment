@@ -1,10 +1,21 @@
 from datetime import datetime
 
 from models.session import Session
-from models.trial import AdvisorSelection, TrialError
+from models.trial import AdvisorSelection, Trial
 
 
-async def prepare_social_leaning_selection_trial(trial, session):
+async def prepare_trial(session: Session):
+    trial = session.trials[session.current_trial_num]
+    # prepare social leaning selection trials
+    if trial.trial_type == 'social_learning_selection':
+        await prepare_social_leaning_selection_trial(trial, session)
+    # save starting time
+    trial.started_at = datetime.now()
+    return trial
+
+
+async def prepare_social_leaning_selection_trial(trial: Trial,
+                                                 session: Session):
     """ Prepare social leaning selection trials """
     subject_id = session.subject_id
 
@@ -27,24 +38,3 @@ async def prepare_social_leaning_selection_trial(trial, session):
         trial.advisor_selection.advisor_ids.append(ad_id)
         trial.advisor_selection.advisor_demo_trial_ids.append(sl_trial.id)
         trial.advisor_selection.scores.append(sl_trial.solution.score)
-
-
-async def get_check_trial(session, trial_type):
-    # get current trial
-    trial = session.trials[session.current_trial_num]
-
-    # check if trial type is correct
-    if trial.trial_type != trial_type:
-        return TrialError(message='Trial type is not correct')
-
-    return trial
-
-
-async def prepare_trial(session):
-    trial = session.trials[session.current_trial_num]
-    # prepare social leaning selection trials
-    if trial.trial_type == 'social_learning_selection':
-        await prepare_social_leaning_selection_trial(trial, session)
-    # save starting time
-    trial.started_at = datetime.now()
-    return trial

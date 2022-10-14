@@ -58,22 +58,7 @@ async def initialize_session(subject: Subject):
     )
 
 
-async def update_availability_status_child_sessions(session: Session):
-    """ Update child sessions availability status """
-
-    # update `unfinished_parents` value for child sessions
-    await Session.find(
-        In(Session.id, session.child_ids)
-    ).inc({Session.unfinished_parents: -1})
-
-    # update child sessions status if all parent sessions are finished
-    await Session.find(
-        In(Session.id, session.child_ids),
-        Session.unfinished_parents == 0
-    ).update(Set({Session.available: True}))
-
-
-async def save_session(session):
+async def update_session(session):
     if (session.current_trial_num + 1) == len(session.trials):
         await end_session(session)
     else:
@@ -91,3 +76,19 @@ async def end_session(session):
     await session.save()
     # update child sessions
     await update_availability_status_child_sessions(session)
+
+
+async def update_availability_status_child_sessions(session: Session):
+    """ Update child sessions availability status """
+
+    # update `unfinished_parents` value for child sessions
+    await Session.find(
+        In(Session.id, session.child_ids)
+    ).inc({Session.unfinished_parents: -1})
+
+    # update child sessions status if all parent sessions are finished
+    await Session.find(
+        In(Session.id, session.child_ids),
+        Session.unfinished_parents == 0
+    ).update(Set({Session.available: True}))
+
