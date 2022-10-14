@@ -4,7 +4,7 @@ variables:
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
-    ref: "master"
+    ref: "1.5.0"
     file: "react-app.yml"
 
 init:
