@@ -8,8 +8,8 @@ from models.network import Network
 from models.session import Session
 from models.subject import Subject
 from models.trial import Trial, Solution, WrittenStrategy
-from routes.session_utils import update_availability_status_child_sessions, \
-    estimate_solution_score
+from routes.session_utils import update_availability_status_child_sessions
+from utils.utils import estimate_solution_score
 from study_setup.generate_sessions import generate_sessions
 
 simulation_router = APIRouter(tags=["Simulation"])

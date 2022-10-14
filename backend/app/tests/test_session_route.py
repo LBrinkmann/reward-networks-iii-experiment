@@ -7,7 +7,7 @@ from beanie.odm.operators.find.comparison import In
 from models.network import Network
 from models.session import Session
 from models.subject import Subject
-from routes.session_utils import estimate_solution_score
+from utils.utils import estimate_solution_score
 from routes.simulate_study import simulate_data
 
 

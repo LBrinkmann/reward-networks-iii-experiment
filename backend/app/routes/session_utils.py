@@ -5,11 +5,11 @@ from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 
-from models.network import Network
 from models.session import Session, SessionError
 from models.subject import Subject
 from models.trial import AdvisorSelection, Trial, Solution, TrialError, \
     WrittenStrategy, Advisor
+from utils.utils import estimate_solution_score
 
 
 async def get_session(prolific_id) -> Union[Session, SessionError]:
@@ -163,16 +163,3 @@ async def save_social_leaning_selection(trials: List[Trial],
 
     trials[0].finished_at = datetime.now()
     trials[0].finished = True
-
-
-def estimate_solution_score(network: Network, moves: List[int]) -> int:
-    """ Estimate solution score """
-    score = 0
-    for m0, m1 in zip(moves[:-1], moves[1:]):
-        edge = [e for e in network.edges
-                if e.source_num == m0 and e.target_num == m1]
-        if len(edge) > 0:
-            score += edge[0].reward
-        else:
-            return -100_000  # invalid move sequence
-    return score

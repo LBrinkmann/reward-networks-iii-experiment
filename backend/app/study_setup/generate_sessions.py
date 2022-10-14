@@ -7,7 +7,7 @@ from typing import List
 from models.network import Network
 from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
-from routes.session_utils import estimate_solution_score
+from utils.utils import estimate_solution_score
 
 
 async def generate_sessions(n_generations: int = 5,
