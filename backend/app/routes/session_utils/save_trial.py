@@ -5,6 +5,7 @@ from beanie import PydanticObjectId
 
 from models.session import Session
 from models.trial import Trial, Solution, TrialError, WrittenStrategy, Advisor
+from routes.session import n_social_learning_trials
 from utils.utils import estimate_solution_score
 
 
@@ -69,3 +70,29 @@ async def save_social_leaning_selection(trials: List[Trial],
 
     trials[0].finished_at = datetime.now()
     trials[0].finished = True
+
+
+async def save_trial(body, session, trial, trial_type):
+    # save trial results
+    if trial_type == 'consent':
+        pass
+    elif trial_type == 'individual':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'social_learning_selection':
+        # select all social learning trials for one advisor
+        sl_start = session.current_trial_num
+        sl_end = sl_start + n_social_learning_trials + 1
+        trials = session.trials[sl_start:sl_end]
+        await save_social_leaning_selection(trials, session.subject_id, body)
+        session.trials[sl_start:sl_end] = trials
+    elif trial_type == 'social_learning':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'demonstration':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'written_strategy':
+        save_written_strategy(trial, body)
+    elif trial_type == 'debriefing':
+        pass
+
+    # update session with the trial
+    session.trials[session.current_trial_num] = trial

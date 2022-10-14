@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Union
 
 from beanie.odm.operators.find.comparison import In
@@ -70,3 +71,23 @@ async def update_availability_status_child_sessions(session: Session):
         In(Session.id, session.child_ids),
         Session.unfinished_parents == 0
     ).update(Set({Session.available: True}))
+
+
+async def save_session(session):
+    if (session.current_trial_num + 1) == len(session.trials):
+        await end_session(session)
+    else:
+        # increase trial index by 1
+        session.current_trial_num += 1
+
+        # save session
+        await session.save()
+
+
+async def end_session(session):
+    session.finished_at = datetime.now()
+    session.finished = True
+    # save session
+    await session.save()
+    # update child sessions
+    await update_availability_status_child_sessions(session)

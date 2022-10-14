@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Union
 
 from fastapi import APIRouter
@@ -6,11 +5,10 @@ from fastapi import APIRouter
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
     WrittenStrategy, Advisor
-from routes.session.prepare_trial import prepare_social_leaning_selection_trial
-from routes.session.session_lifecycle import get_session, \
-    update_availability_status_child_sessions
-from routes.session.save_trial import save_individual_demonstration_trial, \
-    save_written_strategy, save_social_leaning_selection
+from routes.session_utils.prepare_trial import get_check_trial, prepare_trial
+from routes.session_utils.save_trial import save_trial
+from routes.session_utils.session_lifecycle import save_session
+from session_utils.session_lifecycle import get_session
 
 session_router = APIRouter(tags=["Session"])
 
@@ -25,17 +23,11 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     # find session and trial for the subject
     session = await get_session(prolific_id)
 
+    # return error if session is not available
     if isinstance(session, SessionError):
         return session
 
-    trial = session.trials[session.current_trial_num]
-
-    # prepare social leaning selection trials
-    if trial.trial_type == 'social_learning_selection':
-        await prepare_social_leaning_selection_trial(trial, session)
-
-    # save starting time
-    trial.started_at = datetime.now()
+    trial = await prepare_trial(session)
 
     await session.save()
 
@@ -55,52 +47,14 @@ async def post_current_trial_results(
     if isinstance(session, SessionError):
         return session
 
-    # get current trial
-    trial = session.trials[session.current_trial_num]
+    trial = await get_check_trial(session, trial_type)
 
-    # check if trial type is correct
-    if trial.trial_type != trial_type:
-        return TrialError(message='Trial type is not correct')
+    # return error if trial type is correct
+    if isinstance(session, TrialError):
+        return trial
 
-    # save trial results
-    if trial_type == 'consent':
-        pass
-    elif trial_type == 'individual':
-        save_individual_demonstration_trial(trial, body)
-    elif trial_type == 'social_learning_selection':
-        # select all social learning trials for one advisor
-        sl_start = session.current_trial_num
-        sl_end = sl_start + n_social_learning_trials + 1
-        trials = session.trials[sl_start:sl_end]
-        await save_social_leaning_selection(trials, session.subject_id, body)
-        session.trials[sl_start:sl_end] = trials
-    elif trial_type == 'social_learning':
-        save_individual_demonstration_trial(trial, body)
-    elif trial_type == 'demonstration':
-        save_individual_demonstration_trial(trial, body)
-    elif trial_type == 'written_strategy':
-        save_written_strategy(trial, body)
-    elif trial_type == 'debriefing':
-        pass
-    else:
-        return TrialError(message='Trial type is not correct')
+    await save_trial(body, session, trial, trial_type)
 
-    # update session with the trial
-    session.trials[session.current_trial_num] = trial
-
-    if (session.current_trial_num + 1) == len(session.trials):
-        session.finished_at = datetime.now()
-        session.finished = True
-        # save session
-        await session.save()
-
-        # update child sessions
-        await update_availability_status_child_sessions(session)
-    else:
-        # increase trial index by 1
-        session.current_trial_num += 1
-
-        # save session
-        await session.save()
+    await save_session(session)
 
     return TrialSaved()
