@@ -206,17 +206,15 @@ def create_ai_trials(experiment_num, experiment_type, generation,
                      session_idx, n_demonstration=3):
     network_data = json.load(open(Path('data') / 'train_viz.json'))
     solutions = json.load(
-        open(Path('data') / 'solution_moves_take_first_loss.json'))
+        open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
     trials = []
 
     # Demonstration trial
     for i in range(n_demonstration):
         network = Network.parse_obj(
             network_data[random.randint(0, network_data.__len__() - 1)])
-        # moves = [s for s in solutions if s['network_id'] == network.network_id][
-        #     0]['moves']
-        # TODO: fix this
-        moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        moves = [s for s in solutions if s['network_id'] == network.network_id][
+            0]['moves']
 
         dem_trial = Trial(
             id=i,

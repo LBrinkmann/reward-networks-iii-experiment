@@ -12,8 +12,11 @@ from utils.utils import estimate_solution_score
 from study_setup.generate_sessions import generate_sessions
 
 simulation_router = APIRouter(tags=["Simulation"])
-test_network_data = json.load(
-    open(Path('tests') / 'data' / 'test_network.json'))
+network_data = json.load(open(Path('data') / 'train_viz.json'))
+
+solutions = json.load(
+    open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+
 n_demonstration_trials = 3
 
 
@@ -49,7 +52,12 @@ async def simulate_data(generation):
             # Demonstration trial
             for i in range(n_demonstration_trials):
                 moves = [0, 5, 3, 4, 0, 5, 6, 7, 9]
-                network = Network.parse_obj(test_network_data)
+                network = Network.parse_obj(
+                    network_data[random.randint(0, network_data.__len__() - 1)])
+                moves = \
+                    [s for s in solutions if
+                     s['network_id'] == network.network_id][
+                        0]['moves']
                 dem_trial = Trial(
                     id=i,
                     trial_type='demonstration',

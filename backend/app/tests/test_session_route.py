@@ -3,9 +3,7 @@ from datetime import datetime, timedelta
 
 import httpx
 import pytest
-from beanie import PydanticObjectId
 from beanie.odm.operators.find.comparison import In
-from beanie.odm.operators.update.general import Set
 
 from models.session import Session
 from models.subject import Subject
@@ -51,7 +49,6 @@ async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
 
 @pytest.mark.asyncio
 @pytest.mark.very_slow  # > 1 minute
-@pytest.mark.skip
 async def test_multiple_subjects(default_client: httpx.AsyncClient,
                                  create_empty_experiment):
     """Test multiple parallel subjects from the generation 0 and 1"""
