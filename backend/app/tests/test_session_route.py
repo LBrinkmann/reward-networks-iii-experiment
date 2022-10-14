@@ -4,10 +4,8 @@ import httpx
 import pytest
 from beanie.odm.operators.find.comparison import In
 
-from models.network import Network
 from models.session import Session
 from models.subject import Subject
-from utils.utils import estimate_solution_score
 from routes.simulate_study import simulate_data
 
 
@@ -187,10 +185,3 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     assert response.status_code == 200
     data = response.json()
     assert data['message'] == 'Trial saved'
-
-
-def test_estimate_solution_score():
-    network = Network.parse_file('tests/data/test_network.json')
-    moves = [0, 5, 3, 4, 0, 5, 6, 7, 9]
-    score = estimate_solution_score(network, moves)
-    assert score == -240
