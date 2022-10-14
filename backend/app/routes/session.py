@@ -6,10 +6,10 @@ from fastapi import APIRouter
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
     WrittenStrategy, Advisor
-from routes.session.session_utils import get_session, \
-    update_availability_status_child_sessions, \
-    prepare_social_leaning_selection_trial, \
-    save_individual_demonstration_trial, \
+from routes.session.prepare_trial import prepare_social_leaning_selection_trial
+from routes.session.session_lifecycle import get_session, \
+    update_availability_status_child_sessions
+from routes.session.save_trial import save_individual_demonstration_trial, \
     save_written_strategy, save_social_leaning_selection
 
 session_router = APIRouter(tags=["Session"])
