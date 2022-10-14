@@ -18,7 +18,6 @@ class Session(Document):
     advise_ids: Optional[Union[List[PydanticObjectId]]] = []
     unfinished_parents: Optional[int] = 0
     child_ids: Optional[Union[List[PydanticObjectId]]] = []
-    valid: Optional[bool] = False
     finished: Optional[bool] = False
     available: Optional[bool] = False
     ai_player: Optional[bool] = False
