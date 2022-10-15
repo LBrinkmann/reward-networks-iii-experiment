@@ -51,13 +51,13 @@ async def generate_experiment_sessions():
     if config.rewrite_previous_data or not await Session.find().to_list():
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
-                n_generations=config.n_individual_trials,
+                n_generations=config.n_generations,
                 n_sessions_per_generation=config.n_sessions_per_generation,
                 n_advise_per_session=config.n_advise_per_session,
                 experiment_type=config.experiment_name,
                 experiment_num=replication,
                 n_ai_players=config.n_ai_players,
-                n_sessions_first_generation=config.n_players_first_generation,
+                n_sessions_first_generation=config.n_sessions_first_generation,
                 n_social_learning_trials=config.n_social_learning_trials,
                 n_individual_trials=config.n_individual_trials,
                 n_demonstration_trials=config.n_demonstration_trials,

@@ -71,7 +71,7 @@ async def test_multiple_subjects(default_client: httpx.AsyncClient,
         In(Session.subject_id, [s.id for s in subjects])).to_list()
 
     assert len(
-        sessions) == e_config.n_players_first_generation - e_config.n_ai_players
+        sessions) == e_config.n_sessions_first_generation - e_config.n_ai_players
 
     # generation 1
     tasks = []
