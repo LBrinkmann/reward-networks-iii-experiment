@@ -3,21 +3,18 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database.connection import Settings
+from database.connection import DatabaseSettings
+from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
-# from routes.advise import advise_router
 from routes.progress import progress_router
 from routes.session import session_router
-from routes.simulate_study import simulation_router
 from study_setup.generate_sessions import generate_sessions
-
-if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
-    from pydantic2ts import generate_typescript_defs
 
 api = FastAPI()
 
-settings = Settings()
+config = ExperimentSettings()
+settings = DatabaseSettings(db_name=config.experiment_name)
 
 api.add_middleware(
     CORSMiddleware,
@@ -30,10 +27,6 @@ api.add_middleware(
 # Register routes
 api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
-# api.include_router(advise_router, prefix="/advise")
-
-# Only for testing purposes
-api.include_router(simulation_router, prefix="/simulation")
 
 
 @api.on_event("startup")
@@ -41,17 +34,40 @@ async def startup_event():
     # initialize database
     await settings.initialize_database()
 
+    # generate sessions
+    await generate_experiment_sessions()
+
+    # development mode
+    generate_frontend_types()
+
+
+async def generate_experiment_sessions():
+    if config.rewrite_previous_data:
+        await Session.find().delete()
+        await Subject.find().delete()
+
+    # if the database is empty, generate sessions
+    if config.rewrite_previous_data or not await Session.find().to_list():
+        for replication in range(config.n_session_tree_replications):
+            await generate_sessions(
+                n_generations=config.n_individual_trials,
+                n_sessions_per_generation=config.n_sessions_per_generation,
+                n_advise_per_session=config.n_advise_per_session,
+                experiment_type=config.experiment_name,
+                experiment_num=replication,
+                n_ai_players=config.n_ai_players,
+                n_players_first_generation=config.n_players_first_generation,
+                n_social_learning_trials=config.n_social_learning_trials,
+                n_individual_trials=config.n_individual_trials,
+                n_demonstration_trials=config.n_demonstration_trials,
+            )
+
+
+def generate_frontend_types():
     # generate frontend types
+    # environment variables are set in the docker-compose.yml
     if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
+        from pydantic2ts import generate_typescript_defs
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
             'app.models.trial', os.path.join(path, 'apiTypes.ts'))
-
-    # run the study simulation
-    # await Session.find().delete()
-    # await Subject.find().delete()
-    # await generate_sessions(n_generations=5,
-    #                         n_sessions_per_generation=10,
-    #                         n_advise_per_session=5,
-    #                         experiment_type='reward_network_iii',
-    #                         experiment_num=0)
