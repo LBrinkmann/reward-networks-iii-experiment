@@ -9,13 +9,24 @@ from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score
 
+# load all networks
+network_data = json.load(open(Path('data') / 'train_viz.json'))
 
-async def generate_sessions(n_generations: int = 5,
-                            n_sessions_per_generation: int = 20,
+# load all ai solutions
+solutions = json.load(
+    open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+
+
+async def generate_sessions(n_generations: int = 2,
+                            n_sessions_per_generation: int = 10,
                             n_advise_per_session: int = 5,
-                            experiment_type: str = 'reward_network_iii',
+                            experiment_type: str = 'reward-network-iii',
                             experiment_num: int = 0,
-                            num_ai_players: int = 3,
+                            n_ai_players: int = 3,
+                            n_players_first_generation: int = 13,
+                            n_social_learning_trials: int = 2,
+                            n_individual_trials: int = 3,
+                            n_demonstration_trials: int = 2,
                             seed: int = 4242):
     """
     Generate one experiment.
@@ -32,19 +43,33 @@ async def generate_sessions(n_generations: int = 5,
     # create sessions for the first generation
     # the last `num_ai_players` sessions are for AI players
     sessions_n_0 = await create_generation(
-        0, n_sessions_per_generation, experiment_type, experiment_num,
-        num_ai_players)
+        generation=0,
+        n_sessions_per_generation=n_sessions_per_generation,
+        experiment_type=experiment_type,
+        experiment_num=experiment_num,
+        n_ai_players=n_ai_players,
+        n_social_learning_trials=n_social_learning_trials,
+        n_individual_trials=n_individual_trials,
+        n_demonstration_trials=n_demonstration_trials
+    )
 
-    sessions_n_0_with_ai = sessions_n_0[num_ai_players:]
+    sessions_n_0_with_ai = sessions_n_0[n_ai_players:]
     sessions_n_0_without_ai = sessions_n_0[
-                              :n_sessions_per_generation - num_ai_players]
+                              :n_sessions_per_generation - n_ai_players]
 
     # iterate over generations
     for generation in range(n_generations - 1):
         # create sessions for the next generation
         sessions_n_1 = await create_generation(
-            generation + 1, n_sessions_per_generation, experiment_type,
-            experiment_num)
+            generation=generation + 1,
+            n_sessions_per_generation=n_sessions_per_generation,
+            experiment_type=experiment_type,
+            experiment_num=experiment_num,
+            n_ai_players=0,  # no AI players in the next generations
+            n_social_learning_trials=n_social_learning_trials,
+            n_individual_trials=n_individual_trials,
+            n_demonstration_trials=n_demonstration_trials
+        )
 
         # split sessions into two streams (with and without AI player
         # advisors or offsprings of AI player advisors)
@@ -89,22 +114,36 @@ async def create_generation(generation: int,
                             n_sessions_per_generation: int,
                             experiment_type: str,
                             experiment_num: int,
-                            num_ai_players: int = 0
+                            n_ai_players: int,
+                            n_social_learning_trials: int,
+                            n_individual_trials: int,
+                            n_demonstration_trials: int,
                             ) -> List[Session]:
     sessions = []
-    for session_idx in range(n_sessions_per_generation - num_ai_players):
-        session = create_trials(experiment_num, experiment_type,
-                                generation, session_idx)
+    for session_idx in range(n_sessions_per_generation - n_ai_players):
+        session = create_trials(
+            experiment_num=experiment_num,
+            experiment_type=experiment_type,
+            generation=generation,
+            session_idx=session_idx,
+            n_social_learning_trials=n_social_learning_trials,
+            n_individual_trials=n_individual_trials,
+            n_demonstration_trials=n_demonstration_trials
+        )
         # save session
         await session.save()
         sessions.append(session)
 
     # if there are AI players, create sessions for them
-    if num_ai_players > 0:
-        for session_idx in range(n_sessions_per_generation - num_ai_players,
+    if n_ai_players > 0:
+        for session_idx in range(n_sessions_per_generation - n_ai_players,
                                  n_sessions_per_generation):
-            session = create_ai_trials(experiment_num, experiment_type,
-                                       generation, session_idx)
+            session = create_ai_trials(
+                experiment_num=experiment_num,
+                experiment_type=experiment_type,
+                generation=generation,
+                session_idx=session_idx,
+                n_demonstration_trials=n_demonstration_trials)
             # save session
             await session.save()
             sessions.append(session)
@@ -116,12 +155,10 @@ def create_trials(experiment_num: int, experiment_type: str,
                   generation: int, session_idx: int,
                   n_social_learning_trials: int = 3,
                   n_individual_trials: int = 3,
-                  n_demonstration: int = 3) -> Session:
+                  n_demonstration_trials: int = 3) -> Session:
     """
     Generate one session.
     """
-    # load all networks
-    network_data = json.load(open(Path('data') / 'train_viz.json'))
     trial_n = 0
 
     # Consent form
@@ -166,7 +203,7 @@ def create_trials(experiment_num: int, experiment_type: str,
         trials.append(trial)
         trial_n += 1
 
-    for i in range(n_demonstration):
+    for i in range(n_demonstration_trials):
         # demonstration trial
         dem_trial = Trial(
             id=trial_n,
@@ -203,14 +240,11 @@ def create_trials(experiment_num: int, experiment_type: str,
 
 
 def create_ai_trials(experiment_num, experiment_type, generation,
-                     session_idx, n_demonstration=3):
-    network_data = json.load(open(Path('data') / 'train_viz.json'))
-    solutions = json.load(
-        open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+                     session_idx, n_demonstration_trials):
     trials = []
 
     # Demonstration trial
-    for i in range(n_demonstration):
+    for i in range(n_demonstration_trials):
         network = Network.parse_obj(
             network_data[random.randint(0, network_data.__len__() - 1)])
         moves = [s for s in solutions if s['network_id'] == network.network_id][
@@ -232,7 +266,7 @@ def create_ai_trials(experiment_num, experiment_type, generation,
 
     # Written strategy
     trials.append(Trial(
-        id=n_demonstration + 1,
+        id=n_demonstration_trials + 1,
         trial_type='written_strategy',
         written_strategy=WrittenStrategy(strategy=''))
     )
