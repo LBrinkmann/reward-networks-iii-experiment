@@ -8,15 +8,16 @@ from models.session import Session
 from models.subject import Subject
 
 
-class Settings(BaseSettings):
+class DatabaseSettings(BaseSettings):
     # reading variables from the environment
     MONGO_URL: Optional[str] = 'mongodb://localhost:3002/'
-    APP_NAME = 'reward-network-iii'
+    # get the name of the collection from the experiment settings
+    db_name: str = 'reward-network-iii'
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.MONGO_URL)
         await init_beanie(
-            database=client[self.APP_NAME],
+            database=client[self.db_name],
             document_models=[
                 Session,
                 Subject

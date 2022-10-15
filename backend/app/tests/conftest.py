@@ -5,7 +5,7 @@ import httpx
 import pytest
 from httpx import AsyncClient
 
-from database.connection import Settings
+from database.connection import DatabaseSettings
 from models.session import Session
 from models.subject import Subject
 from server import api
@@ -20,9 +20,9 @@ def event_loop():
 
 
 async def init_db():
-    test_settings = Settings()
+    test_settings = DatabaseSettings()
     test_settings.MONGO_URL = "mongodb://localhost:27017"
-    test_settings.APP_NAME = "reward-network-iii-test"
+    test_settings.db_name = "reward-network-iii-test"
 
     await test_settings.initialize_database()
 
@@ -44,4 +44,4 @@ async def create_empty_experiment(default_client: httpx.AsyncClient):
                             n_advise_per_session=5,
                             n_generations=2,
                             n_sessions_per_generation=20,
-                            num_ai_players=3)
+                            n_ai_players=3)
