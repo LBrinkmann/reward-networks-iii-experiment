@@ -62,6 +62,9 @@ async def generate_experiment_sessions():
                 n_individual_trials=config.n_individual_trials,
                 n_demonstration_trials=config.n_demonstration_trials,
             )
+    if config.simulate_first_generation:
+        from tests.simultate_session_data import simulate_data
+        await simulate_data(1)
 
 
 def generate_frontend_types():

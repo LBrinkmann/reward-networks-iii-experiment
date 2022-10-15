@@ -17,3 +17,6 @@ class ExperimentSettings(BaseSettings):
     n_social_learning_trials: int = 2
     n_individual_trials: int = 3
     n_demonstration_trials: int = 2
+
+    # development
+    simulate_first_generation: bool = True
