@@ -9,7 +9,7 @@ from models.session import Session
 from models.subject import Subject
 from routes.session_utils.session_lifecycle import replace_stale_session, \
     initialize_session, get_session
-from routes.simulate_study import simulate_data
+from simultate_session_data import simulate_data
 
 
 @pytest.mark.asyncio

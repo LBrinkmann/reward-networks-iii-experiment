@@ -2,8 +2,9 @@ from pydantic import BaseSettings
 
 
 class ExperimentSettings(BaseSettings):
-    experiment_name: str = 'reward-network-iii-pilot'
+    experiment_name: str = 'reward-network-iii-pilot-1'
     rewrite_previous_data: bool = False
+    # number of generations without the first generation
     n_generations: int = 2
     n_players_first_generation: int = 13  # 3 (humans) + 7 (humans) + 3 (AI)
     n_ai_players: int = 3
