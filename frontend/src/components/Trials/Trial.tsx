@@ -31,7 +31,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
 
     const OnNextTrial = (moves: number[] = [],
                          selectedAdvisorId: string = '',
-                         selectedAdvisorDemoTrialId: number = 0,
                          writtenStrategy: string = '') => {
         let payload: {};
         switch (trialType) {
@@ -41,7 +40,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case 'social_learning_selection':
                 payload = {
                     advisor_id: selectedAdvisorId,
-                    demonstration_trial_id: selectedAdvisorDemoTrialId
                 } as Advisor;
                 break;
             case 'individual':
@@ -69,8 +67,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
         )
     }
 
-    const onSocialLearningSelectionClickHandler = (advisorId: string, demoTrialId: number) => {
-        OnNextTrial([], advisorId, demoTrialId);
+    const onSocialLearningSelectionClickHandler = (advisorId: string) => {
+        OnNextTrial([], advisorId);
     }
 
     const renderTrial = (type: string, data: Trial) => {

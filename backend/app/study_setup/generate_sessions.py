@@ -7,7 +7,7 @@ from typing import List
 from models.network import Network
 from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
-from utils.utils import estimate_solution_score
+from utils.utils import estimate_solution_score, estimate_average_player_score
 
 # load all networks
 network_data = json.load(open(Path('data') / 'train_viz.json'))
@@ -173,20 +173,23 @@ def create_trials(experiment_num: int, experiment_type: str,
                                 trial_type='social_learning_selection'))
             trial_n += 1
 
-            # Social learning
-            trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                social_learning_type='observation'))
-            trial_n += 1
-            trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                social_learning_type='repeat'))
-            trial_n += 1
-            trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                social_learning_type='tryyourself'))
-            trial_n += 1
+            # show all demonstration trials
+            for ii in range(n_demonstration_trials):
+                # Social learning
+                trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                    social_learning_type='observation'))
+                trial_n += 1
+                trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                    social_learning_type='repeat'))
+                trial_n += 1
+                trials.append(Trial(id=trial_n, trial_type='social_learning',
+                                    social_learning_type='tryyourself'))
+                trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very
         # first generation
-        n_individual_trials += n_social_learning_trials * 3
+        n_individual_trials += n_social_learning_trials \
+                               * n_demonstration_trials * 3
 
     # Individual trials
 
@@ -281,4 +284,5 @@ def create_ai_trials(experiment_num, experiment_type, generation,
         ai_player=True,
         finished=True
     )
+    session.average_score = estimate_average_player_score(session)
     return session

@@ -16,14 +16,12 @@ class Solution(BaseModel):
 
 class Advisor(BaseModel):
     advisor_id: PydanticObjectId  # advisor id
-    demonstration_trial_id: int  # trial number in advisor's session
     solution: Optional[Solution]
     written_strategy: Optional[str]
 
 
 class AdvisorSelection(BaseModel):
     advisor_ids: List[PydanticObjectId]  # advisor ids
-    advisor_demo_trial_ids: List[int]  # advisor demonstration trial ids
     scores: List[int]  # scores for each advisor
 
 

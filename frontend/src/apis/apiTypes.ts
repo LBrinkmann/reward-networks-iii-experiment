@@ -7,7 +7,6 @@
 
 export interface Advisor {
   advisor_id: string;
-  demonstration_trial_id: number;
   solution?: Solution;
   written_strategy?: string;
 }
@@ -19,7 +18,6 @@ export interface Solution {
 }
 export interface AdvisorSelection {
   advisor_ids: string[];
-  advisor_demo_trial_ids: number[];
   scores: number[];
 }
 export interface Network {

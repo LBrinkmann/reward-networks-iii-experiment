@@ -15,6 +15,7 @@ class Session(Document):
     session_num_in_generation: int
     ai_player: Optional[bool] = False
     subject_id: Optional[PydanticObjectId]
+    average_score: Optional[int]
     trials: List[Trial]
     current_trial_num: Optional[int] = 0
     advise_ids: Optional[Union[List[PydanticObjectId]]] = []

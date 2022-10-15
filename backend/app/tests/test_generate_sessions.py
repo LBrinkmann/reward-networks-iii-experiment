@@ -30,7 +30,7 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
-async def test_create_trials(default_client: httpx.AsyncClient):
+async def test_create_trials(default_client: httpx.AsyncClient,):
     n_consent = 1
     n_soc_learning = 3
     n_ind = 3
@@ -38,11 +38,15 @@ async def test_create_trials(default_client: httpx.AsyncClient):
     n_w_strategy = 1
     n_debriefing = 1
     n_all_trials = n_consent + n_demonstration + n_w_strategy + n_debriefing
-    n_all_trials += n_soc_learning * 3 + n_ind
+    n_all_trials += n_soc_learning * n_demonstration * 3 + n_ind
 
     session = create_trials(
-        experiment_num=0, experiment_type='test', generation=0, session_idx=0,
-        n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind,
+        experiment_num=0,
+        experiment_type='test',
+        generation=0,
+        session_idx=0,
+        n_social_learning_trials=n_soc_learning,
+        n_individual_trials=n_ind,
         n_demonstration_trials=n_demonstration)
 
     assert len(session.trials) == n_all_trials

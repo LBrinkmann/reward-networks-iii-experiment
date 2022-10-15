@@ -7,6 +7,7 @@ from beanie.odm.operators.update.general import Set
 from models.session import Session, SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
+from utils.utils import estimate_average_player_score
 
 
 async def get_session(prolific_id) -> Union[Session, SessionError]:
@@ -78,6 +79,7 @@ async def update_session(session):
 async def end_session(session):
     session.finished_at = datetime.now()
     session.finished = True
+    session.average_score = estimate_average_player_score(session)
     # save session
     await session.save()
     # update child sessions

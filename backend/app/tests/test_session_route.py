@@ -122,20 +122,21 @@ async def one_subject(default_client: httpx.AsyncClient,
         for i in range(e_config.n_social_learning_trials):
             # social learning selection
             await get_post_trial(default_client, 'social_learning_selection',
-                                 trial_num, url)
+                                 trial_num, url, headers=headers)
             trial_num += 1
 
-            for ii in range(3):
+            for ii in range(3 * e_config.n_demonstration_trials):
                 # social learning
                 await get_post_trial(default_client, 'social_learning',
-                                     trial_num, url, solution)
+                                     trial_num, url, solution, headers)
                 trial_num += 1
 
     if generation > 0:
         n_individual_trials = e_config.n_individual_trials
     else:
         n_individual_trials = e_config.n_individual_trials
-        n_individual_trials += e_config.n_social_learning_trials * 3
+        n_individual_trials += e_config.n_social_learning_trials \
+                               * e_config.n_demonstration_trials * 3
 
     for i in range(n_individual_trials):
         # individual trial
@@ -188,11 +189,8 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     else:
         if trial_type == 'social_learning_selection':
             # select the first advisor
-            id = str(trial['advisor_selection']['advisor_ids'][0])
-            n = int(trial['advisor_selection']['advisor_demo_trial_ids'][0])
             payload = {
-                'advisor_id': id,
-                'demonstration_trial_id': n
+                'advisor_id': str(trial['advisor_selection']['advisor_ids'][0])
             }
             response = await client.post(url, json=payload, headers=headers)
         else:

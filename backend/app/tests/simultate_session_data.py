@@ -6,7 +6,7 @@ from models.config import ExperimentSettings
 from models.network import Network
 from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
-from utils.utils import estimate_solution_score
+from utils.utils import estimate_solution_score, estimate_average_player_score
 
 network_data = json.load(open(Path('data') / 'train_viz.json'))
 solutions = json.load(
@@ -58,6 +58,7 @@ async def simulate_data(generation):
             s.finished = True
             s.available = False
             s.unfinished_parents = 0
+            s.average_score = estimate_average_player_score(s)
             await s.save()
     gen = await Session.find(Session.generation == generation).to_list()
     for s in gen:

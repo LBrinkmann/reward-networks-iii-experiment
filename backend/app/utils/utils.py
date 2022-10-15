@@ -14,3 +14,16 @@ def estimate_solution_score(network: Network, moves: List[int]) -> int:
         else:
             return -100_000  # invalid move sequence
     return score
+
+
+def estimate_average_player_score(session) -> int:
+    """ Estimate average player score """
+    # get all trials
+    trials_to_consider = ['individual', 'demonstration']
+    trials = [t for t in session.trials if t.trial_type in trials_to_consider]
+
+    # get all player scores
+    player_scores = [t.solution.score for t in trials]
+
+    # compute average score
+    return int(sum(player_scores) / len(player_scores))
