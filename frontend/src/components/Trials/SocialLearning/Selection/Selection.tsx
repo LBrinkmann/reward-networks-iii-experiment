@@ -4,7 +4,7 @@ import {Grid} from "@mui/material";
 
 
 interface SocialLearningSelectionProps {
-    advisors: { advisorInx: number, advisorId: string, averageScore: number }[];
+    advisors: { advisorId: string, averageScore: number }[];
     onClickHandler: (advisorId: string) => void;
 }
 
@@ -18,7 +18,7 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearning
                 return (
                     <Grid item key={inx}>
                         <SelectionOneCard
-                            personInx={advisor.advisorInx}
+                            personInx={inx}
                             averageScore={advisor.averageScore}
                             onClickHandler={onClickHandler}/>
                     </Grid>

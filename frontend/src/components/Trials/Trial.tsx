@@ -83,7 +83,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     advisors={
                         data.advisor_selection.scores.map((score: number, inx: number) => {
                             return {
-                                advisorInx: data.advisor_selection.advisor_demo_trial_ids[inx],
                                 advisorId: data.advisor_selection.advisor_ids[inx],
                                 averageScore: score
                             }
