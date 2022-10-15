@@ -23,7 +23,7 @@ async def generate_sessions(n_generations: int = 2,
                             experiment_type: str = 'reward-network-iii',
                             experiment_num: int = 0,
                             n_ai_players: int = 3,
-                            n_players_first_generation: int = 13,
+                            n_sessions_first_generation: int = 13,
                             n_social_learning_trials: int = 2,
                             n_individual_trials: int = 3,
                             n_demonstration_trials: int = 2,
@@ -34,17 +34,11 @@ async def generate_sessions(n_generations: int = 2,
     # Set random seed
     random.seed(seed)
 
-    # check that n_sessions_per_generation is even
-    # this is to ensure that there are an equal number of sessions with and
-    # without AI player advisors
-    assert n_sessions_per_generation % 2 == 0, \
-        "n_sessions_per_generation must be even"
-
     # create sessions for the first generation
     # the last `num_ai_players` sessions are for AI players
     sessions_n_0 = await create_generation(
         generation=0,
-        n_sessions_per_generation=n_sessions_per_generation,
+        n_sessions_per_generation=n_sessions_first_generation,
         experiment_type=experiment_type,
         experiment_num=experiment_num,
         n_ai_players=n_ai_players,
@@ -55,7 +49,13 @@ async def generate_sessions(n_generations: int = 2,
 
     sessions_n_0_with_ai = sessions_n_0[n_ai_players:]
     sessions_n_0_without_ai = sessions_n_0[
-                              :n_sessions_per_generation - n_ai_players]
+                              :n_sessions_first_generation - n_ai_players]
+
+    # check that n_sessions_per_generation is even
+    # this is to ensure that there are an equal number of sessions with and
+    # without AI player advisors
+    assert n_sessions_per_generation % 2 == 0, \
+        "n_sessions_per_generation must be even"
 
     # iterate over generations
     for generation in range(n_generations - 1):
