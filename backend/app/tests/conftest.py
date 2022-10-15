@@ -6,6 +6,7 @@ import pytest
 from httpx import AsyncClient
 
 from database.connection import DatabaseSettings
+from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 from server import api
@@ -19,17 +20,19 @@ def event_loop():
     loop.close()
 
 
-async def init_db():
-    test_settings = DatabaseSettings()
-    test_settings.MONGO_URL = "mongodb://localhost:27017"
-    test_settings.db_name = "reward-network-iii-test"
-
-    await test_settings.initialize_database()
+@pytest.fixture(scope="session")
+async def e_config():
+    return ExperimentSettings(experiment_name="reward-network-iii-test")
 
 
 @pytest.fixture(scope="session")
-async def default_client():
-    await init_db()
+async def default_client(e_config: ExperimentSettings):
+    test_settings = DatabaseSettings()
+    test_settings.MONGO_URL = "mongodb://localhost:27017"
+    test_settings.db_name = e_config.experiment_name
+
+    await test_settings.initialize_database()
+
     async with AsyncClient(app=api, base_url="http://testserver/") as client:
         yield client
 
@@ -39,9 +42,18 @@ async def default_client():
 
 
 @pytest.fixture(scope="function")
-async def create_empty_experiment(default_client: httpx.AsyncClient):
-    await generate_sessions(experiment_type='reward_network_iii',
-                            n_advise_per_session=5,
-                            n_generations=2,
-                            n_sessions_per_generation=20,
-                            n_ai_players=3)
+async def create_empty_experiment(default_client: httpx.AsyncClient,
+                                  e_config: ExperimentSettings):
+    for replication in range(e_config.n_session_tree_replications):
+        await generate_sessions(
+            n_generations=e_config.n_individual_trials,
+            n_sessions_per_generation=e_config.n_sessions_per_generation,
+            n_advise_per_session=e_config.n_advise_per_session,
+            experiment_type=e_config.experiment_name,
+            experiment_num=replication,
+            n_ai_players=e_config.n_ai_players,
+            n_sessions_first_generation=e_config.n_players_first_generation,
+            n_social_learning_trials=e_config.n_social_learning_trials,
+            n_individual_trials=e_config.n_individual_trials,
+            n_demonstration_trials=e_config.n_demonstration_trials,
+        )

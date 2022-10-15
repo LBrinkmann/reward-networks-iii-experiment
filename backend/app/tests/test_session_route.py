@@ -5,6 +5,7 @@ import httpx
 import pytest
 from beanie.odm.operators.find.comparison import In
 
+from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 from routes.session_utils.session_lifecycle import replace_stale_session, \
@@ -14,9 +15,10 @@ from simultate_session_data import simulate_data
 
 @pytest.mark.asyncio
 async def test_one_subject(default_client: httpx.AsyncClient,
+                           e_config: ExperimentSettings,
                            create_empty_experiment):
     """Test one subject from the generation 0"""
-    await one_subject(default_client, 0)
+    await one_subject(default_client, e_config, 0)
 
     # Clean up resources
     await Session.find().delete()
@@ -25,13 +27,14 @@ async def test_one_subject(default_client: httpx.AsyncClient,
 
 @pytest.mark.asyncio
 async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
+                                 e_config: ExperimentSettings,
                                  create_empty_experiment):
     """Test one subject from the generation 0"""
     # simulate data for generation 0
     generation = 1
     await simulate_data(generation)
 
-    await one_subject(default_client, 0, generation)
+    await one_subject(default_client, e_config, 0, generation)
 
     session = await Session.find_one(Session.generation == generation,
                                      Session.finished == True)
@@ -50,12 +53,13 @@ async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
 @pytest.mark.asyncio
 @pytest.mark.very_slow  # > 1 minute
 async def test_multiple_subjects(default_client: httpx.AsyncClient,
+                                 e_config: ExperimentSettings,
                                  create_empty_experiment):
     """Test multiple parallel subjects from the generation 0 and 1"""
     # generation 0
     tasks = []
     for i in range(30):
-        task = asyncio.create_task(one_subject(default_client, i))
+        task = asyncio.create_task(one_subject(default_client, e_config, i))
         tasks.append(task)
     [await t for t in tasks]
 
@@ -66,12 +70,14 @@ async def test_multiple_subjects(default_client: httpx.AsyncClient,
     sessions = await Session.find(
         In(Session.subject_id, [s.id for s in subjects])).to_list()
 
-    assert len(sessions) == 17
+    assert len(
+        sessions) == e_config.n_players_first_generation - e_config.n_ai_players
 
     # generation 1
     tasks = []
     for i in range(30, 60):
-        task = asyncio.create_task(one_subject(default_client, i, generation=1))
+        task = asyncio.create_task(one_subject(
+            default_client, e_config, i, generation=1))
         tasks.append(task)
     [await t for t in tasks]
 
@@ -84,14 +90,16 @@ async def test_multiple_subjects(default_client: httpx.AsyncClient,
         Session.generation == 1
     ).to_list()
 
-    assert len(sessions) == 20
+    assert len(sessions) == e_config.n_sessions_per_generation
 
     # Clean up resources
     await Session.find().delete()
     await Subject.find().delete()
 
 
-async def one_subject(default_client: httpx.AsyncClient, subj: int,
+async def one_subject(default_client: httpx.AsyncClient,
+                      e_config: ExperimentSettings,
+                      subj: int,
                       generation: int = 0):
     subj_name = f'test-{subj}'
     headers = {
@@ -111,7 +119,7 @@ async def one_subject(default_client: httpx.AsyncClient, subj: int,
     trial_num += 1
 
     if generation != 0:
-        for i in range(3):
+        for i in range(e_config.n_social_learning_trials):
             # social learning selection
             await get_post_trial(default_client, 'social_learning_selection',
                                  trial_num, url)
@@ -123,14 +131,20 @@ async def one_subject(default_client: httpx.AsyncClient, subj: int,
                                      trial_num, url, solution)
                 trial_num += 1
 
-    for i in range(3 + 3 * 3 if generation == 0 else 3):
+    if generation > 0:
+        n_individual_trials = e_config.n_individual_trials
+    else:
+        n_individual_trials = e_config.n_individual_trials
+        n_individual_trials += e_config.n_social_learning_trials * 3
+
+    for i in range(n_individual_trials):
         # individual trial
         await get_post_trial(default_client, 'individual', trial_num, url,
                              solution, headers)
         trial_num += 1
 
     # demonstration trial
-    for i in range(3):
+    for i in range(e_config.n_demonstration_trials):
         await get_post_trial(default_client, 'demonstration', trial_num, url,
                              solution, headers)
         trial_num += 1

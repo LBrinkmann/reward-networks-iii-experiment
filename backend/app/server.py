@@ -13,8 +13,9 @@ from study_setup.generate_sessions import generate_sessions
 
 api = FastAPI()
 
+# load settings
 config = ExperimentSettings()
-settings = DatabaseSettings(db_name=config.experiment_name)
+db_settings = DatabaseSettings(db_name=config.experiment_name)
 
 api.add_middleware(
     CORSMiddleware,
@@ -32,12 +33,12 @@ api.include_router(progress_router, prefix="/progress")
 @api.on_event("startup")
 async def startup_event():
     # initialize database
-    await settings.initialize_database()
+    await db_settings.initialize_database()
 
     # generate sessions
     await generate_experiment_sessions()
 
-    # development mode
+    # run only in development mode
     generate_frontend_types()
 
 
@@ -56,7 +57,7 @@ async def generate_experiment_sessions():
                 experiment_type=config.experiment_name,
                 experiment_num=replication,
                 n_ai_players=config.n_ai_players,
-                n_players_first_generation=config.n_players_first_generation,
+                n_sessions_first_generation=config.n_players_first_generation,
                 n_social_learning_trials=config.n_social_learning_trials,
                 n_individual_trials=config.n_individual_trials,
                 n_demonstration_trials=config.n_demonstration_trials,
