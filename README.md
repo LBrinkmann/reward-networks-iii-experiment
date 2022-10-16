@@ -97,7 +97,7 @@ GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks
 
 ### Check the study progress
 
-- https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/reward-network-iii-pilot-1/0
+- https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/rn-iii-pilot/0
 
 ### Logs
 

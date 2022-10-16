@@ -48,7 +48,7 @@ async def generate_experiment_sessions():
         await Subject.find().delete()
 
     # if the database is empty, generate sessions
-    if config.REWRITE_PREVIOUS_DATA or not await Session.find().to_list():
+    if config.REWRITE_PREVIOUS_DATA or not await Session.find().first_or_none():
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
                 n_generations=config.N_GENERATIONS,
