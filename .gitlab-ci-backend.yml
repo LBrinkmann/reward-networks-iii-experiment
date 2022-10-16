@@ -1,5 +1,8 @@
 variables:
   APP_NAME: rn-iii-backend
+  experiment_name: reward-network-iii-pilot-test-1
+  rewrite_previous_data: true
+  n_generations: 4
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
