@@ -20,6 +20,7 @@ init:
     - echo "EXPERIMENT_NAME=${EXPERIMENT_NAME}" >>build.env
     - echo "N_GENERATIONS=${N_GENERATIONS}" >>build.env
     - echo "REWRITE_PREVIOUS_DATA=${REWRITE_PREVIOUS_DATA}" >>build.env
+    - cat build.env
 #    - ls -R
   artifacts:
     paths:
