@@ -9,9 +9,8 @@ from models.subject import Subject
 
 
 class DatabaseSettings(BaseSettings):
-    # reading variables from the environment
+    # reading variables from the deployment environment
     MONGO_URL: Optional[str] = 'mongodb://localhost:3002/'
-    # get the name of the collection from the experiment settings
     DATABASE_NAME: str = 'reward-network-iii'
 
     async def initialize_database(self):

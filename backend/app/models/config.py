@@ -5,6 +5,7 @@ class ExperimentSettings(BaseSettings):
     # These variables are rewritten on deployment
     # number of generations with the first generation
     N_GENERATIONS: int = 3
+    SIMULATE_FIRST_GENERATION: bool = True  # development only
 
     # other experiment settings
     experiment_type: str = 'reward-network-iii'  # name of the experiment
@@ -20,6 +21,3 @@ class ExperimentSettings(BaseSettings):
     n_social_learning_trials: int = 2
     n_individual_trials: int = 3
     n_demonstration_trials: int = 2
-
-    # development
-    simulate_first_generation: bool = True
