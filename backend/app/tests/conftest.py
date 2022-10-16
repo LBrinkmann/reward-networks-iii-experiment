@@ -22,14 +22,14 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 async def e_config():
-    return ExperimentSettings(experiment_name="reward-network-iii-test")
+    return ExperimentSettings()
 
 
 @pytest.fixture(scope="session")
 async def default_client(e_config: ExperimentSettings):
     test_settings = DatabaseSettings()
     test_settings.MONGO_URL = "mongodb://localhost:27017"
-    test_settings.db_name = e_config.EXPERIMENT_NAME
+    test_settings.DATABASE_NAME = 'test-reward-network-iii'
 
     await test_settings.initialize_database()
 
@@ -49,7 +49,7 @@ async def create_empty_experiment(default_client: httpx.AsyncClient,
             n_generations=e_config.n_individual_trials,
             n_sessions_per_generation=e_config.n_sessions_per_generation,
             n_advise_per_session=e_config.n_advise_per_session,
-            experiment_type=e_config.EXPERIMENT_NAME,
+            experiment_type=e_config.experiment_type,
             experiment_num=replication,
             n_ai_players=e_config.n_ai_players,
             n_sessions_first_generation=e_config.n_sessions_first_generation,

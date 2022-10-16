@@ -15,7 +15,7 @@ api = FastAPI()
 
 # load settings
 config = ExperimentSettings()
-db_settings = DatabaseSettings(db_name=config.EXPERIMENT_NAME)
+db_settings = DatabaseSettings()
 
 api.add_middleware(
     CORSMiddleware,
@@ -43,18 +43,18 @@ async def startup_event():
 
 
 async def generate_experiment_sessions():
-    if config.REWRITE_PREVIOUS_DATA:
+    if config.rewrite_previous_data:
         await Session.find().delete()
         await Subject.find().delete()
 
     # if the database is empty, generate sessions
-    if config.REWRITE_PREVIOUS_DATA or not await Session.find().first_or_none():
+    if config.rewrite_previous_data or not await Session.find().first_or_none():
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
                 n_generations=config.N_GENERATIONS,
                 n_sessions_per_generation=config.n_sessions_per_generation,
                 n_advise_per_session=config.n_advise_per_session,
-                experiment_type=config.EXPERIMENT_NAME,
+                experiment_type=config.experiment_type,
                 experiment_num=replication,
                 n_ai_players=config.n_ai_players,
                 n_sessions_first_generation=config.n_sessions_first_generation,

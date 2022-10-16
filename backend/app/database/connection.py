@@ -12,12 +12,12 @@ class DatabaseSettings(BaseSettings):
     # reading variables from the environment
     MONGO_URL: Optional[str] = 'mongodb://localhost:3002/'
     # get the name of the collection from the experiment settings
-    db_name: str = 'reward-network-iii'
+    DATABASE_NAME: str = 'reward-network-iii'
 
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.MONGO_URL)
         await init_beanie(
-            database=client[self.db_name],
+            database=client[self.DATABASE_NAME],
             document_models=[
                 Session,
                 Subject
