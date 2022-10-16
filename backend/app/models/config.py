@@ -20,7 +20,3 @@ class ExperimentSettings(BaseSettings):
 
     # development
     simulate_first_generation: bool = True
-
-    class Config:
-        env_file = 'build.env'
-        env_file_encoding = 'utf-8'

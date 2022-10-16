@@ -1,8 +1,6 @@
 variables:
+  DEPLOYMENT_VARS: "MONGO_URL, EXPERIMENT_NAME, N_GENERATIONS, REWRITE_PREVIOUS_DATA"
   APP_NAME: rn-iii-backend
-  EXPERIMENT_NAME: reward-network-iii-pilot-test
-  N_GENERATIONS: 2
-  REWRITE_PREVIOUS_DATA: "False"
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
@@ -17,10 +15,7 @@ init:
     - rm -rf frontend
     - rm -rf backend
 # set environment variables for experiment configuration
-    - echo "EXPERIMENT_NAME=${EXPERIMENT_NAME}" >>build.env
-    - echo "N_GENERATIONS=${N_GENERATIONS}" >>build.env
-    - echo "REWRITE_PREVIOUS_DATA=${REWRITE_PREVIOUS_DATA}" >>build.env
-    - cat build.env
+#    - cat build.env
 #    - ls -R
   artifacts:
     paths:
