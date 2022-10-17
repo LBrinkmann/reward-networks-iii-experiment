@@ -1,10 +1,8 @@
 import React, {FC, useEffect, useState} from "react"
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
-import Timer from "../../IndividualTrial/Timer";
 import WaitForNextTrial from "../../IndividualTrial/WaitForNextTrial";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {

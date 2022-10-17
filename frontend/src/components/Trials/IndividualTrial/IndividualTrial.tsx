@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
+import {Box, Grid, Paper, Typography} from "@mui/material";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import {DynamicNetworkInterface} from "../../Network/DynamicNetwork/DynamicNetwork";
 import Timer from "./Timer";
+import WaitForNextTrial from "./WaitForNextTrial";
 
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
@@ -53,7 +54,7 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         window.localStorage.setItem('isBlankScreen', JSON.stringify(isBlankScreen));
 
         if (isTimerDone || step === maxSteps) {
-            if(props.onTrialEndHandler) props.onTrialEndHandler(moves);
+            if (props.onTrialEndHandler) props.onTrialEndHandler(moves);
             // hide the trial content
             setIsBlankScreen(true);
             // wait for `waitBeforeNextTrial` second
@@ -129,20 +130,7 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
 
                         </Grid>
                     </Grid>
-                </Paper>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
+                </Paper>) : (<WaitForNextTrial/>)
             }
         </>
     );
