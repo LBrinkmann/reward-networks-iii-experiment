@@ -14,10 +14,10 @@ init:
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
     - rm -rf frontend
     - rm -rf backend
-    - echo "DATABASE_NAME=${APP_NAME}-$(git log --pretty='format:%C(auto)%ad' --date=format:%Y%m%d-%H%M%S -n 1)" >>build.env
-# set environment variables for experiment configuration
-    - cat build.env
 #    - ls -R
+# set environment variables for experiment configuration
+    - echo "DATABASE_NAME=${APP_NAME}-$(git log --pretty='format:%C(auto)%ad' --date=format:%Y%m%d-%H%M%S -n 1)" >>build.env
+#    - cat build.env
   artifacts:
     paths:
       - ./
