@@ -30,6 +30,6 @@ ExampleOne.args = {
     timer: 30,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    onNextTrialHandler: () => {},
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: false
 };
