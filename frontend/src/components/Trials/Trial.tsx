@@ -78,6 +78,34 @@ const Trial: React.FC<TrialInterface> = (props) => {
         OnNextTrial([], advisorId);
     }
 
+    const setHeaderTitle = () => {
+        switch (trialType) {
+            case 'consent':
+                return 'Consent Form';
+            case 'social_learning_selection':
+                return 'Learning Selection';
+            case 'individual':
+                return 'Individual Performance';
+            case 'demonstration':
+                return 'Demonstration';
+            case 'social_learning':
+                switch (socialLearningType) {
+                    case 'observation':
+                        return 'Learning By Watching';
+                    case 'repeat':
+                        return 'Learning By Repeating';
+                    case 'tryyourself':
+                        return 'Learning By Trying';
+                    default:
+                        return 'Learning';
+                }
+            case 'written_strategy':
+                return 'Written Strategy';
+            case 'debriefing':
+                return 'Explanation of the Experiment';
+        }
+    }
+
     const renderTrial = (type: string, data: Trial) => {
         switch (type) {
             case 'consent':
@@ -151,7 +179,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error && !waitingForTheNextTrial ?
                 (
                     <>
-                        <Header title={"Trial: " + trialType}/>
+                        <Header title={setHeaderTitle()}/>
                         {renderTrial(trialType, trial)}
                     </>
                 ) : (<WaitForNextTrialScreen/>)
