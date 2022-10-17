@@ -3,6 +3,9 @@ import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
+import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
+import Timer from "../../IndividualTrial/Timer";
+import WaitForNextTrial from "../../IndividualTrial/WaitForNextTrial";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -55,52 +58,47 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
         setPoints(cumulativeScore);
     }
 
+    const renderNetwork = () => (
+        <AnimatedNetwork
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={props.moves}
+            onNextStepHandler={onNextStepHandler}
+            startAnimation={startAnimation}
+        />
+    )
+
+    const renderPlayerInformation = () => (
+        <PlayerInformation
+            step={step}
+            cumulativePoints={points}
+            id={props.teacherId}
+            comment={props.comment}
+        />
+    )
+
+    const renderLinearSolution = () => (
+        <LinearSolution
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={props.moves}
+            title={"Player " + props.teacherId + " total score"}
+        />
+    )
+
     return (
         <>
             {(!isBlankScreen) ? (
-                <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
-                    <Grid item xs={7}>
-                        <AnimatedNetwork
-                            nodes={props.nodes}
-                            edges={props.edges}
-                            moves={props.moves}
-                            onNextStepHandler={onNextStepHandler}
-                            startAnimation={startAnimation}
-                        />
-                    </Grid>
-
-                    <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
-                        <PlayerInformation
-                            step={step}
-                            cumulativePoints={points}
-                            id={props.teacherId}
-                            comment={props.comment}/>
-                    </Grid>
-
-                    <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
-                        <Paper sx={{p: 2, margin: 2}}>
-                            <LinearSolution
-                                nodes={props.nodes}
-                                edges={props.edges}
-                                moves={props.moves}
-                                title={"Player " + props.teacherId + " total score"}
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
+                <TrialWithNetworkLayout
+                    network={renderNetwork()}
+                    timer={<> </>}
+                    playerInformation={renderPlayerInformation()}
+                    linearSolution={renderLinearSolution()}
+                    showTimer={false}
+                    showPlayerInformation={true}
+                    showLinearSolution={true}
+                />
+            ) : (<WaitForNextTrial/>)
             }
         </>
     );
