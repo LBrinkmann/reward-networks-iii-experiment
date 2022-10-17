@@ -1,8 +1,10 @@
 import React, {FC, useEffect, useState} from "react"
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../../Network/LinearSolution";
 import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/HighlightedNetwork/HighlightedNetwork";
+import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
+import WaitForNextTrial from "../../IndividualTrial/WaitForNextTrial";
+import Timer from "../../IndividualTrial/Timer";
 
 
 interface RepeatTrialInterface extends HighlightedNetworkInterface {
@@ -16,11 +18,12 @@ interface RepeatTrialInterface extends HighlightedNetworkInterface {
     waitAfterTheEndOfTrial?: number;
     /** Handle the end of the trial */
     onNextTrialHandler: () => void;
+    timer?: number;
 }
 
 
 export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
-    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfTrial = 2, waitBeforeNextTrial = 2} = props;
+    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfTrial = 2, waitBeforeNextTrial = 2, timer = 30} = props;
 
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
@@ -48,51 +51,48 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
         setPoints(cumulativeScore);
     }
 
+    const renderNetwork = () => (
+        <HighlightedNetwork
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={props.moves}
+            onNextStepHandler={onNextStepHandler}
+        />
+    )
+
+    const renderPlayerInformation = () => (
+        <PlayerInformation
+            step={step}
+            cumulativePoints={points}
+            id={props.teacherId}
+            comment={props.comment}
+        />
+    )
+
+    const renderLinearSolution = () => (
+        <LinearSolution
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={props.moves}
+            title={"Player " + props.teacherId + " total score"}
+        />
+    )
+
+    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => {setStep(maxSteps)}}/>
+
     return (
         <>
             {(!isBlankScreen) ? (
-                <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
-                    <Grid item xs={7}>
-                        <HighlightedNetwork
-                            nodes={props.nodes}
-                            edges={props.edges}
-                            moves={props.moves}
-                            onNextStepHandler={onNextStepHandler}
-                        />
-                    </Grid>
-
-                    <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
-                        <PlayerInformation
-                            step={step}
-                            cumulativePoints={points}
-                            id={props.teacherId}
-                            comment={props.comment}/>
-                    </Grid>
-
-                    <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
-                        <Paper sx={{p: 2, margin: 2}}>
-                            <LinearSolution
-                                nodes={props.nodes}
-                                edges={props.edges}
-                                moves={props.moves}
-                                title={"Player " + props.teacherId + " total score"}
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
+                <TrialWithNetworkLayout
+                    network={renderNetwork()}
+                    timer={renderTimer()}
+                    playerInformation={renderPlayerInformation()}
+                    linearSolution={renderLinearSolution()}
+                    showTimer={true}
+                    showPlayerInformation={true}
+                    showLinearSolution={true}
+                />
+            ) : (<WaitForNextTrial/>)
             }
         </>
     );
