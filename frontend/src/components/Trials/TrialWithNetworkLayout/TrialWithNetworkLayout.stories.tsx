@@ -33,7 +33,7 @@ const Template: ComponentStory<typeof TrialWithNetworkLayout> = function (args) 
             edges={edges}
             moves={moves}
             onNextStepHandler={() => {}}
-            startAnimation={true}
+            playAnimation={true}
         />
     )
 

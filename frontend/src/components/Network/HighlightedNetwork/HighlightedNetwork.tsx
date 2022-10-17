@@ -33,11 +33,6 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
         }
     }, []);
 
-    useEffect(() => {
-        // save states to local storage to prevent losing state on refresh
-        window.localStorage.setItem('currentMoveInx', JSON.stringify(currentMoveInx));
-    }, [currentMoveInx]);
-
     // Highlight the edge between the current node and the next node
     const updateEdges = (sourceInx: number, targetInx: number) => {
         return edges.map((edge: StaticNetworkEdgeInterface) => {
@@ -51,6 +46,8 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
 
     const OnNodeClick = (nodeId: number) => {
         if ((currentMoveInx < moves.length) && (nodeId === moves[currentMoveInx + 1])) {
+            // save states to local storage to prevent losing state on refresh
+            window.localStorage.setItem('currentMoveInx', JSON.stringify(currentMoveInx + 1));
             props.onNextStepHandler(moves[currentMoveInx], moves[currentMoveInx + 1]);
             setEdges(updateEdges(moves[currentMoveInx + 1], moves[currentMoveInx + 2]));
             setCurrentMoveInx(currentMoveInx + 1);
