@@ -7,11 +7,11 @@ interface TryYourselfTrialInterface extends IndividualTrialInterface {
     /** The list of moves with the starting node as the first element */
     moves: number[];
     teacherId: number;
-    waitAfterTheEndOfTrial?: number;
+    linearSolutionPresentationTime?: number;
 }
 
 export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
-    const {waitBeforeNextTrial = 2} = props;
+    const {linearSolutionPresentationTime = 3} = props;
 
     const [currentPlayerMoves, setCurrentPlayerMoves] = useState<number[]>([]);
     const [showLinearNetwork, setShowLinearNetwork] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
             setTimeout(() => {
                 // go to the next trial
                 props.onNextTrialHandler(currentPlayerMoves);
-            }, waitBeforeNextTrial * 1000);
+            }, linearSolutionPresentationTime * 1000);
         }
 
     }, [showLinearNetwork]);
@@ -51,7 +51,7 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
         <>
             {
                 (showLinearNetwork) ? renderLinerSolutions() :
-                    <IndividualTrial  {...props} onTrialEndHandler={onTrialFinish}/>
+                    <IndividualTrial  {...props} onNextTrialHandler={onTrialFinish}/>
             }
         </>
 
