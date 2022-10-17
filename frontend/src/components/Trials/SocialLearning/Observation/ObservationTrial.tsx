@@ -3,6 +3,7 @@ import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
+import useNetworkStates from "../../IndividualTrial/NetworkStates";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -10,9 +11,6 @@ interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's comment */
     comment?: string;
     maxSteps?: number;
-    hideTrial?: boolean;
-    waitBeforeNextTrial?: number;
-    waitAfterTheEndOfAnimation?: number;
     /** Handle the end of the trial */
     onNextTrialHandler: () => void;
 }
@@ -21,29 +19,20 @@ interface ObservationTrialInterface extends AnimatedNetworkInterface {
 export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     const {maxSteps = 8} = props;
 
-    const [step, setStep] = useState<number>(0);
-    const [points, setPoints] = useState<number>(0);
-    const [startAnimation, setStartAnimation] = useState<boolean>(false);
+    const {
+        step,
+        points,
+        onNextStepHandler
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
+
+    const [playAnimation, setPlayAnimation] = useState<boolean>(false);
 
     // wait for 2 seconds before starting the animation
     useEffect(() => {
         setTimeout(() => {
-            setStartAnimation(true);
+            setPlayAnimation(true);
         }, 2000);
     }, []);
-
-    // Go to the next trial when all the steps are done
-    useEffect(() => {
-        if (step === maxSteps) {
-            // go to the next trial
-            props.onNextTrialHandler();
-        }
-    }, [step]);
-
-    const onNextStepHandler = (stepNumber: number, cumulativeScore: number) => {
-        setStep(stepNumber);
-        setPoints(cumulativeScore);
-    }
 
     const renderNetwork = () => (
         <AnimatedNetwork
@@ -51,7 +40,7 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
             edges={props.edges}
             moves={props.moves}
             onNextStepHandler={onNextStepHandler}
-            startAnimation={startAnimation}
+            playAnimation={step < maxSteps ? playAnimation : false}
         />
     )
 

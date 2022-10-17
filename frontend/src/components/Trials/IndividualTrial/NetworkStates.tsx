@@ -31,7 +31,7 @@ const useNetworkStates = (
         window.localStorage.setItem('moves', JSON.stringify(moves));
         window.localStorage.setItem('isTimerDone', JSON.stringify(isTimerDone));
 
-        if (isTimerDone || step === maxSteps) {
+        if (isTimerDone || step >= maxSteps) {
             // wait for 1 second before the next trial
             setTimeout(() => {
                 // reset local storage

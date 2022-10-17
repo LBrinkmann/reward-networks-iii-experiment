@@ -28,7 +28,8 @@ ShortComment.args = {
     comment: "Just follow the green arrows.",
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
+    onNextTrialHandler: () => {location.reload()},
 };
 
 export const NoComment = Template.bind({});
@@ -38,7 +39,8 @@ NoComment.args = {
     comment: "",
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
+    onNextTrialHandler: () => {location.reload()},
 };
 
 
@@ -49,5 +51,6 @@ LongComment.args = {
     comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
+    onNextTrialHandler: () => {location.reload()},
 };
