@@ -27,20 +27,20 @@ const useNetworkStates = (onNextTrialHandler: (moves: number[]) => void, maxStep
         window.localStorage.setItem('isTimerDone', JSON.stringify(isTimerDone));
 
         if (isTimerDone || step === maxSteps) {
-            // reset local storage
-            window.localStorage.removeItem('step');
-            window.localStorage.removeItem('points');
-            window.localStorage.removeItem('moves');
-            window.localStorage.removeItem('isTimerDone');
-            window.localStorage.removeItem('isBlankScreen');
-            // from dynamic network
-            window.localStorage.removeItem('currentNodeInx');
-            window.localStorage.removeItem('movesDynamicNetwork');
-            // from timer
-            window.localStorage.removeItem('timePassed');
-
             // wait for 1 second before the next trial
             setTimeout(() => {
+                // reset local storage
+                window.localStorage.removeItem('step');
+                window.localStorage.removeItem('points');
+                window.localStorage.removeItem('moves');
+                window.localStorage.removeItem('isTimerDone');
+                window.localStorage.removeItem('isBlankScreen');
+                // from network components
+                window.localStorage.removeItem('currentNodeInx');
+                window.localStorage.removeItem('movesDynamicNetwork');
+                // from timer
+                window.localStorage.removeItem('timePassed');
+
                 // go to the next trial
                 onNextTrialHandler(moves);
             }, 1000);

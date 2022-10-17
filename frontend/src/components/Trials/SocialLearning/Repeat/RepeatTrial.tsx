@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react"
+import React, {FC} from "react"
 import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../../Network/LinearSolution";
 import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/HighlightedNetwork/HighlightedNetwork";
@@ -31,9 +31,9 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
         setMoves
     } = useNetworkStates(props.onNextTrialHandler, maxSteps)
 
-    const onNextStepHandler = (stepNumber: number, cumulativeScore: number) => {
+    const onNextStepHandler = (stepNumber: number, addPoints: number) => {
         setStep(stepNumber);
-        setPoints(cumulativeScore);
+        setPoints(points + addPoints);
         setMoves(props.moves.slice(0, stepNumber));
     }
 
