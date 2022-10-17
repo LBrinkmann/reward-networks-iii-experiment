@@ -13,11 +13,16 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  n_generations=5,
                                  n_sessions_per_generation=20
                                  ):
+    sessions = await Session.find().first_or_none()
+    assert sessions is None
+
     await generate_sessions(experiment_type=experiment_type,
                             n_advise_per_session=n_advise_per_session,
                             n_generations=n_generations,
                             n_sessions_per_generation=n_sessions_per_generation)
     sessions = await Session.find().to_list(100)
+
+    assert sessions is not None
 
     for s in sessions:
         assert s.experiment_type == "reward_network_iii"

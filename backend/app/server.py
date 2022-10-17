@@ -44,11 +44,14 @@ async def startup_event():
 
 async def generate_experiment_sessions():
     if config.rewrite_previous_data:
-        await Session.find().delete()
-        await Subject.find().delete()
+        if config.rewrite_previous_data:
+            await Session.find().delete()
+            await Subject.find().delete()
 
-    # if the database is empty, generate sessions
-    if config.rewrite_previous_data or not await Session.find().first_or_none():
+    sessions = await Session.find().first_or_none()
+
+    if sessions is None:
+        # if the database is empty, generate sessions
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
                 n_generations=config.N_GENERATIONS,
@@ -62,6 +65,7 @@ async def generate_experiment_sessions():
                 n_individual_trials=config.n_individual_trials,
                 n_demonstration_trials=config.n_demonstration_trials,
             )
+
     if config.SIMULATE_FIRST_GENERATION:
         from tests.simultate_session_data import simulate_data
         await simulate_data(1)
