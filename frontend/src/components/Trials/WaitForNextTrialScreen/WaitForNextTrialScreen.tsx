@@ -1,7 +1,7 @@
 import {Box, LinearProgress, Typography} from "@mui/material";
 import React from "react";
 
-export const WaitForNextTrial = () => {
+export const WaitForNextTrialScreen = () => {
     return (
         <Box
             sx={{width: '25%'}}
@@ -18,4 +18,4 @@ export const WaitForNextTrial = () => {
     )
 }
 
-export default WaitForNextTrial;
+export default WaitForNextTrialScreen;
