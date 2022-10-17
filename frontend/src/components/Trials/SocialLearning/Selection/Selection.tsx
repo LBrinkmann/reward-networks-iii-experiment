@@ -5,7 +5,7 @@ import {Grid} from "@mui/material";
 
 interface SocialLearningSelectionProps {
     advisors: { advisorId: string, averageScore: number }[];
-    onClickHandler: (advisorId: string) => void;
+    onClickHandler: (advisorId: string, inx: number) => void;
 }
 
 const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearningSelectionProps) => {
@@ -13,7 +13,7 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearning
         <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
             {props.advisors.map((advisor, inx) => {
                 const onClickHandler = () => {
-                    props.onClickHandler(advisor.advisorId);
+                    props.onClickHandler(advisor.advisorId, inx);
                 }
                 return (
                     <Grid item key={inx}>

@@ -22,12 +22,28 @@ const Trial: React.FC<TrialInterface> = (props) => {
     const [trialType, setTrialType] = useState<string>('');
     const [socialLearningType, setSocialLearningType] = useState<string>('');
     const [waitingForTheNextTrial, setWaitingForTheNextTrial] = useState<boolean>(false);
+    const [teacherInx, setTeacherInx] = useState<number>();
+    const [learningExampleInx, setLearningExampleInx] = useState<number>(0);
+
+    useEffect(() => {
+        const t = JSON.parse(window.localStorage.getItem('teacherInx'));
+        if (t) setTeacherInx(t);
+        const e = JSON.parse(window.localStorage.getItem('learningExampleInx'));
+        if (e) setLearningExampleInx(e);
+    }, []);
 
     useEffect(() => {
         if (trial) {
             // change the trial type only when the trial is changed
             setTrialType(trial.trial_type);
             setSocialLearningType(trial.social_learning_type);
+            if (trial.trial_type === 'social_learning_selection') {
+                window.localStorage.setItem('learningExampleInx', JSON.stringify(0));
+                setLearningExampleInx(0);
+            } else if (trial.social_learning_type === 'observation') {
+                window.localStorage.setItem('learningExampleInx', JSON.stringify(learningExampleInx + 1));
+                setLearningExampleInx(learningExampleInx + 1);
+            }
         }
     }, [trial])
 
@@ -74,7 +90,9 @@ const Trial: React.FC<TrialInterface> = (props) => {
         }, waitTime);
     }
 
-    const onSocialLearningSelectionClickHandler = (advisorId: string) => {
+    const onSocialLearningSelectionClickHandler = (advisorId: string, inx: number) => {
+        window.localStorage.setItem('teacherInx', JSON.stringify(inx));
+        setTeacherInx(inx);
         OnNextTrial([], advisorId);
     }
 
@@ -91,11 +109,11 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case 'social_learning':
                 switch (socialLearningType) {
                     case 'observation':
-                        return 'Learning By Watching';
+                        return 'Learning By Watching Example ' + learningExampleInx + ' Player ' + teacherInx;
                     case 'repeat':
-                        return 'Learning By Repeating';
+                        return 'Learning By Repeating Example ' + learningExampleInx + ' Player ' + teacherInx;
                     case 'tryyourself':
-                        return 'Learning By Trying';
+                        return 'Learning By Trying Example ' + learningExampleInx + ' Player ' + teacherInx;
                     default:
                         return 'Learning';
                 }
@@ -131,7 +149,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         nodes={data.network.nodes}
                         edges={data.network.edges}
                         moves={data.advisor.solution.moves}
-                        teacherId={1}  // TODO: set correct teacher id
+                        teacherId={teacherInx}
                         onNextTrialHandler={OnNextTrial}
                     />;
                 } else if (socialLearningType === 'repeat') {
@@ -139,7 +157,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         nodes={data.network.nodes}
                         edges={data.network.edges}
                         moves={data.advisor.solution.moves}
-                        teacherId={1}  // TODO: set correct teacher id
+                        teacherId={teacherInx}
                         onNextTrialHandler={OnNextTrial}
                     />;
                 } else {  // tryyourself
@@ -147,7 +165,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         nodes={data.network.nodes}
                         edges={data.network.edges}
                         moves={data.advisor.solution.moves}
-                        teacherId={1}  // TODO: set correct teacher id
+                        teacherId={teacherInx}
                         onNextTrialHandler={OnNextTrial}
                     />;
                 }
