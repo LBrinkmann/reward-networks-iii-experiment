@@ -1,5 +1,4 @@
 import React, {FC, useEffect, useState} from "react"
-import {Grid} from "@mui/material";
 import StaticNetwork from "../StaticNetwork";
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
@@ -55,18 +54,14 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
     }
 
     return (
-        <Grid sx={{flexGrow: 1}} direction="column" container spacing={4} justifyContent="center" alignItems="center">
-            <Grid item>
-                <StaticNetwork
-                    edges={edges}
-                    nodes={props.nodes}
-                    currentNodeId={moves[currentMoveInx]}
-                    possibleMoves={[moves[currentMoveInx + 1]] || []}
-                    size={460}
-                    onNodeClickHandler={OnNodeClick}
-                />
-            </Grid>
-        </Grid>
+        <StaticNetwork
+            edges={edges}
+            nodes={props.nodes}
+            currentNodeId={moves[currentMoveInx]}
+            possibleMoves={[moves[currentMoveInx + 1]] || []}
+            size={460}
+            onNodeClickHandler={OnNodeClick}
+        />
     )
 }
 

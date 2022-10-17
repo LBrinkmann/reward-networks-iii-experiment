@@ -32,7 +32,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
             {(showComment) ? (
                 <TextField
                     id="outlined-multiline-static"
-                    label=""
+                    // label=""
                     multiline
                     fullWidth
                     rows={10}

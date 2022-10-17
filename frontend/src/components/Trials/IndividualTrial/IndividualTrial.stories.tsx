@@ -42,13 +42,3 @@ ExampleTwo.args = {
     onNextTrialHandler: () => {location.reload()},
     hideTrial: false
 };
-
-export const ScreenAfterTrialEnd = Template.bind({});
-
-ScreenAfterTrialEnd.args = {
-    timer: 30,
-    edges: data[examples_rand[1]].edges,
-    nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => {location.reload()},
-    hideTrial: true
-};
