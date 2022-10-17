@@ -90,7 +90,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         <Grid container spacing={1}>
             {props.title &&
                 (<Grid item xs={12}>
-                    <Typography variant="h6" gutterBottom align={'left'}>
+                    <Typography variant="h5" gutterBottom align={'left'}>
                         {props.title ? props.title : ""}: {score}
                     </Typography>
 

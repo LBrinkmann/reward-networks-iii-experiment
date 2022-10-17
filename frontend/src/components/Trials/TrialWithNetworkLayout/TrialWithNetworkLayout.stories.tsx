@@ -25,6 +25,7 @@ const Template: ComponentStory<typeof TrialWithNetworkLayout> = function (args) 
     const nodes = data[0].nodes;
     const moves = [0, 5, 3, 4, 0, 5, 6, 7, 9];
     const teacherId = 2;
+    const comment = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
     const renderNetwork = () => (
         <AnimatedNetwork
@@ -36,15 +37,15 @@ const Template: ComponentStory<typeof TrialWithNetworkLayout> = function (args) 
         />
     )
 
-
     const renderPlayerInformation = () => (
         <PlayerInformation
             id={teacherId}
             step={step}
             cumulativePoints={cumulativePoints}
+            comment={comment}
+            showComment={true}
         />
     )
-
 
     const renderLinearSolution = () => (
         <LinearSolution
@@ -55,18 +56,17 @@ const Template: ComponentStory<typeof TrialWithNetworkLayout> = function (args) 
         />
     )
 
-    const renderTimer = () => <Timer time={timer}/>
+    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => {}}/>
 
     return (
         <>
-            <Header totalPoints={0} title={"Individual Trial"}/>
+            <Header totalPoints={0} title={"Layout"}/>
             <TrialWithNetworkLayout
                 network={renderNetwork()}
                 timer={renderTimer()}
                 playerInformation={renderPlayerInformation()}
                 linearSolution={renderLinearSolution()}
-
-
+                {...args}
             />
         </>
     );
@@ -74,5 +74,9 @@ const Template: ComponentStory<typeof TrialWithNetworkLayout> = function (args) 
 
 export const ExampleOne = Template.bind({});
 
-ExampleOne.args = {};
+ExampleOne.args = {
+    showLinearSolution: true,
+    showPlayerInformation: true,
+    showTimer: true
+};
 

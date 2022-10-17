@@ -1,4 +1,4 @@
-import {Paper, Typography} from "@mui/material";
+import {Paper, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
 
 interface PlayerInformationProps {
@@ -8,31 +8,38 @@ interface PlayerInformationProps {
     cumulativePoints: number;
     /** Player's comment */
     comment?: string;
+    showComment?: boolean;
 }
 
 
-export const PlayerInformation:FC<PlayerInformationProps> = (props) => {
+export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
+    const {showComment = true} = props;
     return (
         <>
-            <Paper sx={{p: 2}} variant="outlined">
-                <Typography gutterBottom variant="h4" component="div" align={'center'}>
-                    Player {props.id}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
+            <Paper sx={{p: 2}} elevation={0}>
+                <Typography gutterBottom variant="h5" component="div">
                     Step {props.step}
                 </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    Cumulative points {props.cumulativePoints}
+                <Typography gutterBottom variant="h5" component="div">
+                    Points {props.cumulativePoints}
                 </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    Comment:
-                </Typography>
-                <Paper sx={{p: 2, maxHeight: "200px", overflow: 'auto'}}>
-                    <Typography variant="body1">
-                        {props.comment ? props.comment : "No comment"}
+                {(showComment) ? (
+                    <Typography gutterBottom variant="h5" component="div">
+                        Player {props.id} comment:
                     </Typography>
-                </Paper>
+                ) : null}
             </Paper>
+            {(showComment) ? (
+                <TextField
+                    id="outlined-multiline-static"
+                    label=""
+                    multiline
+                    fullWidth
+                    rows={10}
+                    InputProps={{readOnly: true}}
+                    defaultValue={props.comment ? props.comment : "No comment"}
+                />
+            ) : null}
         </>
     )
 }

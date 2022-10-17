@@ -76,7 +76,7 @@ const AnimatedNetwork: FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInt
     }
 
     return (
-        <Grid sx={{flexGrow: 1}} direction="column" container spacing={4} justifyContent="center" alignItems="center">
+        <Grid container direction="column" spacing={4} justifyContent="center" alignItems="center">
             <Grid item>
                 <StaticNetwork
                     edges={edges}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
+import {Grid} from "@mui/material";
 
 
 interface TrialWithNetworkLayoutInterface {
@@ -7,50 +7,39 @@ interface TrialWithNetworkLayoutInterface {
     timer: React.ReactNode;
     playerInformation: React.ReactNode;
     linearSolution?: React.ReactNode;
+    showLinearSolution?: boolean;
+    showPlayerInformation?: boolean;
+    showTimer?: boolean;
 }
 
 
 export const TrialWithNetworkLayout: React.FC<TrialWithNetworkLayoutInterface> = (props) => {
-
-    const [showTrial, setShowTrial] = React.useState<boolean>(true);
-
+    const {showLinearSolution = true, showPlayerInformation = true, showTimer = true} = props;
     return (
-        <>
-            {(showTrial) ? (
-                <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
-                    <Grid item xs={7}>
+
+        <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
+            <Grid item xs={8}>
+                <Grid container direction="column" justifyContent="space-between" alignItems="center">
+                    <Grid item>
                         {props.network}
                     </Grid>
+
+                    <Grid item>
+                        {(showLinearSolution) ? (props.linearSolution) : null}
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item xs={4}>
+                <Grid container direction="column">
                     <Grid item xs={4}>
-                        {props.timer}
+                        {(showTimer) ? (props.timer) : null}
                     </Grid>
-
-                    <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
-                        {props.playerInformation}
+                    <Grid item xs={8}>
+                        {(showPlayerInformation) ? (props.playerInformation) : null}
                     </Grid>
-
-                    <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
-                        <Paper sx={{p: 2, margin: 2}}>
-                            {props.linearSolution}
-                        </Paper>
-                    </Grid>
-
-                </Grid>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
-            }
-        </>
+                </Grid>
+            </Grid>
+        </Grid>
     )
 }
 
