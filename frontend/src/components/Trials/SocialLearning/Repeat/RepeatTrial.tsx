@@ -25,17 +25,9 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
     const {
         step,
         points,
-        setStep,
-        setPoints,
         setIsTimerDone,
-        setMoves
-    } = useNetworkStates(props.onNextTrialHandler, maxSteps)
-
-    const onNextStepHandler = (stepNumber: number, addPoints: number) => {
-        setStep(stepNumber);
-        setPoints(points + addPoints);
-        setMoves(props.moves.slice(0, stepNumber));
-    }
+        onNextStepHandler
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
 
     const renderNetwork = () => (
         <HighlightedNetwork

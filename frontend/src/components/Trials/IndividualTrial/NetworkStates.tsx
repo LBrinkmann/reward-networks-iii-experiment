@@ -1,6 +1,11 @@
 import {useEffect, useState} from "react";
+import {StaticNetworkEdgeInterface} from "../../Network/StaticNetwork/StaticNetwork";
 
-const useNetworkStates = (onNextTrialHandler: (moves: number[]) => void, maxSteps?: number) => {
+const useNetworkStates = (
+    onNextTrialHandler: (moves: number[]) => void,
+    edges: StaticNetworkEdgeInterface[],
+    maxSteps?: number) => {
+
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
     const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
@@ -37,6 +42,7 @@ const useNetworkStates = (onNextTrialHandler: (moves: number[]) => void, maxStep
                 window.localStorage.removeItem('isBlankScreen');
                 // from network components
                 window.localStorage.removeItem('currentNodeInx');
+                window.localStorage.removeItem('currentMoveInx');
                 window.localStorage.removeItem('movesDynamicNetwork');
                 // from timer
                 window.localStorage.removeItem('timePassed');
@@ -48,7 +54,23 @@ const useNetworkStates = (onNextTrialHandler: (moves: number[]) => void, maxStep
         }
     }, [step, isTimerDone]);
 
-    return {step, points, isTimerDone, moves, setStep, setPoints, setIsTimerDone, setMoves};
+    const onNextStepHandler = (currentNode: number, nextNode: number) => {
+        // Update moves
+        if (moves.length === 0) {
+            setMoves([currentNode, nextNode]);
+        } else {
+            setMoves([...moves, nextNode]);
+        }
+        // Update state
+        setStep(step + 1);
+        // Select current edge
+        const currentEdge = edges.filter(
+            (edge) => edge.source_num === currentNode && edge.target_num === nextNode)[0];
+        // Update cumulative reward
+        setPoints(points + currentEdge.reward);
+    }
+
+    return {step, points, isTimerDone, moves, setStep, setPoints, setIsTimerDone, setMoves, onNextStepHandler};
 }
 
 export default useNetworkStates;

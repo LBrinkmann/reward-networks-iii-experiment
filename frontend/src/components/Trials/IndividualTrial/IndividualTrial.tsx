@@ -26,35 +26,16 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         step,
         points,
         isTimerDone,
-        moves,
-        setStep,
-        setPoints,
         setIsTimerDone,
-        setMoves
-    } = useNetworkStates(props.onNextTrialHandler, maxSteps)
-
-    const onNodeClickHandler = (currentNode: number, nextNode: number) => {
-        // Update moves
-        if (moves.length === 0) {
-            setMoves([currentNode, nextNode]);
-        } else {
-            setMoves([...moves, nextNode]);
-        }
-        // Update state
-        setStep(step + 1);
-        // Select current edge
-        const currentEdge = props.edges.filter(
-            (edge) => edge.source_num === currentNode && edge.target_num === nextNode)[0];
-        // Update cumulative reward
-        setPoints(points + currentEdge.reward);
-    }
+        onNextStepHandler
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
 
     const renderNetwork = () => (
         <DynamicNetwork
             nodes={props.nodes}
             edges={props.edges}
-            onNodeClickParentHandler={onNodeClickHandler}
-            isDisabled={isTimerDone}
+            onNodeClickParentHandler={onNextStepHandler}
+            isDisabled={isTimerDone || step >= maxSteps}
         />
     )
 
