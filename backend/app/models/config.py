@@ -9,7 +9,7 @@ class ExperimentSettings(BaseSettings):
 
     # other experiment settings
     experiment_type: str = 'reward-network-iii'  # name of the experiment
-    rewrite_previous_data: bool = True
+    rewrite_previous_data: bool = False
     n_sessions_first_generation: int = 13  # 3 (humans) + 7 (humans) + 3 (AI)
     n_ai_players: int = 3
     n_sessions_per_generation: int = 20
