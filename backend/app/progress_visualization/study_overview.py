@@ -35,7 +35,7 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
             else:
                 color = '#F4B5BD'
 
-            if not session.available:
+            if session.expired:
                 color = '#D5D5D3'
                 label = 'NA'
 
