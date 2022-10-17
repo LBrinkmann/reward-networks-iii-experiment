@@ -32,5 +32,12 @@ export const ExampleOne = Template.bind({});
 ExampleOne.args = {
     moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
     edges:  data[0].edges,
-    nodes: data[0].nodes
+    nodes: data[0].nodes,
+    onNextStepHandler: (currentNodeInx: number, points: number) => {
+        if (currentNodeInx === 8) {
+            window.localStorage.removeItem('currentNodeInx');
+            location.reload();
+        }
+    },
+
 };
