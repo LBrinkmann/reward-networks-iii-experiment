@@ -19,11 +19,14 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
         g = session.generation
         s_num = session.session_num_in_generation
         trial_num = session.current_trial_num
+        trial = session.trials[trial_num]
         subject_in_the_session = True if session.subject_id else False
         is_ai_player = session.ai_player
         label = f'{trial_num + 1}' if subject_in_the_session else ' '
         title = f'Session {s_num} in generation {g}\n'
-        title += f'Created at: {session.created_at}\n'
+        title += f'Current trial: {trial_num + 1} ({trial.trial_type})\n'
+        title += f'Created at: ' \
+                 f'{session.created_at.strftime("%m.%d.%Y %H:%M:%S")}\n'
 
         if session.available:
             color = '#85D4E3'
@@ -35,9 +38,9 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
             else:
                 color = '#F4B5BD'
 
-            if session.expired:
-                color = '#D5D5D3'
-                label = 'NA'
+        if session.expired:
+            color = '#D5D5D3'
+            label = 'NA'
 
         if is_ai_player:
             color = '#FAD77B'
