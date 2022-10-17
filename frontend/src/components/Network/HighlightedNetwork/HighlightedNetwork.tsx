@@ -12,27 +12,40 @@ export interface HighlightedNetworkInterface {
     /** The list of moves with the starting node as the first element */
     moves: number[];
     /** Hook to handle parent states on new step */
-    onNextStepHandler?: (stepNumber: number, cumulativeScore: number) => void;
+    onNextStepHandler?: (stepNumber: number, addPoints: number) => void;
 
 }
 
 export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: HighlightedNetworkInterface) => {
     const {moves} = props;
 
-    const [currentNodeId, setCurrentNodeId] = useState<number>(props.moves[0]);
-    const [currentMoveInx, setCurrentMoveInx] = useState<number>(0);
+    const [currentNodeInx, setCurrentNodeInx] = useState<number>(0);
     const [edges, setEdges] = useState<StaticNetworkEdgeInterface[]>(props.edges);
-    const [cumulativeScore, setCumulativeScore] = useState<number>(0);
+    const [points, setPoints] = useState<number>(0);
+
+    // get states from local storage to prevent losing state on refresh
+    useEffect(() => {
+        const n = JSON.parse(window.localStorage.getItem('currentNodeInx'))
+        if (n) {
+            setCurrentNodeInx(n);
+            setEdges(updateEdges(moves[n], moves[n + 1]));
+        } else {
+            setEdges(updateEdges(moves[0], moves[1]));
+        }
+    }, []);
 
     useEffect(() => {
-        setEdges(updateEdges(moves[currentMoveInx], moves[currentMoveInx + 1]));
-    }, [currentMoveInx]);
+        // save states to local storage to prevent losing state on refresh
+        window.localStorage.setItem('currentNodeInx', JSON.stringify(currentNodeInx));
+
+        props.onNextStepHandler(currentNodeInx, points);
+    }, [currentNodeInx]);
 
     // Highlight the edge between the current node and the next node
     const updateEdges = (sourceInx: number, targetInx: number) => {
         return edges.map((edge: StaticNetworkEdgeInterface) => {
             if (edge.source_num === sourceInx && edge.target_num === targetInx) {
-                setCumulativeScore(cumulativeScore + edge.reward);
+                setPoints(edge.reward);
                 return {...edge, edgeStyle: "animated" as NetworkEdgeStyle};
             } else {
                 return {...edge, edgeStyle: "normal" as NetworkEdgeStyle};
@@ -41,10 +54,9 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
     }
 
     const OnNodeClick = (nodeId: number) => {
-        if((currentMoveInx < moves.length) && (nodeId === moves[currentMoveInx + 1])) {
-            props.onNextStepHandler(currentMoveInx + 1, cumulativeScore);
-            setCurrentNodeId(nodeId);
-            setCurrentMoveInx(currentMoveInx + 1);
+        if((currentNodeInx < moves.length) && (nodeId === moves[currentNodeInx + 1])) {
+            setEdges(updateEdges(moves[currentNodeInx+1], moves[currentNodeInx + 2]));
+            setCurrentNodeInx(currentNodeInx + 1);
         }
     }
 
@@ -54,8 +66,8 @@ export const HighlightedNetwork: FC<HighlightedNetworkInterface> = (props: Highl
                 <StaticNetwork
                     edges={edges}
                     nodes={props.nodes}
-                    currentNodeId={currentNodeId}
-                    possibleMoves={[moves[currentMoveInx + 1]] || []}
+                    currentNodeId={moves[currentNodeInx]}
+                    possibleMoves={[moves[currentNodeInx + 1]] || []}
                     size={460}
                     onNodeClickHandler={OnNodeClick}
                 />
