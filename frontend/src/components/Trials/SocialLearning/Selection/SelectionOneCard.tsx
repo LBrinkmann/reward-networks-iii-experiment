@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Card, CardActions, CardContent, Button, Typography} from "@mui/material";
+import {Card, CardActions, CardContent, Button, Typography} from "@mui/material";
 import PersonIcon from '@mui/icons-material/Person';
 
 
@@ -11,7 +11,7 @@ interface SocialLearningSelectionOneCardProps {
 
 const SelectionOneCard: React.FC<SocialLearningSelectionOneCardProps> = (props: SocialLearningSelectionOneCardProps) => {
     return (
-        <Card sx={{maxWidth: 200, alignItems: 'center', justifyContent: 'center'}}>
+        <Card sx={{width: 230, alignItems: 'center', justifyContent: 'center'}}>
             <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <PersonIcon sx={{height: 120, width: 120}} color="action"/>
                 <Typography gutterBottom variant="h5" component="div">
