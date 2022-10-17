@@ -153,9 +153,9 @@ async def create_generation(generation: int,
 
 def create_trials(experiment_num: int, experiment_type: str,
                   generation: int, session_idx: int,
-                  n_social_learning_trials: int = 3,
+                  n_social_learning_trials: int = 2,
                   n_individual_trials: int = 3,
-                  n_demonstration_trials: int = 3) -> Session:
+                  n_demonstration_trials: int = 2) -> Session:
     """
     Generate one session.
     """

@@ -4,6 +4,7 @@ from typing import Union
 from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 
+from models.config import ExperimentSettings
 from models.session import Session, SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
@@ -51,7 +52,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
 
 async def initialize_session(subject: Subject):
     # Check and remove expired sessions
-    await replace_stale_session()
+    await replace_stale_session(ExperimentSettings())
 
     # assign subject to any available session
     await Session.find_one(Session.available == True).update(
@@ -101,12 +102,15 @@ async def update_availability_status_child_sessions(session: Session):
     ).update(Set({Session.available: True}))
 
 
-async def replace_stale_session(time_delta: int = 30):
+async def replace_stale_session(exp_config: ExperimentSettings,
+                                time_delta: int = 30):
     """
     Replace the unfinished session so as not to break the social learning chains
 
     Parameters
     ----------
+    exp_config: ExperimentSettings
+        Experiment settings
     time_delta : int
         Time in minutes after which the session is considered expired
     """
@@ -128,8 +132,15 @@ async def replace_stale_session(time_delta: int = 30):
     # make empty duplicates of the expired sessions
     for s in new_expired:
         # create an empty session to replace the expired one
-        new_s = create_trials(s.experiment_num, s.experiment_type,
-                              s.generation, s.session_num_in_generation)
+        new_s = create_trials(
+            experiment_num=s.experiment_num,
+            experiment_type=s.experiment_type,
+            generation=s.generation,
+            session_idx=s.session_num_in_generation,
+            n_social_learning_trials=exp_config.n_social_learning_trials,
+            n_individual_trials=exp_config.n_individual_trials,
+            n_demonstration_trials=exp_config.n_demonstration_trials,
+        )
         new_s.advise_ids = s.advise_ids
         new_s.child_ids = s.child_ids
         new_s.unfinished_parents = 0

@@ -202,8 +202,9 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
 
 
 @pytest.mark.asyncio
-async def test_replace_stale_session(default_client: httpx.AsyncClient,
-                                     create_empty_experiment):
+async def test_replace_stale_session(create_empty_experiment,
+                                     default_client: httpx.AsyncClient,
+                                     e_config: ExperimentSettings):
     subj = Subject(prolific_id='test-1')
 
     await subj.save()
@@ -218,7 +219,7 @@ async def test_replace_stale_session(default_client: httpx.AsyncClient,
 
     await session.save()
 
-    await replace_stale_session(10)
+    await replace_stale_session(e_config, 10)
 
     replaced_session = await Session.get(session_id)
     expired_session = await Session.find_one(Session.expired == True)
@@ -226,6 +227,7 @@ async def test_replace_stale_session(default_client: httpx.AsyncClient,
     assert expired_session.expired == True
     assert replaced_session.subject_id is None
     assert expired_session.subject_id == subj.id
+    assert len(replaced_session.trials) == len(expired_session.trials)
 
     # Clean up resources
     await Session.find().delete()
