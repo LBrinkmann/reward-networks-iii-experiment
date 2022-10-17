@@ -10,7 +10,6 @@ import RepeatTrial from "./SocialLearning/Repeat";
 import TryYourselfTrial from "./SocialLearning/TryYourself";
 import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes, Trial} from "../../apis/apiTypes";
 import Debriefing from "./Outro/Debriefing";
-import {Box, LinearProgress, Typography} from "@mui/material";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 
 interface TrialInterface {
@@ -19,8 +18,10 @@ interface TrialInterface {
 
 const Trial: React.FC<TrialInterface> = (props) => {
     const {trial, loading, error, axiosGet, axiosPost} = useTrialAPI();
+
     const [trialType, setTrialType] = useState<string>('');
     const [socialLearningType, setSocialLearningType] = useState<string>('');
+    const [waitingForTheNextTrial, setWaitingForTheNextTrial] = useState<boolean>(false);
 
     useEffect(() => {
         if (trial) {
@@ -34,6 +35,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                          selectedAdvisorId: string = '',
                          writtenStrategy: string = '') => {
         let payload: {};
+        let waitTime = 1000;
         switch (trialType) {
             case 'consent':
                 payload = {moves: []};  // TODO: add {consent: true} to payload
@@ -59,13 +61,17 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 payload = {moves: []};
                 break;
         }
-
-        axiosPost({data: payload}).then(
-            () => {
-                props.nextTrialHandler();
-                axiosGet({});
-            }
-        )
+        setWaitingForTheNextTrial(true);
+        // wait before starting the next trial
+        setTimeout(() => {
+            setWaitingForTheNextTrial(false);
+            axiosPost({data: payload}).then(
+                () => {
+                    props.nextTrialHandler();
+                    axiosGet({});
+                }
+            )
+        }, waitTime);
     }
 
     const onSocialLearningSelectionClickHandler = (advisorId: string) => {
@@ -142,13 +148,13 @@ const Trial: React.FC<TrialInterface> = (props) => {
     return (
         <>
             {error && (console.log(error))}
-            {!loading && !error ?
+            {!loading && !error && !waitingForTheNextTrial ?
                 (
                     <>
                         <Header title={"Trial: " + trialType}/>
                         {renderTrial(trialType, trial)}
                     </>
-                ) : ( <WaitForNextTrialScreen />)
+                ) : (<WaitForNextTrialScreen/>)
             }
         </>
     );
