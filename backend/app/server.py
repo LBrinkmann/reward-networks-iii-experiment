@@ -44,9 +44,8 @@ async def startup_event():
 
 async def generate_experiment_sessions():
     if config.rewrite_previous_data:
-        if config.rewrite_previous_data:
-            await Session.find().delete()
-            await Subject.find().delete()
+        await Session.find().delete()
+        await Subject.find().delete()
 
     sessions = await Session.find().first_or_none()
 
@@ -66,9 +65,9 @@ async def generate_experiment_sessions():
                 n_demonstration_trials=config.n_demonstration_trials,
             )
 
-    if config.SIMULATE_FIRST_GENERATION:
-        from tests.simultate_session_data import simulate_data
-        await simulate_data(1)
+        if config.SIMULATE_FIRST_GENERATION:
+            from tests.simultate_session_data import simulate_data
+            await simulate_data(1)
 
 
 def generate_frontend_types():
