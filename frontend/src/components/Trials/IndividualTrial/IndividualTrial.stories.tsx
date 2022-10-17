@@ -29,7 +29,7 @@ ExampleOne.args = {
     timer: 30,
     edges: data[examples_rand[0]].edges,
     nodes: data[examples_rand[0]].nodes,
-    onNextTrialHandler: () => { },
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: false
 };
 
@@ -39,7 +39,7 @@ ExampleTwo.args = {
     timer: 30,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { },
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: false
 };
 
@@ -49,6 +49,6 @@ ScreenAfterTrialEnd.args = {
     timer: 30,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { },
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: true
 };
