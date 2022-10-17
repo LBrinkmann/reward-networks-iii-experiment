@@ -3,7 +3,6 @@ import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
-import WaitForNextTrial from "../../IndividualTrial/WaitForNextTrial";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -20,12 +19,11 @@ interface ObservationTrialInterface extends AnimatedNetworkInterface {
 
 
 export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
-    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfAnimation = 3, waitBeforeNextTrial = 2} = props;
+    const {maxSteps = 8} = props;
 
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
     const [startAnimation, setStartAnimation] = useState<boolean>(false);
-    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
 
     // wait for 2 seconds before starting the animation
     useEffect(() => {
@@ -37,17 +35,8 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     // Go to the next trial when all the steps are done
     useEffect(() => {
         if (step === maxSteps) {
-            // wait for `waitAfterTheEndOfAnimation` second
-            setTimeout(() => {
-                // hide the trial content
-                setIsBlankScreen(true);
-            }, waitAfterTheEndOfAnimation * 1000);
-
-            // wait for `waitBeforeNextTrial` second
-            setTimeout(() => {
-                // go to the next trial
-                props.onNextTrialHandler();
-            }, waitBeforeNextTrial * 1000);
+            // go to the next trial
+            props.onNextTrialHandler();
         }
     }, [step]);
 
@@ -85,20 +74,15 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     )
 
     return (
-        <>
-            {(!isBlankScreen) ? (
-                <TrialWithNetworkLayout
-                    network={renderNetwork()}
-                    timer={<> </>}
-                    playerInformation={renderPlayerInformation()}
-                    linearSolution={renderLinearSolution()}
-                    showTimer={false}
-                    showPlayerInformation={true}
-                    showLinearSolution={true}
-                />
-            ) : (<WaitForNextTrial/>)
-            }
-        </>
+        <TrialWithNetworkLayout
+            network={renderNetwork()}
+            timer={<> </>}
+            playerInformation={renderPlayerInformation()}
+            linearSolution={renderLinearSolution()}
+            showTimer={false}
+            showPlayerInformation={true}
+            showLinearSolution={true}
+        />
     );
 }
 

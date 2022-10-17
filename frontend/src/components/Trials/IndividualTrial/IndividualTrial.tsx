@@ -107,7 +107,6 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
     const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
 
     return (
-
         <TrialWithNetworkLayout
             network={renderNetwork()}
             timer={renderTimer()}
@@ -118,7 +117,6 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
             showPlayerInformation={true}
             showLinearSolution={false}
         />
-
     );
 };
 
