@@ -11,6 +11,7 @@ import TryYourselfTrial from "./SocialLearning/TryYourself";
 import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes, Trial} from "../../apis/apiTypes";
 import Debriefing from "./Outro/Debriefing";
 import {Box, LinearProgress, Typography} from "@mui/material";
+import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -147,20 +148,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         <Header title={"Trial: " + trialType}/>
                         {renderTrial(trialType, trial)}
                     </>
-                ) : (
-                    <Box
-                        sx={{width: '25%'}}
-                        style={{margin: 'auto', marginTop: '20%'}}
-                        justifyContent="center"
-                        alignItems="center"
-                        minHeight="90vh"
-                    >
-                        <Typography variant="h6" align={'center'}>
-                            Waiting for the next trial...
-                        </Typography>
-                        <LinearProgress/>
-                    </Box>
-                )
+                ) : ( <WaitForNextTrialScreen />)
             }
         </>
     );

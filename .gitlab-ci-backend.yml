@@ -1,6 +1,8 @@
 variables:
   DEPLOYMENT_VARS: "MONGO_URL, DATABASE_NAME, N_GENERATIONS, SIMULATE_FIRST_GENERATION"
   APP_NAME: rn-iii-backend
+  N_GENERATIONS: 3
+  SIMULATE_FIRST_GENERATION: "True"
 
 include:
   - project: "mpib/chm/common/deploy-pipeline"
