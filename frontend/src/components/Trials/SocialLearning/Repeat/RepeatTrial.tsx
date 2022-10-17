@@ -4,6 +4,7 @@ import LinearSolution from "../../../Network/LinearSolution";
 import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/HighlightedNetwork/HighlightedNetwork";
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
 import Timer from "../../IndividualTrial/Timer";
+import useNetworkStates from "../../IndividualTrial/NetworkStates";
 
 
 interface RepeatTrialInterface extends HighlightedNetworkInterface {
@@ -11,12 +12,9 @@ interface RepeatTrialInterface extends HighlightedNetworkInterface {
     teacherId: number;
     /** Teacher's comment */
     comment?: string;
-    maxSteps?: number;
-    hideTrial?: boolean;
-    waitBeforeNextTrial?: number;
-    waitAfterTheEndOfTrial?: number;
     /** Handle the end of the trial */
     onNextTrialHandler: () => void;
+    maxSteps?: number;
     timer?: number;
 }
 
@@ -24,19 +22,19 @@ interface RepeatTrialInterface extends HighlightedNetworkInterface {
 export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
     const {maxSteps = 8, timer = 30} = props;
 
-    const [step, setStep] = useState<number>(0);
-    const [points, setPoints] = useState<number>(0);
-
-    // Go to the next trial when all the steps are done
-    useEffect(() => {
-        if (step === maxSteps) {
-            props.onNextTrialHandler();
-        }
-    }, [step]);
+    const {
+        step,
+        points,
+        setStep,
+        setPoints,
+        setIsTimerDone,
+        setMoves
+    } = useNetworkStates(props.onNextTrialHandler, maxSteps)
 
     const onNextStepHandler = (stepNumber: number, cumulativeScore: number) => {
         setStep(stepNumber);
         setPoints(cumulativeScore);
+        setMoves(props.moves.slice(0, stepNumber));
     }
 
     const renderNetwork = () => (
@@ -66,9 +64,7 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
         />
     )
 
-    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => {
-        setStep(maxSteps)
-    }}/>
+    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
 
     return (
         <TrialWithNetworkLayout
