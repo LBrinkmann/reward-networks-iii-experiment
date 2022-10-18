@@ -7,7 +7,7 @@ import TutorialTip from './TutorialTip';
 
 
 export default {
-    title: 'Experiment/TutorialTip',
+    title: 'Tutorial/TutorialTip',
     component: TutorialTip,
     argTypes: {
         tutorialIdx: {

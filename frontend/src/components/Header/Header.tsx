@@ -1,6 +1,6 @@
 import React from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
-import TutorialTip from "../TutorialTip";
+import TutorialTip from "../Tutorial/TutorialTip";
 
 interface HeaderInterface {
     /** Collected in the experiment points */
