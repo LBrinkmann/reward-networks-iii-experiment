@@ -14,12 +14,12 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearning
 
     const renderOneCard = (advisor: { advisorId: string, averageScore: number }, inx: number) => {
         const onClickHandler = () => {
-            props.onClickHandler(advisor.advisorId, inx);
+            props.onClickHandler(advisor.advisorId, inx + 1);
         }
         return (
                 <Grid item key={inx}>
                     <SelectionOneCard
-                        personInx={inx}
+                        personInx={inx + 1}
                         averageScore={advisor.averageScore}
                         onClickHandler={onClickHandler}
                         isTutorial={isTutorial && inx === 2}
