@@ -91,8 +91,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
     }
 
     const onSocialLearningSelectionClickHandler = (advisorId: string, inx: number) => {
-        window.localStorage.setItem('teacherInx', JSON.stringify(inx));
-        setTeacherInx(inx);
+        window.localStorage.setItem('teacherInx', JSON.stringify(inx + 1));
+        setTeacherInx(inx + 1);
         OnNextTrial([], advisorId);
     }
 
