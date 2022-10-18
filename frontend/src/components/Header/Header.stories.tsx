@@ -25,5 +25,4 @@ export const HeaderInTutorial = Template.bind({});
 
 HeaderInTutorial.args = {
     totalPoints: 0,
-    tutorialIdx: 0
 };

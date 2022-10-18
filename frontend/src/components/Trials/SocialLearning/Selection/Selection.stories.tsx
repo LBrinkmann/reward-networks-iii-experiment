@@ -30,3 +30,16 @@ DefaultStory.args = {
         {advisorInx: 5, averageScore: -1000},
     ],
 };
+
+export const Tutorial = Template.bind({});
+
+Tutorial.args = {
+    advisors: [
+        {advisorInx: 1, averageScore: 120},
+        {advisorInx: 2, averageScore: -500},
+        {advisorInx: 3, averageScore: -60},
+        {advisorInx: 4, averageScore: 800},
+        {advisorInx: 5, averageScore: -1000},
+    ],
+    isTutorial: true,
+};

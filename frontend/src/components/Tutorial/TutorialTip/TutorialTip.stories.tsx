@@ -2,36 +2,32 @@ import React from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
-
 import TutorialTip from './TutorialTip';
 
 
 export default {
     title: 'Tutorial/TutorialTip',
     component: TutorialTip,
-    argTypes: {
-        tutorialIdx: {
-            control: {type: "select", options: [0, 1, 2, 3]},
-        },
-        idx: {
-            control: {type: "select", options: [0, 1, 2, 3]},
-        },
-        placement: {
-            control: {type: "select", options: ["top", "right", "bottom", "left"]},
-        },
-
-    },
 } as ComponentMeta<typeof TutorialTip>;
 
 const Template: ComponentStory<typeof TutorialTip> = (args) =>
     <TutorialTip {...args}>
-        <h1> Test Tutorial </h1>
+        <h1 style={{backgroundColor: 'seagreen'}}> Hover over me! </h1>
     </TutorialTip>;
 
-export const DefaultStory = Template.bind({});
+export const Tutorial = Template.bind({});
 
-DefaultStory.args = {
-    idx: 0,
-    tutorialIdx: 0,
-    arrow: true
+Tutorial.args = {
+    tutorialId: "social_learning_selection_player",
+    isTutorial: true,
+    isShowTip: false
 };
+
+export const Tip = Template.bind({});
+
+Tip.args = {
+    tutorialId: "social_learning_selection_player",
+    isTutorial: false,
+    isShowTip: true
+};
+
