@@ -69,6 +69,12 @@ async def update_session(session):
     # if this is the last trial minus debriefing trial
     if (session.current_trial_num + 1) == (len(session.trials) - 1):
         await end_session(session)
+        # increase trial index by 1 to show debriefing trial
+        session.current_trial_num += 1
+        # save session
+        await session.save()
+    elif (session.current_trial_num + 1) == len(session.trials):
+        pass
     else:
         # increase trial index by 1
         session.current_trial_num += 1
