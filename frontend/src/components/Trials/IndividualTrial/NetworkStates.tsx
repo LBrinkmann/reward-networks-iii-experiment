@@ -49,7 +49,7 @@ const useNetworkStates = (
 
                 // go to the next trial
                 onNextTrialHandler(moves);
-            }, 1000);
+            }, 500);
 
         }
     }, [step, isTimerDone]);
