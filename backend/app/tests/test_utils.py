@@ -7,3 +7,7 @@ def test_estimate_solution_score():
     moves = [0, 5, 3, 4, 0, 5, 6, 7, 9]
     score = estimate_solution_score(network, moves)
     assert score == -240
+
+    moves = []
+    score = estimate_solution_score(network, moves)
+    assert score == 0
