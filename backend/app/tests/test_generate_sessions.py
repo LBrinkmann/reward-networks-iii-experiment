@@ -62,8 +62,14 @@ async def test_create_trials(default_client: httpx.AsyncClient,):
                                 'debriefing', 'individual']
 
     session = create_trials(
-        experiment_num=0, experiment_type='test', generation=1, session_idx=0,
-        n_social_learning_trials=n_soc_learning, n_individual_trials=n_ind)
+        experiment_num=0,
+        experiment_type='test',
+        generation=1,
+        session_idx=0,
+        n_social_learning_trials=n_soc_learning,
+        n_individual_trials=n_ind,
+        n_demonstration_trials=n_demonstration
+    )
 
     # add n_all_trials because social_learning_selection counts as a trial
     assert len(session.trials) == n_all_trials + n_soc_learning
