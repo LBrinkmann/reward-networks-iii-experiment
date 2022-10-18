@@ -9,6 +9,7 @@ axios.defaults.baseURL = config.backendUrl + '/session/';
 
 export const useTrialAPI = () => {
     const [trial, setTrial] = useState<Trial>();
+    const [postResponse, setPostResponse] = useState<object>({});
     const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
     const [error, setError] = useState<AxiosError>();
@@ -47,7 +48,6 @@ export const useTrialAPI = () => {
             params.headers = {accept: '*/*'}
             const result = await axios.request(params);
             setTrial(result.data);
-            // console.log(result.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -56,13 +56,14 @@ export const useTrialAPI = () => {
     };
 
     const axiosPost = async (params: AxiosRequestConfig) => {
+        // SEE issue here: https://stackoverflow.com/questions/48255545/axios-getting-two-requests-options-post
         setLoading(true);
         try {
             params.method = 'POST';
             params.url = searchParams.get("userId") + '/' + trial.trial_type;
             params.headers = {"Content-Type": "application/json"}
             const result = await axios.request(params);
-            setTrial(result.data);
+            setPostResponse(result.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -71,5 +72,5 @@ export const useTrialAPI = () => {
     };
 
 
-    return {trial, error, loading, axiosGet, axiosPost};
+    return {trial, error, loading, postResponse, axiosGet, axiosPost};
 }

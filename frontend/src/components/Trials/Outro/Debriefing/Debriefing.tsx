@@ -1,14 +1,18 @@
 import React from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import Header from "../../../Header";
 
 interface DebriefingProps {
-    onClickHandler: () => void;
+    redirect: string;
 }
 
 
 const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
+
+    const onClick = () => {
+        window.open(props.redirect, "_blank");
+    }
+
     return (
         <>
             <Grid container spacing={4}>
@@ -34,7 +38,7 @@ const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={props.onClickHandler}
+                                onClick={onClick}
                                 startIcon={<CheckIcon/>}>️
                                 Finish the study
                             </Button>

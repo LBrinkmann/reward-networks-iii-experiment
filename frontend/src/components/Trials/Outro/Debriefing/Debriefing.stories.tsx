@@ -10,14 +10,11 @@ export default {
 } as ComponentMeta<typeof Debriefing>;
 
 const Template: ComponentStory<typeof Debriefing> = function (args) {
-    return (
-        <>
-            <Debriefing {...args}/>
-        </>
-    );
+    return <Debriefing {...args}/>
 };
 
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
+    redirect: "https://www.prolific.co/"
 };

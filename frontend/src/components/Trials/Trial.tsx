@@ -52,14 +52,13 @@ const Trial: React.FC<TrialInterface> = (props) => {
                          writtenStrategy: string = '') => {
         let payload: {};
         let waitTime = 1000;
+        // setup post request payload
         switch (trialType) {
             case 'consent':
                 payload = {moves: []};  // TODO: add {consent: true} to payload
                 break;
             case 'social_learning_selection':
-                payload = {
-                    advisor_id: selectedAdvisorId,
-                } as Advisor;
+                payload = {advisor_id: selectedAdvisorId,} as Advisor;
                 break;
             case 'individual':
                 payload = {moves: moves} as Solution;
@@ -72,9 +71,6 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 break;
             case 'written_strategy':
                 payload = {strategy: writtenStrategy} as WrittenStrategyApiTypes;
-                break;
-            case 'debriefing':
-                payload = {moves: []};
                 break;
         }
         setWaitingForTheNextTrial(true);
@@ -185,7 +181,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
             case 'debriefing':
-                return <Debriefing onClickHandler={OnNextTrial}/>;
+                return <Debriefing redirect={'https://www.prolific.co/'}/>; // TODO: data.redirect_link
             default:
                 return <> </>;
         }
