@@ -1,16 +1,23 @@
 import React from "react";
-import {Box, Button, Grid, Paper, Typography} from "@mui/material";
+import {Button, Grid, Paper, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Header from "../../../Header";
 
 interface ConsentFormProps {
     onClickAgreeHandler: () => void;
-    onClickDisagreeHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    /* Redirect URL */
+    onDisagreeRedirect: string;
 }
 
 
 const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
+    const onDisagree = () => {
+        // clean local storage
+        localStorage.clear();
+        // redirect to prolific
+        window.open(props.onDisagreeRedirect,"_self");  // , "_blank" to open in a new tab
+    }
+
     return (
         <>
             <Grid container spacing={4}>
@@ -132,7 +139,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                             <Button
                                 variant="contained"
                                 color="error"
-                                onClick={props.onClickDisagreeHandler}
+                                onClick={onDisagree}
                                 startIcon={<CancelIcon/>}>️
                                 I do NOT consent to participate in the study.
                             </Button>

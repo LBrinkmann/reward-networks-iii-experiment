@@ -125,7 +125,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case 'consent':
                 return <ConsentForm
                     onClickAgreeHandler={OnNextTrial}
-                    onClickDisagreeHandler={() => null}
+                    onDisagreeRedirect={'https://www.prolific.co/'}  // TODO: data.redirect_link
                 />;
             case 'social_learning_selection':
                 return <Selection

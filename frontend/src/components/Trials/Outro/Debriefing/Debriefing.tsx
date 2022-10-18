@@ -10,7 +10,10 @@ interface DebriefingProps {
 const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
 
     const onClick = () => {
-        window.open(props.redirect, "_blank");
+        // clean local storage
+        localStorage.clear();
+        // redirect to prolific
+        window.open(props.redirect,"_self");  // , "_blank" to open in a new tab
     }
 
     return (
