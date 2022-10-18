@@ -66,8 +66,8 @@ async def initialize_session(subject: Subject):
 
 
 async def update_session(session):
-    # if this is the last trial
-    if (session.current_trial_num + 1) == len(session.trials):
+    # if this is the last trial minus debriefing trial
+    if (session.current_trial_num + 1) == (len(session.trials) - 1):
         await end_session(session)
     else:
         # increase trial index by 1
