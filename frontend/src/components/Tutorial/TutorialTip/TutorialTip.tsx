@@ -1,26 +1,6 @@
-import {Divider, Typography, Tooltip, Button, Box} from "@mui/material";
+import {Box, Button, Divider, Tooltip, Typography} from "@mui/material";
 import React, {FC, useEffect, useState} from "react";
-
-const tutorialTip = [
-    {
-        id: "practice_node",
-        title: "Network Nodes",
-        text: "You start at the highlighted circle in the network.",
-        tip: "Click a node",
-    },
-    {
-        id: "practice_step_score",
-        title: "Score & Step",
-        text: "You always have 8 moves per network. Your goal is to collect the maximum total number of points in these 8 moves.",
-        tip: "Current step and cumulative score",
-    },
-    {
-        id: "social_learning_selection_player",
-        title: "Player selection",
-        text: `Select a player to see the solution of this player`,
-        tip: "Select a player",
-    },
-];
+import {tutorialTooltipContent} from "./TutorialTooltipContent";
 
 interface TutorialTipInterface {
     /** children of the tutorial component */
@@ -49,7 +29,7 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
     }, [isTutorial]);
 
     // const {title, text, tip} = tutorialTip[0];
-    const {title, text, tip} = tutorialTip.filter((tip) => tip.id === props.tutorialId)[0];
+    const {title, text, tip} = tutorialTooltipContent.filter((tip) => tip.id === props.tutorialId)[0];
 
     const onClose = () => {
         setOpen(false);
