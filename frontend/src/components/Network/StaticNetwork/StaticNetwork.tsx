@@ -2,7 +2,7 @@ import React from "react";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
-import { Node, Edge } from "../../../apis/apiTypes";
+import {Node, Edge} from "../../../apis/apiTypes";
 
 export interface StaticNetworkEdgeInterface extends Edge {
     reward: number;
@@ -59,7 +59,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         edges,
         nodes,
         onNodeClickHandler,
-        currentNodeId=null,
+        currentNodeId = null,
         possibleMoves = [],
         size = 470,
         nodeSize = 20,
@@ -105,8 +105,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             Text={node.display_name}
                             Radius={nodeSize}
                             onNodeClick={onNodeClickHandler}
-                            isActive={(node.starting_node && currentNodeId === idx) || (currentNodeId === idx)}
-                            isValidMove={possibleMoves.includes(idx)}
+                            isActive={(node.starting_node && currentNodeId === node.node_num) || (currentNodeId === node.node_num)}
+                            isValidMove={possibleMoves.includes(node.node_num)}
                             key={'node-' + idx}
                         />
                     );
