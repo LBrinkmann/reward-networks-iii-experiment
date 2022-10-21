@@ -9,6 +9,12 @@ export interface DynamicNetworkInterface {
     onNodeClickParentHandler?: (currentNode: number, nextNode: number) => void;
     /** Control weather subject can interact with the network */
     isDisabled?: boolean;
+    /** show tutorial tip */
+    showNodeTutorial?: boolean;
+    /** show tutorial tip */
+    showEdgeTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
 export interface MovesInterface {
@@ -18,13 +24,13 @@ export interface MovesInterface {
     previousMoves: number[];
 }
 
-const DynamicNetwork: React.FC<DynamicNetworkInterface> = (
-    {
+const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
+    const {
         nodes,
         edges,
         onNodeClickParentHandler,
         isDisabled = false,
-    }: DynamicNetworkInterface) => {
+    } = props;
 
     // get starting node
     const startingNode = nodes.filter(node => node.starting_node)[0];
@@ -73,9 +79,8 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = (
             nodes={nodes}
             currentNodeId={currentNodeInx}
             possibleMoves={moves.possibleMoves}
-            onNodeClickHandler={
-                isDisabled ? null : onNodeClickHandler
-            }
+            onNodeClickHandler={isDisabled ? null : onNodeClickHandler}
+            {...props}
         />
     )
 }

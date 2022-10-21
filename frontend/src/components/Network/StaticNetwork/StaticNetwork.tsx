@@ -52,10 +52,16 @@ export interface StaticNetworkInterface {
     showRewardText?: boolean;
     nodeSize?: number;
     edgeWidth?: number;
+    /** show tutorial tip */
+    showNodeTutorial?: boolean;
+    /** show tutorial tip */
+    showEdgeTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
-const StaticNetwork: React.FC<StaticNetworkInterface> = (
-    {
+const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
+    const {
         edges,
         nodes,
         onNodeClickHandler,
@@ -65,7 +71,9 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
         nodeSize = 20,
         edgeWidth = 2.5,
         showRewardText = false,
-    }: StaticNetworkInterface) => {
+        showNodeTutorial = false,
+        showEdgeTutorial = false
+    } = props;
 
     // Scale node coordinates
     const multiplier = 2;
@@ -91,12 +99,15 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             target_x={scaleSizeX(edge.target_x)}
                             target_y={scaleSizeY(edge.target_y)}
                             key={'edge-' + idx}
+                            showTutorial={showEdgeTutorial && idx === 0}
+                            onTutorialClose={props.onTutorialClose}
                         />
                     );
                 })}
             </g>
             <g>
                 {nodes.map((node: StaticNetworkNodeInterface, idx: number) => {
+                    const isActive = currentNodeId === node.node_num;
                     return (
                         <NetworkNode
                             x={scaleSizeX(node.x)}
@@ -105,9 +116,11 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = (
                             Text={node.display_name}
                             Radius={nodeSize}
                             onNodeClick={onNodeClickHandler}
-                            isActive={(node.starting_node && currentNodeId === node.node_num) || (currentNodeId === node.node_num)}
+                            isActive={isActive}
                             isValidMove={possibleMoves.includes(node.node_num)}
                             key={'node-' + idx}
+                            showTutorial={showNodeTutorial && isActive}
+                            onTutorialClose={props.onTutorialClose}
                         />
                     );
                 })}

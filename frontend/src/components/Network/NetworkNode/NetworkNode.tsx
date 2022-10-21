@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 import NetworkNodeStyled from "./NetworkNode.styled";
+import TutorialTip from "../../Tutorial/TutorialTip";
 
 export type NetworkNodeStatus = "starting" | "active" | "disabled" | "invalid-click" | "";
 
@@ -19,9 +20,14 @@ export interface NetworkNodeInterface {
     onNodeClick: (nodeIdx: number) => void;
     isValidMove: boolean;
     isActive: boolean;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
-const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInterface) => {
+const NetworkNode: React.FC<NetworkNodeInterface> = props => {
+    const {showTutorial = false} = props;
     const [status, setStatus] = useState<NetworkNodeStatus>(() => props.isActive ? 'active' : '');
 
     useEffect(() => {
@@ -31,8 +37,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInte
             }, 300);
         } else if (status === "active" && !props.isActive) { // override status with the props value
             setStatus("");
-        } else if (props.isActive)
-        {
+        } else if (props.isActive) {
             setStatus("active");
         }
     }, [status, props.isActive]);
@@ -47,12 +52,19 @@ const NetworkNode: React.FC<NetworkNodeInterface> = ({...props}: NetworkNodeInte
     }
 
     return (
-        <NetworkNodeStyled status={status} fontSize={props.Radius} onClick={onNodeClick}>
-            <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
-            <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>
-                {props.Text}
-            </text>
-        </NetworkNodeStyled>
+        <TutorialTip
+            tutorialId={"practice_node"}
+            isTutorial={showTutorial}
+            isShowTip={false}
+            onTutorialClose={props.onTutorialClose}
+            placement="left">
+            <NetworkNodeStyled status={status} fontSize={props.Radius} onClick={onNodeClick}>
+                <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
+                <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>
+                    {props.Text}
+                </text>
+            </NetworkNodeStyled>
+        </TutorialTip>
     );
 };
 

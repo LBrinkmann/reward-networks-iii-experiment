@@ -7,7 +7,6 @@ import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 
 import {edges, nodes} from "./PracticeData";
-import TutorialTip from "../../Tutorial/TutorialTip";
 
 
 export interface PracticeNetworkTrialInterface {
@@ -34,7 +33,7 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
         setIsTimerDone,
         onNextStepHandler
     } = useNetworkStates(props.onNextTrialHandler, edges, nodes, maxSteps)
-    const [tutorialId, setTutorialId] = useState<number>(3);
+    const [tutorialId, setTutorialId] = useState<number>(1);
 
     const renderNetwork = () => {
         // <TutorialTip tutorialId={"practice_node"} isTutorial={true} isShowTip={true}>
@@ -44,6 +43,9 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 edges={edges}
                 onNodeClickParentHandler={onNextStepHandler}
                 isDisabled={isTimerDone || step >= maxSteps}
+                showNodeTutorial={tutorialId === 1}
+                showEdgeTutorial={tutorialId === 2}
+                onTutorialClose={() => setTutorialId(tutorialId + 1)}
             />
         )
     }
