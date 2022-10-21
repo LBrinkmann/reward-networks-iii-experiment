@@ -19,10 +19,11 @@ const useNetworkStates = (
         const p = JSON.parse(window.localStorage.getItem('points'))
         if (p) setPoints(p);
         const m = JSON.parse(window.localStorage.getItem('moves'))
-        if (m) {
-            setMoves(m)
-        } else {
+        if (m) setMoves(m)
+
+        if (moves.length === 0){
             setMoves([nodes.filter(node => node.starting_node)[0].node_num])
+            window.localStorage.setItem('moves', JSON.stringify(moves));
         }
 
         const t = JSON.parse(window.localStorage.getItem('isTimerDone'))
