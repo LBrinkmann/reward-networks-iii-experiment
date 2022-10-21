@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import Timer from "../../Timer";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
@@ -7,6 +7,7 @@ import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 
 import {edges, nodes} from "./practice_data";
+import TutorialTip from "../../Tutorial/TutorialTip";
 
 
 export interface PracticeNetworkTrialInterface {
@@ -33,15 +34,19 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
         setIsTimerDone,
         onNextStepHandler
     } = useNetworkStates(props.onNextTrialHandler, edges, nodes, maxSteps)
+    const [tutorialId, setTutorialId] = useState<number>(3);
 
-    const renderNetwork = () => (
-        <DynamicNetwork
-            nodes={nodes}
-            edges={edges}
-            onNodeClickParentHandler={onNextStepHandler}
-            isDisabled={isTimerDone || step >= maxSteps}
-        />
-    )
+    const renderNetwork = () => {
+        // <TutorialTip tutorialId={"practice_node"} isTutorial={true} isShowTip={true}>
+        return (
+            <DynamicNetwork
+                nodes={nodes}
+                edges={edges}
+                onNodeClickParentHandler={onNextStepHandler}
+                isDisabled={isTimerDone || step >= maxSteps}
+            />
+        )
+    }
 
     const renderPlayerInformation = () => (
         <PlayerInformation
@@ -49,19 +54,28 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
             step={step}
             cumulativePoints={points}
             showComment={false}
+            showTutorial={tutorialId === 3}
+            onTutorialClose={() => setTutorialId(tutorialId + 1)}
         />
     )
 
-    const renderLinearSolution = () => (
-        <LinearSolution
-            nodes={nodes}
-            edges={edges}
-            moves={moves}
-            title={""}
-        />
-    )
 
-    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
+    const renderLinearSolution = () => {
+        return (
+            <LinearSolution
+                nodes={nodes}
+                edges={edges}
+                moves={moves}
+                title={""}
+            />
+        )
+    }
+
+    const renderTimer = () => {
+        return (
+            <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)} pause={true}/>
+        )
+    }
 
 
     return (
@@ -73,6 +87,8 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
             showTimer={true}
             showPlayerInformation={true}
             showLinearSolution={true}
+            showTutorial={tutorialId === 4}
+            onTutorialClose={() => setTutorialId(tutorialId + 1)}
         />
     );
 };

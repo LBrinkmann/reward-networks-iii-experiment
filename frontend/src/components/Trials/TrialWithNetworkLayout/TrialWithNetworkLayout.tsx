@@ -29,10 +29,10 @@ export const TrialWithNetworkLayout: React.FC<TrialWithNetworkLayoutInterface> =
                 </Grid>
             </Grid>
             <Grid item xs={7}>
-                <Grid container direction="row" justifyContent="space-around" >
+                <Grid container direction="row" justifyContent="space-around">
                     <Grid item>
                         {props.network}
-                        <Divider variant="middle" light />
+                        <Divider variant="middle" light/>
                     </Grid>
                     <Grid item sx={{marginTop: '10px'}}>
                         {(showLinearSolution) ? (props.linearSolution) : null}

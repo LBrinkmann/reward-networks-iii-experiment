@@ -3,34 +3,16 @@ import React, {FC, useEffect, useState} from "react";
 
 const tutorialTip = [
     {
-        id: "headerTitle",
-        title: "Welcome",
-        text: "Welcome to the experiment of the MPIB.",
-        tip: "Name of the experiment",
+        id: "practice_node",
+        title: "Network Nodes",
+        text: "You start at the highlighted circle in the network.",
+        tip: "Click a node",
     },
     {
-        id: "experimentPoints",
-        title: "Point system",
-        text: `You can earn points in this experiment. 
- The total number of points you have been
-    earned so far will be shown here.`,
-        tip: "Your total number of points accross the full experiment.",
-    },
-    {
-        id: "task",
-        title: "Task",
-        text: `The task is to find a sequence of 8 moves, that is 
-    maximising the cumulative reward as indicated on top of the arrows.
-    You will be helped by an algorithm. The move recommended by the algorithm 
-    is going to be visulized by a animated dashed line.`,
-        tip: "Maximise the cumulative reward",
-    },
-    {
-        id: "explanation",
-        title: "Explanation",
-        text: `In later stages of the experiment you will get here an explanation
-    from the algorithm.`,
-        tip: "Explanation",
+        id: "practice_step_score",
+        title: "Score & Step",
+        text: "You always have 8 moves per network. Your goal is to collect the maximum total number of points in these 8 moves.",
+        tip: "Current step and cumulative score",
     },
     {
         id: "social_learning_selection_player",
@@ -58,7 +40,7 @@ interface TutorialTipInterface {
 }
 
 const TutorialTip: FC<TutorialTipInterface> = (props) => {
-    const {children, isTutorial = false, isShowTip=true, placement = 'bottom', arrow = true} = props;
+    const {children, isTutorial = false, isShowTip = true, placement = 'bottom', arrow = true} = props;
 
     const [open, setOpen] = useState(isTutorial);
 
