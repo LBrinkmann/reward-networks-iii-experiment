@@ -30,7 +30,7 @@ interface LinearSolutionInterface {
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     const {
-        size = {width: 600, height: 50},
+        size = {width: 530, height: 50},
         nodeRadius = 20,
         gap = 60,
         onset = 24,
@@ -87,7 +87,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     }
 
     return (
-        <Grid container spacing={1}>
+        <Grid container>
             {props.title &&
                 (<Grid item xs={12}>
                     <Typography variant="h5" gutterBottom align={'left'}>

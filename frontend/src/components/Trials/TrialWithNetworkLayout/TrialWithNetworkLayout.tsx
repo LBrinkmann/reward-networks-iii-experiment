@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid} from "@mui/material";
+import {Divider, Grid} from "@mui/material";
 
 
 interface TrialWithNetworkLayoutInterface {
@@ -29,12 +29,12 @@ export const TrialWithNetworkLayout: React.FC<TrialWithNetworkLayoutInterface> =
                 </Grid>
             </Grid>
             <Grid item xs={7}>
-                <Grid container direction="column" justifyContent="space-between" >
+                <Grid container direction="row" justifyContent="space-around" >
                     <Grid item>
                         {props.network}
+                        <Divider variant="middle" light />
                     </Grid>
-
-                    <Grid item>
+                    <Grid item sx={{marginTop: '10px'}}>
                         {(showLinearSolution) ? (props.linearSolution) : null}
                     </Grid>
                 </Grid>
