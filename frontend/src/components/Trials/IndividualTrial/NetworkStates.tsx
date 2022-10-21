@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {StaticNetworkEdgeInterface} from "../../Network/StaticNetwork/StaticNetwork";
+import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../../Network/StaticNetwork/StaticNetwork";
 
 const useNetworkStates = (
     onNextTrialHandler: (moves: number[]) => void,
     edges: StaticNetworkEdgeInterface[],
+    nodes: StaticNetworkNodeInterface[],
     maxSteps?: number) => {
 
     const [step, setStep] = useState<number>(0);
@@ -18,7 +19,12 @@ const useNetworkStates = (
         const p = JSON.parse(window.localStorage.getItem('points'))
         if (p) setPoints(p);
         const m = JSON.parse(window.localStorage.getItem('moves'))
-        if (m) setMoves(m);
+        if (m) {
+            setMoves(m)
+        } else {
+            setMoves([nodes.filter(node => node.starting_node)[0].node_num])
+        }
+
         const t = JSON.parse(window.localStorage.getItem('isTimerDone'))
         if (t) setIsTimerDone(t);
     }, []);
@@ -56,11 +62,8 @@ const useNetworkStates = (
 
     const onNextStepHandler = (currentNode: number, nextNode: number) => {
         // Update moves
-        if (moves.length === 0) {
-            setMoves([currentNode, nextNode]);
-        } else {
-            setMoves([...moves, nextNode]);
-        }
+        setMoves([...moves, nextNode]);
+
         // Update state
         setStep(step + 1);
         // Select current edge

@@ -5,6 +5,7 @@ import Timer from "./Timer";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
 import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
 import useNetworkStates from "./NetworkStates";
+import LinearSolution from "../../Network/LinearSolution";
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
     /** Handle the end of the trial */
@@ -26,9 +27,10 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         step,
         points,
         isTimerDone,
+        moves,
         setIsTimerDone,
         onNextStepHandler
-    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps)
 
     const renderNetwork = () => (
         <DynamicNetwork
@@ -48,6 +50,15 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         />
     )
 
+    const renderLinearSolution = () => (
+        <LinearSolution
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={moves}
+            title={""}
+        />
+    )
+
     const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
 
     return (
@@ -55,11 +66,10 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
             network={renderNetwork()}
             timer={renderTimer()}
             playerInformation={renderPlayerInformation()}
-            linearSolution={() => {
-            }}
+            linearSolution={renderLinearSolution()}
             showTimer={true}
             showPlayerInformation={true}
-            showLinearSolution={false}
+            showLinearSolution={true}
         />
     );
 };

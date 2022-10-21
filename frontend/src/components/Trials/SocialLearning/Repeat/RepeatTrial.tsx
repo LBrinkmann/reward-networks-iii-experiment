@@ -26,8 +26,9 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
         step,
         points,
         setIsTimerDone,
+        moves,
         onNextStepHandler
-    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps)
 
     const renderNetwork = () => (
         <HighlightedNetwork
@@ -51,8 +52,8 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
         <LinearSolution
             nodes={props.nodes}
             edges={props.edges}
-            moves={props.moves}
-            title={"Player " + props.teacherId + " total score"}
+            moves={moves}
+            title={""}
         />
     )
 
