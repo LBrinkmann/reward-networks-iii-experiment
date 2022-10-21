@@ -1,5 +1,6 @@
 import {Box, CircularProgress, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
+import TutorialTip from "../Tutorial/TutorialTip";
 
 interface TimerInterface {
     /** Time in seconds */
@@ -8,10 +9,14 @@ interface TimerInterface {
     OnTimeEndHandler?: () => void;
     /** Pause the timer */
     pause?: boolean;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
 const Timer: React.FC<TimerInterface> = (props) => {
-    const {time, OnTimeEndHandler, pause = false} = props;
+    const {time, OnTimeEndHandler, pause = false, showTutorial = false} = props;
     const [timePassed, setTimePassed] = useState<number>(0);
     const [isDone, setIsDone] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(pause);
@@ -70,17 +75,25 @@ const Timer: React.FC<TimerInterface> = (props) => {
     }
 
     return (
-        <Box display='flex' justifyContent='center' alignItems='center'>
-            <Typography position="absolute" variant="h5" component="div" color="text.secondary">
-                {fmtMSS(time - timePassed)}
-            </Typography>
+        <TutorialTip
+            tutorialId={"practice_timer"}
+            isTutorial={showTutorial}
+            isShowTip={false}
+            onTutorialClose={props.onTutorialClose}
+            placement="bottom"
+        >
+            <Box display='flex' justifyContent='center' alignItems='center'>
+                <Typography position="absolute" variant="h5" component="div" color="text.secondary">
+                    {fmtMSS(time - timePassed)}
+                </Typography>
 
-            <CircularProgress
-                color={selectColor(timePassed / time)}
-                variant="determinate"
-                value={((timePassed + time) / time) * 100}
-                size={120}/>
-        </Box>
+                <CircularProgress
+                    color={selectColor(timePassed / time)}
+                    variant="determinate"
+                    value={((timePassed + time) / time) * 100}
+                    size={120}/>
+            </Box>
+        </TutorialTip>
     );
 
 };

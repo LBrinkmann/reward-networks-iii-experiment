@@ -24,7 +24,7 @@ export interface PracticeNetworkTrialInterface {
 }
 
 const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) => {
-    const {timer = 30, maxSteps = 8} = props;
+    const {timer = 25, maxSteps = 8} = props;
     const {
         step,
         points,
@@ -34,6 +34,10 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
         onNextStepHandler
     } = useNetworkStates(props.onNextTrialHandler, edges, nodes, maxSteps)
     const [tutorialId, setTutorialId] = useState<number>(1);
+
+    const onTooltipClick = () => {
+        setTutorialId(tutorialId + 1)
+    }
 
     const renderNetwork = () => {
         // <TutorialTip tutorialId={"practice_node"} isTutorial={true} isShowTip={true}>
@@ -45,7 +49,7 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 isDisabled={isTimerDone || step >= maxSteps}
                 showNodeTutorial={tutorialId === 1}
                 showEdgeTutorial={tutorialId === 2}
-                onTutorialClose={() => setTutorialId(tutorialId + 1)}
+                onTutorialClose={onTooltipClick}
             />
         )
     }
@@ -56,8 +60,8 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
             step={step}
             cumulativePoints={points}
             showComment={false}
-            showTutorial={tutorialId === 3}
-            onTutorialClose={() => setTutorialId(tutorialId + 1)}
+            showTutorial={tutorialId === 3 && moves.length > 1}
+            onTutorialClose={onTooltipClick}
         />
     )
 
@@ -69,15 +73,21 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 edges={edges}
                 moves={moves}
                 title={""}
-                showTutorial={tutorialId === 4}
-                onTutorialClose={() => setTutorialId(tutorialId + 1)}
+                showTutorial={tutorialId === 4 && moves.length > 2}
+                onTutorialClose={onTooltipClick}
             />
         )
     }
 
     const renderTimer = () => {
         return (
-            <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)} pause={true}/>
+            <Timer
+                time={timer}
+                OnTimeEndHandler={() => setIsTimerDone(true)}
+                pause={true}
+                showTutorial={tutorialId === 5 && moves.length === maxSteps + 1}
+                onTutorialClose={onTooltipClick}
+            />
         )
     }
 

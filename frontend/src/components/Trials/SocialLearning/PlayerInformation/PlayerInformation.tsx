@@ -10,25 +10,25 @@ interface PlayerInformationProps {
     /** Player's comment */
     comment?: string;
     showComment?: boolean;
+    /** show tutorial tip */
     showTutorial?: boolean;
-    showTutorialTip?: boolean;
+    /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
 }
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorial = false, showTutorialTip = false} = props;
+    const {showComment = true, showTutorial = false} = props;
     return (
         <>
             <Paper sx={{p: 2}} elevation={0}>
-
                 <Typography gutterBottom variant="h5" component="div">
                     Step {props.step}
                 </Typography>
                 <TutorialTip
                     tutorialId={"practice_step_score"}
                     isTutorial={showTutorial}
-                    isShowTip={showTutorialTip}
+                    isShowTip={false}
                     onTutorialClose={props.onTutorialClose}
                 >
                     <Typography gutterBottom variant="h5" component="div">
