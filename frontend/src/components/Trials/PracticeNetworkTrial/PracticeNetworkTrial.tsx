@@ -1,6 +1,6 @@
 import React from "react";
 import DynamicNetwork from "../../Network/DynamicNetwork";
-import Timer from "../IndividualTrial/Timer";
+import Timer from "../../Timer";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
 import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
 import useNetworkStates from "../IndividualTrial/NetworkStates";

@@ -3,7 +3,7 @@ import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../../Network/LinearSolution";
 import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/HighlightedNetwork/HighlightedNetwork";
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
-import Timer from "../../IndividualTrial/Timer";
+import Timer from "../../../Timer";
 import useNetworkStates from "../../IndividualTrial/NetworkStates";
 
 

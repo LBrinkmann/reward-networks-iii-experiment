@@ -6,11 +6,15 @@ interface TimerInterface {
     time: number;
     /** Callback to handle timer end */
     OnTimeEndHandler?: () => void;
+    /** Pause the timer */
+    pause?: boolean;
 }
 
-const Timer: React.FC<TimerInterface> = ({time, OnTimeEndHandler}) => {
+const Timer: React.FC<TimerInterface> = (props) => {
+    const {time, OnTimeEndHandler, pause = false} = props;
     const [timePassed, setTimePassed] = useState<number>(0);
     const [isDone, setIsDone] = useState<boolean>(false);
+    const [isPaused, setIsPaused] = useState<boolean>(pause);
 
     // get states from local storage to prevent losing state on refresh
     useEffect(() => {
@@ -19,15 +23,25 @@ const Timer: React.FC<TimerInterface> = ({time, OnTimeEndHandler}) => {
     }, []);
 
     useEffect(() => {
+        if (pause) {
+            setIsPaused(true);
+        } else {
+            setIsPaused(false);
+        }
+    }, [pause]);
+
+    useEffect(() => {
         if (isDone) {
             OnTimeEndHandler();
+        } else if (isPaused) {
+            return;
         } else {
             const interval = setInterval(() => {
                 setTimePassed(prevTime => prevTime + 1)
             }, 1000);
             return () => clearInterval(interval);
         }
-    }, [isDone]);
+    }, [isDone, isPaused]);
 
     useEffect(() => {
         // save states to local storage to prevent losing state on refresh

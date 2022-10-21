@@ -5,7 +5,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import TrialWithNetworkLayout from "./TrialWithNetworkLayout";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
-import Timer from "../IndividualTrial/Timer";
+import Timer from "../../Timer/Timer";
 import Header from "../../Header";
 
 import data from "../../Network/examples";
