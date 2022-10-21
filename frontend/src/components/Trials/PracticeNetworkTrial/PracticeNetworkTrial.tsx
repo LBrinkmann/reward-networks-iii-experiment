@@ -24,19 +24,24 @@ export interface PracticeNetworkTrialInterface {
 }
 
 const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) => {
-    const {timer = 25, maxSteps = 8} = props;
+    const {timer = 25, maxSteps = 9} = props;
     const {
         step,
         points,
         isTimerDone,
         moves,
         setIsTimerDone,
+        setStep,
         onNextStepHandler
     } = useNetworkStates(props.onNextTrialHandler, edges, nodes, maxSteps)
     const [tutorialId, setTutorialId] = useState<number>(1);
 
     const onTooltipClick = () => {
         setTutorialId(tutorialId + 1)
+    }
+
+    const onLastTooltipClick = () => {
+        setStep(step + 1)
     }
 
     const renderNetwork = () => {
@@ -65,7 +70,6 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
         />
     )
 
-
     const renderLinearSolution = () => {
         return (
             <LinearSolution
@@ -85,8 +89,8 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 time={timer}
                 OnTimeEndHandler={() => setIsTimerDone(true)}
                 pause={true}
-                showTutorial={tutorialId === 5 && moves.length === maxSteps + 1}
-                onTutorialClose={onTooltipClick}
+                showTutorial={tutorialId === 5 && moves.length === maxSteps - 1}
+                onTutorialClose={onLastTooltipClick}
             />
         )
     }
