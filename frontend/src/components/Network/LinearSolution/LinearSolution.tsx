@@ -1,8 +1,9 @@
-import React, {FC, useEffect, useState} from "react"
+import React, {FC, useEffect} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
-import {Grid, Typography} from "@mui/material";
+import {Box} from "@mui/material";
+import TutorialTip from "../../Tutorial/TutorialTip";
 
 interface LinearSolutionInterface {
     /** Array of nodes of the network */
@@ -25,6 +26,10 @@ interface LinearSolutionInterface {
     onset?: number;
     /** unique id of the component */
     id?: number;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
 
@@ -39,9 +44,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         edges,
         moves,
         id = 100,
+        showTutorial = false,
     } = props;
-
-    const [score, setScore] = useState<number>(0);
 
     useEffect(() => {
         let score = 0;
@@ -51,7 +55,6 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                 score += edge.reward;
             }
         }
-        setScore(score);
     }, [moves]);
 
     const plotEdge = (moveIdx: number) => {
@@ -87,16 +90,14 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     }
 
     return (
-        <Grid container>
-            {props.title &&
-                (<Grid item xs={12}>
-                    <Typography variant="h5" gutterBottom align={'left'}>
-                        {props.title ? props.title : ""}: {score}
-                    </Typography>
-
-                </Grid>)
-            }
-            <Grid item xs={12}>
+        <TutorialTip
+            tutorialId={"practice_linear_solution"}
+            isTutorial={showTutorial}
+            isShowTip={false}
+            onTutorialClose={props.onTutorialClose}
+            placement="left"
+        >
+            <Box>
                 <svg width={size.width} height={size.height}>
                     <g>
                         {moves.map((move, idx) => {
@@ -109,7 +110,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         nodeInx={node.node_num}
                                         Text={node.display_name}
                                         Radius={nodeRadius}
-                                        onNodeClick={null}
+                                        onNodeClick={() => {
+                                        }}
                                         isActive={false}
                                         isValidMove={false}
                                         key={"linear-solution-node-" + idx}
@@ -120,8 +122,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                         })};
                     </g>
                 </svg>
-            </Grid>
-        </Grid>
+            </Box>
+        </TutorialTip>
     )
 }
 

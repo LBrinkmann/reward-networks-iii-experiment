@@ -6,7 +6,7 @@ import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
 import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 
-import {edges, nodes} from "./practice_data";
+import {edges, nodes} from "./PracticeData";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
 
@@ -67,6 +67,8 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 edges={edges}
                 moves={moves}
                 title={""}
+                showTutorial={tutorialId === 4}
+                onTutorialClose={() => setTutorialId(tutorialId + 1)}
             />
         )
     }
@@ -87,8 +89,6 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
             showTimer={true}
             showPlayerInformation={true}
             showLinearSolution={true}
-            showTutorial={tutorialId === 4}
-            onTutorialClose={() => setTutorialId(tutorialId + 1)}
         />
     );
 };
