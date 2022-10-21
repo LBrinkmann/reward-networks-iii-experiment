@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from "react"
+import React, {FC} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
@@ -46,16 +46,6 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         id = 100,
         showTutorial = false,
     } = props;
-
-    useEffect(() => {
-        let score = 0;
-        for (let i = 0; i < moves.length - 1; i++) {
-            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
-            if (edge) {
-                score += edge.reward;
-            }
-        }
-    }, [moves]);
 
     const plotEdge = (moveIdx: number) => {
         if (moveIdx < moves.length - 1) {
