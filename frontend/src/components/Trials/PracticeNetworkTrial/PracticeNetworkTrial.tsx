@@ -66,7 +66,7 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
             step={step}
             cumulativePoints={points}
             showComment={false}
-            showTutorial={tutorialId === 3 && moves.length > 1}
+            showTutorialScore={tutorialId === 3 && moves.length > 1}
             onTutorialClose={onTooltipClick}
         />
     )

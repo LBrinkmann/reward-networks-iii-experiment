@@ -122,13 +122,13 @@ const Trial: React.FC<TrialInterface> = (props) => {
             case 'instruction_welcome':
                 return 'Welcome';
             case 'instruction_learning_selection':
-                return 'Instruction';
+                return 'Instruction Learning Selection';
             case 'instruction_learning':
-                return 'Instruction';
+                return 'Instruction Learning';
             case 'instruction_individual':
-                return 'Instruction';
+                return 'Instruction Individual Performance';
             case 'instruction_demonstration':
-                return 'Instruction';
+                return 'Instruction Demonstration';
         }
     }
 
@@ -167,6 +167,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         moves={data.advisor.solution.moves}
                         teacherId={teacherInx}
                         onNextTrialHandler={OnNextTrial}
+                        showTutorial={trial.id === 6}  // show tutorial only for the very first social learning trial
                     />;
                 } else if (socialLearningType === 'repeat') {
                     return <RepeatTrial
@@ -219,6 +220,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error && !waitingForTheNextTrial ?
                 (
                     <>
+                        {/* Hide header for practice trial */}
                         {trialType !== 'practice' && <Header title={setHeaderTitle()}/>}
                         {renderTrial(trialType, trial)}
                     </>

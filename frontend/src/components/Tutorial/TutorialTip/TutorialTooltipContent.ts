@@ -39,8 +39,20 @@ export const tutorialTooltipContent = [
     },
     {
         id: "social_learning_selection_player",
-        title: "Player selection",
+        title: "Player Selection",
         text: `Select a player to see the solution of this player`,
         tip: "Select a player",
+    },
+    {
+        id: "social_learning_observation_comment",
+        title: "Player Comment",
+        text: "The player might have provided their strategy for you here (or not, if the box is empty).",
+        tip: "Player comment",
+    },
+    {
+        id: "social_learning_observation_animation",
+        title: "Player Solution Animation",
+        text: "You can now watch their chosen path once. The animation will start in 4 seconds.",
+        tip: "Player solution animation",
     },
 ];

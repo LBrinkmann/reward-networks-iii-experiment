@@ -11,14 +11,15 @@ interface PlayerInformationProps {
     comment?: string;
     showComment?: boolean;
     /** show tutorial tip */
-    showTutorial?: boolean;
+    showTutorialScore?: boolean;
+    showTutorialComment?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
 }
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorial = false} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false} = props;
     return (
         <>
             <Paper sx={{p: 2}} elevation={0}>
@@ -27,7 +28,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                 </Typography>
                 <TutorialTip
                     tutorialId={"practice_step_score"}
-                    isTutorial={showTutorial}
+                    isTutorial={showTutorialScore}
                     isShowTip={false}
                     onTutorialClose={props.onTutorialClose}
                 >
@@ -42,15 +43,23 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                 ) : null}
             </Paper>
             {(showComment) ? (
-                <TextField
-                    id="outlined-multiline-static"
-                    // label=""
-                    multiline
-                    fullWidth
-                    rows={10}
-                    InputProps={{readOnly: true}}
-                    defaultValue={props.comment ? props.comment : "No comment"}
-                />
+                <TutorialTip
+                    tutorialId={"social_learning_observation_comment"}
+                    isTutorial={showTutorialComment}
+                    isShowTip={false}
+                    onTutorialClose={props.onTutorialClose}
+                    placement={"right"}
+                >
+                    <TextField
+                        id="outlined-multiline-static"
+                        // label=""
+                        multiline
+                        fullWidth
+                        rows={10}
+                        InputProps={{readOnly: true}}
+                        defaultValue={props.comment ? props.comment : "No comment"}
+                    />
+                </TutorialTip>
             ) : null}
         </>
     )
