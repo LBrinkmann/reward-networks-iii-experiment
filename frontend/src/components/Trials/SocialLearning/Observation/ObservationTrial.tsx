@@ -23,7 +23,7 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
         step,
         points,
         onNextStepHandler
-    } = useNetworkStates(props.onNextTrialHandler, props.edges, maxSteps)
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps)
 
     const [playAnimation, setPlayAnimation] = useState<boolean>(false);
 
