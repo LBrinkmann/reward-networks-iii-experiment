@@ -58,6 +58,8 @@ export interface StaticNetworkInterface {
     showEdgeTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** Blur the network to hide it */
+    blur?: boolean;
 }
 
 const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
@@ -72,7 +74,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
         edgeWidth = 2.5,
         showRewardText = false,
         showNodeTutorial = false,
-        showEdgeTutorial = false
+        showEdgeTutorial = false,
+        blur = false
     } = props;
 
     // Scale node coordinates
@@ -82,48 +85,56 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
 
     return (
         <svg width={size} height={size}>
-            <g>
-                {edges.map((edge: StaticNetworkEdgeInterface, idx: number) => {
-                    return (
-                        <NetworkEdge
-                            reward={edge.reward}
-                            edgeWidth={edgeWidth}
-                            edgeStyle={edge.edgeStyle}
-                            idx={idx}
-                            showRewardText={showRewardText}
-                            arc_type={edge.arc_type}
-                            source_x={scaleSizeX(edge.source_x)}
-                            source_y={scaleSizeY(edge.source_y)}
-                            arc_x={scaleSizeX(edge.arc_x)}
-                            arc_y={scaleSizeY(edge.arc_y)}
-                            target_x={scaleSizeX(edge.target_x)}
-                            target_y={scaleSizeY(edge.target_y)}
-                            key={'edge-' + idx}
-                            showTutorial={showEdgeTutorial && idx === 0}
-                            onTutorialClose={props.onTutorialClose}
-                        />
-                    );
-                })}
-            </g>
-            <g>
-                {nodes.map((node: StaticNetworkNodeInterface, idx: number) => {
-                    const isActive = currentNodeId === node.node_num;
-                    return (
-                        <NetworkNode
-                            x={scaleSizeX(node.x)}
-                            y={scaleSizeY(node.y)}
-                            nodeInx={node.node_num}
-                            Text={node.display_name}
-                            Radius={nodeSize}
-                            onNodeClick={onNodeClickHandler}
-                            isActive={isActive}
-                            isValidMove={possibleMoves.includes(node.node_num)}
-                            key={'node-' + idx}
-                            showTutorial={showNodeTutorial && isActive}
-                            onTutorialClose={props.onTutorialClose}
-                        />
-                    );
-                })}
+            <defs>
+                <filter id="static-network-blur" x="0" y="0">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="7"/>
+                </filter>
+            </defs>
+            {/* apply filter to the network to hide it if 'blur' is true */}
+            <g filter={blur ? "url(#static-network-blur)" : ""}>
+                <g>
+                    {edges.map((edge: StaticNetworkEdgeInterface, idx: number) => {
+                        return (
+                            <NetworkEdge
+                                reward={edge.reward}
+                                edgeWidth={edgeWidth}
+                                edgeStyle={edge.edgeStyle}
+                                idx={idx}
+                                showRewardText={showRewardText}
+                                arc_type={edge.arc_type}
+                                source_x={scaleSizeX(edge.source_x)}
+                                source_y={scaleSizeY(edge.source_y)}
+                                arc_x={scaleSizeX(edge.arc_x)}
+                                arc_y={scaleSizeY(edge.arc_y)}
+                                target_x={scaleSizeX(edge.target_x)}
+                                target_y={scaleSizeY(edge.target_y)}
+                                key={'edge-' + idx}
+                                showTutorial={showEdgeTutorial && idx === 0}
+                                onTutorialClose={props.onTutorialClose}
+                            />
+                        );
+                    })}
+                </g>
+                <g>
+                    {nodes.map((node: StaticNetworkNodeInterface, idx: number) => {
+                        const isActive = currentNodeId === node.node_num;
+                        return (
+                            <NetworkNode
+                                x={scaleSizeX(node.x)}
+                                y={scaleSizeY(node.y)}
+                                nodeInx={node.node_num}
+                                Text={node.display_name}
+                                Radius={nodeSize}
+                                onNodeClick={onNodeClickHandler}
+                                isActive={isActive}
+                                isValidMove={possibleMoves.includes(node.node_num)}
+                                key={'node-' + idx}
+                                showTutorial={showNodeTutorial && isActive}
+                                onTutorialClose={props.onTutorialClose}
+                            />
+                        );
+                    })}
+                </g>
             </g>
         </svg>
     );

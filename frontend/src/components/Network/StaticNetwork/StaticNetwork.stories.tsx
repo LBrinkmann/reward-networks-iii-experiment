@@ -56,7 +56,21 @@ TenNodes.args = {
     nodeSize: 20,
     edgeWidth: 2.5,
     showRewardText: false,
+    blur: false,
     size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
 };
+
+export const TenNodesBlured = Template.bind({});
+
+TenNodesBlured.args = {
+    nodeSize: 20,
+    edgeWidth: 2.5,
+    showRewardText: false,
+    blur: true,
+    size: 470,
+    edges: data[0].edges,
+    nodes: data[0].nodes,
+};
+
