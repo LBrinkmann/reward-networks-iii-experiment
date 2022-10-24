@@ -19,7 +19,7 @@ export interface AnimatedNetworkInterface {
 }
 
 const AnimatedNetwork: FC<AnimatedNetworkInterface> = (props: AnimatedNetworkInterface) => {
-    const {moves, playAnimation = true, delayBetweenMoves = 1000} = props;
+    const {moves, playAnimation = true, delayBetweenMoves = 2000} = props;
 
     const [currentMoveInx, setCurrentMoveInx] = useState<number>(0);
     const [edges, setEdges] = useState<StaticNetworkEdgeInterface[]>(props.edges);
