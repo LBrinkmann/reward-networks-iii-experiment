@@ -5,6 +5,7 @@ import {HighlightedNetwork, HighlightedNetworkInterface} from "../../../Network/
 import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
 import Timer from "../../../Timer";
 import useNetworkStates from "../../IndividualTrial/NetworkStates";
+import {Typography} from "@mui/material";
 
 
 interface RepeatTrialInterface extends HighlightedNetworkInterface {
@@ -60,15 +61,20 @@ export const RepeatTrial: FC<RepeatTrialInterface> = (props) => {
     const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
 
     return (
-        <TrialWithNetworkLayout
-            network={renderNetwork()}
-            timer={renderTimer()}
-            playerInformation={renderPlayerInformation()}
-            linearSolution={renderLinearSolution()}
-            showTimer={true}
-            showPlayerInformation={true}
-            showLinearSolution={true}
-        />
+        <>
+            <Typography variant="h3" align='center'>
+                Repeat the solution by following the dashed line
+            </Typography>
+            <TrialWithNetworkLayout
+                network={renderNetwork()}
+                timer={renderTimer()}
+                playerInformation={renderPlayerInformation()}
+                linearSolution={renderLinearSolution()}
+                showTimer={true}
+                showPlayerInformation={true}
+                showLinearSolution={true}
+            />
+        </>
     );
 }
 

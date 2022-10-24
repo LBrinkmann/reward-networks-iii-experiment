@@ -6,7 +6,7 @@ import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
 import useNetworkStates from "../../IndividualTrial/NetworkStates";
 import TutorialTip from "../../../Tutorial/TutorialTip";
 import StaticNetwork from "../../../Network/StaticNetwork";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -111,15 +111,20 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     )
 
     return (
-        <TrialWithNetworkLayout
-            network={renderNetwork()}
-            timer={<> </>}
-            playerInformation={renderPlayerInformation()}
-            linearSolution={renderLinearSolution()}
-            showTimer={false}
-            showPlayerInformation={true}
-            showLinearSolution={true}
-        />
+        <>
+            <Typography variant="h3" align='center'>
+                Watch player {props.teacherId} solve the task
+            </Typography>
+            <TrialWithNetworkLayout
+                network={renderNetwork()}
+                timer={<> </>}
+                playerInformation={renderPlayerInformation()}
+                linearSolution={renderLinearSolution()}
+                showTimer={false}
+                showPlayerInformation={true}
+                showLinearSolution={true}
+            />
+        </>
     );
 }
 

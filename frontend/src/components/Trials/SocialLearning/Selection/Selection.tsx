@@ -1,6 +1,6 @@
 import React from "react";
 import SelectionOneCard from "./SelectionOneCard";
-import {Grid} from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 
 
 interface SocialLearningSelectionProps {
@@ -30,6 +30,9 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearning
 
     return (
         <>
+            <Typography variant="h3" align='center'>
+                Select a player to learn from
+            </Typography>
             <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
                 {props.advisors.map((advisor, inx) => {
                     return renderOneCard(advisor, inx);
