@@ -10,7 +10,7 @@ const useNetworkStates = (
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
     const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
-    const [moves, setMoves] = useState<number[]>([]);
+    const [moves, setMoves] = useState<number[]>([nodes.filter(node => node.starting_node)[0].node_num]);
 
     // get states from local storage to prevent losing state on refresh
     useEffect(() => {
