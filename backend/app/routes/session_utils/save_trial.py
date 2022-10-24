@@ -29,11 +29,11 @@ async def save_trial(body, session, trial, trial_type):
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'written_strategy':
         save_written_strategy(trial, body)
-    elif trial_type in ['consent', 'debriefing',
-                        'instruction_learning_selection',
-                        'instruction_learning',
+    elif trial_type in ['consent', 'n_practice', 'debriefing',
+                        'instruction_welcome', 'instruction_learning_selection',
+                        'instruction_learning', 'instruction_learning',
                         'instruction_individual', 'instruction_demonstration',
-                        'instruction_written_strategy', 'instruction_welcome']:
+                        'instruction_written_strategy']:
         save_empty_trial(trial)
 
     # update session with the trial

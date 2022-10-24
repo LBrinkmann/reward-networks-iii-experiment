@@ -36,6 +36,7 @@ class Trial(BaseModel):
     trial_type: Literal[
         'consent',
         'instruction_welcome',
+        'practice',
         'instruction_learning_selection',
         'social_learning_selection',
         'instruction_learning',

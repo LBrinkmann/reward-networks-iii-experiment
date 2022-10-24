@@ -168,6 +168,9 @@ def create_trials(experiment_num: int, experiment_type: str,
     trials.append(Trial(id=trial_n, trial_type='instruction_welcome'))
     trial_n += 1
 
+    trials.append(Trial(id=trial_n, trial_type='practice'))
+    trial_n += 1
+
     # Social learning trials (not relevant for the very first generation)
     if generation > 0:
         for i in range(n_social_learning_trials):

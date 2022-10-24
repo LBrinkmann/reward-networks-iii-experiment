@@ -122,6 +122,10 @@ async def one_subject(default_client: httpx.AsyncClient,
     await get_post_trial(default_client, 'instruction_welcome', trial_num, url)
     trial_num += 1
 
+    # practice
+    await get_post_trial(default_client, 'practice', trial_num, url)
+    trial_num += 1
+
     if generation != 0:
         for i in range(e_config.n_social_learning_trials):
             if i == 0:
