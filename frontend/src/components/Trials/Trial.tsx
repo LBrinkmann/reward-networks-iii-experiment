@@ -11,6 +11,8 @@ import TryYourselfTrial from "./SocialLearning/TryYourself";
 import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes, Trial} from "../../apis/apiTypes";
 import Debriefing from "./Outro/Debriefing";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
+import Instruction from "./Instruction";
+import PracticeNetworkTrial from "./PracticeNetworkTrial";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -117,6 +119,16 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 return 'Written Strategy';
             case 'debriefing':
                 return 'Explanation of the Experiment';
+            case 'instruction_welcome':
+                return 'Welcome';
+            case 'instruction_learning_selection':
+                return 'Instruction';
+            case 'instruction_learning':
+                return 'Instruction';
+            case 'instruction_individual':
+                return 'Instruction';
+            case 'instruction_demonstration':
+                return 'Instruction';
         }
     }
 
@@ -127,6 +139,12 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     onClickAgreeHandler={OnNextTrial}
                     onDisagreeRedirect={'https://www.prolific.co/'}  // TODO: data.redirect_link
                 />;
+            case 'instruction_welcome':
+                return <Instruction instructionId={"welcome"} onClick={OnNextTrial}/>;
+            case 'practice':
+                return <PracticeNetworkTrial onNextTrialHandler={OnNextTrial}/>;
+            case 'instruction_learning_selection':
+                return <Instruction instructionId={"learning_selection"} onClick={OnNextTrial}/>;
             case 'social_learning_selection':
                 return <Selection
                     advisors={
@@ -139,6 +157,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     }
                     onClickHandler={onSocialLearningSelectionClickHandler}
                 />;
+            case 'instruction_learning':
+                return <Instruction instructionId={"learning"} onClick={OnNextTrial}/>;
             case 'social_learning':
                 if (socialLearningType === 'observation') {
                     return <ObservationTrial
@@ -165,12 +185,16 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         onNextTrialHandler={OnNextTrial}
                     />;
                 }
+            case 'instruction_individual':
+                return <Instruction instructionId={"individual"} onClick={OnNextTrial}/>;
             case  'individual':
                 return <IndividualTrial
                     nodes={data.network.nodes}
                     edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
                 />;
+            case 'instruction_demonstration':
+                return <Instruction instructionId={"demonstration"} onClick={OnNextTrial}/>;
             case 'demonstration':
                 return <IndividualTrial
                     timer={2 * 60}
@@ -178,6 +202,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
                     edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
                 />;
+            case 'instruction_written_strategy':
+                return <Instruction instructionId={"written_strategy"} onClick={OnNextTrial}/>;
             case  'written_strategy':
                 return <WrittenStrategy onClickContinue={OnNextTrial}/>;
             case 'debriefing':
@@ -193,7 +219,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
             {!loading && !error && !waitingForTheNextTrial ?
                 (
                     <>
-                        <Header title={setHeaderTitle()}/>
+                        {trialType !== 'practice' && <Header title={setHeaderTitle()}/>}
                         {renderTrial(trialType, trial)}
                     </>
                 ) : (<WaitForNextTrialScreen/>)

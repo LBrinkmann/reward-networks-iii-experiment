@@ -18,12 +18,12 @@ export const Instruction: FC<InstructionInterface> = props => {
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12}>
-                    <Box sx={{width: '75%'}}
+                    <Box sx={{width: '65%'}}
                          m="auto" // box margin auto to make box in the center
                          style={{maxHeight: '80vh', overflow: 'auto'}}  //maxHeight: 300,
                          p={3} // box padding
                     >
-                        <Typography variant="body1" paragraph>
+                        <Typography variant="h5" align='justify'>
                             {content.text}
                         </Typography>
 
