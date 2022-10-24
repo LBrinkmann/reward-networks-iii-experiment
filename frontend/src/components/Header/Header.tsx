@@ -14,7 +14,7 @@ interface HeaderInterface {
 }
 
 const Header: FC<HeaderInterface> = (props) => {
-    const {totalPoints = 0, title = "", showTutorial = false, showTip = true} = props;
+    const {totalPoints = null, title = "", showTutorial = false, showTip = true} = props;
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
