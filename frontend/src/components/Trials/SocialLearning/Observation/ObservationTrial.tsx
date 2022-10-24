@@ -22,6 +22,7 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
     const {
         step,
         points,
+        moves,
         onNextStepHandler
     } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps)
 
@@ -57,7 +58,7 @@ export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
         <LinearSolution
             nodes={props.nodes}
             edges={props.edges}
-            moves={props.moves}
+            moves={moves}
             title={"Player " + props.teacherId + " total score"}
         />
     )
