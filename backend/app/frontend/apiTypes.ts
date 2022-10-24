@@ -52,10 +52,16 @@ export interface Trial {
   id: number;
   trial_type:
     | "consent"
+    | "instruction_welcome"
+    | "instruction_learning_selection"
     | "social_learning_selection"
+    | "instruction_learning"
     | "social_learning"
+    | "instruction_individual"
     | "individual"
+    | "instruction_demonstration"
     | "demonstration"
+    | "instruction_written_strategy"
     | "written_strategy"
     | "debriefing";
   social_learning_type?: "observation" | "repeat" | "tryyourself";

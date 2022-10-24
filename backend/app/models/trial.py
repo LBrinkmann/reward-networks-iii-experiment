@@ -35,10 +35,16 @@ class Trial(BaseModel):
     id: int  # trial number in session
     trial_type: Literal[
         'consent',
+        'instruction_welcome',
+        'instruction_learning_selection',
         'social_learning_selection',
+        'instruction_learning',
         'social_learning',
+        'instruction_individual',
         'individual',
+        'instruction_demonstration',
         'demonstration',
+        'instruction_written_strategy',
         'written_strategy',
         'debriefing'
     ]

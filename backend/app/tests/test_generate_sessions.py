@@ -35,7 +35,7 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
-async def test_create_trials(default_client: httpx.AsyncClient,):
+async def test_create_trials(default_client: httpx.AsyncClient):
     n_consent = 1
     n_soc_learning = 3
     n_ind = 3
@@ -44,6 +44,7 @@ async def test_create_trials(default_client: httpx.AsyncClient,):
     n_debriefing = 1
     n_all_trials = n_consent + n_demonstration + n_w_strategy + n_debriefing
     n_all_trials += n_soc_learning * n_demonstration * 3 + n_ind
+    n_all_trials += 4  # 5 instructions: welcome, individual, demo, w_strategy
 
     session = create_trials(
         experiment_num=0,
@@ -59,7 +60,11 @@ async def test_create_trials(default_client: httpx.AsyncClient,):
         assert t.trial_type not in ['social_learning_selection',
                                     'social_learning']
         assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
-                                'debriefing', 'individual']
+                                'debriefing', 'individual',
+                                'instruction_welcome',
+                                'instruction_individual',
+                                'instruction_demonstration',
+                                'instruction_written_strategy']
 
     session = create_trials(
         experiment_num=0,
@@ -72,8 +77,12 @@ async def test_create_trials(default_client: httpx.AsyncClient,):
     )
 
     # add n_all_trials because social_learning_selection counts as a trial
-    assert len(session.trials) == n_all_trials + n_soc_learning
+    # 2 instructions: social_learning_selection, social_learning
+    assert len(session.trials) == n_all_trials + n_soc_learning + 2
     for t in session.trials:
-        assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
-                                'debriefing', 'individual', 'social_learning',
-                                'social_learning_selection']
+        assert t.trial_type in [
+            'consent', 'demonstration', 'written_strategy', 'debriefing',
+            'individual', 'social_learning', 'social_learning_selection',
+            'instruction_learning_selection', 'instruction_learning',
+            'instruction_individual', 'instruction_demonstration',
+            'instruction_written_strategy', 'instruction_welcome']

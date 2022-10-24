@@ -118,14 +118,32 @@ async def one_subject(default_client: httpx.AsyncClient,
     await get_post_trial(default_client, 'consent', trial_num, url)
     trial_num += 1
 
+    # welcome
+    await get_post_trial(default_client, 'instruction_welcome', trial_num, url)
+    trial_num += 1
+
     if generation != 0:
         for i in range(e_config.n_social_learning_trials):
+            if i == 0:
+                # instruction_learning_selection
+                await get_post_trial(default_client,
+                                     'instruction_learning_selection',
+                                     trial_num, url)
+                trial_num += 1
+
             # social learning selection
             await get_post_trial(default_client, 'social_learning_selection',
                                  trial_num, url, headers=headers)
             trial_num += 1
 
             for ii in range(3 * e_config.n_demonstration_trials):
+                if i == 0 and ii == 0:
+                    # instruction_learning_selection
+                    await get_post_trial(default_client,
+                                         'instruction_learning',
+                                         trial_num, url)
+                    trial_num += 1
+
                 # social learning
                 await get_post_trial(default_client, 'social_learning',
                                      trial_num, url, solution, headers)
@@ -139,6 +157,12 @@ async def one_subject(default_client: httpx.AsyncClient,
                                * e_config.n_demonstration_trials * 3
 
     for i in range(n_individual_trials):
+        if i == 0:
+            # instruction_learning_selection
+            await get_post_trial(default_client, 'instruction_individual',
+                                 trial_num, url)
+            trial_num += 1
+
         # individual trial
         await get_post_trial(default_client, 'individual', trial_num, url,
                              solution, headers)
@@ -146,11 +170,21 @@ async def one_subject(default_client: httpx.AsyncClient,
 
     # demonstration trial
     for i in range(e_config.n_demonstration_trials):
+        if i == 0:
+            # instruction_learning_selection
+            await get_post_trial(default_client, 'instruction_demonstration',
+                                 trial_num, url)
+            trial_num += 1
+
         await get_post_trial(default_client, 'demonstration', trial_num, url,
                              solution, headers)
         trial_num += 1
 
     # written strategy trial
+    await get_post_trial(default_client, 'instruction_written_strategy',
+                         trial_num, url)
+    trial_num += 1
+
     await get_post_trial(default_client, 'written_strategy', trial_num, url,
                          written_strategy, headers)
     trial_num += 1

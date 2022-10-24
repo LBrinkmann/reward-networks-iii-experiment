@@ -165,16 +165,31 @@ def create_trials(experiment_num: int, experiment_type: str,
     trials = [Trial(id=trial_n, trial_type='consent')]
     trial_n += 1
 
+    trials.append(Trial(id=trial_n, trial_type='instruction_welcome'))
+    trial_n += 1
+
     # Social learning trials (not relevant for the very first generation)
     if generation > 0:
         for i in range(n_social_learning_trials):
             # Social learning selection
+            if i == 0:
+                # instruction
+                trials.append(Trial(
+                    id=trial_n, trial_type='instruction_learning_selection'))
+                trial_n += 1
+
             trials.append(Trial(id=trial_n,
                                 trial_type='social_learning_selection'))
             trial_n += 1
 
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
+                if i == 0 and ii == 0:
+                    # instruction
+                    trials.append(Trial(
+                        id=trial_n, trial_type='instruction_learning'))
+                    trial_n += 1
+
                 # Social learning
                 trials.append(Trial(id=trial_n, trial_type='social_learning',
                                     social_learning_type='observation'))
@@ -192,6 +207,8 @@ def create_trials(experiment_num: int, experiment_type: str,
                                * n_demonstration_trials * 3
 
     # Individual trials
+    trials.append(Trial(id=trial_n, trial_type='instruction_individual'))
+    trial_n += 1
 
     for i in range(n_individual_trials):
         # individual trial
@@ -206,6 +223,9 @@ def create_trials(experiment_num: int, experiment_type: str,
         trials.append(trial)
         trial_n += 1
 
+    # Demonstration trials
+    trials.append(Trial(id=trial_n, trial_type='instruction_demonstration'))
+    trial_n += 1
     for i in range(n_demonstration_trials):
         # demonstration trial
         dem_trial = Trial(
@@ -221,6 +241,8 @@ def create_trials(experiment_num: int, experiment_type: str,
         trial_n += 1
 
     # Written strategy
+    trials.append(Trial(id=trial_n, trial_type='instruction_written_strategy'))
+    trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
 

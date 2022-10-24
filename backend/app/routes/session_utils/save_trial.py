@@ -10,9 +10,7 @@ from utils.utils import estimate_solution_score
 
 async def save_trial(body, session, trial, trial_type):
     # save trial results
-    if trial_type == 'consent':
-        pass
-    elif trial_type == 'individual':
+    if trial_type == 'individual':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'social_learning_selection':
         # select all social learning trials for one advisor
@@ -31,8 +29,12 @@ async def save_trial(body, session, trial, trial_type):
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'written_strategy':
         save_written_strategy(trial, body)
-    elif trial_type == 'debriefing':
-        pass
+    elif trial_type in ['consent', 'debriefing',
+                        'instruction_learning_selection',
+                        'instruction_learning',
+                        'instruction_individual', 'instruction_demonstration',
+                        'instruction_written_strategy', 'instruction_welcome']:
+        save_empty_trial(trial)
 
     # update session with the trial
     session.trials[session.current_trial_num] = trial
@@ -74,6 +76,9 @@ async def save_social_leaning_selection(trials: List[Trial],
     sl_selection = trials[0]
     sl_trials = trials[1:]
 
+    # remove instruction trial if it is in the list of social learning trials
+    sl_trials = [t for t in sl_trials if t.trial_type != 'instruction_learning']
+
     # get advisor session
     ad_s = await Session.get(body.advisor_id)
 
@@ -104,9 +109,14 @@ async def save_social_leaning_selection(trials: List[Trial],
             sl_trials[n * 3 + i].network = t.network
 
     sl_selection.advisor = Advisor(
-                advisor_id=body.advisor_id,
-                written_strategy=wr_s.strategy
-            )
+        advisor_id=body.advisor_id,
+        written_strategy=wr_s.strategy
+    )
 
     sl_selection.finished_at = datetime.now()
     sl_selection.finished = True
+
+
+def save_empty_trial(trial: Trial):
+    trial.finished_at = datetime.now()
+    trial.finished = True
