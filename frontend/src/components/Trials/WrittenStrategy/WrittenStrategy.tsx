@@ -12,6 +12,10 @@ interface WrittenStrategyInterface {
 const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) => {
     const [writtenStrategy, setWrittenStrategy] = React.useState<string>("");
 
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 200) setWrittenStrategy(event.target.value)
+    }
+
     return (
         <Paper
             sx={{
@@ -33,9 +37,9 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) 
                         fullWidth
                         margin="normal"
                         rows={6}
-                        helperText="Please type at least 50 characters"
+                        helperText="Please enter between 50 and 200 characters"
                         value={writtenStrategy}
-                        onChange={(event) => setWrittenStrategy(event.target.value)}
+                        onChange={onChange}
                     />
                 </Grid>
                 <Grid item style={{ textAlign: "center" }}>
