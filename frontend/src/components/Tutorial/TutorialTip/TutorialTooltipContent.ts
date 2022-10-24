@@ -31,6 +31,13 @@ export const tutorialTooltipContent = [
         tip: "Time Constraint",
     },
     {
+        id: "practice_total_score",
+        title: "Total Score",
+        text: "Your total number of points collected are displayed here. The points will determine your bonus payment. Note that some rounds, just like this, are only for practice. You will not to collect points in these rounds.",
+        tip: "Total Score",
+
+    },
+    {
         id: "social_learning_selection_player",
         title: "Player selection",
         text: `Select a player to see the solution of this player`,

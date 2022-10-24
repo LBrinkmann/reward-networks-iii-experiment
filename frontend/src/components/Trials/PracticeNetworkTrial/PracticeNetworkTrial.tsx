@@ -7,6 +7,7 @@ import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 
 import {edges, nodes} from "./PracticeData";
+import Header from "../../Header";
 
 
 export interface PracticeNetworkTrialInterface {
@@ -89,23 +90,32 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 time={timer}
                 OnTimeEndHandler={() => setIsTimerDone(true)}
                 pause={true}
-                showTutorial={tutorialId === 5 && moves.length === maxSteps - 1}
-                onTutorialClose={onLastTooltipClick}
+                showTutorial={tutorialId === 5 && moves.length === maxSteps}
+                onTutorialClose={onTooltipClick}
             />
         )
     }
 
 
     return (
-        <TrialWithNetworkLayout
-            network={renderNetwork()}
-            timer={renderTimer()}
-            playerInformation={renderPlayerInformation()}
-            linearSolution={renderLinearSolution()}
-            showTimer={true}
-            showPlayerInformation={true}
-            showLinearSolution={true}
-        />
+        <>
+            <Header
+                title={"Practice"}
+                showTutorial={tutorialId === 6 && moves.length === maxSteps}
+                showTip={false}
+                onTutorialClose={onLastTooltipClick}
+                totalPoints={0}
+            />
+            <TrialWithNetworkLayout
+                network={renderNetwork()}
+                timer={renderTimer()}
+                playerInformation={renderPlayerInformation()}
+                linearSolution={renderLinearSolution()}
+                showTimer={true}
+                showPlayerInformation={true}
+                showLinearSolution={true}
+            />
+        </>
     );
 };
 

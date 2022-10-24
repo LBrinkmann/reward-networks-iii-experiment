@@ -21,8 +21,8 @@ HeaderInExperiment.args = {
     totalPoints: 100
 };
 
-export const HeaderInTutorial = Template.bind({});
+export const NoTotalPoints = Template.bind({});
 
-HeaderInTutorial.args = {
-    totalPoints: 0,
+NoTotalPoints.args = {
+    totalPoints: null,
 };
