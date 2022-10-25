@@ -23,7 +23,7 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
-    const {timer = 30, maxSteps = 8} = props;
+    const {timer = 25, maxSteps = 8} = props;
     const {
         step,
         points,
@@ -60,7 +60,11 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         />
     )
 
-    const renderTimer = () => <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
+    const renderTimer = () => <Timer
+        time={timer}
+        invisibleTime={5} // 5 seconds before the timer starts
+        OnTimeEndHandler={() => setIsTimerDone(true)}
+    />
 
     return (
         <TrialWithNetworkLayout

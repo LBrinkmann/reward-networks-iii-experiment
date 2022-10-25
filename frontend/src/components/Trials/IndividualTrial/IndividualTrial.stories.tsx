@@ -32,7 +32,7 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
 export const ExampleOne = Template.bind({});
 
 ExampleOne.args = {
-    timer: 30,
+    timer: 25,
     edges: data[examples_rand[0]].edges,
     nodes: data[examples_rand[0]].nodes,
     onNextTrialHandler: () => {location.reload()},
@@ -42,7 +42,7 @@ ExampleOne.args = {
 export const ExampleTwo = Template.bind({});
 
 ExampleTwo.args = {
-    timer: 30,
+    timer: 25,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
     onNextTrialHandler: () => {location.reload()},

@@ -5,6 +5,8 @@ import TutorialTip from "../Tutorial/TutorialTip";
 interface TimerInterface {
     /** Time in seconds */
     time: number;
+    /** Invisible time: time when timer has no visual changes but the time is ticking */
+    invisibleTime?: number;
     /** Callback to handle timer end */
     OnTimeEndHandler?: () => void;
     /** Pause the timer */
@@ -16,10 +18,11 @@ interface TimerInterface {
 }
 
 const Timer: React.FC<TimerInterface> = (props) => {
-    const {time, OnTimeEndHandler, pause = false, showTutorial = false} = props;
+    const {time, OnTimeEndHandler, invisibleTime = 0, pause = false, showTutorial = false} = props;
     const [timePassed, setTimePassed] = useState<number>(0);
     const [isDone, setIsDone] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(pause);
+    const [isVisibleTimerChanges, setIsVisibleTimerChanges] = useState<boolean>(invisibleTime === 0);
 
     // get states from local storage to prevent losing state on refresh
     useEffect(() => {
@@ -47,6 +50,14 @@ const Timer: React.FC<TimerInterface> = (props) => {
             return () => clearInterval(interval);
         }
     }, [isDone, isPaused]);
+
+    useEffect(() => {
+        if (invisibleTime - timePassed < 0) {
+            setIsVisibleTimerChanges(true);
+        }
+
+    }, [timePassed]);
+
 
     useEffect(() => {
         // save states to local storage to prevent losing state on refresh
@@ -84,13 +95,13 @@ const Timer: React.FC<TimerInterface> = (props) => {
         >
             <Box display='flex' justifyContent='center' alignItems='center'>
                 <Typography position="absolute" variant="h5" component="div" color="text.secondary">
-                    {fmtMSS(time - timePassed)}
+                    {fmtMSS(isVisibleTimerChanges ? time - (timePassed - invisibleTime) : time)}
                 </Typography>
 
                 <CircularProgress
-                    color={selectColor(timePassed / time)}
+                    color={selectColor((timePassed - invisibleTime) / time)}
                     variant="determinate"
-                    value={((timePassed + time) / time) * 100}
+                    value={isVisibleTimerChanges ? (((timePassed - invisibleTime) + time) / time) * 100: 100}
                     size={120}/>
             </Box>
         </TutorialTip>

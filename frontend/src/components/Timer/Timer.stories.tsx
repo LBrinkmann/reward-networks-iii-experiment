@@ -25,3 +25,21 @@ DefaultStory.args = {
     time: 30,
     OnTimeEndHandler: () => {location.reload()},
 };
+
+export const Tutorial = Template.bind({});
+
+Tutorial.args = {
+    pause: true,
+    time: 30,
+    showTutorial: true,
+    OnTimeEndHandler: () => {location.reload()},
+};
+
+export const invisible5seconds = Template.bind({});
+
+invisible5seconds.args = {
+    pause: false,
+    time: 25,
+    invisibleTime: 5,
+    OnTimeEndHandler: () => {location.reload()},
+};
