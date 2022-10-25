@@ -23,7 +23,11 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
         trial = session.trials[trial_num]
         subject_in_the_session = True if session.subject_id else False
         is_ai_player = session.ai_player
-        label = f'{trial_num + 1}' if subject_in_the_session else ' '
+        if subject_in_the_session:
+            percentage = round((trial_num + 1) / len(session.trials) * 100)
+            label = f'{percentage}%'
+        else:
+            label = ' '
         title = f'Session {s_num} in generation {g}\n'
         title += f'Current trial: {trial_num + 1} ({trial.trial_type})\n'
         first_trial = session.trials[0]
