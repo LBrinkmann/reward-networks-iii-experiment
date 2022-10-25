@@ -99,7 +99,7 @@ GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks
 
 - https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/reward-network-iii/0
 
-### Logs
+### Logs in New Relic
 
 - Frontend pod logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
 - Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
