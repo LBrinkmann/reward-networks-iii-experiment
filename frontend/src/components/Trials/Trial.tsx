@@ -103,7 +103,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         {/* Hide header for practice trial */}
                         {trialType !== 'practice' &&
                             <Header
-                                title={setHeaderTitle(trialType, socialLearningType, teacherInx, learningExampleInx)}
+                                title={setHeaderTitle(trialType, socialLearningType, learningExampleInx, teacherInx)}
                                 totalPoints={totalPoints}
                             />}
                         {/* Render correct trial */}
