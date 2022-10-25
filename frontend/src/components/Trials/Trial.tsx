@@ -156,6 +156,7 @@ const Trial: React.FC<TrialInterface> = (props) => {
                         })
                     }
                     onClickHandler={onSocialLearningSelectionClickHandler}
+                    showTutorial={trial.id === 4}
                 />;
             case 'instruction_learning':
                 return <Instruction instructionId={"learning"} onClick={OnNextTrial}/>;

@@ -41,5 +41,5 @@ Tutorial.args = {
         {advisorInx: 4, averageScore: 800},
         {advisorInx: 5, averageScore: -1000},
     ],
-    isTutorial: true,
+    showTutorial: true,
 };

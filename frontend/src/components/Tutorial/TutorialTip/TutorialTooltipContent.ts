@@ -40,7 +40,7 @@ export const tutorialTooltipContent = [
     {
         id: "social_learning_selection_player",
         title: "Player Selection",
-        text: `Select a player to see the solution of this player`,
+        text: "Select a player to learn from. Scores displayed are the average scores obtained during the players’ experiments.",
         tip: "Select a player",
     },
     {
