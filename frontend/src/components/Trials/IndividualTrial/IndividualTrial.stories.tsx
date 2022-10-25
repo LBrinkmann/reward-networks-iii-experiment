@@ -15,10 +15,16 @@ export default {
 } as ComponentMeta<typeof IndividualTrial>;
 
 const Template: ComponentStory<typeof IndividualTrial> = function (args) {
+    const [totalPoints, setTotalPoints] = React.useState(0);
+
+    const updateTotalPoints = (points: number) => {
+        setTotalPoints(totalPoints + points);
+    }
+
     return (
         <>
-            <Header totalPoints={0} title={"Individual Trial"}/>
-            <IndividualTrial {...args}/>
+            <Header totalPoints={totalPoints} title={"Individual Trial"}/>
+            <IndividualTrial updateTotalScore={updateTotalPoints} {...args}/>
         </>
     );
 };

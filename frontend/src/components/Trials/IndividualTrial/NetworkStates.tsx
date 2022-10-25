@@ -5,7 +5,10 @@ const useNetworkStates = (
     onNextTrialHandler: (moves: number[]) => void,
     edges: StaticNetworkEdgeInterface[],
     nodes: StaticNetworkNodeInterface[],
-    maxSteps?: number) => {
+    maxSteps?: number,
+    // update total score
+    updateTotalScore?: (points: number) => void
+    ) => {
 
     const [step, setStep] = useState<number>(0);
     const [points, setPoints] = useState<number>(0);
@@ -72,6 +75,8 @@ const useNetworkStates = (
             (edge) => edge.source_num === currentNode && edge.target_num === nextNode)[0];
         // Update cumulative reward
         setPoints(points + currentEdge.reward);
+        // Update total score
+        if (updateTotalScore) updateTotalScore(currentEdge.reward);
     }
 
     return {step, points, isTimerDone, moves, setStep, setPoints, setIsTimerDone, setMoves, onNextStepHandler};

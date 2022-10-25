@@ -89,6 +89,11 @@ const Trial: React.FC<TrialInterface> = (props) => {
         OnNextTrial([], advisorId);
     }
 
+    const updateTotalPoints = (points: number) => {
+        window.localStorage.setItem('totalPoints', JSON.stringify(totalPoints + points));
+        setTotalPoints(totalPoints + points);
+    }
+
     return (
         <>
             {error && (console.log(error))}
@@ -109,7 +114,9 @@ const Trial: React.FC<TrialInterface> = (props) => {
                                 trial,
                                 OnNextTrial,
                                 onSocialLearningSelectionClickHandler,
-                                teacherInx)
+                                teacherInx,
+                                updateTotalPoints
+                            )
                         }
                     </>
                 ) : (<WaitForNextTrialScreen/>)

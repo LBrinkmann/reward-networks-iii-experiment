@@ -72,5 +72,5 @@ export const useTrialAPI = () => {
     };
 
 
-    return {trial, error, loading, postResponse, axiosGet, axiosPost};
+    return {trial, error, loading, axiosGet, axiosPost};
 }

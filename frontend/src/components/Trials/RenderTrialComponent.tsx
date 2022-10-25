@@ -19,7 +19,7 @@ export const renderTrial = (
     OnNextTrial: () => void,
     onSocialLearningSelectionClickHandler: (advisorId: string, inx: number) => void,
     teacherInx: number,
-
+    updateTotalPoints: (points: number) => void,
 ) => {
     switch (type) {
         case 'consent':
@@ -82,6 +82,7 @@ export const renderTrial = (
                 nodes={data.network.nodes}
                 edges={data.network.edges}
                 onNextTrialHandler={OnNextTrial}
+                updateTotalScore={updateTotalPoints}
             />;
         case 'instruction_demonstration':
             return <Instruction instructionId={"demonstration"} onClick={OnNextTrial}/>;
