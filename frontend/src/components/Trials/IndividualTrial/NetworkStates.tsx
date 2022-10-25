@@ -7,7 +7,8 @@ const useNetworkStates = (
     nodes: StaticNetworkNodeInterface[],
     maxSteps?: number,
     // update total score
-    updateTotalScore?: (points: number) => void
+    updateTotalScore?: (points: number) => void,
+    incompleteTrialPunishment? : number
     ) => {
 
     const [step, setStep] = useState<number>(0);
@@ -56,6 +57,11 @@ const useNetworkStates = (
                 window.localStorage.removeItem('movesDynamicNetwork');
                 // from timer
                 window.localStorage.removeItem('timePassed');
+
+                // update total score if the trial is incomplete
+                if (step < maxSteps && updateTotalScore) {
+                    updateTotalScore(incompleteTrialPunishment * maxSteps - step);
+                }
 
                 // go to the next trial
                 onNextTrialHandler(moves);

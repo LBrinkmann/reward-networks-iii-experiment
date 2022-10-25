@@ -20,10 +20,12 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
     hideTrial?: boolean;
     /** Callback to update player's total score */
     updateTotalScore?: (score: number) => void;
+    /** Punishment for the incomplete trials */
+    incompleteTrialPunishment?: number;
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
-    const {timer = 25, maxSteps = 8} = props;
+    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -140} = props;
     const {
         step,
         points,
@@ -31,7 +33,8 @@ const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
         moves,
         setIsTimerDone,
         onNextStepHandler
-    } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps, props.updateTotalScore)
+    } = useNetworkStates(
+        props.onNextTrialHandler, props.edges, props.nodes, maxSteps, props.updateTotalScore, incompleteTrialPunishment)
 
     const renderNetwork = () => (
         <DynamicNetwork
