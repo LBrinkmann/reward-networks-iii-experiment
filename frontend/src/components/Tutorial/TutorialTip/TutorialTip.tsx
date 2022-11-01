@@ -17,10 +17,19 @@ interface TutorialTipInterface {
     arrow?: boolean;
     /** Callback to update parent tutorial index */
     onTutorialClose?: () => void;
+    /** Show title of the tutorial tip */
+    showTitle?: boolean;
 }
 
 const TutorialTip: FC<TutorialTipInterface> = (props) => {
-    const {children, isTutorial = false, isShowTip = true, placement = 'bottom', arrow = true} = props;
+    const {
+        children,
+        isTutorial = false,
+        isShowTip = true,
+        placement = 'bottom',
+        arrow = true,
+        showTitle = false
+    } = props;
 
     const [open, setOpen] = useState(isTutorial);
 
@@ -37,18 +46,35 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
     }
 
     const setTitleAndContent = (name: string, content: string) => (
+
         <Box sx={{textAlign: "center"}}>
-            <Typography color="inherit" variant="h6" sx={{m: 1}}>
-                {name}
-            </Typography>
-            <Divider/>
+            {/* Hide the title of the tooltip */}
+            {showTitle &&
+                (
+                    <>
+                        <Typography color="inherit" variant="h6" sx={{m: 1}}>
+                            {name}
+                        </Typography>
+                        <Divider/>
+                    </>
+                )
+            }
             <Typography color="inherit" sx={{m: 1}}>
                 {content}
             </Typography>
-            <Divider/>
-            <Button sx={{m: 1}} variant="contained" color="secondary" onClick={onClose}>
-                Ok
-            </Button>
+
+            {/* sometimes the tooltip should disappear without the button click */}
+            {props.onTutorialClose &&
+                (
+                    <>
+                        <Divider/>
+                        <Button sx={{m: 1}} variant="contained" color="secondary" onClick={onClose}>
+                            Ok
+                        </Button>
+                    </>
+                )
+            }
+
         </Box>
     )
 

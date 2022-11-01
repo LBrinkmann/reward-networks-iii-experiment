@@ -110,7 +110,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
                                 target_y={scaleSizeY(edge.target_y)}
                                 key={'edge-' + idx}
                                 showTutorial={showEdgeTutorial && idx === 0}
-                                onTutorialClose={props.onTutorialClose}
+                                onTutorialClose={null}  // No need for the OK button in the tooltip
                             />
                         );
                     })}
