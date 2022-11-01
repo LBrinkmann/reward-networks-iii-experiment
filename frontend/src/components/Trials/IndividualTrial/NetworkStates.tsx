@@ -60,7 +60,7 @@ const useNetworkStates = (
 
                 // update total score if the trial is incomplete
                 if (step < maxSteps && updateTotalScore) {
-                    updateTotalScore(incompleteTrialPunishment * maxSteps - step);
+                    updateTotalScore(incompleteTrialPunishment * (maxSteps - step));
                 }
 
                 // go to the next trial

@@ -19,6 +19,7 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
 
     const updateTotalPoints = (points: number) => {
         setTotalPoints(totalPoints + points);
+        console.log(`Current score: ${totalPoints} + ${points} = ${totalPoints + points}`);
     }
 
     return (
