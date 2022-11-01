@@ -1,10 +1,4 @@
-## Backend-Frontend interaction
-
-<p align="centre">
-<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
-</p>
-
-
+# Reward Network III
 ## Development environment
 
 Development environment is defined in `docker-compose-dev.yml` file. To simplify docker-compose usage, one can set `docker-compose-dev.yml` as an environmental variable in `.env` file: `COMPOSE_FILE=docker-compose-dev.yml`.
@@ -108,3 +102,10 @@ GitLab repo is available at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks
 - Frontend and backend pipelines are triggered by the parent pipeline [`.gitlab-ci.yml`](.gitlab-ci.yml).
 - In order to run two separate pipelines from the same repo, we need to copy the content of [`frontend`](frontend) and [`backend`](backend) folders to the root of the repo before running the corresponding child pipeline ([`.gitlab-ci-frontend.yml`](`.gitlab-ci-frontend.yml`) or [`.gitlab-ci-backend.yml`](.gitlab-ci-backend.yml)).
 - [`frontend`](frontend) folder should be deleted before the `build` stage of the [`.gitlab-ci-frontend.yml`](.gitlab-ci-frontend.yml) pipeline. This is necessary to avoid typescript errors when building the frontend.
+
+## Backend-Frontend interaction scheme
+
+<p align="centre">
+<img alt="Backend-Frontend interaction" height="auto" src="docs/backend-frontend.png" width="50%"/>
+</p>
+
