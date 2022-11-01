@@ -14,7 +14,7 @@ group Consent [1 time]
     Backend --> Frontend: <color green>**TrialSaved**</color>
 end
 
-alt Generation 0
+alt Generation > 0
 
 group Social learning block [3 times]
     autonumber
@@ -43,7 +43,7 @@ group Social learning block [3 times]
 
 end
 
-else Generation > 0
+else Generation == 0
     autonumber
 
     group Individual trial [9 times]
