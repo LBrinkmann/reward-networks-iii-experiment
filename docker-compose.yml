@@ -71,6 +71,7 @@ services:
     volumes:
       - /usr/frontend/node_modules
       - ./frontend/src:/frontend/src
+      - ./frontend/static:/frontend/static
       - ./frontend/.storybook:/frontend/.storybook
     depends_on:
       - react

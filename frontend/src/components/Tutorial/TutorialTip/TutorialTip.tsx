@@ -1,6 +1,8 @@
-import {Box, Button, Divider, Tooltip, Typography} from "@mui/material";
+import {Box, Button, CardMedia, Divider, Tooltip, Typography} from "@mui/material";
 import React, {FC, useEffect, useState} from "react";
 import {tutorialTooltipContent} from "./TutorialTooltipContent";
+// @ts-ignore
+import rewardsImg from './rewards.png';
 
 interface TutorialTipInterface {
     /** children of the tutorial component */
@@ -62,6 +64,16 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
             <Typography color="inherit" sx={{m: 1}}>
                 {content}
             </Typography>
+            {(name == "Arrow") &&
+                (
+                    <CardMedia
+                        component="img"
+                        // height="140"
+                        image={rewardsImg}
+                        alt="You earn or lose points depending on the color of the arrow."
+                    />
+                )
+            }
 
             {/* sometimes the tooltip should disappear without the button click */}
             {props.onTutorialClose &&
