@@ -63,7 +63,7 @@ const Timer: React.FC<TimerInterface> = (props) => {
         // save states to local storage to prevent losing state on refresh
         window.localStorage.setItem('timePassed', JSON.stringify(timePassed + 1));
 
-        if (timePassed >= time) {
+        if (timePassed >= time + invisibleTime) {
             window.localStorage.removeItem('timePassed');
             setIsDone(true);
         }
