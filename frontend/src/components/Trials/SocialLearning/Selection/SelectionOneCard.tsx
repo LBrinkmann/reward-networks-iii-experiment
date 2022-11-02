@@ -25,6 +25,7 @@ const SelectionOneCard: React.FC<SocialLearningSelectionOneCardProps> = (props) 
             isShowTip={false}
             onTutorialClose={props.onTutorialClose}
             placement={"right"}
+            arrow={false}
         >
             <Card sx={{width: 230, alignItems: 'center', justifyContent: 'center'}}>
                 <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
