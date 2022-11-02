@@ -15,7 +15,7 @@ export const tutorialTooltipContent = [
     {
         id: "practice_step_score",
         title: "Score & Step",
-        text: "You always have 8 moves per network. Your goal is to collect the maximum total number of points in these 8 moves. Now click on the next node.",
+        text: "You always have 8 moves per network. Your goal is to collect the maximum number of points in these 8 moves. Now click on the next node.",
         tip: "Current step and cumulative score",
     },
     {
@@ -27,13 +27,13 @@ export const tutorialTooltipContent = [
     {
         id: "practice_timer",
         title: "Time Constraint",
-        text: "In the actual experiment, you will have a limited time to solve each network. If you run out of time, you will receive -140 points for each move you are missing.",
+        text: "In the actual experiment, you will have limited time to solve each network. If you run out of time, you will receive -140 points for each missing move.",
         tip: "Time Constraint",
     },
     {
         id: "practice_total_score",
         title: "Total Score",
-        text: "Your total number of points collected are displayed here. The points will determine your bonus payment. Note that some rounds, just like this, are only for practice. You will not to collect points in these rounds.",
+        text: "Once you can actually collect points, your total number of points will be displayed here.",
         tip: "Total Score",
 
     },

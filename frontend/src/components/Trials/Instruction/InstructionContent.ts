@@ -10,18 +10,17 @@ export const InstructionContent = [
     {
         id: "learning",
         text: "You will now see solutions of the selected player for two different networks.\n" +
-            "For each network, you will see first a replay of the previous player’s solution, then you will have to repeat the solution and finally you will be able to try the network yourself.\n" +
+            "For each network, you will see first a replay of the previous player’s solution, then you will have to repeat the solution, and finally you will be able to try the network yourself.\n" +
             "Additionally, the player might have provided a written strategy for you.\n" +
-            "Note that you cannot collect points in these rounds, as they are for learning only.\n"
+            "Note that you cannot collect points in these rounds, they are for learning only.\n"
     },
     {
         id: "individual",
-        text: "From now on you are on your own. In the next 6 rounds you can practise the task. Half of your bonus will depend on your performance during this practise rounds.\n\n" +
-            "You will earn a bonus payment depending on your collected points!\n"
+        text: "From now on you are on your own. In the next 6 rounds you can try to maximize your points. Half of your bonus will depend on your performance during these rounds."
     },
     {
         id: "demonstration",
-        text: "Well done. Please provide two demonstrations for future players to learn from. You will earn a bonus payment depending on the performance of people that learn from you, so try your best!"
+        text: "Well done. Please provide two demonstrations for future players to learn from. You will earn the second half of your bonus payment depending on the performance of people that learn from you, so try your best!"
     },
     {
         id: "written_strategy",
