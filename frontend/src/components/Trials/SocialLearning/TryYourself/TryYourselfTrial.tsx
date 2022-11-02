@@ -17,7 +17,7 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
     const [showLinearNetwork, setShowLinearNetwork] = useState<boolean>(false);
 
     useEffect(() => {
-        if(showLinearNetwork) {
+        if (showLinearNetwork) {
             // wait for `waitBeforeNextTrial` second
             setTimeout(() => {
                 // go to the next trial
@@ -52,7 +52,7 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
             <Typography variant="h6" gutterBottom align={'left'}>
                 Player {props.teacherId} total score: {calculateTotalScore(props.moves)}
             </Typography>
-            <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves} />
+            <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}/>
         </Box>
     )
 
@@ -65,7 +65,12 @@ export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
         <>
             {
                 (showLinearNetwork) ? renderLinerSolutions() :
-                    <IndividualTrial  {...props} onNextTrialHandler={onTrialFinish}/>
+                    <>
+                        <Typography variant="h3" align='center'>
+                            Now try on your own!
+                        </Typography>
+                        <IndividualTrial  {...props} onNextTrialHandler={onTrialFinish}/>
+                    </>
             }
         </>
 
