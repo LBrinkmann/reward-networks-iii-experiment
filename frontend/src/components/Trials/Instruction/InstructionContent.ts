@@ -20,7 +20,7 @@ export const InstructionContent = [
     },
     {
         id: "demonstration",
-        text: "Well done. Please provide two demonstrations for future players to learn from. You will earn the second half of your bonus payment depending on the performance of people that learn from you, so try your best!"
+        text: "Well done. Please provide two demonstrations for future players to learn from. You will not earn points directly, but the second half of your bonus payment depends on the the performance of people that learn from you, so try your best!"
     },
     {
         id: "written_strategy",
