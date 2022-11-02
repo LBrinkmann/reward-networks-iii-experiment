@@ -25,5 +25,9 @@ export const InstructionContent = [
     {
         id: "written_strategy",
         text: "Last, please describe your strategy and write it down for the other players to learn from."
+    },
+    {
+        id: "consent_decline",
+        text: "You have declined to participate in the experiment. Thank you for your time. Please return the study on Prolific."
     }
 ]
