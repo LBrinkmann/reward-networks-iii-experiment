@@ -47,6 +47,7 @@ async def startup_event():
 
     # run only in development mode
     generate_frontend_types()
+    draw_db_diagram()
 
 
 async def generate_experiment_sessions():
@@ -85,3 +86,18 @@ def generate_frontend_types():
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
             'app.models.trial', os.path.join(path, 'apiTypes.ts'))
+
+
+def draw_db_diagram():
+    # draw database diagram (for development and documentation)
+    # environment variables are set in the docker-compose.yml
+    if os.getenv('DRAW_DB_DIAGRAM', default='false') == 'true':
+        import erdantic as erd
+        from models.subject import Subject
+        from models.session import Session
+
+        diagram = erd.create(Subject)
+        diagram.draw("models/subject.png", args='-Gdpi=300')
+
+        diagram = erd.create(Session)
+        diagram.draw("models/session.png", args='-Gdpi=300')

@@ -1,4 +1,17 @@
 # Reward Network III
+
+## DB models
+
+### Session
+<p align="centre">
+<img alt="Backend-Frontend interaction" height="auto" src="backend/app/models/session.png" width="100%"/>
+</p>
+
+### Subject
+<p align="centre">
+<img alt="Backend-Frontend interaction" height="auto" src="backend/app/models/subject.png" width="25%"/>
+</p>
+
 ## Development environment
 
 Development environment is defined in `docker-compose-dev.yml` file. To simplify docker-compose usage, one can set `docker-compose-dev.yml` as an environmental variable in `.env` file: `COMPOSE_FILE=docker-compose-dev.yml`.

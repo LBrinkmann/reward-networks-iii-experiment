@@ -24,6 +24,7 @@ services:
       # Environment variables for official FastAPI docker image
       APP_MODULE: 'server:api'
       LOG_LEVEL: 'debug'
+      DRAW_DB_DIAGRAM: 'true'
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'
     ports:
