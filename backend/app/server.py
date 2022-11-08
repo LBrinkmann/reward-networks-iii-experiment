@@ -9,11 +9,13 @@ from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 from routes.progress import progress_router
+from routes.results import results_router
 from routes.session import session_router
 from study_setup.generate_sessions import generate_sessions
 
 api = FastAPI()
 
+# metrics on the /metrics endpoint for prometheus
 api.add_middleware(PrometheusMiddleware)
 api.add_route("/metrics", handle_metrics)
 
@@ -32,6 +34,7 @@ api.add_middleware(
 # Register routes
 api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
+api.include_router(results_router, prefix="/results")
 
 
 @api.on_event("startup")
