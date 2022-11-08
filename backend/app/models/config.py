@@ -2,6 +2,11 @@ from pydantic import BaseSettings
 
 
 class ExperimentSettings(BaseSettings):
+    # username and password for basic auth on routes to view progress and
+    # results
+    BACKEND_USER: str = "admin"
+    BACKEND_PASSWORD: str = "admin"
+
     # These variables are rewritten on deployment
     # number of generations with the first generation
     N_GENERATIONS: int = 3
