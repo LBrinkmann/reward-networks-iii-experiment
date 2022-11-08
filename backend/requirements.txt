@@ -7,6 +7,6 @@ pydantic==1.9.0
 pymongo
 pyvis
 pyyaml
-starlette-prometheus
+starlette-exporter
 stringcase
 uvicorn
