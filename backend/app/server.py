@@ -2,6 +2,7 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 from database.connection import DatabaseSettings
 from models.config import ExperimentSettings
@@ -12,6 +13,9 @@ from routes.session import session_router
 from study_setup.generate_sessions import generate_sessions
 
 api = FastAPI()
+
+api.add_middleware(PrometheusMiddleware)
+api.add_route("/metrics", metrics)
 
 # load settings
 config = ExperimentSettings()
