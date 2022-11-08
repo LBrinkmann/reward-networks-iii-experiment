@@ -6,11 +6,11 @@ type NetworkEdgeProps = {
 }
 
 const colors = {
-    'large-negative': '#de0000',
-    'negative': '#e8a1da',
-    'neutral': '#cbcbcb',
-    'positive': '#008585',
-    'large-positive': '#00b200'
+    'large-negative': '#7b3294',
+    'negative': '#c2a5cf',
+    'neutral': '#e1e1e1',
+    'positive': '#a6dba0',
+    'large-positive': '#008837'
 }
 
 const NetworkEdgeStyled = styled('g')<NetworkEdgeProps>`
