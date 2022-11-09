@@ -23,10 +23,9 @@ async def simulate_data(generation):
         for s in gen:
 
             trials = []
-
-            # Demonstration trial
+            n_trial = 0
+            # Individual trial
             for i in range(config.n_demonstration_trials):
-                moves = [0, 5, 3, 4, 0, 5, 6, 7, 9]
                 network = Network.parse_obj(
                     network_data[random.randint(0, network_data.__len__() - 1)])
                 moves = \
@@ -34,7 +33,30 @@ async def simulate_data(generation):
                      s['network_id'] == network.network_id][
                         0]['moves']
                 dem_trial = Trial(
-                    id=i,
+                    id=n_trial,
+                    trial_type='individual',
+                    network=network,
+                    solution=Solution(
+                        moves=moves,
+                        score=estimate_solution_score(network, moves)
+                    )
+                )
+                # update the starting node
+                dem_trial.network.nodes[
+                    dem_trial.network.starting_node].starting_node = True
+                trials.append(dem_trial)
+                n_trial += 1
+
+            # Demonstration trial
+            for i in range(config.n_demonstration_trials):
+                network = Network.parse_obj(
+                    network_data[random.randint(0, network_data.__len__() - 1)])
+                moves = \
+                    [s for s in solutions if
+                     s['network_id'] == network.network_id][
+                        0]['moves']
+                dem_trial = Trial(
+                    id=n_trial,
                     trial_type='demonstration',
                     network=network,
                     solution=Solution(
@@ -46,10 +68,11 @@ async def simulate_data(generation):
                 dem_trial.network.nodes[
                     dem_trial.network.starting_node].starting_node = True
                 trials.append(dem_trial)
+                n_trial += 1
 
             # Written strategy
             trials.append(Trial(
-                id=config.n_demonstration_trials + 1,
+                id=n_trial,
                 trial_type='written_strategy',
                 written_strategy=WrittenStrategy(strategy=''))
             )
