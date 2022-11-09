@@ -9,7 +9,7 @@ from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 from routes.session_utils.session_lifecycle import replace_stale_session, \
-    initialize_session, get_session
+    initialize_session, get_session, end_session
 from simultate_session_data import simulate_data
 
 
@@ -276,6 +276,30 @@ async def test_replace_stale_session(create_empty_experiment,
     expired_session = await Session.find_one(Session.subject_id == subj.id)
     assert replaced_session.subject_id is None
     assert expired_session.subject_id == subj.id
+
+    # Clean up resources
+    await Session.find().delete()
+    await Subject.find().delete()
+
+
+@pytest.mark.asyncio
+async def test_end_session(create_empty_experiment,
+                           default_client: httpx.AsyncClient,
+                           e_config: ExperimentSettings):
+    generation = 1
+    await simulate_data(generation)
+
+    # select the session from the 0 generation (session with the simulated data)
+    session = await Session.find_one(Session.generation == 0)
+    session.started_at = datetime.now() - timedelta(minutes=60)
+    await session.save()
+    await end_session(session)
+    # update the session
+    session = await Session.get(session.id)
+    assert session.finished == False
+    # expired session should be in the database
+    expired_session = await Session.find_one(Session.expired == True)
+    assert expired_session is not None
 
     # Clean up resources
     await Session.find().delete()
