@@ -65,7 +65,9 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
 
     // Component indices
     const edgeId = `edge-${props.idx}`;
+    const edgeBackgroundId = `edge-background-${props.idx}`;
     const markerId = `marker-arrow-${props.idx}`;
+    const markerBackgroundId = `marker-arrow-background-${props.idx}`;
     const textId = `edge-text-${props.idx}`;
     const textIdBg = `edge-text-bg-${props.idx}`;
 
@@ -115,6 +117,24 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
             isShowTip={false}
             onTutorialClose={props.onTutorialClose}
             placement="top">
+            {/* Background */}
+            <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
+                <animated.path
+                    strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
+                    className="colored-stroke"
+                    id={edgeBackgroundId}
+                    strokeDasharray={strokeDasharray ? strokeDasharray : null}
+                    markerEnd={`url(#${markerBackgroundId})`}
+                    markerUnits="userSpaceOnUse"
+                    d={d}
+                />
+                {/* Marker ➤ */}
+                <marker id={markerBackgroundId} markerWidth="5" markerHeight="4" className="colored-fill"
+                        refX="4" refY="2" orient="auto">
+                    <polygon points="0.4 0, 5.3 2, 0.4 4"/>
+                </marker>
+            </NetworkEdgeStyled>
+            {/* Edge */}
             <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
                 <animated.path
                     strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
