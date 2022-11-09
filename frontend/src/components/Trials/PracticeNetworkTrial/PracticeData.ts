@@ -86,7 +86,7 @@ export const edges = [
     {
         "source_num": 0,
         "target_num": 5,
-        "reward": 140,
+        "reward": 100,
         "arc_type": "straight",
         "source_x": 88.55743415023434,
         "source_y": -9.701037972931204e-7,
@@ -134,7 +134,7 @@ export const edges = [
     {
         "source_num": 1,
         "target_num": 3,
-        "reward": -140,
+        "reward": -100,
         "arc_type": "straight",
         "source_x": 69.81450684495366,
         "source_y": -62.3809726491924,

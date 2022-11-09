@@ -111,12 +111,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
     const {dashOffset} = useSpring(springConfig);
 
     return (
-        <TutorialTip
-            tutorialId={"practice_edge"}
-            isTutorial={showTutorial}
-            isShowTip={false}
-            onTutorialClose={props.onTutorialClose}
-            placement="top">
+        <>
             {/* Background */}
             <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
                 <animated.path
@@ -134,41 +129,52 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
                     <polygon points="0.4 0, 5.3 2, 0.4 4"/>
                 </marker>
             </NetworkEdgeStyled>
-            {/* Edge */}
-            <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
-                <animated.path
-                    strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
-                    className="colored-stroke"
-                    id={edgeId}
-                    strokeDasharray={strokeDasharray ? strokeDasharray : null}
-                    markerEnd={`url(#${markerId})`}
-                    markerUnits="userSpaceOnUse"
-                    d={d}
-                />
-                {showRewardText ? (
-                    <>
-                        {/* Text text background */}
-                        <text id={textIdBg} className="edge-text-bg edge-text">
-                            <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={'35%'}>
-                                <tspan dy={3}>{reward}</ tspan>
-                            </textPath>
-                        </text>
-                        {/* Reward text */}
-                        <text id={textId} className="edge-text colored-fill">
-                            <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`} startOffset={'35%'}>
-                                <tspan dy={3}>{reward}</ tspan>
-                            </textPath>
-                        </text>
 
-                    </>) : null}
-                {/* Marker ➤ */}
-                <marker id={markerId} markerWidth="5" markerHeight="4" className="colored-fill"
-                        refX="4" refY="2" orient="auto">
-                    <polygon points="0 0, 5 2, 0 4"/>
-                </marker>
+            <TutorialTip
+                tutorialId={"practice_edge"}
+                isTutorial={showTutorial}
+                isShowTip={false}
+                onTutorialClose={props.onTutorialClose}
+                placement="top">
 
-            </NetworkEdgeStyled>
-        </TutorialTip>
+                {/* Edge */}
+                <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
+                    <animated.path
+                        strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
+                        className="colored-stroke"
+                        id={edgeId}
+                        strokeDasharray={strokeDasharray ? strokeDasharray : null}
+                        markerEnd={`url(#${markerId})`}
+                        markerUnits="userSpaceOnUse"
+                        d={d}
+                    />
+                    {showRewardText ? (
+                        <>
+                            {/* Text text background */}
+                            <text id={textIdBg} className="edge-text-bg edge-text">
+                                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}
+                                          startOffset={'35%'}>
+                                    <tspan dy={3}>{reward}</ tspan>
+                                </textPath>
+                            </text>
+                            {/* Reward text */}
+                            <text id={textId} className="edge-text colored-fill">
+                                <textPath alignmentBaseline="text-after-edge" xlinkHref={`#${edgeId}`}
+                                          startOffset={'35%'}>
+                                    <tspan dy={3}>{reward}</ tspan>
+                                </textPath>
+                            </text>
+
+                        </>) : null}
+                    {/* Marker ➤ */}
+                    <marker id={markerId} markerWidth="5" markerHeight="4" className="colored-fill"
+                            refX="4" refY="2" orient="auto">
+                        <polygon points="0 0, 5 2, 0 4"/>
+                    </marker>
+
+                </NetworkEdgeStyled>
+            </TutorialTip>
+        </>
     );
 };
 
