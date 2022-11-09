@@ -268,8 +268,32 @@ def create_trials(experiment_num: int, experiment_type: str,
 
 
 def create_ai_trials(experiment_num, experiment_type, generation,
-                     session_idx, n_demonstration_trials):
+                     session_idx, n_demonstration_trials,
+                     n_individual_trials=6):
     trials = []
+    trial_n = 0
+    # Individual trials
+    for i in range(n_individual_trials):
+        network = Network.parse_obj(
+            network_data[random.randint(0, network_data.__len__() - 1)])
+        moves = [s for s in solutions if s['network_id'] == network.network_id][
+            0]['moves']
+
+        # individual trial
+        trial = Trial(
+            trial_type='individual',
+            id=trial_n,
+            network=Network.parse_obj(
+                network_data[random.randint(0, network_data.__len__() - 1)]),
+            solution=Solution(
+                moves=moves,
+                score=estimate_solution_score(network, moves)
+            )
+        )
+        # update the starting node
+        trial.network.nodes[trial.network.starting_node].starting_node = True
+        trials.append(trial)
+        trial_n += 1
 
     # Demonstration trial
     for i in range(n_demonstration_trials):
@@ -279,7 +303,7 @@ def create_ai_trials(experiment_num, experiment_type, generation,
             0]['moves']
 
         dem_trial = Trial(
-            id=i,
+            id=trial_n,
             trial_type='demonstration',
             network=network,
             solution=Solution(
@@ -291,10 +315,11 @@ def create_ai_trials(experiment_num, experiment_type, generation,
         dem_trial.network.nodes[
             dem_trial.network.starting_node].starting_node = True
         trials.append(dem_trial)
+        trial_n += 1
 
     # Written strategy
     trials.append(Trial(
-        id=n_demonstration_trials + 1,
+        id=trial_n,
         trial_type='written_strategy',
         written_strategy=WrittenStrategy(strategy=''))
     )
