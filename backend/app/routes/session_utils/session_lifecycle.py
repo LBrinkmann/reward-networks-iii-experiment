@@ -121,7 +121,7 @@ async def replace_stale_session(exp_config: ExperimentSettings,
         Time in minutes after which the session is considered expired
     """
     # get all expired sessions (sessions that were started long ago)
-    new_expired = await Session.find(
+    await Session.find(
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
@@ -129,6 +129,14 @@ async def replace_stale_session(exp_config: ExperimentSettings,
     ).find(
         # find all sessions older than the specified time delta
         Session.started_at < datetime.now() - timedelta(minutes=time_delta)
+    ).update(Set({Session.expired: True}))
+
+    # get all newly expired sessions
+    new_expired = await Session.find(
+        # session is marked as expired
+        Session.expired == True,
+        # session has not yet been replaced
+        Session.replaced != True
     ).to_list()
 
     # nothing to replace
@@ -156,6 +164,6 @@ async def replace_stale_session(exp_config: ExperimentSettings,
 
         # mark the session as expired and delete id
         s.expired = True
+        s.replaced = True
         del s.id
-
-    await Session.insert_many(new_expired)
+        await s.save()

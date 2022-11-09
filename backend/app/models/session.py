@@ -26,6 +26,7 @@ class Session(Document):
     available: Optional[bool] = False  # available for subject to play
     started_at: Optional[datetime.datetime]  # when the first trial was started
     expired: Optional[bool] = False  # if the session is expired
+    replaced: Optional[bool] = False  # if the session was replaced
 
     class Config:
         # TODO: add example
