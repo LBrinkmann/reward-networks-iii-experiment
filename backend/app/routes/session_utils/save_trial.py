@@ -21,7 +21,7 @@ async def save_trial(body, session, trial, trial_type):
                 break
             sl_end += 1
         trials = session.trials[sl_start:sl_start + sl_end]
-        await save_social_leaning_selection(trials, session.subject_id, body)
+        await save_social_learning_selection(trials, session.subject_id, body)
         session.trials[sl_start:sl_start + sl_end] = trials
     elif trial_type == 'social_learning':
         save_individual_demonstration_trial(trial, body)
@@ -67,9 +67,9 @@ def save_written_strategy(trial: Trial, body: WrittenStrategy):
     trial.finished = True
 
 
-async def save_social_leaning_selection(trials: List[Trial],
-                                        subject_id: PydanticObjectId,
-                                        body: Advisor):
+async def save_social_learning_selection(trials: List[Trial],
+                                         subject_id: PydanticObjectId,
+                                         body: Advisor):
     if not isinstance(body, Advisor):
         return TrialError(message='Trial results are missing')
 
