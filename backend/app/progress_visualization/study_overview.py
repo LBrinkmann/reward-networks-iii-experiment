@@ -72,5 +72,8 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
     path = ROOT / 'tmp'
     path.mkdir(exist_ok=True)
     file = path / f'study_{experiment_type}_{experiment_num}_overview.html'
-    net.save_graph(str(file))
+
+    html = net.generate_html(str(file))
+    with open(file, "w+") as out:
+        out.write(html)
     return file
