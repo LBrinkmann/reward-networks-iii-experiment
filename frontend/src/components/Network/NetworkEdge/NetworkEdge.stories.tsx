@@ -11,7 +11,7 @@ export default {
     component: NetworkEdge,
     argTypes: {
         reward: {
-            control: { type: 'select', options: [-120, -20, 20, 120] },
+            control: { type: 'select', options: [-100, -20, 0, 20, 120] },
         }
     }
 } as ComponentMeta<typeof NetworkEdge>;
