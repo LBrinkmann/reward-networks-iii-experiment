@@ -27,6 +27,8 @@ class Session(Document):
     started_at: Optional[datetime.datetime]  # when the first trial was started
     expired: Optional[bool] = False  # if the session is expired
     replaced: Optional[bool] = False  # if the session was replaced
+    # time spent on the session after the session was finished
+    time_spent: Optional[datetime.timedelta] = datetime.timedelta(0)
 
     class Config:
         # TODO: add example

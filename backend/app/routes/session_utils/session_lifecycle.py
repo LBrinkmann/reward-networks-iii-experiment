@@ -87,6 +87,7 @@ async def end_session(session):
     session.finished_at = datetime.now()
     session.finished = True
     session.average_score = estimate_average_player_score(session)
+    session.time_spent = session.finished_at - session.started_at
     # save session
     await session.save()
     # update child sessions
@@ -125,10 +126,18 @@ async def replace_stale_session(exp_config: ExperimentSettings,
         Session.finished == False,  # session is not finished
         Session.subject_id != None,  # session is assigned to subject
         # there can be old expired and already replaces sessions
-        Session.expired != True
+        Session.expired == False
     ).find(
         # find all sessions older than the specified time delta
         Session.started_at < datetime.now() - timedelta(minutes=time_delta)
+    ).update(Set({Session.expired: True}))
+
+    # mark as expired finished but not replaced sessions
+    await Session.find(
+        Session.finished == True,  # session is finished
+        Session.replaced == False  # session is not replaced
+    ).find(
+        Session.time_spent > timedelta(minutes=time_delta)
     ).update(Set({Session.expired: True}))
 
     # get all newly expired sessions
@@ -136,7 +145,7 @@ async def replace_stale_session(exp_config: ExperimentSettings,
         # session is marked as expired
         Session.expired == True,
         # session has not yet been replaced
-        Session.replaced != True
+        Session.replaced == False
     ).to_list()
 
     # nothing to replace

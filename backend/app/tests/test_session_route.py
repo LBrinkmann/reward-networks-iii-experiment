@@ -244,19 +244,14 @@ async def test_replace_stale_session(create_empty_experiment,
                                      default_client: httpx.AsyncClient,
                                      e_config: ExperimentSettings):
     subj = Subject(prolific_id='test-1')
-
     await subj.save()
-
     await initialize_session(subj)
-
     # get session
     session = await get_session('test-1')
     session_id = session.id
 
     session.started_at = datetime.now() - timedelta(minutes=10)
-
     await session.save()
-
     await replace_stale_session(e_config, 10)
 
     replaced_session = await Session.get(session_id)
@@ -266,6 +261,21 @@ async def test_replace_stale_session(create_empty_experiment,
     assert replaced_session.subject_id is None
     assert expired_session.subject_id == subj.id
     assert len(replaced_session.trials) == len(expired_session.trials)
+
+    # test finished and expired but not replaced session
+    subj = Subject(prolific_id='test-2')
+    await subj.save()
+    await initialize_session(subj)
+    session = await get_session('test-2')
+    session_id = session.id
+    session.finished = True
+    session.time_spent = timedelta(minutes=15)
+    await session.save()
+    await replace_stale_session(e_config, 10)
+    replaced_session = await Session.get(session_id)
+    expired_session = await Session.find_one(Session.subject_id == subj.id)
+    assert replaced_session.subject_id is None
+    assert expired_session.subject_id == subj.id
 
     # Clean up resources
     await Session.find().delete()
