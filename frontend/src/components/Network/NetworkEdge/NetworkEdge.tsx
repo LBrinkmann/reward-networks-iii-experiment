@@ -113,22 +113,24 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
     return (
         <>
             {/* Background */}
-            <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
-                <animated.path
-                    strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
-                    className="colored-stroke"
-                    id={edgeBackgroundId}
-                    strokeDasharray={strokeDasharray ? strokeDasharray : null}
-                    markerEnd={`url(#${markerBackgroundId})`}
-                    markerUnits="userSpaceOnUse"
-                    d={d}
-                />
-                {/* Marker ➤ */}
-                <marker id={markerBackgroundId} markerWidth="5" markerHeight="4" className="colored-fill"
-                        refX="4" refY="2" orient="auto">
-                    <polygon points="0.4 0, 5.3 2, 0.4 4"/>
-                </marker>
-            </NetworkEdgeStyled>
+            {(colorClass === 'neutral') && (
+                <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
+                    <animated.path
+                        strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
+                        className="colored-stroke"
+                        id={edgeBackgroundId}
+                        strokeDasharray={strokeDasharray ? strokeDasharray : null}
+                        markerEnd={`url(#${markerBackgroundId})`}
+                        markerUnits="userSpaceOnUse"
+                        d={d}
+                    />
+                    {/* Marker ➤ */}
+                    <marker id={markerBackgroundId} markerWidth="5" markerHeight="4" className="colored-fill"
+                            refX="4" refY="2" orient="auto">
+                        <polygon points="0.4 0, 5.3 2, 0.4 4"/>
+                    </marker>
+                </NetworkEdgeStyled>
+            )}
 
             <TutorialTip
                 tutorialId={"practice_edge"}
