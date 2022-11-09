@@ -8,7 +8,7 @@ type NetworkEdgeProps = {
 const colors = {
     'large-negative': '#7b3294',
     'negative': '#c2a5cf',
-    'neutral': '#e1e1e1',
+    'neutral': '#f7f7f7',
     'positive': '#a6dba0',
     'large-positive': '#008837',
     'background': '#000000'
