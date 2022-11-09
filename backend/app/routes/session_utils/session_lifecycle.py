@@ -90,6 +90,15 @@ async def end_session(session):
     session.time_spent = session.finished_at - session.started_at
     # save session
     await session.save()
+    # Ensure that the expired but finished sessions are removed from the
+    # session tree
+    await replace_stale_session(ExperimentSettings())
+    # get the updated version of the session
+    session = await Session.get(session.id)
+    # if session in not finished then it was expired and replaced
+    # no need to update availability status of child sessions
+    if not session.finished:
+        return
     # update child sessions
     await update_availability_status_child_sessions(session)
 
