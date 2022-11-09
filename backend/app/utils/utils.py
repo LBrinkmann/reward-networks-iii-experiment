@@ -19,7 +19,7 @@ def estimate_solution_score(network: Network, moves: List[int]) -> int:
 def estimate_average_player_score(session) -> int:
     """ Estimate average player score """
     # get all trials
-    trials_to_consider = ['individual', 'demonstration']
+    trials_to_consider = ['individual']
     trials = [t for t in session.trials if t.trial_type in trials_to_consider]
 
     # get all player scores
