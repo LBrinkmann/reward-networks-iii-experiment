@@ -23,5 +23,5 @@ export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
     onContinueHandler: null,
-    requiredFields: [true, true, true, true]
+    requiredFields: [true, true, true, true, false]
 };

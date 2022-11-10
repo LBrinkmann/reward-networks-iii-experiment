@@ -37,7 +37,7 @@ const OpenQuestion: React.FC<OpenQuestionProps> = (props) => {
                     multiline
                     fullWidth
                     margin="normal"
-                    rows={3}
+                    rows={2}
                     value={props.value}
                     onChange={handleChange}
                 />
@@ -62,14 +62,16 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
     }
     return (
         <FormControl fullWidth={true}>
-            <FormLabel id={`likert-question-label-${props.id}`}>{props.question}</FormLabel>
-            <Grid container direction="row" justifyContent={'center'} alignItems={'center'} spacing={2}>
-                <Grid item>
+            <FormLabel id={`likert-question-label-${props.id}`}  sx={{marginBottom: "30px"}}>
+                {props.question}
+            </FormLabel>
+            <Grid container direction="row" justifyContent={'center'} alignItems={'center'} spacing={4}>
+                <Grid item xs={3}>
                     <Typography fontWeight="lg" fontSize="sm" align={'center'}>
                         {props.minValueExplanation}
                     </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item xs={5}>
                     <RadioGroup
                         row
                         id={`radio-group-${props.id}`}
@@ -84,7 +86,7 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
                         <FormControlLabel value="6" control={<Radio/>} label="6"/>
                     </RadioGroup>
                 </Grid>
-                <Grid item>
+                <Grid item xs={3}>
                     <Typography fontWeight="lg" fontSize="sm" align={'center'}>
                         {props.maxValueExplanation}
                     </Typography>
@@ -121,50 +123,59 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
     }
 
     return (
-        <Grid sx={{flexGrow: 1, p: 5, margin: 'auto', width: '75%', maxWidth: 800,}}
+        <Grid sx={{flexGrow: 1, p: 5, margin: 'auto', width: '75%', maxWidth: 1000,}}
               direction="column"
               container
               spacing={3}
         >
             <Grid item>
                 <LikertQuestion
-                    question={"How much did you enjoy the game?"}
+                    question={"Did you experience the time as sufficient to concentrate on each trial?"}
                     id={0}
                     isRequired={props.requiredFields[0]}
                     value={answers[0]}
-                    maxValueExplanation={"Very much"}
-                    minValueExplanation={"Not at all"}
+                    maxValueExplanation={"Strongly disagree"}
+                    minValueExplanation={"Strongly agree"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
                 <LikertQuestion
-                    question={"How much did you enjoy the game?"}
+                    question={"Please rate the difficulty of the task?"}
                     id={1}
                     isRequired={props.requiredFields[1]}
                     value={answers[1]}
-                    maxValueExplanation={"Very much"}
-                    minValueExplanation={"Not at all"}
+                    maxValueExplanation={"Very easy"}
+                    minValueExplanation={"Very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
                 <LikertQuestion
-                    question={"How much did you enjoy the game?"}
+                    question={"How well was the task explained?"}
                     id={2}
                     isRequired={props.requiredFields[2]}
                     value={answers[2]}
-                    maxValueExplanation={"Very much"}
-                    minValueExplanation={"Not at all"}
+                    maxValueExplanation={"I always knew what to do"}
+                    minValueExplanation={"I felt lost by times"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
                 <OpenQuestion
-                    question={"Hi"}
+                    question={"Did you follow a strategy while solving the task?"}
                     id={3}
                     isRequired={props.requiredFields[3]}
                     value={answers[3]}
+                    onChangeHandler={onChangeHandler}
+                />
+            </Grid>
+            <Grid item>
+                <OpenQuestion
+                    question={"Do you have any additional comments on the experiment?"}
+                    id={4}
+                    isRequired={props.requiredFields[4]}
+                    value={answers[4]}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
