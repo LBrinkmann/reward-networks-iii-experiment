@@ -13,7 +13,7 @@ export default {
 const Template: ComponentStory<typeof PostSurvey> = function (args) {
     return (
         <>
-            <Header title={"Introduction"}/>
+            <Header title={"Final survey"}/>
             <PostSurvey {...args}/>
         </>
     );

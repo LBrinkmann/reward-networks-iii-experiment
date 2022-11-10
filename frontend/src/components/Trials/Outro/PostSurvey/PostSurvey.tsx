@@ -85,28 +85,28 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
                 {(showErrorMessage && props.isRequired && !props.value) &&
                     <span style={{color: "red"}}>{"(Please answer this question)"}</span>}
             </FormLabel>
-            <Grid container direction="row" justifyContent={'center'} alignItems={'center'} spacing={4}>
-                <Grid item xs={3}>
+            <Grid container direction="row" justifyContent={'center'} alignItems={'center'} spacing={1}>
+                <Grid item xs={2}>
                     <Typography fontWeight="lg" fontSize="sm" align={'center'}>
                         {props.minValueExplanation}
                     </Typography>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                     <RadioGroup
                         row
                         id={`radio-group-${props.id}`}
                         value={props.value}
                         onChange={handleChange}
                     >
-                        <FormControlLabel value="1" control={<Radio/>} label="1"/>
-                        <FormControlLabel value="2" control={<Radio/>} label="2"/>
-                        <FormControlLabel value="3" control={<Radio/>} label="3"/>
-                        <FormControlLabel value="4" control={<Radio/>} label="4"/>
-                        <FormControlLabel value="5" control={<Radio/>} label="5"/>
-                        <FormControlLabel value="6" control={<Radio/>} label="6"/>
+                        <FormControlLabel value="1" control={<Radio/>} label="1" labelPlacement={"bottom"}/>
+                        <FormControlLabel value="2" control={<Radio/>} label="2" labelPlacement={"bottom"}/>
+                        <FormControlLabel value="3" control={<Radio/>} label="3" labelPlacement={"bottom"}/>
+                        <FormControlLabel value="4" control={<Radio/>} label="4" labelPlacement={"bottom"}/>
+                        <FormControlLabel value="5" control={<Radio/>} label="5" labelPlacement={"bottom"}/>
+                        <FormControlLabel value="6" control={<Radio/>} label="6" labelPlacement={"bottom"}/>
                     </RadioGroup>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                     <Typography fontWeight="lg" fontSize="sm" align={'center'}>
                         {props.maxValueExplanation}
                     </Typography>
