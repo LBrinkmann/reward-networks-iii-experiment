@@ -56,6 +56,8 @@ services:
       - /usr/frontend/node_modules
       - ./frontend/static:/frontend/static
       - ./frontend/src:/frontend/src
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/webpack.config.js:/frontend/webpack.config.js
     environment:
       BACKEND_URL: 'http://localhost:5000'
     stdin_open: true  # to replicate `-it` mode in docker run
@@ -74,6 +76,8 @@ services:
       - ./frontend/src:/frontend/src
       - ./frontend/static:/frontend/static
       - ./frontend/.storybook:/frontend/.storybook
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/webpack.config.js:/frontend/webpack.config.js
     depends_on:
       - react
 
