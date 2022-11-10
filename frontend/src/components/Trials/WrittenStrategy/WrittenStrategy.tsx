@@ -3,7 +3,7 @@ import {Typography, Grid, Paper, TextField, Button} from "@mui/material";
 
 interface WrittenStrategyInterface {
     /** On click continue handler */
-    onClickContinue: () => void;
+    onClickContinue: (writtenStrategy: string) => void;
 }
 
 
@@ -14,6 +14,10 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) 
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 200) setWrittenStrategy(event.target.value)
+    }
+
+    const onClickContinueHandler = () => {
+        onClickContinue(writtenStrategy);
     }
 
     return (
@@ -46,7 +50,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) 
                     {writtenStrategy.length < 50 ? (
                         <Button variant="contained" color="primary" disabled>Continue</Button>
                     ) : (
-                        <Button onClick={onClickContinue} variant="contained" color="primary">Continue</Button>
+                        <Button onClick={onClickContinueHandler} variant="contained" color="primary">Continue</Button>
                     )}
                 </Grid>
 
