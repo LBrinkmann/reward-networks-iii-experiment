@@ -1,11 +1,14 @@
 import json
 import random
 from pathlib import Path
-
 from typing import List
 
+from beanie import PydanticObjectId
+
+from models.config import ExperimentSettings
 from models.network import Network
 from models.session import Session
+from models.subject import Subject
 from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score, estimate_average_player_score
 
@@ -17,7 +20,52 @@ solutions = json.load(
     open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
 
 
-async def generate_sessions(n_generations: int = 2,
+async def generate_experiment_sessions():
+    # find an active configuration
+    config = await ExperimentSettings.find_one(
+        ExperimentSettings.active == True)
+    if config is None:
+        # if there are no configs in the database
+        # create a new config
+        config = ExperimentSettings()
+        config.active = True
+        await config.save()
+
+    if config.rewrite_previous_data:
+        await Session.find(
+            Session.experiment_type == config.experiment_type).delete()
+        await Subject.find(
+            Session.experiment_type == config.experiment_type).delete()
+
+    # find all sessions for this experiment
+    sessions = await Session.find(
+        Session.experiment_type == config.experiment_type
+    ).first_or_none()
+
+    if sessions is None:
+        # if the database is empty, generate sessions
+        for replication in range(config.n_session_tree_replications):
+            await generate_sessions(
+                config_id=config.id,
+                n_generations=config.N_GENERATIONS,
+                n_sessions_per_generation=config.n_sessions_per_generation,
+                n_advise_per_session=config.n_advise_per_session,
+                experiment_type=config.experiment_type,
+                experiment_num=replication,
+                n_ai_players=config.n_ai_players,
+                n_sessions_first_generation=config.n_sessions_first_generation,
+                n_social_learning_trials=config.n_social_learning_trials,
+                n_individual_trials=config.n_individual_trials,
+                n_demonstration_trials=config.n_demonstration_trials,
+            )
+
+        if config.SIMULATE_FIRST_GENERATION:
+            from tests.simultate_session_data import simulate_data
+            await simulate_data(1)
+
+
+async def generate_sessions(config_id: PydanticObjectId,
+                            n_generations: int = 2,
                             n_sessions_per_generation: int = 10,
                             n_advise_per_session: int = 5,
                             experiment_type: str = 'reward-network-iii',
@@ -37,6 +85,7 @@ async def generate_sessions(n_generations: int = 2,
     # create sessions for the first generation
     # the last `num_ai_players` sessions are for AI players
     sessions_n_0 = await create_generation(
+        config_id=config_id,
         generation=0,
         n_sessions_per_generation=n_sessions_first_generation,
         experiment_type=experiment_type,
@@ -61,6 +110,7 @@ async def generate_sessions(n_generations: int = 2,
     for generation in range(n_generations - 1):
         # create sessions for the next generation
         sessions_n_1 = await create_generation(
+            config_id=config_id,
             generation=generation + 1,
             n_sessions_per_generation=n_sessions_per_generation,
             experiment_type=experiment_type,
@@ -110,7 +160,8 @@ async def create_connections(gen0, gen1, n_advise_per_session):
         await s_n_1.save()
 
 
-async def create_generation(generation: int,
+async def create_generation(config_id: PydanticObjectId,
+                            generation: int,
                             n_sessions_per_generation: int,
                             experiment_type: str,
                             experiment_num: int,
@@ -122,6 +173,7 @@ async def create_generation(generation: int,
     sessions = []
     for session_idx in range(n_sessions_per_generation - n_ai_players):
         session = create_trials(
+            config_id=config_id,
             experiment_num=experiment_num,
             experiment_type=experiment_type,
             generation=generation,
@@ -139,6 +191,7 @@ async def create_generation(generation: int,
         for session_idx in range(n_sessions_per_generation - n_ai_players,
                                  n_sessions_per_generation):
             session = create_ai_trials(
+                config_id=config_id,
                 experiment_num=experiment_num,
                 experiment_type=experiment_type,
                 generation=generation,
@@ -151,8 +204,8 @@ async def create_generation(generation: int,
     return sessions
 
 
-def create_trials(experiment_num: int, experiment_type: str,
-                  generation: int, session_idx: int,
+def create_trials(config_id: PydanticObjectId, experiment_num: int,
+                  experiment_type: str, generation: int, session_idx: int,
                   n_social_learning_trials: int = 2,
                   n_individual_trials: int = 3,
                   n_demonstration_trials: int = 2) -> Session:
@@ -257,6 +310,7 @@ def create_trials(experiment_num: int, experiment_type: str,
 
     # create session
     session = Session(
+        config_id=config_id,
         experiment_num=experiment_num,
         experiment_type=experiment_type,
         generation=generation,
@@ -269,9 +323,9 @@ def create_trials(experiment_num: int, experiment_type: str,
     return session
 
 
-def create_ai_trials(experiment_num, experiment_type, generation,
-                     session_idx, n_demonstration_trials,
-                     n_individual_trials=6):
+def create_ai_trials(config_id: PydanticObjectId, experiment_num,
+                     experiment_type, generation, session_idx,
+                     n_demonstration_trials, n_individual_trials=6):
     trials = []
     trial_n = 0
     # Individual trials
@@ -327,6 +381,7 @@ def create_ai_trials(experiment_num, experiment_type, generation,
     )
 
     session = Session(
+        config_id=config_id,
         experiment_num=experiment_num,
         experiment_type=experiment_type,
         generation=generation,

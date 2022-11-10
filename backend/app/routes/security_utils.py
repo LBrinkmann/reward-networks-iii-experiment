@@ -9,9 +9,9 @@ security = HTTPBasic()
 
 
 async def get_user(credentials: HTTPBasicCredentials = Depends(security)):
-    # load settings
-    # TODO: find a better way to load settings
-    config = await ExperimentSettings.find_one()
+    # find an active configuration
+    config = await ExperimentSettings.find_one(
+        ExperimentSettings.active == True)
 
     if credentials.username != config.BACKEND_USER or \
             credentials.password != config.BACKEND_PASSWORD:

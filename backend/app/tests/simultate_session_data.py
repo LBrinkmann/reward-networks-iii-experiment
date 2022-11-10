@@ -12,10 +12,8 @@ network_data = json.load(open(Path('data') / 'train_viz.json'))
 solutions = json.load(
     open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
 
-config = ExperimentSettings()
 
-
-async def simulate_data(generation):
+async def simulate_data(generation, config):
     # fill generations with mock sessions
     for gen_ind in range(generation):
         gen = await Session.find(Session.generation == gen_ind).to_list()

@@ -1,7 +1,13 @@
+from datetime import datetime
+
 from beanie import Document
 
 
 class ExperimentSettings(Document):
+    # whether the experiment is active
+    active: bool = False
+    created_at: datetime = datetime.now()
+
     # username and password for basic auth on routes to view progress and
     # results
     BACKEND_USER: str = "admin"

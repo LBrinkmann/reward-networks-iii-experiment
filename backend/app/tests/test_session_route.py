@@ -32,7 +32,7 @@ async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
     """Test one subject from the generation 0"""
     # simulate data for generation 0
     generation = 1
-    await simulate_data(generation)
+    await simulate_data(generation, e_config)
 
     await one_subject(default_client, e_config, 0, generation)
 
@@ -300,7 +300,7 @@ async def test_end_session(create_empty_experiment,
                            default_client: httpx.AsyncClient,
                            e_config: ExperimentSettings):
     generation = 1
-    await simulate_data(generation)
+    await simulate_data(generation, e_config)
 
     # select the session from the 0 generation (session with the simulated data)
     session = await Session.find_one(Session.generation == 0)

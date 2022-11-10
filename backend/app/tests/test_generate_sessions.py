@@ -1,6 +1,7 @@
 import httpx
 import pytest
 
+from models.config import ExperimentSettings
 from models.session import Session
 from study_setup.generate_sessions import generate_sessions, create_trials
 
@@ -8,6 +9,7 @@ from study_setup.generate_sessions import generate_sessions, create_trials
 @pytest.mark.asyncio
 @pytest.mark.slow
 async def test_generate_sessions(default_client: httpx.AsyncClient,
+                                 e_config: ExperimentSettings,
                                  experiment_type='reward_network_iii',
                                  n_advise_per_session=5,
                                  n_generations=5,
@@ -16,10 +18,12 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
     sessions = await Session.find().first_or_none()
     assert sessions is None
 
-    await generate_sessions(experiment_type=experiment_type,
-                            n_advise_per_session=n_advise_per_session,
-                            n_generations=n_generations,
-                            n_sessions_per_generation=n_sessions_per_generation)
+    await generate_sessions(
+        config_id=e_config.id,
+        experiment_type=experiment_type,
+        n_advise_per_session=n_advise_per_session,
+        n_generations=n_generations,
+        n_sessions_per_generation=n_sessions_per_generation)
     sessions = await Session.find().to_list(100)
 
     assert sessions is not None
@@ -35,7 +39,8 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
 
 
 @pytest.mark.asyncio
-async def test_create_trials(default_client: httpx.AsyncClient):
+async def test_create_trials(default_client: httpx.AsyncClient,
+                             e_config: ExperimentSettings):
     n_consent = 1
     n_practice = 1
     n_soc_learning = 3
@@ -51,6 +56,7 @@ async def test_create_trials(default_client: httpx.AsyncClient):
     n_all_trials += 4  # 5 instructions: welcome, individual, demo, w_strategy
 
     session = create_trials(
+        config_id=e_config.id,
         experiment_num=0,
         experiment_type='test',
         generation=0,
@@ -71,6 +77,7 @@ async def test_create_trials(default_client: httpx.AsyncClient):
                                 'instruction_written_strategy', 'practice']
 
     session = create_trials(
+        config_id=e_config.id,
         experiment_num=0,
         experiment_type='test',
         generation=1,

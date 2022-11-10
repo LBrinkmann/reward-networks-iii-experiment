@@ -5,14 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from database.connection import DatabaseSettings
-from models.config import ExperimentSettings
-from models.session import Session
-from models.subject import Subject
 from routes.admin import admin_router
 from routes.progress import progress_router
 from routes.results import results_router
 from routes.session import session_router
-from study_setup.generate_sessions import generate_sessions
+from study_setup.generate_sessions import generate_experiment_sessions
 
 api = FastAPI()
 
@@ -51,44 +48,6 @@ async def startup_event():
     draw_db_diagram()
 
 
-async def generate_experiment_sessions():
-    configs = await ExperimentSettings.find().to_list()
-    if len(configs) == 0:
-        # if there are no configs in the database
-        # create a new config
-        config = ExperimentSettings()
-        await config.save()
-    else:
-        # if there is a config in the database
-        config = configs[0]
-
-    if config.rewrite_previous_data:
-        await Session.find().delete()
-        await Subject.find().delete()
-
-    sessions = await Session.find().first_or_none()
-
-    if sessions is None:
-        # if the database is empty, generate sessions
-        for replication in range(config.n_session_tree_replications):
-            await generate_sessions(
-                n_generations=config.N_GENERATIONS,
-                n_sessions_per_generation=config.n_sessions_per_generation,
-                n_advise_per_session=config.n_advise_per_session,
-                experiment_type=config.experiment_type,
-                experiment_num=replication,
-                n_ai_players=config.n_ai_players,
-                n_sessions_first_generation=config.n_sessions_first_generation,
-                n_social_learning_trials=config.n_social_learning_trials,
-                n_individual_trials=config.n_individual_trials,
-                n_demonstration_trials=config.n_demonstration_trials,
-            )
-
-        if config.SIMULATE_FIRST_GENERATION:
-            from tests.simultate_session_data import simulate_data
-            await simulate_data(1)
-
-
 def generate_frontend_types():
     # generate frontend types
     # environment variables are set in the docker-compose.yml
@@ -106,9 +65,13 @@ def draw_db_diagram():
         import erdantic as erd
         from models.subject import Subject
         from models.session import Session
+        from models.config import ExperimentSettings
 
         diagram = erd.create(Subject)
         diagram.draw("models/subject.png", args='-Gdpi=300')
 
         diagram = erd.create(Session)
         diagram.draw("models/session.png", args='-Gdpi=300')
+
+        diagram = erd.create(ExperimentSettings)
+        diagram.draw("models/config.png", args='-Gdpi=300')

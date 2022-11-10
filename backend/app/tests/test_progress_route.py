@@ -9,7 +9,7 @@ from models.subject import Subject
 async def test_get_progress(default_client: httpx.AsyncClient,
                             create_empty_experiment):
 
-    url = f'/progress/reward-network-iii/0'
+    url = f'/progress/'
 
     response = await default_client.get(url, auth=('admin', 'admin'))
     assert response.status_code == 200

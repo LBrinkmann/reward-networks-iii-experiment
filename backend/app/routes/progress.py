@@ -9,10 +9,14 @@ progress_router = APIRouter(tags=["Progress"])
 
 
 # view study progress
-@progress_router.get('/{experiment_type}/{experiment_num}')
-async def get_progress(experiment_type: str, experiment_num: int,
+@progress_router.get('/')
+async def get_progress(experiment_num: int = 0,
                        user: HTTPBasicCredentials = Depends(get_user)):
-    """ http://localhost:5000/progress/reward_network_iii/0 """
-    file_path = await create_sessions_network(experiment_type, experiment_num)
+    """
+    http://localhost:5000/progress
+    or
+    http://localhost:5000/progress/?experiment_num=0
+    """
+    file_path = await create_sessions_network(experiment_num)
     # return html document with the progress graph
     return FileResponse(file_path)

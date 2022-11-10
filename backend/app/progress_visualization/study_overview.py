@@ -3,16 +3,20 @@ from pathlib import Path
 
 from pyvis.network import Network
 
+from models.config import ExperimentSettings
 from models.session import Session
 
 ROOT = Path(__file__).parent
 
 
-async def create_sessions_network(experiment_type: str = 'reward_network_iii',
-                                  experiment_num: int = 0) -> Path:
+async def create_sessions_network(experiment_num) -> Path:
+    # find an active configuration
+    config = await ExperimentSettings.find_one(
+        ExperimentSettings.active == True)
+
     sessions = await Session.find(
         Session.experiment_num == experiment_num,
-        Session.experiment_type == experiment_type
+        Session.experiment_type == config.experiment_type
     ).sort(+Session.generation).to_list()
 
     net = Network(height='800px', width='100%', directed=True, layout=True)
@@ -71,7 +75,7 @@ async def create_sessions_network(experiment_type: str = 'reward_network_iii',
     net.set_options(open(ROOT / 'graph_settings.json').read())
     path = ROOT / 'tmp'
     path.mkdir(exist_ok=True)
-    file = path / f'study_{experiment_type}_{experiment_num}_overview.html'
+    file = path / f'study_{config.experiment_type}_{experiment_num}_overview.html'
 
     html = net.generate_html(str(file))
     with open(file, "w+") as out:
