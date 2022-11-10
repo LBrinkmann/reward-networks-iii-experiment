@@ -10,6 +10,7 @@ import IndividualTrial from "./IndividualTrial";
 import WrittenStrategy from "./WrittenStrategy";
 import Debriefing from "./Outro/Debriefing";
 import React from "react";
+import PostSurvey from "./Outro/PostSurvey";
 
 // Function to render the trial component based on the trial type
 export const renderTrial = (
@@ -97,6 +98,8 @@ export const renderTrial = (
             return <Instruction instructionId={"written_strategy"} onClick={OnNextTrial}/>;
         case  'written_strategy':
             return <WrittenStrategy onClickContinue={OnNextTrial}/>;
+        case 'post_survey':
+            return <PostSurvey onContinueHandler={OnNextTrial}/>;
         case 'debriefing':
             return <Debriefing redirect={'https://www.prolific.co/'}/>; // TODO: data.redirect_link
         default:

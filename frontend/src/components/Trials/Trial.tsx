@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {useTrialAPI} from "../../apis";
 import Header from "../Header";
-import {Advisor, Solution, WrittenStrategy as WrittenStrategyApiTypes} from "../../apis/apiTypes";
+import {
+    Advisor,
+    Solution,
+    WrittenStrategy as WrittenStrategyApiTypes,
+    PostSurvey as PostSurveyApiTypes
+} from "../../apis/apiTypes";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 import {renderTrial, setHeaderTitle} from "./RenderTrialComponent";
 
@@ -46,7 +51,8 @@ const Trial: React.FC<TrialInterface> = (props) => {
 
     const OnNextTrial = (moves: number[] = [],
                          selectedAdvisorId: string = '',
-                         writtenStrategy: string = '') => {
+                         writtenStrategy: string = '',
+                         postSurveyAnswers: object = {}) => {
         let payload: {};
         let waitTime = 1000;
         // setup post request payload
@@ -68,6 +74,9 @@ const Trial: React.FC<TrialInterface> = (props) => {
                 break;
             case 'written_strategy':
                 payload = {strategy: writtenStrategy} as WrittenStrategyApiTypes;
+                break;
+            case 'post_survey':
+                payload = {questions: postSurveyAnswers} as PostSurveyApiTypes;
                 break;
         }
         setWaitingForTheNextTrial(true);

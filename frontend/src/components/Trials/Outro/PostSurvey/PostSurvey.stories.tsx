@@ -22,6 +22,6 @@ const Template: ComponentStory<typeof PostSurvey> = function (args) {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    onContinueHandler: null,
+    onContinueHandler: (data: object) => console.log(data),
     requiredFields: [true, true, true, false, false]
 };

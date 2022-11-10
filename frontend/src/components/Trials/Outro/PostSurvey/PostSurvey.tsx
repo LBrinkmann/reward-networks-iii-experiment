@@ -11,11 +11,6 @@ import {
     Typography
 } from "@mui/material";
 
-interface PostSurveyProps {
-    onContinueHandler: () => void;
-    requiredFields: boolean[];
-}
-
 interface OpenQuestionProps {
     id: number;
     question: string;
@@ -118,9 +113,14 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
     )
 }
 
+interface PostSurveyProps {
+    onContinueHandler: (postSurveyAnswers: object) => void;
+    requiredFields?: boolean[];
+}
 
 export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) => {
-    const numberOfQuestions = props.requiredFields.length;
+    const {requiredFields = [true, true, true, false, false]} = props;
+    const numberOfQuestions = requiredFields.length;
     const initialAnswers = new Array(numberOfQuestions).fill("");
     const [allQuestionsAnswered, setAllQuestionsAnswered] = useState<boolean>(false);
     const [showError, setShowError] = useState<boolean>(false);
@@ -137,7 +137,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
         let allAnswered = true;
         for (let index = 0; index < allQuestions.length; ++index) {
             const q = allQuestions[index];
-            if (props.requiredFields[index] && !q) {
+            if (requiredFields[index] && !q) {
                 allAnswered = false;
             }
         }
@@ -146,7 +146,8 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
 
     const onContinueHandler = () => {
         if (allQuestionsAnswered) {
-            props.onContinueHandler();
+            // const answersObject = answers.map((answer, ind) => { return {ind: answer} });
+            props.onContinueHandler({ ...answers});
         } else {
             setShowError(true);
         }
@@ -163,7 +164,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                 <LikertQuestion
                     question={"Did you experience the time as sufficient to concentrate on each trial?"}
                     id={0}
-                    isRequired={props.requiredFields[0]}
+                    isRequired={requiredFields[0]}
                     value={answers[0]}
                     showErrorMessage={showError}
                     maxValueExplanation={"Strongly disagree"}
@@ -175,7 +176,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                 <LikertQuestion
                     question={"Please rate the difficulty of the task?"}
                     id={1}
-                    isRequired={props.requiredFields[1]}
+                    isRequired={requiredFields[1]}
                     value={answers[1]}
                     showErrorMessage={showError}
                     maxValueExplanation={"Very easy"}
@@ -187,7 +188,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                 <LikertQuestion
                     question={"How well was the task explained?"}
                     id={2}
-                    isRequired={props.requiredFields[2]}
+                    isRequired={requiredFields[2]}
                     value={answers[2]}
                     showErrorMessage={showError}
                     maxValueExplanation={"I always knew what to do"}
@@ -199,7 +200,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                 <OpenQuestion
                     question={"Did you follow a strategy while solving the task?"}
                     id={3}
-                    isRequired={props.requiredFields[3]}
+                    isRequired={requiredFields[3]}
                     value={answers[3]}
                     showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
@@ -209,7 +210,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                 <OpenQuestion
                     question={"Do you have any additional comments on the experiment?"}
                     id={4}
-                    isRequired={props.requiredFields[4]}
+                    isRequired={requiredFields[4]}
                     value={answers[4]}
                     showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
