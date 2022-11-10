@@ -17,7 +17,7 @@ class ExperimentSettings(Document):
     # These variables are rewritten on deployment
     # number of generations with the first generation
     N_GENERATIONS: int = 3
-    SIMULATE_FIRST_GENERATION: bool = True  # development only
+    SIMULATE_FIRST_GENERATION: bool = False  # development only
 
     # other experiment settings
     experiment_type: str = 'reward-network-iii'  # name of the experiment
