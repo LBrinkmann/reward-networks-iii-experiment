@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import {
     Button,
     FormControl,
@@ -10,7 +10,6 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {forEach} from "lodash";
 
 interface PostSurveyProps {
     onContinueHandler: () => void;
@@ -31,7 +30,7 @@ const OpenQuestion: React.FC<OpenQuestionProps> = (props) => {
     }
     return (
         <Grid item xs={12}>
-            <FormControl>
+            <FormControl fullWidth={true}>
                 <FormLabel id={`open-question-${props.id}`}>{props.question}</FormLabel>
                 <TextField
                     id={props.id.toString()}
@@ -98,22 +97,27 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
 
 
 export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) => {
-    const numberOfQuestions = 4;
-    const [allQuestionsAnswered, setAllQuestionsAnswered] = React.useState<boolean>(false);
-    const [questions, setQuestions] = React.useState<string[]>(forEach(new Array(numberOfQuestions), () => ""));
+    const numberOfQuestions = props.requiredFields.length;
+    const initialAnswers = new Array(numberOfQuestions).fill("");
+    const [allQuestionsAnswered, setAllQuestionsAnswered] = useState<boolean>(false);
+    const [answers, setAnswers] = useState<string[]>(initialAnswers);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
-        const newQuestions = questions;
-        newQuestions[id] = event.target.value;
-        setQuestions(newQuestions);
+        let newAnswers = [...answers];
+        newAnswers[id] = event.target.value;
+        setAnswers(newAnswers);
+        // checkAllRequiredQuestions(newQuestions);
+        console.log(newAnswers);
+    }
 
+    function checkAllRequiredQuestions(allQuestions: string[]) {
         let allAnswered = true;
-        forEach(newQuestions, (question, inx) => {
-                if (!question && props.requiredFields[inx]) {
-                    allAnswered = false;
-                }
+        for (let index = 0; index < allQuestions.length; ++index) {
+            const q = allQuestions[index];
+            if (props.requiredFields[index] && !q) {
+                allAnswered = false;
             }
-        );
+        }
         setAllQuestionsAnswered(allAnswered);
     }
 
@@ -128,7 +132,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     question={"How much did you enjoy the game?"}
                     id={0}
                     isRequired={props.requiredFields[0]}
-                    value={questions[0]}
+                    value={answers[0]}
                     maxValueExplanation={"Very much"}
                     minValueExplanation={"Not at all"}
                     onChangeHandler={onChangeHandler}
@@ -139,7 +143,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     question={"How much did you enjoy the game?"}
                     id={1}
                     isRequired={props.requiredFields[1]}
-                    value={questions[1]}
+                    value={answers[1]}
                     maxValueExplanation={"Very much"}
                     minValueExplanation={"Not at all"}
                     onChangeHandler={onChangeHandler}
@@ -150,7 +154,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     question={"How much did you enjoy the game?"}
                     id={2}
                     isRequired={props.requiredFields[2]}
-                    value={questions[2]}
+                    value={answers[2]}
                     maxValueExplanation={"Very much"}
                     minValueExplanation={"Not at all"}
                     onChangeHandler={onChangeHandler}
@@ -161,7 +165,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     question={"Hi"}
                     id={3}
                     isRequired={props.requiredFields[3]}
-                    value={questions[3]}
+                    value={answers[3]}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
