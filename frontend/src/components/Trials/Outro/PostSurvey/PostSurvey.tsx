@@ -20,18 +20,27 @@ interface OpenQuestionProps {
     id: number;
     question: string;
     isRequired: boolean;
+    showErrorMessage?: boolean;
     onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>, id: number) => void;
     value: string;
 }
 
 const OpenQuestion: React.FC<OpenQuestionProps> = (props) => {
+    const {showErrorMessage = false} = props;
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.onChangeHandler(event, props.id);
     }
     return (
+
         <Grid item xs={12}>
             <FormControl fullWidth={true}>
-                <FormLabel id={`open-question-${props.id}`}>{props.question}</FormLabel>
+                <FormLabel id={`open-question-${props.id}`}>
+                    {props.question}
+                    {props.isRequired && <span style={{color: "red"}}>{" * "}</span>}
+                    {/* Only if the question is required and not answered */}
+                    {(showErrorMessage && props.isRequired && !props.value) &&
+                        <span style={{color: "red"}}>{"(Please answer this question)"}</span>}
+                </FormLabel>
                 <TextField
                     id={props.id.toString()}
                     multiline
@@ -43,12 +52,14 @@ const OpenQuestion: React.FC<OpenQuestionProps> = (props) => {
                 />
             </FormControl>
         </Grid>
+
     )
 }
 
 interface LikertQuestionProps {
     id: number;
     question: string;
+    showErrorMessage?: boolean;
     isRequired: boolean;
     onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>, id: number) => void;
     value: string;
@@ -57,13 +68,22 @@ interface LikertQuestionProps {
 }
 
 const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
+    const {showErrorMessage = false} = props;
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.onChangeHandler(event, props.id);
     }
     return (
+
         <FormControl fullWidth={true}>
-            <FormLabel id={`likert-question-label-${props.id}`}  sx={{marginBottom: "30px"}}>
+            <FormLabel
+                id={`likert-question-label-${props.id}`}
+                sx={{marginBottom: "30px"}}
+            >
                 {props.question}
+                {props.isRequired && <span style={{color: "red"}}>{" * "}</span>}
+                {/* Only if the question is required and not answered */}
+                {(showErrorMessage && props.isRequired && !props.value) &&
+                    <span style={{color: "red"}}>{"(Please answer this question)"}</span>}
             </FormLabel>
             <Grid container direction="row" justifyContent={'center'} alignItems={'center'} spacing={4}>
                 <Grid item xs={3}>
@@ -94,6 +114,7 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
             </Grid>
         </FormControl>
 
+
     )
 }
 
@@ -102,6 +123,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
     const numberOfQuestions = props.requiredFields.length;
     const initialAnswers = new Array(numberOfQuestions).fill("");
     const [allQuestionsAnswered, setAllQuestionsAnswered] = useState<boolean>(false);
+    const [showError, setShowError] = useState<boolean>(false);
     const [answers, setAnswers] = useState<string[]>(initialAnswers);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
@@ -111,7 +133,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
         checkAllRequiredQuestions(newAnswers);
     }
 
-    function checkAllRequiredQuestions(allQuestions: string[]) {
+    const checkAllRequiredQuestions = (allQuestions: string[]) => {
         let allAnswered = true;
         for (let index = 0; index < allQuestions.length; ++index) {
             const q = allQuestions[index];
@@ -121,6 +143,15 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
         }
         setAllQuestionsAnswered(allAnswered);
     }
+
+    const onContinueHandler = () => {
+        if (allQuestionsAnswered) {
+            props.onContinueHandler();
+        } else {
+            setShowError(true);
+        }
+    }
+
 
     return (
         <Grid sx={{flexGrow: 1, p: 5, margin: 'auto', width: '75%', maxWidth: 1000,}}
@@ -134,6 +165,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     id={0}
                     isRequired={props.requiredFields[0]}
                     value={answers[0]}
+                    showErrorMessage={showError}
                     maxValueExplanation={"Strongly disagree"}
                     minValueExplanation={"Strongly agree"}
                     onChangeHandler={onChangeHandler}
@@ -145,6 +177,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     id={1}
                     isRequired={props.requiredFields[1]}
                     value={answers[1]}
+                    showErrorMessage={showError}
                     maxValueExplanation={"Very easy"}
                     minValueExplanation={"Very hard"}
                     onChangeHandler={onChangeHandler}
@@ -156,6 +189,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     id={2}
                     isRequired={props.requiredFields[2]}
                     value={answers[2]}
+                    showErrorMessage={showError}
                     maxValueExplanation={"I always knew what to do"}
                     minValueExplanation={"I felt lost by times"}
                     onChangeHandler={onChangeHandler}
@@ -167,6 +201,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     id={3}
                     isRequired={props.requiredFields[3]}
                     value={answers[3]}
+                    showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
@@ -176,17 +211,12 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     id={4}
                     isRequired={props.requiredFields[4]}
                     value={answers[4]}
+                    showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item style={{textAlign: "center"}}>
-                {allQuestionsAnswered ? (
-                    <Button onClick={props.onContinueHandler} variant="contained"
-                            color="primary">Continue</Button>
-
-                ) : (
-                    <Button variant="contained" color="primary" disabled>Continue</Button>
-                )}
+                <Button onClick={onContinueHandler} variant="contained" color="primary">Continue</Button>
             </Grid>
         </Grid>
     )
