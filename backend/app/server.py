@@ -1,17 +1,21 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from fastapi.security import HTTPBasicCredentials
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from database.connection import DatabaseSettings
 from routes.admin import admin_router
 from routes.progress import progress_router
 from routes.results import results_router
+from routes.security_utils import get_user
 from routes.session import session_router
 from study_setup.generate_sessions import generate_experiment_sessions
 
-api = FastAPI()
+api = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
 # metrics on the /metrics endpoint for prometheus
 api.add_middleware(PrometheusMiddleware)
@@ -46,6 +50,20 @@ async def startup_event():
     # run only in development mode
     generate_frontend_types()
     draw_db_diagram()
+
+
+# secure swagger ui
+# SEE: https://github.com/tiangolo/fastapi/issues/364#issuecomment-789711477
+@api.get("/docs")
+async def get_documentation(user: HTTPBasicCredentials = Depends(get_user)):
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
+
+
+# secure swagger ui
+# SEE: https://github.com/tiangolo/fastapi/issues/364#issuecomment-789711477
+@api.get("/openapi.json")
+async def openapi(user: HTTPBasicCredentials = Depends(get_user)):
+    return get_openapi(title="FastAPI", version="0.1.0", routes=api.routes)
 
 
 def generate_frontend_types():
