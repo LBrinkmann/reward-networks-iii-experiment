@@ -4,14 +4,15 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from models.config import ExperimentSettings
 
-# load settings
-config = ExperimentSettings()
-
 # protect some routes with basic auth
 security = HTTPBasic()
 
 
-def get_user(credentials: HTTPBasicCredentials = Depends(security)):
+async def get_user(credentials: HTTPBasicCredentials = Depends(security)):
+    # load settings
+    # TODO: find a better way to load settings
+    config = await ExperimentSettings.find_one()
+
     if credentials.username != config.BACKEND_USER or \
             credentials.password != config.BACKEND_PASSWORD:
         raise HTTPException(

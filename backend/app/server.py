@@ -8,6 +8,7 @@ from database.connection import DatabaseSettings
 from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
+from routes.admin import admin_router
 from routes.progress import progress_router
 from routes.results import results_router
 from routes.session import session_router
@@ -20,7 +21,6 @@ api.add_middleware(PrometheusMiddleware)
 api.add_route("/metrics", handle_metrics)
 
 # load settings
-config = ExperimentSettings()
 db_settings = DatabaseSettings()
 
 api.add_middleware(
@@ -35,6 +35,7 @@ api.add_middleware(
 api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
 api.include_router(results_router, prefix="/results")
+api.include_router(admin_router, prefix="/admin")
 
 
 @api.on_event("startup")
