@@ -51,8 +51,9 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
 
 
 async def initialize_session(subject: Subject):
+    config = await ExperimentSettings.find_one()
     # Check and remove expired sessions
-    await replace_stale_session(ExperimentSettings())
+    await replace_stale_session(config)
 
     # assign subject to any available session
     await Session.find_one(Session.available == True).update(

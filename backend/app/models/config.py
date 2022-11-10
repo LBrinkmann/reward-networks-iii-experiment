@@ -1,7 +1,7 @@
-from pydantic import BaseSettings
+from beanie import Document
 
 
-class ExperimentSettings(BaseSettings):
+class ExperimentSettings(Document):
     # username and password for basic auth on routes to view progress and
     # results
     BACKEND_USER: str = "admin"

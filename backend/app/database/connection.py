@@ -4,6 +4,7 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseSettings
 
+from models.config import ExperimentSettings
 from models.session import Session
 from models.subject import Subject
 
@@ -19,5 +20,6 @@ class DatabaseSettings(BaseSettings):
             database=client[self.DATABASE_NAME],
             document_models=[
                 Session,
-                Subject
+                Subject,
+                ExperimentSettings
             ])

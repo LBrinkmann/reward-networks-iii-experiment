@@ -51,6 +51,16 @@ async def startup_event():
 
 
 async def generate_experiment_sessions():
+    configs = await ExperimentSettings.find().to_list()
+    if len(configs) == 0:
+        # if there are no configs in the database
+        # create a new config
+        config = ExperimentSettings()
+        await config.save()
+    else:
+        # if there is a config in the database
+        config = configs[0]
+
     if config.rewrite_previous_data:
         await Session.find().delete()
         await Subject.find().delete()
