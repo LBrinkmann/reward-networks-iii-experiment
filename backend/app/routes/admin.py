@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import Depends, APIRouter
 from fastapi.security import HTTPBasicCredentials
 from starlette.requests import Request
@@ -22,8 +24,8 @@ async def get_config(user: HTTPBasicCredentials = Depends(get_user)):
     return config.dict()
 
 
-@admin_router.get("/config_update")
-async def update_config(request: Request,
+@admin_router.post("/config")
+async def update_config(new_config: ExperimentSettings,
                         user: HTTPBasicCredentials = Depends(get_user)):
     config = await ExperimentSettings.find_one(
         ExperimentSettings.active == True)
@@ -32,11 +34,13 @@ async def update_config(request: Request,
     await config.replace()
 
     # create a new config
-    new_config = ExperimentSettings(**request.query_params)
     new_config.active = True
+    new_config.created_at = datetime.now()
+    new_config.BACKEND_USER = config.BACKEND_USER
+    new_config.BACKEND_PASSWORD = config.BACKEND_PASSWORD
     await new_config.save()
 
     # generate sessions
     await generate_experiment_sessions()
 
-    return config.dict()
+    return new_config.dict()

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from beanie import Document
 
@@ -6,12 +7,12 @@ from beanie import Document
 class ExperimentSettings(Document):
     # whether the experiment is active
     active: bool = False
-    created_at: datetime = datetime.now()
+    created_at: Optional[datetime] = datetime.now()
 
     # username and password for basic auth on routes to view progress and
     # results
-    BACKEND_USER: str = "admin"
-    BACKEND_PASSWORD: str = "admin"
+    BACKEND_USER: Optional[str] = "admin"
+    BACKEND_PASSWORD: Optional[str] = "admin"
 
     # These variables are rewritten on deployment
     # number of generations with the first generation

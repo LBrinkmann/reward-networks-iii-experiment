@@ -61,7 +61,7 @@ async def generate_experiment_sessions():
 
         if config.SIMULATE_FIRST_GENERATION:
             from tests.simultate_session_data import simulate_data
-            await simulate_data(1)
+            await simulate_data(1, config)
 
 
 async def generate_sessions(config_id: PydanticObjectId,

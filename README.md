@@ -1,5 +1,39 @@
 # Reward Network III
 
+## Admin API
+
+### Create a new study
+
+`POST /<localhost or rn-iii-backend.eks-test-default.mpg-chm.com>/admin/config`
+
+```json
+
+{
+    "active": true,
+    "N_GENERATIONS": 3,
+    "SIMULATE_FIRST_GENERATION": true,
+    "experiment_type": "rn-iii-test",
+    "rewrite_previous_data": false,
+    "n_sessions_first_generation": 13,
+    "n_ai_players": 3,
+    "n_sessions_per_generation": 20,
+    "n_advise_per_session": 5,
+    "n_session_tree_replications": 1,
+    "n_social_learning_trials": 2,
+    "n_individual_trials": 6,
+    "n_demonstration_trials": 2
+}
+
+```
+
+### Get the current study configuration
+
+`GET /admin/config`
+
+### Get the current study session tree
+
+`GET /progress/`
+
 ## DB models
 
 ### Session
@@ -98,7 +132,6 @@ docker system prune --volumes --force # clean up unused volumes
 - React: http://localhost:9000/
 - Storybook: http://localhost:6006/
 - Swagger UI FastAPI: http://localhost:5000/docs
-- Backend progress: http://localhost:5000/progress/reward_network_iii/0
 
 ## Deployment
 
