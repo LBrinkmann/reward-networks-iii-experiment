@@ -22,11 +22,10 @@ module.exports = {
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
-        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-        loader: require.resolve("url-loader"),
+        test: /\.(png|jpe?g|gif|jp2|webp)$/,
+        loader: 'file-loader',
         options: {
-          limit: 10000,
-          name: "static/media/[name].[hash:8].[ext]",
+          name: '[name].[ext]',
         },
       },
       {

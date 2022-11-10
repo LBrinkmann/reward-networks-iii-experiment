@@ -1,8 +1,7 @@
 import {Box, Button, CardMedia, Divider, Tooltip, Typography} from "@mui/material";
 import React, {FC, useEffect, useState} from "react";
 import {tutorialTooltipContent} from "./TutorialTooltipContent";
-// @ts-ignore
-import rewardsImg from './rewards.png';
+import rewardsImg from '../../../images/rewards.png';
 
 interface TutorialTipInterface {
     /** children of the tutorial component */

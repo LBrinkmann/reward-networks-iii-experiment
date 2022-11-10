@@ -1,8 +1,7 @@
 import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
 import TutorialTip from "../../../Tutorial/TutorialTip";
-// @ts-ignore
-import rewardsImg from "./legend.png";
+import rewardsImg from "../../../../images/legend.png";
 import styled from "@emotion/styled";
 
 interface PlayerInformationProps {
