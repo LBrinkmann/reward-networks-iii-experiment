@@ -106,8 +106,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
         let newAnswers = [...answers];
         newAnswers[id] = event.target.value;
         setAnswers(newAnswers);
-        // checkAllRequiredQuestions(newQuestions);
-        console.log(newAnswers);
+        checkAllRequiredQuestions(newAnswers);
     }
 
     function checkAllRequiredQuestions(allQuestions: string[]) {
