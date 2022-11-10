@@ -6,7 +6,7 @@ from study_setup.generate_sessions import generate_sessions, create_trials
 
 
 @pytest.mark.asyncio
-@pytest.mark.slow  # 18 seconds
+@pytest.mark.slow
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  experiment_type='reward_network_iii',
                                  n_advise_per_session=5,
@@ -42,8 +42,10 @@ async def test_create_trials(default_client: httpx.AsyncClient):
     n_ind = 3
     n_demonstration = 3
     n_w_strategy = 1
+    n_post_survey = 1
     n_debriefing = 1
-    n_all_trials = n_consent + n_demonstration + n_w_strategy + n_debriefing
+    n_all_trials = n_consent + n_demonstration + n_w_strategy + n_post_survey
+    n_all_trials += n_debriefing
     n_all_trials += n_practice
     n_all_trials += n_soc_learning * n_demonstration * 3 + n_ind
     n_all_trials += 4  # 5 instructions: welcome, individual, demo, w_strategy
@@ -62,7 +64,7 @@ async def test_create_trials(default_client: httpx.AsyncClient):
         assert t.trial_type not in ['social_learning_selection',
                                     'social_learning']
         assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
-                                'debriefing', 'individual',
+                                'debriefing', 'individual', 'post_survey',
                                 'instruction_welcome',
                                 'instruction_individual',
                                 'instruction_demonstration',
@@ -87,4 +89,5 @@ async def test_create_trials(default_client: httpx.AsyncClient):
             'individual', 'social_learning', 'social_learning_selection',
             'instruction_learning_selection', 'instruction_learning',
             'instruction_individual', 'instruction_demonstration',
-            'instruction_written_strategy', 'instruction_welcome', 'practice']
+            'instruction_written_strategy', 'instruction_welcome', 'practice',
+            'post_survey']

@@ -4,7 +4,8 @@ from typing import List
 from beanie import PydanticObjectId
 
 from models.session import Session
-from models.trial import Trial, Solution, TrialError, WrittenStrategy, Advisor
+from models.trial import Trial, Solution, TrialError, WrittenStrategy, \
+    Advisor, PostSurvey
 from utils.utils import estimate_solution_score
 
 
@@ -29,6 +30,8 @@ async def save_trial(body, session, trial, trial_type):
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'written_strategy':
         save_written_strategy(trial, body)
+    elif trial_type == 'post_survey':
+        save_survey_trial(trial, body)
     elif trial_type in ['consent', 'n_practice', 'debriefing',
                         'instruction_welcome', 'instruction_learning_selection',
                         'instruction_learning', 'instruction_learning',
@@ -60,6 +63,19 @@ def save_written_strategy(trial: Trial, body: WrittenStrategy):
 
     trial.written_strategy = WrittenStrategy(
         strategy=body.strategy,
+        trial_id=trial.id,
+        finished_at=datetime.now()
+    )
+    trial.finished_at = datetime.now()
+    trial.finished = True
+
+
+def save_survey_trial(trial: Trial, body: PostSurvey):
+    if not isinstance(body, PostSurvey):
+        return TrialError(message='Trial results are missing')
+
+    trial.post_survey = PostSurvey(
+        questions=body.questions,
         trial_id=trial.id,
         finished_at=datetime.now()
     )

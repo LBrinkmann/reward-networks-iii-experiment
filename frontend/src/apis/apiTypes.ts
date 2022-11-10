@@ -48,6 +48,13 @@ export interface Edge {
   target_x: number;
   target_y: number;
 }
+export interface PostSurvey {
+  questions: {
+    [k: string]: string;
+  };
+  trial_id?: number;
+  finished_at?: string;
+}
 export interface Trial {
   id: number;
   trial_type:
@@ -64,6 +71,7 @@ export interface Trial {
     | "demonstration"
     | "instruction_written_strategy"
     | "written_strategy"
+    | "post_survey"
     | "debriefing";
   social_learning_type?: "observation" | "repeat" | "tryyourself";
   finished?: boolean;
@@ -75,6 +83,7 @@ export interface Trial {
   advisor_selection?: AdvisorSelection;
   selected_by_children?: string[];
   written_strategy?: WrittenStrategy;
+  post_survey?: PostSurvey;
 }
 export interface WrittenStrategy {
   strategy: string;

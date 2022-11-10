@@ -111,6 +111,15 @@ async def one_subject(default_client: httpx.AsyncClient,
     written_strategy = {
         'strategy': 'test'
     }
+
+    post_survey = {
+        'questions': {
+            'q1': 'a1',
+            'q2': 'a2',
+            'q3': 'a3',
+        }
+    }
+
     url = f'/session/prolific_id_{subj_name}'
     trial_num = 0
 
@@ -191,6 +200,10 @@ async def one_subject(default_client: httpx.AsyncClient,
 
     await get_post_trial(default_client, 'written_strategy', trial_num, url,
                          written_strategy, headers)
+    trial_num += 1
+
+    await get_post_trial(default_client, 'post_survey', trial_num, url,
+                         post_survey, headers)
     trial_num += 1
 
     # debriefing

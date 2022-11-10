@@ -248,6 +248,8 @@ def create_trials(experiment_num: int, experiment_type: str,
     trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
+    trials.append(Trial(id=trial_n, trial_type='post_survey'))
+    trial_n += 1
 
     # Debriefing
     trials.append(Trial(id=trial_n, trial_type='debriefing'))

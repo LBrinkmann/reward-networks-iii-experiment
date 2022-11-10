@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
-    WrittenStrategy, Advisor
+    WrittenStrategy, Advisor, PostSurvey
 from .session_utils.prepare_trial import prepare_trial
 from .session_utils.save_trial import save_trial
 from .session_utils.session_lifecycle import update_session
@@ -36,8 +36,8 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
 async def post_current_trial_results(
         prolific_id: str,
         trial_type: str,
-        body: Union[Solution, WrittenStrategy, Advisor, None] = None) -> Union[
-    TrialSaved, SessionError, TrialError]:
+        body: Union[Solution, WrittenStrategy, Advisor, PostSurvey, None
+        ] = None) -> Union[TrialSaved, SessionError, TrialError]:
     # find session assigned to the subject
     session = await get_session(prolific_id)
 

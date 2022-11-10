@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List, Literal
+from typing import Optional, List, Literal, Dict
 
 from beanie import PydanticObjectId
 
@@ -31,6 +31,12 @@ class WrittenStrategy(BaseModel):
     finished_at: Optional[datetime.datetime]
 
 
+class PostSurvey(BaseModel):
+    questions: Dict[str, str]
+    trial_id: Optional[int]  # trial number in session
+    finished_at: Optional[datetime.datetime]
+
+
 class Trial(BaseModel):
     id: int  # trial number in session
     trial_type: Literal[
@@ -47,6 +53,7 @@ class Trial(BaseModel):
         'demonstration',
         'instruction_written_strategy',
         'written_strategy',
+        'post_survey',
         'debriefing'
     ]
     # social learning trial related field
@@ -68,6 +75,8 @@ class Trial(BaseModel):
     selected_by_children: Optional[List[PydanticObjectId]] = []
     # written strategy trial relevant field
     written_strategy: Optional[WrittenStrategy]
+    # post survey trial relevant field
+    post_survey: Optional[PostSurvey]
 
     class Config:
         orm_mode = True
