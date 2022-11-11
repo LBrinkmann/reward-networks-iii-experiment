@@ -70,7 +70,7 @@ async def generate_experiment_sessions():
 
     # update all child sessions to have the correct number of finished parents
     # especially relevant for the AI player parents
-    sessions = await Session.find(
+    await Session.find(
         Session.experiment_type == config.experiment_type,
         Session.unfinished_parents == 0
     ).update(Set({Session.available: True}))
@@ -418,6 +418,18 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
 
 
 def get_net_solution():
+    # get networks list from the global variable
+    global network_data
+
+    # load the network again if all the previous networks have been used
+    # TODO: maybe change this behavior later
+    if len(network_data) == 0:
+        # load all networks
+        network_data = json.load(open(Path('data') / 'train_viz.json'))
+
+        # randomize the order of the networks
+        random.shuffle(network_data)
+
     # pop a network from the list of networks
     network_raw = network_data.pop()
 
