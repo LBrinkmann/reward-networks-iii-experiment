@@ -108,6 +108,11 @@ Run pytest:
 
 cd backend/app
 
+# set the environment variables
+export BACKEND_USER=admin
+export BACKEND_PASSWORD=admin
+
+# run pytest
 python -m pytest -vv -s
 
 ```

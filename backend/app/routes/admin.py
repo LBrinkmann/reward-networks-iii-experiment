@@ -2,7 +2,6 @@ from datetime import datetime
 
 from fastapi import Depends, APIRouter
 from fastapi.security import HTTPBasicCredentials
-from starlette.requests import Request
 
 from models.config import ExperimentSettings
 from routes.security_utils import get_user
@@ -15,10 +14,6 @@ admin_router = APIRouter(tags=["Admin"])
 async def get_config(user: HTTPBasicCredentials = Depends(get_user)):
     config = await ExperimentSettings.find_one(
         ExperimentSettings.active == True)
-
-    # remove sensitive data
-    if config.BACKEND_PASSWORD:
-        del config.BACKEND_PASSWORD
 
     # return config in json format
     return config.dict()

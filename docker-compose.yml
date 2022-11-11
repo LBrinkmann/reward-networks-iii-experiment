@@ -25,25 +25,12 @@ services:
       APP_MODULE: 'server:api'
       LOG_LEVEL: 'debug'
       DRAW_DB_DIAGRAM: 'true'
+      BACKEND_USER: 'admin'
+      BACKEND_PASSWORD: 'admin'
     # start-reload.sh is a version of start.sh for development with live auto-reload
     command: '/start-reload.sh'
     ports:
       - '5000:5000'
-    depends_on:
-      - database
-  backend-pytest:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile-pytest
-    volumes:
-      - ./backend:/backend
-    environment:
-      PORT: 5001
-      MONGO_URL: 'mongodb://database:27017/'
-      # Environment variables used in app/server.py
-      GENERATE_FRONTEND_TYPES: 'false'
-    ports:
-      - '5001:5001'
     depends_on:
       - database
   react:  # frontend

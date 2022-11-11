@@ -8,14 +8,14 @@ from dotenv import load_dotenv
 # protect some routes with basic auth
 security = HTTPBasic()
 
+load_dotenv()
+
+# load credentials from .env file
+BACKEND_USER = os.getenv("BACKEND_USER")
+BACKEND_PASSWORD = os.getenv("BACKEND_PASSWORD")
+
 
 async def get_user(credentials: HTTPBasicCredentials = Depends(security)):
-    load_dotenv()
-
-    # load credentials from .env file
-    BACKEND_USER = os.getenv("BACKEND_USER")
-    BACKEND_PASSWORD = os.getenv("BACKEND_PASSWORD")
-
     if credentials.username != BACKEND_USER or \
             credentials.password != BACKEND_PASSWORD:
         raise HTTPException(
