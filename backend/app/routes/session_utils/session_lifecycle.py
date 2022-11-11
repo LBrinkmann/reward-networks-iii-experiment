@@ -180,6 +180,7 @@ async def replace_stale_session(exp_config: ExperimentSettings,
             n_social_learning_trials=exp_config.n_social_learning_trials,
             n_individual_trials=exp_config.n_individual_trials,
             n_demonstration_trials=exp_config.n_demonstration_trials,
+            redirect_url=exp_config.redirect_url
         )
         new_s.advise_ids = s.advise_ids
         new_s.child_ids = s.child_ids

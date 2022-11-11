@@ -57,6 +57,7 @@ async def generate_experiment_sessions():
                 n_social_learning_trials=config.n_social_learning_trials,
                 n_individual_trials=config.n_individual_trials,
                 n_demonstration_trials=config.n_demonstration_trials,
+                redirect_url=config.redirect_url,
             )
 
         if config.simulate_first_generation:
@@ -75,6 +76,7 @@ async def generate_sessions(config_id: PydanticObjectId,
                             n_social_learning_trials: int = 2,
                             n_individual_trials: int = 3,
                             n_demonstration_trials: int = 2,
+                            redirect_url: str = 'https://www.prolific.co/',
                             seed: int = 4242):
     """
     Generate one experiment.
@@ -93,7 +95,8 @@ async def generate_sessions(config_id: PydanticObjectId,
         n_ai_players=n_ai_players,
         n_social_learning_trials=n_social_learning_trials,
         n_individual_trials=n_individual_trials,
-        n_demonstration_trials=n_demonstration_trials
+        n_demonstration_trials=n_demonstration_trials,
+        redirect_url=redirect_url
     )
 
     sessions_n_0_with_ai = sessions_n_0[n_ai_players:]
@@ -118,7 +121,8 @@ async def generate_sessions(config_id: PydanticObjectId,
             n_ai_players=0,  # no AI players in the next generations
             n_social_learning_trials=n_social_learning_trials,
             n_individual_trials=n_individual_trials,
-            n_demonstration_trials=n_demonstration_trials
+            n_demonstration_trials=n_demonstration_trials,
+            redirect_url=redirect_url
         )
 
         # split sessions into two streams (with and without AI player
@@ -169,6 +173,7 @@ async def create_generation(config_id: PydanticObjectId,
                             n_social_learning_trials: int,
                             n_individual_trials: int,
                             n_demonstration_trials: int,
+                            redirect_url: str = 'https://www.prolific.co/'
                             ) -> List[Session]:
     sessions = []
     for session_idx in range(n_sessions_per_generation - n_ai_players):
@@ -180,7 +185,8 @@ async def create_generation(config_id: PydanticObjectId,
             session_idx=session_idx,
             n_social_learning_trials=n_social_learning_trials,
             n_individual_trials=n_individual_trials,
-            n_demonstration_trials=n_demonstration_trials
+            n_demonstration_trials=n_demonstration_trials,
+            redirect_url=redirect_url
         )
         # save session
         await session.save()
@@ -208,14 +214,17 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
                   experiment_type: str, generation: int, session_idx: int,
                   n_social_learning_trials: int = 2,
                   n_individual_trials: int = 3,
-                  n_demonstration_trials: int = 2) -> Session:
+                  n_demonstration_trials: int = 2,
+                  redirect_url: str = 'https://www.prolific.co/') -> Session:
     """
     Generate one session.
+    :param redirect_url: URL to redirect to after the experiment is finished
     """
     trial_n = 0
 
     # Consent form
-    trials = [Trial(id=trial_n, trial_type='consent')]
+    trials = [Trial(id=trial_n, trial_type='consent',
+                    redirect_url='https://www.prolific.co/')]
     trial_n += 1
 
     trials.append(Trial(id=trial_n, trial_type='instruction_welcome'))
@@ -305,7 +314,8 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trial_n += 1
 
     # Debriefing
-    trials.append(Trial(id=trial_n, trial_type='debriefing'))
+    trials.append(Trial(id=trial_n, trial_type='debriefing',
+                        redirect_url=redirect_url))
     trial_n += 1
 
     # create session

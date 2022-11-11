@@ -26,7 +26,7 @@ export const renderTrial = (
         case 'consent':
             return <ConsentForm
                 onClickAgreeHandler={OnNextTrial}
-                onDisagreeRedirect={'https://www.prolific.co/'}  // TODO: data.redirect_link
+                onDisagreeRedirect={data.redirect_url}
             />;
         case 'instruction_welcome':
             return <Instruction instructionId={"welcome"} onClick={OnNextTrial}/>;
