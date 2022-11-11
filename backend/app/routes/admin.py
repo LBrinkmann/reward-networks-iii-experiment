@@ -36,8 +36,6 @@ async def update_config(new_config: ExperimentSettings,
     # create a new config
     new_config.active = True
     new_config.created_at = datetime.now()
-    new_config.BACKEND_USER = config.BACKEND_USER
-    new_config.BACKEND_PASSWORD = config.BACKEND_PASSWORD
     await new_config.save()
 
     # generate sessions

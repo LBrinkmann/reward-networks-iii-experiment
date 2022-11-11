@@ -47,7 +47,7 @@ async def generate_experiment_sessions():
         for replication in range(config.n_session_tree_replications):
             await generate_sessions(
                 config_id=config.id,
-                n_generations=config.N_GENERATIONS,
+                n_generations=config.n_generations,
                 n_sessions_per_generation=config.n_sessions_per_generation,
                 n_advise_per_session=config.n_advise_per_session,
                 experiment_type=config.experiment_type,
@@ -59,7 +59,7 @@ async def generate_experiment_sessions():
                 n_demonstration_trials=config.n_demonstration_trials,
             )
 
-        if config.SIMULATE_FIRST_GENERATION:
+        if config.simulate_first_generation:
             from tests.simultate_session_data import simulate_data
             await simulate_data(1, config)
 

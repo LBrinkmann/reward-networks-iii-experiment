@@ -8,16 +8,13 @@ class ExperimentSettings(Document):
     # whether the experiment is active
     active: bool = False
     created_at: Optional[datetime] = datetime.now()
-
-    # username and password for basic auth on routes to view progress and
-    # results
-    BACKEND_USER: Optional[str] = "admin"
-    BACKEND_PASSWORD: Optional[str] = "admin"
+    # https://app.prolific.co/submissions/complete?cc=4FC4E0C0
+    redirect_url: Optional[str] = None
 
     # These variables are rewritten on deployment
     # number of generations with the first generation
-    N_GENERATIONS: int = 3
-    SIMULATE_FIRST_GENERATION: bool = False  # development only
+    n_generations: int = 3
+    simulate_first_generation: bool = False  # development only
 
     # other experiment settings
     experiment_type: str = 'reward-network-iii'  # name of the experiment
