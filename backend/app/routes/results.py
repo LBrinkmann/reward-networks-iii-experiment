@@ -12,8 +12,19 @@ results_router = APIRouter(tags=["Results"])
 
 @results_router.get('/sessions')
 async def get_results(
+        experiment_type: str = None,
+        finished: bool = None,
         user: HTTPBasicCredentials = Depends(get_user)) -> List[Session]:
-    sessions = await Session.find().to_list()
+    search_criteria = []
+    if experiment_type is not None:
+        search_criteria.append({'experiment_type': experiment_type})
+    if finished is not None:
+        search_criteria.append({'finished': finished})
+
+    if len(search_criteria) == 0:
+        sessions = await Session.find().to_list()
+    else:
+        sessions = await Session.find({"$and": search_criteria}).to_list()
     # return html document with the progress graph
     return sessions
 
