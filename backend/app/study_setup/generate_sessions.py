@@ -73,6 +73,9 @@ async def generate_experiment_sessions():
     await Session.find(
         Session.experiment_type == config.experiment_type,
         Session.unfinished_parents == 0,
+        Session.finished == False,
+        Session.replaced == False,
+        Session.expired == False,
         Session.ai_player == False
     ).update(Set({Session.available: True}))
 
