@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List
 
 from beanie import PydanticObjectId
+from beanie.odm.operators.update.general import Set
 
 from models.config import ExperimentSettings
 from models.network import Network
@@ -66,6 +67,13 @@ async def generate_experiment_sessions():
         if config.simulate_first_generation:
             from tests.simultate_session_data import simulate_data
             await simulate_data(1, config)
+
+    # update all child sessions to have the correct number of finished parents
+    # especially relevant for the AI player parents
+    sessions = await Session.find(
+        Session.experiment_type == config.experiment_type,
+        Session.unfinished_parents == 0
+    ).update(Set({Session.available: True}))
 
 
 async def generate_sessions(config_id: PydanticObjectId,

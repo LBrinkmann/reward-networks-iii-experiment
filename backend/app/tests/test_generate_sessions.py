@@ -13,10 +13,9 @@ from study_setup.generate_sessions import generate_sessions, create_trials
     "n_sessions_per_generation,n_advise_per_session",
     [
         (2, 10, 0, 10, 0),  # pilot 1B (first generation only AI players)
-        (1, 10, 0, 10, 0),  # pilot 1A (no AI players, no advise)
+        (1, 10, 0, 10, 0),  # pilot 1A (no AI players, one generation)
         (3, 13, 3, 20, 5),  # full experiment
     ]
-
 )
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  e_config: ExperimentSettings,
