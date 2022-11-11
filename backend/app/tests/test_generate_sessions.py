@@ -8,13 +8,24 @@ from study_setup.generate_sessions import generate_sessions, create_trials
 
 @pytest.mark.asyncio
 @pytest.mark.slow
+@pytest.mark.parametrize(
+    "n_generations,n_sessions_first_generation,n_ai_players,"
+    "n_sessions_per_generation,n_advise_per_session",
+    [
+        (2, 10, 0, 10, 0),  # pilot 1B (first generation only AI players)
+        (1, 10, 0, 10, 0),  # pilot 1A (no AI players, no advise)
+        (3, 13, 3, 20, 5),  # full experiment
+    ]
+
+)
 async def test_generate_sessions(default_client: httpx.AsyncClient,
                                  e_config: ExperimentSettings,
-                                 experiment_type='reward_network_iii',
-                                 n_advise_per_session=5,
-                                 n_generations=5,
-                                 n_sessions_per_generation=20
-                                 ):
+                                 n_generations,
+                                 n_sessions_first_generation,
+                                 n_ai_players,
+                                 n_sessions_per_generation,
+                                 n_advise_per_session,
+                                 experiment_type='reward_network_iii'):
     sessions = await Session.find().first_or_none()
     assert sessions is None
 
@@ -23,6 +34,8 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
         experiment_type=experiment_type,
         n_advise_per_session=n_advise_per_session,
         n_generations=n_generations,
+        n_sessions_first_generation=n_sessions_first_generation,
+        n_ai_players=n_ai_players,
         n_sessions_per_generation=n_sessions_per_generation)
     sessions = await Session.find().to_list()
 

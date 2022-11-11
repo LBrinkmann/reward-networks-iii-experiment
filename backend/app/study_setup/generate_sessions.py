@@ -128,22 +128,30 @@ async def generate_sessions(config_id: PydanticObjectId,
             redirect_url=redirect_url
         )
 
-        # split sessions into two streams (with and without AI player
-        # advisors or offsprings of AI player advisors)
-        sessions_n_1_with_ai = sessions_n_1[n_sessions_per_generation // 2:]
-        await create_connections(sessions_n_0_with_ai,
-                                 sessions_n_1_with_ai,
-                                 n_advise_per_session)
+        # split the sessions into two groups if the first generation is mixed
+        if (n_ai_players > 0) and (n_ai_players < n_sessions_first_generation):
+            # split sessions into two streams (with and without AI player
+            # advisors or offsprings of AI player advisors)
+            sessions_n_1_with_ai = sessions_n_1[n_sessions_per_generation // 2:]
+            await create_connections(sessions_n_0_with_ai,
+                                     sessions_n_1_with_ai,
+                                     n_advise_per_session)
 
-        sessions_n_1_without_ai = sessions_n_1[:n_sessions_per_generation // 2]
-        await create_connections(sessions_n_0_without_ai,
-                                 sessions_n_1_without_ai,
-                                 n_advise_per_session)
+            sessions_n_1_without_ai = sessions_n_1[
+                                      :n_sessions_per_generation // 2]
+            await create_connections(sessions_n_0_without_ai,
+                                     sessions_n_1_without_ai,
+                                     n_advise_per_session)
 
-        # now sessions_n_0 is the previous generation
-        # NOTE: the very first generation is different from the rest
-        sessions_n_0_with_ai = sessions_n_1_with_ai
-        sessions_n_0_without_ai = sessions_n_1_without_ai
+            # now sessions_n_0 is the previous generation
+            # NOTE: the very first generation is different from the rest
+            sessions_n_0_with_ai = sessions_n_1_with_ai
+            sessions_n_0_without_ai = sessions_n_1_without_ai
+        else:
+            # if the first generation is not mixed, no need to split
+            await create_connections(sessions_n_0, sessions_n_1,
+                                     n_advise_per_session)
+            sessions_n_0 = sessions_n_1
 
 
 async def create_connections(gen0, gen1, n_advise_per_session):
