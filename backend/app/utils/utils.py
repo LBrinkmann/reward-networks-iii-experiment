@@ -3,7 +3,8 @@ from typing import List
 from models.network import Network
 
 
-def estimate_solution_score(network: Network, moves: List[int]) -> int:
+def estimate_solution_score(network: Network, moves: List[int],
+                            n_steps: int = 8) -> int:
     """ Estimate solution score """
     score = 0
     for m0, m1 in zip(moves[:-1], moves[1:]):
@@ -13,6 +14,11 @@ def estimate_solution_score(network: Network, moves: List[int]) -> int:
             score += edge[0].reward
         else:
             return -100_000  # invalid move sequence
+    # penalize for missing steps
+    # NOTE: move 0 is always the start node, so we need to add 1
+    # Penalty is the minimum reward of the network (i.e., -100)
+    score -= (n_steps - (len(moves) - 1)) * 100
+
     return score
 
 
