@@ -12,7 +12,7 @@ security = HTTPBasic()
 async def get_user(credentials: HTTPBasicCredentials = Depends(security)):
     load_dotenv()
 
-    # find an active configuration
+    # load credentials from .env file
     BACKEND_USER = os.getenv("BACKEND_USER")
     BACKEND_PASSWORD = os.getenv("BACKEND_PASSWORD")
 
