@@ -72,7 +72,8 @@ async def generate_experiment_sessions():
     # especially relevant for the AI player parents
     await Session.find(
         Session.experiment_type == config.experiment_type,
-        Session.unfinished_parents == 0
+        Session.unfinished_parents == 0,
+        Session.ai_player == False
     ).update(Set({Session.available: True}))
 
 
