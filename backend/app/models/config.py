@@ -15,7 +15,6 @@ class ExperimentSettings(Document):
     # GENERAL SETTINGS
     experiment_type: str = 'reward-network-iii'  # name of the experiment
     rewrite_previous_data: bool = False
-    simulate_first_generation: bool = False  # development only
 
     # SESSION TREE SETTINGS
     # number of generations with the first generation

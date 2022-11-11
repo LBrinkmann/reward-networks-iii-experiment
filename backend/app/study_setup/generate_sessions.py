@@ -64,10 +64,6 @@ async def generate_experiment_sessions():
                 redirect_url=config.redirect_url,
             )
 
-        if config.simulate_first_generation:
-            from tests.simultate_session_data import simulate_data
-            await simulate_data(1, config)
-
     # update all child sessions to have the correct number of finished parents
     # especially relevant for the AI player parents
     await Session.find(
