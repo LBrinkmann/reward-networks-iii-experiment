@@ -3,7 +3,10 @@ import {Typography, Grid, Paper, TextField, Button} from "@mui/material";
 
 interface WrittenStrategyInterface {
     /** On click continue handler */
-    onClickContinue: (writtenStrategy: string) => void;
+    onClickContinue: (moves: number[],
+                      selectedAdvisorId: string,
+                      writtenStrategy: string,
+                      postSurveyAnswers: object) => void;
 }
 
 
@@ -15,7 +18,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) 
     }
 
     const onClickContinueHandler = () => {
-        onClickContinue(writtenStrategy);
+        onClickContinue([], '', writtenStrategy, {});
     }
 
     return (
