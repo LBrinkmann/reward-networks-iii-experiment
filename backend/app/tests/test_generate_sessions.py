@@ -24,15 +24,22 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
         n_advise_per_session=n_advise_per_session,
         n_generations=n_generations,
         n_sessions_per_generation=n_sessions_per_generation)
-    sessions = await Session.find().to_list(100)
+    sessions = await Session.find().to_list()
 
     assert sessions is not None
 
+    net_ids = []
     for s in sessions:
         assert s.experiment_type == "reward_network_iii"
         if s.generation != 0:
             # check the number of parents
             assert len(s.advise_ids) == n_advise_per_session
+        # collect all network ids
+        net_ids += [t.network.network_id for t in s.trials if
+                    t.network is not None]
+
+    # check that each network is unique
+    assert len(net_ids) == len(set(net_ids))
 
     # Clean up resources
     await Session.find().delete()

@@ -15,6 +15,9 @@ from utils.utils import estimate_solution_score, estimate_average_player_score
 # load all networks
 network_data = json.load(open(Path('data') / 'train_viz.json'))
 
+# randomize the order of the networks
+random.shuffle(network_data)
+
 # load all ai solutions
 solutions = json.load(
     open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
@@ -276,12 +279,12 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trial_n += 1
 
     for i in range(n_individual_trials):
+        net, _ = get_net_solution()
         # individual trial
         trial = Trial(
             trial_type='individual',
             id=trial_n,
-            network=Network.parse_obj(
-                network_data[random.randint(0, network_data.__len__() - 1)]),
+            network=net,
         )
         # update the starting node
         trial.network.nodes[trial.network.starting_node].starting_node = True
@@ -292,12 +295,12 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trials.append(Trial(id=trial_n, trial_type='instruction_demonstration'))
     trial_n += 1
     for i in range(n_demonstration_trials):
+        net, _ = get_net_solution()
         # demonstration trial
         dem_trial = Trial(
             id=trial_n,
             trial_type='demonstration',
-            network=Network.parse_obj(
-                network_data[random.randint(0, network_data.__len__() - 1)]),
+            network=net,
         )
         # update the starting node
         dem_trial.network.nodes[
@@ -340,20 +343,16 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
     trial_n = 0
     # Individual trials
     for i in range(n_individual_trials):
-        network = Network.parse_obj(
-            network_data[random.randint(0, network_data.__len__() - 1)])
-        moves = [s for s in solutions if s['network_id'] == network.network_id][
-            0]['moves']
+        net, moves = get_net_solution()
 
         # individual trial
         trial = Trial(
             trial_type='individual',
             id=trial_n,
-            network=Network.parse_obj(
-                network_data[random.randint(0, network_data.__len__() - 1)]),
+            network=net,
             solution=Solution(
                 moves=moves,
-                score=estimate_solution_score(network, moves)
+                score=estimate_solution_score(net, moves)
             )
         )
         # update the starting node
@@ -363,18 +362,15 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
 
     # Demonstration trial
     for i in range(n_demonstration_trials):
-        network = Network.parse_obj(
-            network_data[random.randint(0, network_data.__len__() - 1)])
-        moves = [s for s in solutions if s['network_id'] == network.network_id][
-            0]['moves']
+        net, moves = get_net_solution()
 
         dem_trial = Trial(
             id=trial_n,
             trial_type='demonstration',
-            network=network,
+            network=net,
             solution=Solution(
                 moves=moves,
-                score=estimate_solution_score(network, moves)
+                score=estimate_solution_score(net, moves)
             )
         )
         # update the starting node
@@ -403,3 +399,16 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
     )
     session.average_score = estimate_average_player_score(session)
     return session
+
+
+def get_net_solution():
+    # pop a network from the list of networks
+    network_raw = network_data.pop()
+
+    # parse the network
+    network = Network.parse_obj(network_raw)
+
+    # get the solution for the network
+    moves = [s for s in solutions if s['network_id'] == network.network_id]
+
+    return network, moves[0]['moves']
