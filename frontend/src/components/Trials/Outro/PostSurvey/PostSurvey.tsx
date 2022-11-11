@@ -98,7 +98,6 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
                         <FormControlLabel value="3" control={<Radio/>} label="3" labelPlacement={"bottom"}/>
                         <FormControlLabel value="4" control={<Radio/>} label="4" labelPlacement={"bottom"}/>
                         <FormControlLabel value="5" control={<Radio/>} label="5" labelPlacement={"bottom"}/>
-                        <FormControlLabel value="6" control={<Radio/>} label="6" labelPlacement={"bottom"}/>
                     </RadioGroup>
                 </Grid>
                 <Grid item xs={2}>
@@ -180,8 +179,8 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     isRequired={requiredFields[1]}
                     value={answers[1]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"I always knew what to do"}
                     minValueExplanation={"I felt lost at times"}
+                    maxValueExplanation={"I always knew what to do"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
@@ -192,8 +191,8 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     isRequired={requiredFields[2]}
                     value={answers[2]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"very easy"}
-                    minValueExplanation={"very hard"}
+                    minValueExplanation={"very easy"}
+                    maxValueExplanation={"very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
@@ -204,8 +203,8 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     isRequired={requiredFields[3]}
                     value={answers[3]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"way too short"}
-                    minValueExplanation={"way too long"}
+                    minValueExplanation={"way too short"}
+                    maxValueExplanation={"way too long"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
@@ -216,8 +215,8 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
                     isRequired={requiredFields[4]}
                     value={answers[4]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"very easy"}
-                    minValueExplanation={"very hard"}
+                    minValueExplanation={"very easy"}
+                    maxValueExplanation={"very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
