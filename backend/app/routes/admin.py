@@ -27,7 +27,7 @@ async def update_config(new_config: ExperimentSettings,
 
     # check the experiment type
     if config.experiment_type == new_config.experiment_type and \
-            config.rewrite_previous_data != True:
+            new_config.rewrite_previous_data == False:
         # await config.update(new_config.dict())
         # return error if the experiment type is the same
         return {
