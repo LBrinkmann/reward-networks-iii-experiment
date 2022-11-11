@@ -24,6 +24,16 @@ async def update_config(new_config: ExperimentSettings,
                         user: HTTPBasicCredentials = Depends(get_user)):
     config = await ExperimentSettings.find_one(
         ExperimentSettings.active == True)
+
+    # check the experiment type
+    if config.experiment_type == new_config.experiment_type and \
+            config.rewrite_previous_data != True:
+        # await config.update(new_config.dict())
+        # return error if the experiment type is the same
+        return {
+            "error": "Experiment type was not changed and rewrite_previous_data"
+                     " is False."}
+
     # update config and make it inactive
     config.active = False
     await config.replace()
