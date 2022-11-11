@@ -84,6 +84,7 @@ export interface Trial {
   selected_by_children?: string[];
   written_strategy?: WrittenStrategy;
   post_survey?: PostSurvey;
+  redirect_url?: string;
 }
 export interface WrittenStrategy {
   strategy: string;

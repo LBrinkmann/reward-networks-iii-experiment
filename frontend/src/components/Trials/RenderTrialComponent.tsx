@@ -101,7 +101,7 @@ export const renderTrial = (
         case 'post_survey':
             return <PostSurvey onContinueHandler={OnNextTrial}/>;
         case 'debriefing':
-            return <Debriefing redirect={'https://www.prolific.co/'}/>; // TODO: data.redirect_link
+            return <Debriefing redirect={data.redirect_url}/>;
         default:
             return <> </>;
     }

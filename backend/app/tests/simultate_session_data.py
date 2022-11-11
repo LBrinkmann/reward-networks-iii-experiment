@@ -2,7 +2,6 @@ import json
 import random
 from pathlib import Path
 
-from models.config import ExperimentSettings
 from models.network import Network
 from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy

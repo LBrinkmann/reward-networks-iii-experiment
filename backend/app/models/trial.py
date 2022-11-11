@@ -77,6 +77,8 @@ class Trial(BaseModel):
     written_strategy: Optional[WrittenStrategy]
     # post survey trial relevant field
     post_survey: Optional[PostSurvey]
+    # redirect url with the confirmation code
+    redirect_url: Optional[str]
 
     class Config:
         orm_mode = True

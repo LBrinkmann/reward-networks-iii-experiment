@@ -8,8 +8,9 @@ class ExperimentSettings(Document):
     # whether the experiment is active
     active: bool = False
     created_at: Optional[datetime] = datetime.now()
-    # https://app.prolific.co/submissions/complete?cc=4FC4E0C0
-    redirect_url: Optional[str] = None
+
+    # Example: https://app.prolific.co/submissions/complete?cc=4FC4E0C0
+    redirect_url: Optional[str] = "https://app.prolific.co/submissions/complete"
 
     # These variables are rewritten on deployment
     # number of generations with the first generation
