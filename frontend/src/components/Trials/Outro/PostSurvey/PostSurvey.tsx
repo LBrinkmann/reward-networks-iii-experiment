@@ -122,7 +122,7 @@ interface PostSurveyProps {
 }
 
 export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) => {
-    const {requiredFields = [true, true, true, false, false]} = props;
+    const {requiredFields = [true, true, true, true, true, false]} = props;
     const numberOfQuestions = requiredFields.length;
     const initialAnswers = new Array(numberOfQuestions).fill("");
     const [allQuestionsAnswered, setAllQuestionsAnswered] = useState<boolean>(false);
@@ -164,57 +164,69 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
               spacing={3}
         >
             <Grid item>
-                <LikertQuestion
-                    question={"Did you experience the time as sufficient to concentrate on each trial?"}
+                <OpenQuestion
+                    question={"Which strategies did you use to solve the task, if any?"}
                     id={0}
                     isRequired={requiredFields[0]}
                     value={answers[0]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"Strongly disagree"}
-                    minValueExplanation={"Strongly agree"}
-                    onChangeHandler={onChangeHandler}
-                />
-            </Grid>
-            <Grid item>
-                <LikertQuestion
-                    question={"Please rate the difficulty of the task?"}
-                    id={1}
-                    isRequired={requiredFields[1]}
-                    value={answers[1]}
-                    showErrorMessage={showError}
-                    maxValueExplanation={"Very easy"}
-                    minValueExplanation={"Very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
                 <LikertQuestion
                     question={"How well was the task explained?"}
+                    id={1}
+                    isRequired={requiredFields[1]}
+                    value={answers[1]}
+                    showErrorMessage={showError}
+                    maxValueExplanation={"I always knew what to do"}
+                    minValueExplanation={"I felt lost at times"}
+                    onChangeHandler={onChangeHandler}
+                />
+            </Grid>
+            <Grid item>
+                <LikertQuestion
+                    question={"Please rate the difficulty of the task"}
                     id={2}
                     isRequired={requiredFields[2]}
                     value={answers[2]}
                     showErrorMessage={showError}
-                    maxValueExplanation={"I always knew what to do"}
-                    minValueExplanation={"I felt lost by times"}
+                    maxValueExplanation={"very easy"}
+                    minValueExplanation={"very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
-                <OpenQuestion
-                    question={"Did you follow a strategy while solving the task?"}
+                <LikertQuestion
+                    question={"Did you experience the time limit as sufficient to concentrate?"}
                     id={3}
                     isRequired={requiredFields[3]}
                     value={answers[3]}
                     showErrorMessage={showError}
+                    maxValueExplanation={"way too short"}
+                    minValueExplanation={"way too long"}
+                    onChangeHandler={onChangeHandler}
+                />
+            </Grid>
+            <Grid item>
+                <LikertQuestion
+                    question={"How hard was it to tell apart the colors for the different arrows?"}
+                    id={4}
+                    isRequired={requiredFields[4]}
+                    value={answers[4]}
+                    showErrorMessage={showError}
+                    maxValueExplanation={"very easy"}
+                    minValueExplanation={"very hard"}
                     onChangeHandler={onChangeHandler}
                 />
             </Grid>
             <Grid item>
                 <OpenQuestion
-                    question={"Do you have any additional comments on the experiment?"}
-                    id={4}
-                    isRequired={requiredFields[4]}
-                    value={answers[4]}
+                    question={"Do you have any additional comments on the experiment you would like to share?"}
+                    id={5}
+                    isRequired={requiredFields[5]}
+                    value={answers[5]}
                     showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
                 />
