@@ -27,7 +27,7 @@ export const tutorialTooltipContent = [
     {
         id: "practice_timer",
         title: "Time Constraint",
-        text: "In the actual experiment, you will have limited time to solve each network. If you run out of time, you will receive -140 points for each missing move.",
+        text: "In the actual experiment, you will have limited time to solve each network. If you run out of time, you will receive -100 points for each missing move.",
         tip: "Time Constraint",
     },
     {

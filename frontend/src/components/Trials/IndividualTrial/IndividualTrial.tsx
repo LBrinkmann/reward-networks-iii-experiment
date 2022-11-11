@@ -25,7 +25,7 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
-    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -140} = props;
+    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100} = props;
     const {
         step,
         points,
