@@ -1,23 +1,28 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from fastapi.security import HTTPBasicCredentials
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
-from database.connection import Settings
-from models.session import Session
-from models.subject import Subject
-# from routes.advise import advise_router
+from database.connection import DatabaseSettings
+from routes.admin import admin_router
 from routes.progress import progress_router
+from routes.results import results_router
+from routes.security_utils import get_user
 from routes.session import session_router
-from routes.simulate_study import simulation_router
-from study_setup.generate_sessions import generate_sessions
+from study_setup.generate_sessions import generate_experiment_sessions
 
-if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
-    from pydantic2ts import generate_typescript_defs
+api = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
-api = FastAPI()
+# metrics on the /metrics endpoint for prometheus
+api.add_middleware(PrometheusMiddleware)
+api.add_route("/metrics", handle_metrics)
 
-settings = Settings()
+# load settings
+db_settings = DatabaseSettings()
 
 api.add_middleware(
     CORSMiddleware,
@@ -30,28 +35,61 @@ api.add_middleware(
 # Register routes
 api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
-# api.include_router(advise_router, prefix="/advise")
-
-# Only for testing purposes
-api.include_router(simulation_router, prefix="/simulation")
+api.include_router(results_router, prefix="/results")
+api.include_router(admin_router, prefix="/admin")
 
 
 @api.on_event("startup")
 async def startup_event():
     # initialize database
-    await settings.initialize_database()
+    await db_settings.initialize_database()
 
+    # generate sessions
+    await generate_experiment_sessions()
+
+    # run only in development mode
+    generate_frontend_types()
+    draw_db_diagram()
+
+
+# secure swagger ui
+# SEE: https://github.com/tiangolo/fastapi/issues/364#issuecomment-789711477
+@api.get("/docs")
+async def get_documentation(user: HTTPBasicCredentials = Depends(get_user)):
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
+
+
+# secure swagger ui
+# SEE: https://github.com/tiangolo/fastapi/issues/364#issuecomment-789711477
+@api.get("/openapi.json")
+async def openapi(user: HTTPBasicCredentials = Depends(get_user)):
+    return get_openapi(title="FastAPI", version="0.1.0", routes=api.routes)
+
+
+def generate_frontend_types():
     # generate frontend types
+    # environment variables are set in the docker-compose.yml
     if os.getenv('GENERATE_FRONTEND_TYPES', default='false') == 'true':
+        from pydantic2ts import generate_typescript_defs
         path = os.getenv('FOLDER_TO_SAVE_FRONTEND_TYPES', default='frontend')
         generate_typescript_defs(
-            'app.models', os.path.join(path, 'apiTypes.ts'))
+            'app.models.trial', os.path.join(path, 'apiTypes.ts'))
 
-    # run the study simulation
-    await Session.find().delete()
-    await Subject.find().delete()
-    await generate_sessions(n_generations=5,
-                            n_sessions_per_generation=10,
-                            n_advise_per_session=5,
-                            experiment_type='reward_network_iii',
-                            experiment_num=0)
+
+def draw_db_diagram():
+    # draw database diagram (for development and documentation)
+    # environment variables are set in the docker-compose.yml
+    if os.getenv('DRAW_DB_DIAGRAM', default='false') == 'true':
+        import erdantic as erd
+        from models.subject import Subject
+        from models.session import Session
+        from models.config import ExperimentSettings
+
+        diagram = erd.create(Subject)
+        diagram.draw("models/subject.png", args='-Gdpi=300')
+
+        diagram = erd.create(Session)
+        diagram.draw("models/session.png", args='-Gdpi=300')
+
+        diagram = erd.create(ExperimentSettings)
+        diagram.draw("models/config.png", args='-Gdpi=300')

@@ -1,8 +1,12 @@
 import React, {FC, useEffect, useState} from "react"
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
 import LinearSolution from "../../../Network/LinearSolution";
 import AnimatedNetwork, {AnimatedNetworkInterface} from "../../../Network/AnimatedNetwork/AnimatedNetwork";
 import PlayerInformation from "../PlayerInformation";
+import TrialWithNetworkLayout from "../../TrialWithNetworkLayout";
+import useNetworkStates from "../../IndividualTrial/NetworkStates";
+import TutorialTip from "../../../Tutorial/TutorialTip";
+import StaticNetwork from "../../../Network/StaticNetwork";
+import {Box, Typography} from "@mui/material";
 
 interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's ID */
@@ -10,98 +14,116 @@ interface ObservationTrialInterface extends AnimatedNetworkInterface {
     /** Teacher's comment */
     comment?: string;
     maxSteps?: number;
-    hideTrial?: boolean;
-    waitBeforeNextTrial?: number;
-    waitAfterTheEndOfAnimation?: number;
     /** Handle the end of the trial */
     onNextTrialHandler: () => void;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
 
 export const ObservationTrial: FC<ObservationTrialInterface> = (props) => {
-    const {maxSteps = 8, hideTrial = false, waitAfterTheEndOfAnimation = 3, waitBeforeNextTrial = 2} = props;
+    const {maxSteps = 8, showTutorial = false} = props;
 
-    const [step, setStep] = useState<number>(0);
-    const [points, setPoints] = useState<number>(0);
-    const [startAnimation, setStartAnimation] = useState<boolean>(false);
-    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
+    const {
+        step,
+        points,
+        moves,
+        onNextStepHandler
+    } = useNetworkStates(props.onNextTrialHandler, props.edges, props.nodes, maxSteps)
+
+    const [playAnimation, setPlayAnimation] = useState<boolean>(false);
+    // show tutorial only if the animation is not already playing
+    const [isTutorial, setIsTutorial] = useState<boolean>(showTutorial && step === 0);
+    const [tutorialId, setTutorialId] = useState<number>(1);
+
+    const onTooltipClick = () => {
+        setTutorialId(tutorialId + 1)
+    }
+
+    const onLastTooltipClick = () => {
+        setIsTutorial(false);
+    }
 
     // wait for 2 seconds before starting the animation
     useEffect(() => {
-        setTimeout(() => {
-            setStartAnimation(true);
-        }, 2000);
-    }, []);
-
-    // Go to the next trial when all the steps are done
-    useEffect(() => {
-        if (step === maxSteps) {
-            // wait for `waitAfterTheEndOfAnimation` second
+        if (!isTutorial) {
             setTimeout(() => {
-                // hide the trial content
-                setIsBlankScreen(true);
-            }, waitAfterTheEndOfAnimation * 1000);
-
-            // wait for `waitBeforeNextTrial` second
-            setTimeout(() => {
-                // go to the next trial
-                props.onNextTrialHandler();
-            }, waitBeforeNextTrial * 1000);
+                setPlayAnimation(true);
+            }, 4000);
         }
-    }, [step]);
+    }, [isTutorial]);
 
-    const onNextStepHandler = (stepNumber: number, cumulativeScore: number) => {
-        setStep(stepNumber);
-        setPoints(cumulativeScore);
+    const renderNetwork = () => {
+        if (isTutorial) {
+            return (
+                <TutorialTip
+                    tutorialId={"social_learning_observation_animation"}
+                    isTutorial={showTutorial && tutorialId === 2}
+                    isShowTip={false}
+                    onTutorialClose={onLastTooltipClick}
+                    placement={"left"}
+                >
+                    {/* Box is necessary to show tooltip properly */}
+                    <Box>
+                        <StaticNetwork
+                            edges={props.edges}
+                            nodes={props.nodes}
+                            currentNodeId={moves[0]}
+                            possibleMoves={[]}
+                            size={460}
+                            onNodeClickHandler={null}
+                            blur={true}
+                        />
+                    </Box>
+                </TutorialTip>
+            )
+        } else {
+            return (<AnimatedNetwork
+                nodes={props.nodes}
+                edges={props.edges}
+                moves={props.moves}
+                onNextStepHandler={onNextStepHandler}
+                playAnimation={step < maxSteps ? playAnimation : false}
+            />)
+        }
+
     }
+
+    const renderPlayerInformation = () => (
+        <PlayerInformation
+            step={step}
+            cumulativePoints={points}
+            id={props.teacherId}
+            comment={props.comment}
+            showTutorialComment={showTutorial && tutorialId === 1}
+            onTutorialClose={onTooltipClick}
+        />
+    )
+
+    const renderLinearSolution = () => (
+        <LinearSolution
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={moves}
+        />
+    )
 
     return (
         <>
-            {(!isBlankScreen) ? (
-                <Grid container sx={{p: 1, margin: 'auto', width: '85%'}} justifyContent="space-around">
-                    <Grid item xs={7}>
-                        <AnimatedNetwork
-                            nodes={props.nodes}
-                            edges={props.edges}
-                            moves={props.moves}
-                            onNextStepHandler={onNextStepHandler}
-                            startAnimation={startAnimation}
-                        />
-                    </Grid>
-
-                    <Grid item container xs={5} sx={{height: "450px"}} alignItems="stretch" direction="column">
-                        <PlayerInformation
-                            step={step}
-                            cumulativePoints={points}
-                            id={props.teacherId}
-                            comment={props.comment}/>
-                    </Grid>
-
-                    <Grid item xs={6} style={{margin: "auto", marginTop: "20px", minWidth: "600px"}}>
-                        <Paper sx={{p: 2, margin: 2}}>
-                            <LinearSolution
-                                nodes={props.nodes}
-                                edges={props.edges}
-                                moves={props.moves}
-                                title={"Player " + props.teacherId + " total score"}
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
-            }
+            <Typography variant="h3" align='center'>
+                Watch player {props.teacherId} solve the task
+            </Typography>
+            <TrialWithNetworkLayout
+                network={renderNetwork()}
+                timer={<> </>}
+                playerInformation={renderPlayerInformation()}
+                linearSolution={renderLinearSolution()}
+                showTimer={false}
+                showPlayerInformation={true}
+                showLinearSolution={true}
+            />
         </>
     );
 }

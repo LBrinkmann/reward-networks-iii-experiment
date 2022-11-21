@@ -1,20 +1,23 @@
 import React from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import Header from "../../../Header";
 
 interface DebriefingProps {
-    onClickHandler: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    redirect: string;
 }
 
 
 const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
+
+    const onClick = () => {
+        // clean local storage
+        localStorage.clear();
+        // redirect to prolific
+        window.open(props.redirect,"_self");  // , "_blank" to open in a new tab
+    }
+
     return (
         <>
-            <Header
-                totalPoints={0}
-                title={"Debriefing statement"}/>
-
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Box sx={{width: '75%'}}
@@ -38,7 +41,7 @@ const Debriefing: React.FC<DebriefingProps> = (props: DebriefingProps) => {
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={props.onClickHandler}
+                                onClick={onClick}
                                 startIcon={<CheckIcon/>}>️
                                 Finish the study
                             </Button>

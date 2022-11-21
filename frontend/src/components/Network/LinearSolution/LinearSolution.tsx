@@ -1,8 +1,9 @@
-import React, {FC, useEffect, useState} from "react"
+import React, {FC} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
-import {Grid, Typography} from "@mui/material";
+import {Box} from "@mui/material";
+import TutorialTip from "../../Tutorial/TutorialTip";
 
 interface LinearSolutionInterface {
     /** Array of nodes of the network */
@@ -25,12 +26,16 @@ interface LinearSolutionInterface {
     onset?: number;
     /** unique id of the component */
     id?: number;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
 
 export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     const {
-        size = {width: 600, height: 50},
+        size = {width: 530, height: 50},
         nodeRadius = 20,
         gap = 60,
         onset = 24,
@@ -39,20 +44,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         edges,
         moves,
         id = 100,
+        showTutorial = false,
     } = props;
-
-    const [score, setScore] = useState<number>(0);
-
-    useEffect(() => {
-        let score = 0;
-        for (let i = 0; i < moves.length - 1; i++) {
-            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
-            if (edge) {
-                score += edge.reward;
-            }
-        }
-        setScore(score);
-    }, [moves]);
 
     const plotEdge = (moveIdx: number) => {
         if (moveIdx < moves.length - 1) {
@@ -78,6 +71,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                     arc_y={size.height / 2}
                     target_x={targetX}
                     target_y={size.height / 2}
+                    key={'linear-solution-edge-' + moveIdx}
                 />
             );
         } else {
@@ -86,41 +80,40 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
     }
 
     return (
-        <Grid container spacing={1}>
-            {props.title &&
-                (<Grid item xs={12}>
-                    <Typography variant="h6" gutterBottom align={'left'}>
-                        {props.title ? props.title : ""}: {score}
-                    </Typography>
-
-                </Grid>)
-            }
-            <Grid item xs={12}>
+        <TutorialTip
+            tutorialId={"practice_linear_solution"}
+            isTutorial={showTutorial}
+            isShowTip={false}
+            onTutorialClose={props.onTutorialClose}
+            placement="left"
+        >
+            <Box>
                 <svg width={size.width} height={size.height}>
                     <g>
                         {moves.map((move, idx) => {
                             const node = nodes[move];
                             return (
-                                <>
+                                <React.Fragment key={"move" + idx}>
                                     <NetworkNode
                                         x={onset + idx * gap}
                                         y={size.height / 2}
                                         nodeInx={node.node_num}
                                         Text={node.display_name}
                                         Radius={nodeRadius}
-                                        onNodeClick={null}
+                                        onNodeClick={() => {
+                                        }}
                                         isActive={false}
                                         isValidMove={false}
-                                        key={"node-" + idx}
+                                        key={"linear-solution-node-" + idx}
                                     />
                                     {plotEdge(idx)}
-                                </>
+                                </ React.Fragment>
                             );
                         })};
                     </g>
                 </svg>
-            </Grid>
-        </Grid>
+            </Box>
+        </TutorialTip>
     )
 }
 

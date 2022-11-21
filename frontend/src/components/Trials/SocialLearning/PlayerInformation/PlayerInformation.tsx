@@ -1,5 +1,8 @@
-import {Paper, Typography} from "@mui/material";
+import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
+import TutorialTip from "../../../Tutorial/TutorialTip";
+import rewardsImg from "../../../../images/legend.png";
+import styled from "@emotion/styled";
 
 interface PlayerInformationProps {
     /** Player's ID */
@@ -8,32 +11,86 @@ interface PlayerInformationProps {
     cumulativePoints: number;
     /** Player's comment */
     comment?: string;
+    showComment?: boolean;
+    /** show tutorial tip */
+    showTutorialScore?: boolean;
+    showTutorialComment?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
+const Item = styled(Paper)(() => ({
+    padding: 2,
+    elevation: 0,
+    textAlign: 'left',
+}));
 
-export const PlayerInformation:FC<PlayerInformationProps> = (props) => {
+const PlayerInfoItem:FC = ({children}) => {
     return (
-        <>
-            <Paper sx={{p: 2}} variant="outlined">
-                <Typography gutterBottom variant="h4" component="div" align={'center'}>
-                    Player {props.id}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
+        <Item elevation={0}>
+            {children}
+            <Divider/>
+        </Item>
+    )
+};
+
+
+export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false} = props;
+    return (
+
+        <Stack spacing={1} sx={{paddingTop: "20px"}}>
+            <PlayerInfoItem>
+                <CardMedia
+                    component="img"
+                    image={rewardsImg}
+                    alt="You earn or lose points depending on the color of the arrow."
+                />
+            </PlayerInfoItem>
+            <PlayerInfoItem>
+                <Typography gutterBottom variant="h5" component="div">
                     Step {props.step}
                 </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    Cumulative points {props.cumulativePoints}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    Comment:
-                </Typography>
-                <Paper sx={{p: 2, maxHeight: "200px", overflow: 'auto'}}>
-                    <Typography variant="body1">
-                        {props.comment ? props.comment : "No comment"}
+            </PlayerInfoItem>
+            <PlayerInfoItem>
+                <TutorialTip
+                    tutorialId={"practice_step_score"}
+                    isTutorial={showTutorialScore}
+                    isShowTip={false}
+                    onTutorialClose={props.onTutorialClose}
+                >
+                    <Typography gutterBottom variant="h5" component="div">
+                        Points {props.cumulativePoints}
                     </Typography>
-                </Paper>
-            </Paper>
-        </>
+                </TutorialTip>
+            </PlayerInfoItem>
+            {(showComment) ? (
+                <PlayerInfoItem>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Player {props.id} comment:
+                    </Typography>
+
+                    <TutorialTip
+                        tutorialId={"social_learning_observation_comment"}
+                        isTutorial={showTutorialComment}
+                        isShowTip={false}
+                        onTutorialClose={props.onTutorialClose}
+                        placement={"right"}
+                    >
+                        <TextField
+                            id="outlined-multiline-static"
+                            // label=""
+                            multiline
+                            fullWidth
+                            rows={10}
+                            InputProps={{readOnly: true}}
+                            defaultValue={props.comment ? props.comment : "No comment"}
+                        />
+                    </TutorialTip>
+                </PlayerInfoItem>
+            ) : null}
+        </Stack>
+
     )
 }
 

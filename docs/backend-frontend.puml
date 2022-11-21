@@ -1,0 +1,108 @@
+@startuml
+!include https://raw.githubusercontent.com/future-architect/puml-themes/master/themes/puml-theme-mars.puml
+skinparam backgroundColor white
+skinparam dpi 150
+
+autonumber
+group Consent [1 time]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial []**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST []**</color> //session/{prolific_id}/consent//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+alt Generation > 0
+
+group Social learning block [3 times]
+    autonumber
+
+    group Social learning selection [1 time]
+        Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+        Backend --> Frontend: <color green>**Trial [AdvisorSelection]**</color>
+
+    ... **after participant has finished the trial** ...
+
+        Frontend -> Backend: <color red>**POST [Advisor]**</color> //session/{prolific_id}/social_learning_selection//
+        Backend --> Frontend: <color green>**TrialSaved**</color>
+    end
+
+    autonumber
+
+    group Social learning trial [3 times]
+        Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+        Backend --> Frontend: <color green>**Trial [Network, Advisor]**</color>
+
+    ... **after participant has finished the trial** ...
+
+        Frontend -> Backend: <color red>**POST [Solution]**</color> //session/{prolific_id}/social_learning//
+        Backend --> Frontend: <color green>**TrialSaved**</color>
+    end
+
+end
+
+else Generation == 0
+    autonumber
+
+    group Individual trial [9 times]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial [Network]**</color>
+
+    ... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST [Solution]**</color> //session/{prolific_id}/individual//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+end
+
+
+autonumber
+
+group Individual trial [3 times]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial [Network]**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST [Solution]**</color> //session/{prolific_id}/individual//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+autonumber
+group Demonstration trial [3 times]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial [Network]**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST [Solution]**</color> //session/{prolific_id}/demonstration//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+autonumber
+group Written Strategy [1 time]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial []**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST [WrittenStrategy]**</color> //session/{prolific_id}/written_strategy//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+
+autonumber
+group Debriefing trial [1 time]
+    Frontend -> Backend: <color blue>**GET**</color> //session/{prolific_id}//
+    Backend --> Frontend: <color green>**Trial []**</color>
+
+... **after participant has finished the trial** ...
+
+    Frontend -> Backend: <color red>**POST []**</color> //session/{prolific_id}/debriefing//
+    Backend --> Frontend: <color green>**TrialSaved**</color>
+end
+
+@enduml

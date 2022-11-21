@@ -15,10 +15,17 @@ export default {
 } as ComponentMeta<typeof IndividualTrial>;
 
 const Template: ComponentStory<typeof IndividualTrial> = function (args) {
+    const [totalPoints, setTotalPoints] = React.useState(0);
+
+    const updateTotalPoints = (points: number) => {
+        setTotalPoints(totalPoints + points);
+        console.log(`Current score: ${totalPoints} + ${points} = ${totalPoints + points}`);
+    }
+
     return (
         <>
-            <Header totalPoints={0} title={"Individual Trial"}/>
-            <IndividualTrial {...args}/>
+            <Header totalPoints={totalPoints} title={"Individual Trial"}/>
+            <IndividualTrial updateTotalScore={updateTotalPoints} {...args}/>
         </>
     );
 };
@@ -26,29 +33,19 @@ const Template: ComponentStory<typeof IndividualTrial> = function (args) {
 export const ExampleOne = Template.bind({});
 
 ExampleOne.args = {
-    timer: 30,
+    timer: 25,
     edges: data[examples_rand[0]].edges,
     nodes: data[examples_rand[0]].nodes,
-    onNextTrialHandler: () => { },
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: false
 };
 
 export const ExampleTwo = Template.bind({});
 
 ExampleTwo.args = {
-    timer: 30,
+    timer: 25,
     edges: data[examples_rand[1]].edges,
     nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { },
+    onNextTrialHandler: () => {location.reload()},
     hideTrial: false
-};
-
-export const ScreenAfterTrialEnd = Template.bind({});
-
-ScreenAfterTrialEnd.args = {
-    timer: 30,
-    edges: data[examples_rand[1]].edges,
-    nodes: data[examples_rand[1]].nodes,
-    onNextTrialHandler: () => { },
-    hideTrial: true
 };

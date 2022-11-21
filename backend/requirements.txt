@@ -5,7 +5,9 @@ motor
 numpy
 pydantic==1.9.0
 pymongo
+python-dotenv
 pyvis
 pyyaml
+starlette-exporter
 stringcase
 uvicorn

@@ -1,158 +1,59 @@
-from datetime import datetime
+from typing import Union
 
 from fastapi import APIRouter
 
-from models.session import Session
-from models.subject import Subject
-from models.trial import Trial
+from models.session import SessionError
+from models.trial import Trial, Solution, TrialSaved, TrialError, \
+    WrittenStrategy, Advisor, PostSurvey
+from .session_utils.prepare_trial import prepare_trial
+from .session_utils.save_trial import save_trial
+from .session_utils.session_lifecycle import update_session
+from .session_utils.session_lifecycle import get_session
 
 session_router = APIRouter(tags=["Session"])
 
 
 @session_router.get('/{prolific_id}', response_model_by_alias=False)
-async def get_current_trial(prolific_id: str) -> Trial:
+async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     """
     Get current trial from the session.
     """
     # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
+    session = await get_session(prolific_id)
 
-    # save starting time
-    trial.started_at = datetime.now()
+    # return error if session is not available
+    if isinstance(session, SessionError):
+        return session
+
+    trial = await prepare_trial(session)
 
     await session.save()
-    # TODO: return model compatible with frontend
+
     return trial
 
 
-@session_router.put('/{prolific_id}')
-async def save_moves_in_trial(prolific_id: str, body: Trial) -> dict:
-    # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
+@session_router.post('/{prolific_id}/{trial_type}')
+async def post_current_trial_results(
+        prolific_id: str,
+        trial_type: str,
+        body: Union[Solution, WrittenStrategy, Advisor, PostSurvey, None
+        ] = None) -> Union[TrialSaved, SessionError, TrialError]:
+    # find session assigned to the subject
+    session = await get_session(prolific_id)
 
-    # update current trial with the subject solution
-    trial.solution = body.solution
-    trial.finished_at = datetime.now()
-    trial.finished = True
+    # return error if session is not available
+    if isinstance(session, SessionError):
+        return session
 
-    # update session with the trial
-    session.trials[session.current_trial_num] = trial
-
-    if (session.current_trial_num + 1) == len(session.trials):
-        session.finished_at = datetime.now()
-        session.finished = True
-        # save session
-        await session.save()
-
-        # check if child sessions are available
-        await update_available_status_child_sessions(session)
-    else:
-        # increase trial index by 1
-        session.current_trial_num += 1
-
-        # save session
-        await session.save()
-
-    return {
-        "message": "Trial saved"
-    }
-
-
-# MOCK path to test frontend
-@session_router.post('/{prolific_id}')
-async def save_moves_in_trial(prolific_id: str) -> dict:
-    # find session and trial for the subject
-    session, trial = await get_trial_session(prolific_id)
-
-    # update current trial with the subject solution
-    trial.finished_at = datetime.now()
-    trial.finished = True
-
-    # update session with the trial
-    session.trials[session.current_trial_num] = trial
-
-    if (session.current_trial_num + 1) == len(session.trials):
-        session.finished_at = datetime.now()
-        session.finished = True
-        # save session
-        await session.save()
-
-        # check if child sessions are available
-        await update_available_status_child_sessions(session)
-    else:
-        # increase trial index by 1
-        session.current_trial_num += 1
-
-        # save session
-        await session.save()
-
-    return {
-        "message": "Trial saved"
-    }
-
-
-async def update_available_status_child_sessions(session):
-    """ Check if child sessions are available"""
-    for c in session.child_ids:
-        child_session = await Session.get(c)
-        # TODO: check if child session exists
-        if child_session is None:
-            raise Exception("Child session does not exist")
-        available = True
-        for a in child_session.advise_ids:
-            advise_session = await Session.find_one(Session.id == a)
-            if advise_session.finished is False:
-                available = False
-                break
-        if available:
-            child_session.available = True
-            await child_session.save()
-
-
-async def get_trial_session(prolific_id) -> (Session, Trial):
-    # check if collection Subject exists
-    if await Subject.find().count() > 0:
-        subjects_with_id = await Subject.find(
-            Subject.prolific_id == prolific_id).to_list()
-    else:
-        subjects_with_id = []
-    if len(subjects_with_id) > 1:
-        # TODO: raise exception and make proper error handling
-        raise Exception("More than one subject with the same prolific id")
-    elif len(subjects_with_id) == 0:
-        # creat a new subject
-        subject = Subject(prolific_id=prolific_id)
-        # save subject to database
-        await subject.save()
-        # session initialization
-        session = await initialize_session(subject)
-    else:
-        subject = subjects_with_id[0]
-        # get session for the subject
-        session = await Session.find_one(Session.subject_id == subject.id)
-
+    # get current trial
     trial = session.trials[session.current_trial_num]
-    return session, trial
 
+    # check if trial type is correct
+    if trial.trial_type != trial_type:
+        return TrialError(message='Trial type is not correct')
 
-async def initialize_session(subject: Subject) -> Session:
-    # get any available session
-    session = await Session.find_one(Session.available == True)
+    await save_trial(body, session, trial, trial_type)
 
-    if session is None:
-        # TODO: handle this situation
-        raise Exception("No available session")
+    await update_session(session)
 
-    # session is not available anymore
-    session.available = False
-    # assign subject to session
-    session.subject_id = subject.id
-    # update trial index
-    session.current_trial_num = 0
-    # save session
-    await session.save()
-    # assign session to subject
-    subject.session_id = session.id
-    # save subject
-    await subject.save()
-    return session
+    return TrialSaved()

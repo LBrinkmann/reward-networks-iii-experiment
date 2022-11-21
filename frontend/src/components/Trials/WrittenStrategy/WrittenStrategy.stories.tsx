@@ -22,5 +22,5 @@ const Template: ComponentStory<typeof WrittenStrategy> = function (args) {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    onClickContinue: null
+    onClickContinue: (data: string) => console.log(data),
 };

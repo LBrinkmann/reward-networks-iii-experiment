@@ -1,45 +1,36 @@
-import React from "react";
+import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
-import TutorialTip from "../TutorialTip";
+import TutorialTip from "../Tutorial/TutorialTip";
 
 interface HeaderInterface {
     /** Collected in the experiment points */
     totalPoints?: number;
-    /** Index of the tutorial to show */
-    tutorialIdx?: number;
-    /** Callback to update tutorial index in parents */
-    onTutorialClose?: (tutorialIdx: number) => void;
     title?: string;
+    /** show tutorial tip */
+    showTutorial?: boolean;
+    showTip?: boolean;
+    /** Callback to handle tutorial tip close */
+    onTutorialClose?: () => void;
 }
 
-const Header = ({
-                    tutorialIdx,
-                    onTutorialClose,
-                    totalPoints = 0,
-                    title = "Reward Networks III"
-                }: HeaderInterface) => {
+const Header: FC<HeaderInterface> = (props) => {
+    const {totalPoints = null, title = "", showTutorial = false, showTip = true} = props;
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
                 <Toolbar>
+                    <Typography variant="h6" sx={{flexGrow: 1}}>
+                        {title}
+                    </Typography>
                     <TutorialTip
-                        idx={0}
-                        tutorialIdx={tutorialIdx}
-                        arrow={false}
-                        onTutorialClose={onTutorialClose}
-                    >
-                        <Typography variant="h6" sx={{flexGrow: 1}}>
-                            {title}
-                        </Typography>
-                    </TutorialTip>
-                    <TutorialTip
-                        idx={1}
-                        tutorialIdx={tutorialIdx}
-                        onTutorialClose={onTutorialClose}
-                        placement={"bottom-start"}
+                        tutorialId={"practice_total_score"}
+                        isTutorial={showTutorial}
+                        isShowTip={showTip}
+                        onTutorialClose={props.onTutorialClose}
+                        placement="bottom"
                     >
                         <Typography variant="h6" sx={{mr: 2}}>
-                            {totalPoints > 0 && (<>{totalPoints} points</>)}
+                            {totalPoints && (<>{totalPoints} points</>)}
                         </Typography>
                     </TutorialTip>
                 </Toolbar>

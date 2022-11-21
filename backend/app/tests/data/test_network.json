@@ -1,0 +1,329 @@
+{
+  "network_id": "da58c6fbc897bbbb15464757ae5d65ef",
+  "nodes": [
+    {
+      "node_num": 0,
+      "display_name": "aa",
+      "node_size": 3,
+      "level": 0,
+      "x": 100.0,
+      "y": -1.4702742047251474e-06
+    },
+    {
+      "node_num": 1,
+      "display_name": "ba",
+      "node_size": 3,
+      "level": 0,
+      "x": 80.90170037208972,
+      "y": -58.7785255187306
+    },
+    {
+      "node_num": 2,
+      "display_name": "ca",
+      "node_size": 3,
+      "level": 0,
+      "x": 30.901697689880734,
+      "y": -95.10565490463628
+    },
+    {
+      "node_num": 3,
+      "display_name": "da",
+      "node_size": 3,
+      "level": 0,
+      "x": -30.901702458252295,
+      "y": -95.10564894417183
+    },
+    {
+      "node_num": 4,
+      "display_name": "ea",
+      "node_size": 3,
+      "level": 0,
+      "x": -80.90169917999684,
+      "y": -58.7785255187306
+    },
+    {
+      "node_num": 5,
+      "display_name": "fa",
+      "node_size": 3,
+      "level": 1,
+      "x": -99.9999988079071,
+      "y": 7.272003400514403e-06
+    },
+    {
+      "node_num": 6,
+      "display_name": "ga",
+      "node_size": 3,
+      "level": 2,
+      "x": -80.9016932195324,
+      "y": 58.77852853864663
+    },
+    {
+      "node_num": 7,
+      "display_name": "ha",
+      "node_size": 3,
+      "level": 2,
+      "x": -30.901711398948954,
+      "y": 95.10564600362343
+    },
+    {
+      "node_num": 8,
+      "display_name": "ia",
+      "node_size": 3,
+      "level": 3,
+      "x": 30.901712591041843,
+      "y": 95.10564600362343
+    },
+    {
+      "node_num": 9,
+      "display_name": "ja",
+      "node_size": 3,
+      "level": 3,
+      "x": 80.90169441162529,
+      "y": 58.77852853864663
+    }
+  ],
+  "edges": [
+    {
+      "source_num": 0,
+      "target_num": 2,
+      "reward": -20,
+      "arc_type": "straight",
+      "source_x": 96.83007742469213,
+      "source_y": -4.363025564671324,
+      "arc_x": 65.45107195009543,
+      "arc_y": -47.552521109555386,
+      "target_x": 34.22318713129723,
+      "target_y": -90.53401691730201
+    },
+    {
+      "source_num": 0,
+      "target_num": 5,
+      "reward": -100,
+      "arc_type": "straight",
+      "source_x": 88.55743415023434,
+      "source_y": -9.701037639864296e-07,
+      "arc_x": -0.0007727451110106642,
+      "arc_y": 2.9008983992717674e-06,
+      "target_x": -88.01348725403544,
+      "target_y": 6.748056341487896e-06
+    },
+    {
+      "source_num": 1,
+      "target_num": 4,
+      "reward": 20,
+      "arc_type": "straight",
+      "source_x": 69.45947235658463,
+      "source_y": -58.77852551873062,
+      "arc_x": -0.0002030536362385149,
+      "arc_y": -58.77852551873062,
+      "target_x": -68.91438607743619,
+      "target_y": -58.77852551873062
+    },
+    {
+      "source_num": 1,
+      "target_num": 0,
+      "reward": 20,
+      "arc_type": "straight",
+      "source_x": 83.22458468504861,
+      "source_y": -51.62942250374274,
+      "arc_x": 90.45081701611454,
+      "arc_y": -29.389365581053934,
+      "target_x": 97.5662977634964,
+      "target_y": -7.490166994018649
+    },
+    {
+      "source_num": 2,
+      "target_num": 3,
+      "reward": -20,
+      "arc_type": "straight",
+      "source_x": 19.458789099221473,
+      "source_y": -95.1056538010554,
+      "arc_x": -0.0004200027973633169,
+      "arc_y": -95.1056519243638,
+      "target_x": -18.9141367183953,
+      "target_y": -95.10565010028074
+    },
+    {
+      "source_num": 2,
+      "target_num": 1,
+      "reward": 0,
+      "arc_type": "straight",
+      "source_x": 38.453272802010034,
+      "source_y": -89.61911427564316,
+      "arc_x": 55.90197565708781,
+      "arc_y": -76.94188923104983,
+      "target_x": 72.99069351007903,
+      "target_y": -64.52620860738188
+    },
+    {
+      "source_num": 3,
+      "target_num": 1,
+      "reward": 20,
+      "arc_type": "straight",
+      "source_x": -20.705032861130768,
+      "source_y": -91.79255054460731,
+      "arc_x": 24.99985746401454,
+      "arc_y": -76.94213320527727,
+      "target_x": 70.21863767296739,
+      "target_y": -62.24966259871425
+    },
+    {
+      "source_num": 3,
+      "target_num": 4,
+      "reward": -20,
+      "arc_type": "straight",
+      "source_x": -38.45327667016372,
+      "source_y": -89.61910921539655,
+      "arc_x": -55.90197744519414,
+      "arc_y": -76.94188625085062,
+      "target_x": -72.99069320902034,
+      "target_y": -64.52620770211934
+    },
+    {
+      "source_num": 4,
+      "target_num": 0,
+      "reward": -20,
+      "arc_type": "straight",
+      "source_x": -70.70361984008443,
+      "source_y": -55.46496873929607,
+      "arc_x": 9.550081255311715,
+      "arc_y": -29.388961044532653,
+      "target_x": 89.317672244383,
+      "target_y": -3.4709000949039117
+    },
+    {
+      "source_num": 4,
+      "target_num": 2,
+      "reward": 20,
+      "arc_type": "straight",
+      "source_x": -70.70503012648032,
+      "source_y": -62.09162446190015,
+      "arc_x": -25.00014223795468,
+      "arc_y": -76.94204423784984,
+      "target_x": 20.21863555613377,
+      "target_y": -91.63451725376535
+    },
+    {
+      "source_num": 5,
+      "target_num": 6,
+      "reward": 0,
+      "arc_type": "straight",
+      "source_x": -96.51057145324403,
+      "source_y": 10.739356845471193,
+      "arc_x": -90.45122283349521,
+      "arc_y": 29.38810817368891,
+      "target_x": -84.55824394317797,
+      "target_y": 47.52482629381552
+    },
+    {
+      "source_num": 5,
+      "target_num": 3,
+      "reward": 0,
+      "arc_type": "straight",
+      "source_x": -93.33752116762588,
+      "source_y": -9.170107498962366,
+      "arc_x": -65.45070983719025,
+      "arc_y": -47.55301462502211,
+      "target_x": -37.88149095046076,
+      "target_y": -85.49879320575373
+    },
+    {
+      "source_num": 6,
+      "target_num": 7,
+      "reward": 0,
+      "arc_type": "straight",
+      "source_x": -71.1131835949278,
+      "source_y": 65.89029790320433,
+      "arc_x": -55.901962171427556,
+      "arc_y": 76.94189847018264,
+      "target_x": -41.15740884390444,
+      "target_y": 87.6544447790904
+    },
+    {
+      "source_num": 6,
+      "target_num": 8,
+      "reward": 20,
+      "arc_type": "curved",
+      "source_x": -70.56406664810201,
+      "source_y": 64.66568103824059,
+      "arc_x": -27.495089805734473,
+      "arc_y": 88.00697167068626,
+      "target_x": 18.95923958539647,
+      "target_y": 93.86144593668998
+    },
+    {
+      "source_num": 7,
+      "target_num": 9,
+      "reward": 0,
+      "arc_type": "curved",
+      "source_x": -19.501682378974007,
+      "source_y": 93.92980822705262,
+      "arc_x": 27.495154800443068,
+      "arc_y": 88.00695093996613,
+      "target_x": 70.06695982258076,
+      "target_y": 64.93508956496964
+    },
+    {
+      "source_num": 7,
+      "target_num": 5,
+      "reward": -20,
+      "arc_type": "straight",
+      "source_x": -38.48569548910754,
+      "source_y": 84.667186845351,
+      "arc_x": -65.4512359995771,
+      "arc_y": 47.55230237921152,
+      "target_x": -92.0552265099647,
+      "target_y": 10.93504882377323
+    },
+    {
+      "source_num": 8,
+      "target_num": 9,
+      "reward": 20,
+      "arc_type": "curved",
+      "source_x": 41.537488531973125,
+      "source_y": 89.96139089092202,
+      "arc_x": 57.95156369686545,
+      "arc_y": 81.1277126318922,
+      "target_x": 71.70159726923319,
+      "target_y": 68.13958629850183
+    },
+    {
+      "source_num": 8,
+      "target_num": 6,
+      "reward": 20,
+      "arc_type": "curved",
+      "source_x": 20.546473215445804,
+      "source_y": 89.17797731170089,
+      "arc_x": -22.541576912073214,
+      "arc_y": 65.71421525536005,
+      "target_x": -68.95513154231651,
+      "target_y": 59.98758178164147
+    },
+    {
+      "source_num": 9,
+      "target_num": 8,
+      "reward": 140,
+      "arc_type": "curved",
+      "source_x": 70.26591847069406,
+      "source_y": 63.922783651348034,
+      "arc_x": 53.85184330580173,
+      "arc_y": 72.75646191037785,
+      "target_x": 40.10180973343398,
+      "target_y": 85.74458824376823
+    },
+    {
+      "source_num": 9,
+      "target_num": 7,
+      "reward": 140,
+      "arc_type": "curved",
+      "source_x": 69.49880638078727,
+      "source_y": 59.92050181676063,
+      "arc_x": 22.54249604445007,
+      "arc_y": 65.7139169985737,
+      "target_x": -20.04758532982196,
+      "target_y": 88.90630899196901
+    }
+  ],
+  "starting_node": 0,
+  "max_reward": 260.0
+}

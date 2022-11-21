@@ -1,0 +1,72 @@
+version: "3.3"
+services:
+  database:
+    image: mongo:4.0.8
+    volumes:
+      - data:/data/db
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+  fastapi:  # backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./backend:/backend
+      # this is necessary to copy apiTypes.ts in frontend folder
+      - ./frontend/src/apis:/backend/app/frontend
+    environment:
+      PORT: 5000
+      MONGO_URL: 'mongodb://database:27017/'
+      # Environment variables used in app/server.py
+      GENERATE_FRONTEND_TYPES: 'true'
+      FOLDER_TO_SAVE_FRONTEND_TYPES: 'frontend'
+      # Environment variables for official FastAPI docker image
+      APP_MODULE: 'server:api'
+      LOG_LEVEL: 'debug'
+      DRAW_DB_DIAGRAM: 'true'
+      BACKEND_USER: 'admin'
+      BACKEND_PASSWORD: 'admin'
+    # start-reload.sh is a version of start.sh for development with live auto-reload
+    command: '/start-reload.sh'
+    ports:
+      - '5000:5000'
+    depends_on:
+      - database
+  react:  # frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-dev
+    ports:
+      - '9000:9000'
+    volumes:
+      - /usr/frontend/node_modules
+      - ./frontend/static:/frontend/static
+      - ./frontend/src:/frontend/src
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/webpack.config.js:/frontend/webpack.config.js
+    environment:
+      BACKEND_URL: 'http://localhost:5000'
+    stdin_open: true  # to replicate `-it` mode in docker run
+    tty: true  # to replicate `-it` mode in docker run
+    depends_on:
+      - fastapi
+  react-storybook:  # frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-storybook
+    ports:
+      - '6006:6006'
+    restart: always
+    volumes:
+      - /usr/frontend/node_modules
+      - ./frontend/src:/frontend/src
+      - ./frontend/static:/frontend/static
+      - ./frontend/.storybook:/frontend/.storybook
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/webpack.config.js:/frontend/webpack.config.js
+    depends_on:
+      - react
+
+volumes:
+  data:

@@ -12,3 +12,7 @@ build
 
 # Ignore html generated in backend folder
 backend/**/*.html
+
+venv
+
+.idea

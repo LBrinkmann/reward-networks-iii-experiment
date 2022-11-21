@@ -1,40 +1,54 @@
-import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosRequestConfig} from 'axios';
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
 import config from "./configLoader";
+import {Trial} from "./apiTypes";
 
 axios.defaults.baseURL = config.backendUrl + '/session/';
 
-export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
-    const [trialData, setTrialData] = useState<any>();
+export const useTrialAPI = () => {
+    const [trial, setTrial] = useState<Trial>();
+    const [postResponse, setPostResponse] = useState<object>({});
     const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
     const [error, setError] = useState<AxiosError>();
+    const queryProlificIDParamName = "PROLIFIC_PID";
 
     useEffect(() => {
-        if (!searchParams.get("userId")) {
-            setSearchParams({...searchParams, userId: uuid4().toString()});
+        if (!searchParams.get(queryProlificIDParamName)) {
+            setSearchParams({...searchParams, PROLIFIC_PID: uuid4().toString()});
         }
     }, []);
 
     useEffect(() => {
-        if (searchParams.get("userId")) {
-            if (axiosParamsGet.method === "GET" || axiosParamsGet.method === "get") {
-                axiosRequest(axiosParamsGet);
+        if (searchParams.get(queryProlificIDParamName)) {
+            const t = JSON.parse(window.localStorage.getItem('trial'));
+            // make axios call to get trial only if there is no trial in local storage
+            if (t) {
+                setTrial(t);
+                setLoading(false);
+            } else {
+                const fetchData = async () => await axiosGet({});
+                fetchData().catch(console.error);
             }
         }
     }, [searchParams]);
 
-    const axiosRequest = async (params: AxiosRequestConfig) => {
+    useEffect(() => {
+        if (trial) {
+            window.localStorage.setItem('trial', JSON.stringify(trial));
+        }
+    }, [trial]);
+
+    const axiosGet = async (params: AxiosRequestConfig) => {
         setLoading(true);
         try {
-            params.url = searchParams.get("userId");
-            params.headers = {
-                accept: '*/*'
-            }
+            params.method = 'GET';
+            params.url = searchParams.get(queryProlificIDParamName);
+            params.headers = {accept: '*/*'}
             const result = await axios.request(params);
-            setTrialData(result.data);
+            setTrial(result.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -42,5 +56,22 @@ export const useTrialAPI = (axiosParamsGet: AxiosRequestConfig) => {
         }
     };
 
-    return {trialData, error, loading, axiosRequest};
+    const axiosPost = async (params: AxiosRequestConfig) => {
+        // SEE issue here: https://stackoverflow.com/questions/48255545/axios-getting-two-requests-options-post
+        setLoading(true);
+        try {
+            params.method = 'POST';
+            params.url = searchParams.get(queryProlificIDParamName) + '/' + trial.trial_type;
+            params.headers = {"Content-Type": "application/json"}
+            const result = await axios.request(params);
+            setPostResponse(result.data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    return {trial, error, loading, axiosGet, axiosPost};
 }

@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Box, Grid, LinearProgress, Paper, Typography} from "@mui/material";
+import React from "react";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import {DynamicNetworkInterface} from "../../Network/DynamicNetwork/DynamicNetwork";
-import Timer from "./Timer";
-
+import Timer from "../../Timer";
+import PlayerInformation from "../SocialLearning/PlayerInformation";
+import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
+import useNetworkStates from "./NetworkStates";
+import LinearSolution from "../../Network/LinearSolution";
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
     /** Handle the end of the trial */
     onNextTrialHandler: (moves?: number[]) => void;
-    onTrialEndHandler?: (moves?: number[]) => void;
     /** Timer duration in seconds; 30 seconds by default */
     timer?: number;
     /** The maximum number of steps in the trial. Default is 8 steps*/
@@ -17,101 +18,67 @@ export interface IndividualTrialInterface extends DynamicNetworkInterface {
     waitBeforeNextTrial?: number;
     /** Hide the trial. Default false */
     hideTrial?: boolean;
-
+    /** Callback to update player's total score */
+    updateTotalScore?: (score: number) => void;
+    /** Punishment for the incomplete trials */
+    incompleteTrialPunishment?: number;
 }
 
 const IndividualTrial: React.FC<IndividualTrialInterface> = (props) => {
-    const {timer = 30, maxSteps = 8, waitBeforeNextTrial = 2, hideTrial = false} = props;
+    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100} = props;
+    const {
+        step,
+        points,
+        isTimerDone,
+        moves,
+        setIsTimerDone,
+        onNextStepHandler
+    } = useNetworkStates(
+        props.onNextTrialHandler, props.edges, props.nodes, maxSteps, props.updateTotalScore, incompleteTrialPunishment)
 
-    const [step, setStep] = useState<number>(0);
-    const [points, setPoints] = useState<number>(0);
-    const [isTimerDone, setIsTimerDone] = useState<boolean>(false);
-    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(hideTrial);
-    const [moves, setMoves] = useState<number[]>([]);
+    const renderNetwork = () => (
+        <DynamicNetwork
+            nodes={props.nodes}
+            edges={props.edges}
+            onNodeClickParentHandler={onNextStepHandler}
+            isDisabled={isTimerDone || step >= maxSteps}
+        />
+    )
 
-    // Go to the next trial when the timer is done or the subject has done all the steps
-    useEffect(() => {
-        if (isTimerDone || step === maxSteps) {
-            if(props.onTrialEndHandler) props.onTrialEndHandler(moves);
-            // hide the trial content
-            setIsBlankScreen(true);
-            // wait for `waitBeforeNextTrial` second
-            setTimeout(() => {
-                // go to the next trial
-                props.onNextTrialHandler(moves);
-            }, waitBeforeNextTrial * 1000);
-        }
-    }, [step, isTimerDone]);
+    const renderPlayerInformation = () => (
+        <PlayerInformation
+            id={1}
+            step={step}
+            cumulativePoints={points}
+            showComment={false}
+        />
+    )
 
-    const onNodeClickHandler = (currentNode: number, nextNode: number) => {
-        // Update moves
-        if (moves.length === 0) {
-            setMoves([currentNode, nextNode]);
-        } else {
-            setMoves([...moves, nextNode]);
-        }
-        // Update state
-        setStep(step + 1);
-        // Select current edge
-        const currentEdge = props.edges.filter(
-            (edge) => edge.source_num === currentNode && edge.target_num === nextNode)[0];
-        // Update cumulative reward
-        setPoints(points + currentEdge.reward);
-    }
+    const renderLinearSolution = () => (
+        <LinearSolution
+            nodes={props.nodes}
+            edges={props.edges}
+            moves={moves}
+            title={""}
+        />
+    )
+
+    const renderTimer = () => <Timer
+        time={timer}
+        invisibleTime={5} // 5 seconds before the timer starts
+        OnTimeEndHandler={() => setIsTimerDone(true)}
+    />
 
     return (
-        <>
-            {(!isBlankScreen) ? (
-                <Paper sx={{p: 2, margin: 'auto', maxWidth: 700, flexGrow: 1}}>
-                    <Grid sx={{flexGrow: 1}} direction="row" container spacing={2}>
-                        {/* Network */}
-                        <Grid item>
-                            <DynamicNetwork
-                                nodes={props.nodes}
-                                edges={props.edges}
-                                onNodeClickParentHandler={onNodeClickHandler}
-                                isDisabled={isTimerDone}
-                            />
-                        </Grid>
-                        <Grid item sm container>
-                            <Grid sx={{flexGrow: 1}} direction="column" container spacing={2}>
-                                {/* Timer */}
-                                <Box sx={{margin: "10px"}} justifyContent="center">
-                                    <Timer time={timer} OnTimeEndHandler={() => setIsTimerDone(true)}/>
-                                </Box>
-                                {/* Information */}
-                                <Box sx={{p: 2, margin: "10px"}} justifyContent="center">
-                                    <Grid item>
-                                        <Typography variant="h5" component="div">
-                                            Step {step}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="h5" component="div">
-                                            Points {points}
-                                        </Typography>
-                                    </Grid>
-                                </Box>
-                            </Grid>
-
-                        </Grid>
-                    </Grid>
-                </Paper>) : (
-                <Box
-                    sx={{width: '25%'}}
-                    style={{margin: 'auto', marginTop: '20%'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    minHeight="90vh"
-                >
-                    <Typography variant="h6" align={'center'}>
-                        Waiting for the next trial...
-                    </Typography>
-                    <LinearProgress/>
-                </Box>
-            )
-            }
-        </>
+        <TrialWithNetworkLayout
+            network={renderNetwork()}
+            timer={renderTimer()}
+            playerInformation={renderPlayerInformation()}
+            linearSolution={renderLinearSolution()}
+            showTimer={true}
+            showPlayerInformation={true}
+            showLinearSolution={true}
+        />
     );
 };
 

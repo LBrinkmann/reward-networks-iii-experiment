@@ -28,6 +28,7 @@ ShortComment.args = {
     comment: "Just follow the green arrows.",
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9]
+    moves: [0, 1, 4, 0, 6, 7, 9, 8, 9],
+    onNextTrialHandler: () => {location.reload()},
 };
 

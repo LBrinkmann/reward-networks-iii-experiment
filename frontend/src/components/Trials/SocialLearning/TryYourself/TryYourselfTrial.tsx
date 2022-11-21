@@ -1,80 +1,79 @@
 import React, {FC, useEffect, useState} from "react"
 import IndividualTrial, {IndividualTrialInterface} from "../../IndividualTrial/IndividualTrial";
 import LinearSolution from "../../../Network/LinearSolution";
-import {Box, LinearProgress, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
 interface TryYourselfTrialInterface extends IndividualTrialInterface {
     /** The list of moves with the starting node as the first element */
     moves: number[];
     teacherId: number;
-    waitAfterTheEndOfTrial?: number;
+    linearSolutionPresentationTime?: number;
 }
 
 export const TryYourselfTrial: FC<TryYourselfTrialInterface> = (props) => {
-    const {waitAfterTheEndOfTrial = 10, waitBeforeNextTrial = 2} = props;
+    const {linearSolutionPresentationTime = 3} = props;
 
-    const [showSolution, setShowSolution] = useState<boolean>(false);
     const [currentPlayerMoves, setCurrentPlayerMoves] = useState<number[]>([]);
-    const [isBlankScreen, setIsBlankScreen] = useState<boolean>(props.hideTrial);
+    const [showLinearNetwork, setShowLinearNetwork] = useState<boolean>(false);
 
-    // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {
-        if (showSolution) {
-            setTimeout(() => {
-                // hide the trial content
-                setIsBlankScreen(true);
-            }, waitAfterTheEndOfTrial * 1000);
+        if (showLinearNetwork) {
             // wait for `waitBeforeNextTrial` second
             setTimeout(() => {
                 // go to the next trial
-                props.onNextTrialHandler();
-            }, waitBeforeNextTrial * 1000);
+                props.onNextTrialHandler(currentPlayerMoves);
+            }, linearSolutionPresentationTime * 1000);
         }
-    }, [showSolution]);
+
+    }, [showLinearNetwork]);
+
+    const calculateTotalScore = (moves: number[]) => {
+        let score = 0;
+        for (let i = 0; i < moves.length - 1; i++) {
+            const edge = props.edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
+            if (edge) {
+                score += edge.reward;
+            }
+        }
+        return score;
+    }
+
+    const renderLinerSolutions = () => (
+        <Box
+            sx={{width: '600px'}}
+            justifyContent="center"
+            alignItems="center"
+            style={{margin: 'auto', marginTop: '15%'}}
+        >
+            <Typography variant="h6" gutterBottom align={'left'}>
+                Your solution total score: {calculateTotalScore(currentPlayerMoves)}
+            </Typography>
+            <LinearSolution nodes={props.nodes} edges={props.edges} moves={currentPlayerMoves} id={200}/>
+            <Typography variant="h6" gutterBottom align={'left'}>
+                Player {props.teacherId} total score: {calculateTotalScore(props.moves)}
+            </Typography>
+            <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}/>
+        </Box>
+    )
 
     const onTrialFinish = (moves: number[]) => {
         setCurrentPlayerMoves(moves)
-        setShowSolution(true)
+        setShowLinearNetwork(true)
     }
 
     return (
         <>
             {
-                (!showSolution) ? (
-                    <IndividualTrial  {...props} onTrialEndHandler={onTrialFinish}/>
-                ) : (
+                (showLinearNetwork) ? renderLinerSolutions() :
                     <>
-                        {(!isBlankScreen) ? (
-                            <Box
-                                sx={{width: '600px'}}
-                                justifyContent="center"
-                                alignItems="center"
-                                style={{margin: 'auto', marginTop: '15%'}}
-                            >
-                                <LinearSolution nodes={props.nodes} edges={props.edges} moves={currentPlayerMoves}
-                                                title={"Your solution total score"} id={200}/>
-                                <LinearSolution nodes={props.nodes} edges={props.edges} moves={props.moves}
-                                                title={"Player " + props.teacherId + " total score"}/>
-                            </Box>
-                        ) : (
-                            <Box
-                                sx={{width: '25%'}}
-                                style={{margin: 'auto', marginTop: '20%'}}
-                                justifyContent="center"
-                                alignItems="center"
-                                minHeight="90vh"
-                            >
-                                <Typography variant="h6" align={'center'}>
-                                    Waiting for the next trial...
-                                </Typography>
-                                <LinearProgress/>
-                            </Box>
-                        )
-                        }
+                        <Typography variant="h3" align='center'>
+                            Now try on your own!
+                        </Typography>
+                        <IndividualTrial  {...props} onNextTrialHandler={onTrialFinish}/>
                     </>
-                )
             }
         </>
+
     )
 }
 

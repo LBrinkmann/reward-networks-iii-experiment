@@ -30,9 +30,16 @@ const Template: ComponentStory<typeof AnimatedNetwork> = (args) => {
 export const ExampleOne = Template.bind({});
 
 ExampleOne.args = {
-    moves: [0, 5, 3, 4, 0, 5, 6, 7, 9],
-    playOnClick: true,
-    startAnimation: false,
+    playAnimation: true,
+    delayBetweenMoves: 1500,
+    moves: [0, 1, 4, 0, 6, 7, 9, 8, 9],
     edges:  data[0].edges,
-    nodes: data[0].nodes
+    nodes: data[0].nodes,
+    onNextStepHandler: (currentNode: number, nextNode: number) => {
+        if (currentNode === 9) {
+            window.localStorage.clear();
+            location.reload();
+        }
+    },
+
 };
