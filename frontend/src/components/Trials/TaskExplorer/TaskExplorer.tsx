@@ -6,6 +6,7 @@ import PlayerInformation from "../SocialLearning/PlayerInformation";
 import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
 import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
+import {Box, Button} from "@mui/material";
 
 export interface IndividualTrialInterface extends DynamicNetworkInterface {
     /** Handle the end of the trial */
@@ -69,16 +70,29 @@ const TaskExplorer: React.FC<IndividualTrialInterface> = (props) => {
         OnTimeEndHandler={() => setIsTimerDone(true)}
     />
 
+    const resetData = () => {
+        // hacky way to reset the trial data
+        setIsTimerDone(true);
+        window.localStorage.clear();
+    }
+
     return (
-        <TrialWithNetworkLayout
-            network={renderNetwork()}
-            timer={renderTimer()}
-            playerInformation={renderPlayerInformation()}
-            linearSolution={renderLinearSolution()}
-            showTimer={true}
-            showPlayerInformation={true}
-            showLinearSolution={true}
-        />
+        <>
+            <TrialWithNetworkLayout
+                network={renderNetwork()}
+                timer={renderTimer()}
+                playerInformation={renderPlayerInformation()}
+                linearSolution={renderLinearSolution()}
+                showTimer={true}
+                showPlayerInformation={true}
+                showLinearSolution={true}
+            />
+            {/* put the button in the middle of the screen */}
+            <Box sx={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+
+                <Button variant="contained" color="error" onClick={resetData}> Reset </Button>
+            </Box>
+        </>
     );
 };
 
