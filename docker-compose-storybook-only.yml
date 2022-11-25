@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  react-storybook:  # frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-storybook
+    ports:
+      - '6006:6006'
+    restart: always
+    volumes:
+      - /usr/frontend/node_modules
+      - ./frontend/src:/frontend/src
+      - ./frontend/static:/frontend/static
+      - ./frontend/.storybook:/frontend/.storybook
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/webpack.config.js:/frontend/webpack.config.js
+volumes:
+  data:
