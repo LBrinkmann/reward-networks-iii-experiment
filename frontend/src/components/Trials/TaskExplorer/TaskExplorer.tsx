@@ -6,9 +6,10 @@ import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
 import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 import {IndividualTrialInterface} from "../IndividualTrial/IndividualTrial";
+import {Button} from "@mui/material";
 
 export interface TaskExplorerInterface extends IndividualTrialInterface {
-
+    reload: () => void;
 }
 
 const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
@@ -23,10 +24,11 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
     } = useNetworkStates(
         props.onNextTrialHandler, props.edges, props.nodes, maxSteps, props.updateTotalScore, incompleteTrialPunishment)
 
-    const resetData = () => {
+    const reloadData = () => {
         // hacky way to reset the trial data
         setIsTimerDone(true);
         window.localStorage.clear();
+        props.reload();
     }
 
     const renderNetwork = () => (
@@ -39,12 +41,16 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
     )
 
     const renderPlayerInformation = () => (
-        <PlayerInformation
-            id={1}
-            step={step}
-            cumulativePoints={points}
-            showComment={false}
-        />
+        <>
+            <PlayerInformation
+                id={1}
+                step={step}
+                cumulativePoints={points}
+                showComment={false}
+            />
+
+            <Button variant="contained" onClick={reloadData} sx={{marginTop: "20px"}}>Reload</Button>
+        </>
     )
 
     const renderLinearSolution = () => (
