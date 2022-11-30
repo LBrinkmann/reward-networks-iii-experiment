@@ -20,6 +20,9 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
     }, []);
 
     const parseCustomURLParams = () => {
+        // clean local storage
+        window.localStorage.clear();
+
         const params = new URLSearchParams(location.search);
         // console.log(params.toString());
         const args_custom = params.get("custom_args");
