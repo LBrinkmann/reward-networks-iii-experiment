@@ -72,10 +72,10 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
     return (
         <TrialWithNetworkLayout
             network={renderNetwork()}
-            timer={renderTimer()}
+            timer={() => {}}
             playerInformation={renderPlayerInformation()}
             linearSolution={renderLinearSolution()}
-            showTimer={true}
+            showTimer={false}
             showPlayerInformation={true}
             showLinearSolution={true}
         />
