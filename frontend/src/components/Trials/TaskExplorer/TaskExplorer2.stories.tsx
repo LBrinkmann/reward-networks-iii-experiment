@@ -12,8 +12,8 @@ export default {
 } as ComponentMeta<typeof TaskExplorer>;
 
 const Template: ComponentStory<typeof TaskExplorer> = function (args) {
-    const [data, setData] = React.useState(default_data);
-    const [currentExample, setCurrentExample] = useState<number>(1);
+    const [edges, setEdges] = useState(args.edges);
+    const [nodes, setNodes] = useState(args.nodes);
 
     useEffect(() => {
         parseCustomURLParams();
@@ -30,8 +30,8 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
             if (args_custom) {
                 let args_custom_json = JSON.parse(args_custom);
                 console.log(args_custom_json);
-                setCurrentExample(0);
-                setData([args_custom_json,]);
+                setEdges(args_custom_json.edges);
+                setNodes(args_custom_json.nodes);
             }
         } catch (e) {
             console.log(e);
@@ -41,9 +41,9 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
 
     return (
 
-        <TaskExplorer {...args}
-                      nodes={data[currentExample].nodes}
-                      edges={data[currentExample].edges}
+        <TaskExplorer onNextTrialHandler={args.onNextTrialHandler}
+                      nodes={nodes}
+                      edges={edges}
                       reload={parseCustomURLParams}
         />
     );
