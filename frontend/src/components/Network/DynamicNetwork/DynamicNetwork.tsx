@@ -55,7 +55,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
         // save states to local storage to prevent losing state on refresh
         window.localStorage.setItem('currentNodeInx', JSON.stringify(currentNodeInx));
         window.localStorage.setItem('movesDynamicNetwork', JSON.stringify(moves));
-    }, [currentNodeInx]);
+    }, [currentNodeInx, props.nodes, props.edges]);
 
 
     // select edges starting from the node with the `currentNodeId` index
