@@ -15,6 +15,8 @@ export interface DynamicNetworkInterface {
     showEdgeTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** all rewards */
+    allRewards?: number[];
 }
 
 export interface MovesInterface {
@@ -30,6 +32,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
         edges,
         onNodeClickParentHandler,
         isDisabled = false,
+        allRewards = [-100, -20, 0, 20, 140]
     } = props;
 
     // get starting node
@@ -80,6 +83,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
             currentNodeId={currentNodeInx}
             possibleMoves={moves.possibleMoves}
             onNodeClickHandler={isDisabled ? null : onNodeClickHandler}
+            allRewards={allRewards}
             {...props}
         />
     )
