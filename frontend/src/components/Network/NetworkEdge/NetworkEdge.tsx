@@ -31,6 +31,8 @@ export interface NetworkEdgeInterface {
     showTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** Rewards range */
+    allRewards?: number[];
 }
 
 const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
@@ -47,21 +49,65 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
         target_x,
         target_y,
         showTutorial = false,
+        allRewards = [-100, -20, 0, 20, 140]
     } = props;
 
-    // Color class of the edge based on the reward
-    let colorClass: 'large-negative' | 'negative' | 'neutral' | 'positive' | 'large-positive';
-    if (reward <= -100) {
-        colorClass = 'large-negative';
-    } else if (reward < 0) {
-        colorClass = 'negative';
-    } else if (reward == 0) {
-        colorClass = 'neutral';
-    } else if (reward < 50) {
-        colorClass = 'positive';
-    } else {
-        colorClass = 'large-positive';
+    let colors = [
+        '#7b3294',
+        '#c2a5cf',
+        '#f7f7f7',
+        '#a6dba0',
+        '#008837',
+    ]
+
+    function interpolateColors(startColor: string, endColor: string, middleColor: string, numColors: number): string[] {
+        let startHex = parseInt(startColor.replace('#', ''), 16);
+        let endHex = parseInt(endColor.replace('#', ''), 16);
+        let middleHex = parseInt(middleColor.replace('#', ''), 16);
+
+        let interpolatedColors = [];
+        let interval = (endHex - startHex) / (numColors - 1);
+
+        // Interpolate colors from start to middle
+        let currHex = startHex;
+        while (currHex < middleHex) {
+            interpolatedColors.push('#' + currHex.toString(16));
+            currHex += interval;
+        }
+
+        // Add the middle color
+        interpolatedColors.push(middleColor);
+
+        // Interpolate colors from middle to end
+        currHex = middleHex + interval;
+        while (currHex <= endHex) {
+            interpolatedColors.push('#' + currHex.toString(16));
+            currHex += interval;
+        }
+
+        return interpolatedColors;
     }
+
+    // interpolate colors
+    if (allRewards.length !== colors.length) {
+        switch (allRewards.length) {
+            case 2:
+                colors = ['#7b3294', '#008837'];
+                break;
+            case 3:
+                colors = ['#7b3294', '#f7f7f7', '#008837'];
+                break;
+            case 4:
+                colors = ['#7b3294', '#c2a5cf', '#a6dba0', '#008837'];
+                break;
+            default:
+                colors = []// interpolateColors('#7b3294', '#008837', '#f7f7f7', allRewards.length);
+        }
+    }
+
+    const ind = allRewards.indexOf(reward);
+    const color = colors[ind];
+
 
     // Component indices
     const edgeId = `edge-${props.idx}`;
@@ -113,8 +159,8 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
     return (
         <>
             {/* Background */}
-            {(colorClass === 'neutral') && (
-                <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
+            {(reward === 0) && (
+                <NetworkEdgeStyled color={'black'} strokeWidth={edgeWidthFinal + 0.5}>
                     <animated.path
                         strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                         className="colored-stroke"
@@ -140,7 +186,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
                 placement="top">
 
                 {/* Edge */}
-                <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
+                <NetworkEdgeStyled color={color} strokeWidth={edgeWidthFinal}>
                     <animated.path
                         strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                         className="colored-stroke"
