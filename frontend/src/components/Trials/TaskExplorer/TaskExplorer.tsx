@@ -47,6 +47,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
                 step={step}
                 cumulativePoints={points}
                 showComment={false}
+                showLegend={false}
             />
 
             <Button variant="contained" onClick={reloadData} sx={{marginTop: "20px"}}>Reload</Button>
