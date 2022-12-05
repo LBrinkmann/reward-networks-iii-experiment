@@ -133,7 +133,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
                 colors = ['#7b3294', '#c2a5cf', '#a6dba0', '#008837'];
                 break;
             default:
-                colors = interpolateColors('#7b3294', '#008837', allRewards.length);
+                colors = interpolateColors('#c2a5cf', '#a6dba0', allRewards.length);
         }
     }
 
