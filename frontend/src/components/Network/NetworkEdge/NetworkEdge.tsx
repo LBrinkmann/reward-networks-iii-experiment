@@ -60,31 +60,29 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
         '#008837',
     ]
 
-    function interpolateColors(startColor: string, endColor: string, middleColor: string, numColors: number): string[] {
-        let startHex = parseInt(startColor.replace('#', ''), 16);
-        let endHex = parseInt(endColor.replace('#', ''), 16);
-        let middleHex = parseInt(middleColor.replace('#', ''), 16);
+    // see https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
+    function lerpColor(a: string, b: string, amount: number) {
 
+        const ah = parseInt(a.replace(/#/g, ''), 16),
+            ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+            bh = parseInt(b.replace(/#/g, ''), 16),
+            br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+            rr = ar + amount * (br - ar),
+            rg = ag + amount * (bg - ag),
+            rb = ab + amount * (bb - ab);
+
+        return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+    }
+
+    function interpolateColors(startColor: string, endColor: string, numColors: number): string[] {
         let interpolatedColors = [];
-        let interval = (endHex - startHex) / (numColors - 1);
+        let interval = 1 / (numColors - 1);
 
         // Interpolate colors from start to middle
-        let currHex = startHex;
-        while (currHex < middleHex) {
-            interpolatedColors.push('#' + currHex.toString(16));
-            currHex += interval;
+        for (let i = 0; i < numColors; i++) {
+            let amount = i * interval;
+            interpolatedColors.push(lerpColor(startColor, endColor, amount));
         }
-
-        // Add the middle color
-        interpolatedColors.push(middleColor);
-
-        // Interpolate colors from middle to end
-        currHex = middleHex + interval;
-        while (currHex <= endHex) {
-            interpolatedColors.push('#' + currHex.toString(16));
-            currHex += interval;
-        }
-
         return interpolatedColors;
     }
 
@@ -101,7 +99,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
                 colors = ['#7b3294', '#c2a5cf', '#a6dba0', '#008837'];
                 break;
             default:
-                colors = []// interpolateColors('#7b3294', '#008837', '#f7f7f7', allRewards.length);
+                colors = interpolateColors('#7b3294', '#008837', allRewards.length);
         }
     }
 
@@ -158,8 +156,8 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
 
     return (
         <>
-            {/* Background */}
-            {(reward === 0) && (
+            {/* Background for white color */}
+            {(color === '#f7f7f7') && (
                 <NetworkEdgeStyled color={'black'} strokeWidth={edgeWidthFinal + 0.5}>
                     <animated.path
                         strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
