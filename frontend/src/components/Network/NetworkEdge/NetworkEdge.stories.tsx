@@ -58,22 +58,5 @@ DefaultEdge.args = {
     arc_y: 0.4755241688835527 * -150 + 300,
     target_x: 0.3581937405928582 * 150 + 300,
     target_y: 0.8833705410179864 * -150 + 300,
+    color: '#7b3294',
 };
-
-export const InterpolateColors = Template.bind({});
-
-InterpolateColors.args = {
-    reward: -100,
-    allRewards: [-120, -100, -20, 0, 20, 100, 120],
-    edgeWidth: 1,
-    actionIdx: 0,
-    edgeStyle: 'dashed',
-    edgeCurvation: 1,
-    source_x: 0.9531707596267098 * 150 + 300,
-    source_y: 0.06445493409494168 * -150 + 300,
-    arc_x: 0.4755241688835527 * 150 + 300,
-    arc_y: 0.4755241688835527 * -150 + 300,
-    target_x: 0.3581937405928582 * 150 + 300,
-    target_y: 0.8833705410179864 * -150 + 300,
-};
-
