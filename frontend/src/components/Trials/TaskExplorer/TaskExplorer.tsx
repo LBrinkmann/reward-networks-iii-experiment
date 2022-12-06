@@ -10,10 +10,11 @@ import {Button} from "@mui/material";
 
 export interface TaskExplorerInterface extends IndividualTrialInterface {
     reload: () => void;
+    allRewards: number[];
 }
 
 const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
-    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100} = props;
+    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100, allRewards} = props;
     const {
         step,
         points,
@@ -37,6 +38,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
             edges={props.edges}
             onNodeClickParentHandler={onNextStepHandler}
             isDisabled={isTimerDone || step >= maxSteps}
+            allRewards={allRewards}
         />
     )
 

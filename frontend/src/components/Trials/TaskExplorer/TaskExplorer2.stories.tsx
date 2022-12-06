@@ -14,6 +14,7 @@ export default {
 const Template: ComponentStory<typeof TaskExplorer> = function (args) {
     const [edges, setEdges] = useState(args.edges);
     const [nodes, setNodes] = useState(args.nodes);
+    const [allRewards, setAllRewards] = useState(args.allRewards);
 
     useEffect(() => {
         parseCustomURLParams();
@@ -36,6 +37,17 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
         } catch (e) {
             console.log(e);
         }
+
+        const rewards = params.get("custom_rewards");
+        try {
+            if (rewards) {
+                let rewards_json = JSON.parse(rewards);
+                console.log(rewards_json);
+                setAllRewards(rewards_json);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
 
 
@@ -45,6 +57,7 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
                       nodes={nodes}
                       edges={edges}
                       reload={parseCustomURLParams}
+                      allRewards={allRewards}
         />
     );
 };
@@ -56,5 +69,6 @@ Default.args = {
     edges: default_data[1].edges,
     nodes: default_data[1].nodes,
     onNextTrialHandler: () => {  location.reload()},
-    hideTrial: false
+    hideTrial: false,
+    allRewards: [-100, -20, 0, 20, 140]
 };
