@@ -62,6 +62,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
             edges={props.edges}
             moves={moves}
             title={""}
+            allRewards={allRewards}
         />
     )
 
