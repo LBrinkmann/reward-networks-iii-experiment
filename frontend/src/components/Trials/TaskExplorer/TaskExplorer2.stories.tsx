@@ -58,6 +58,7 @@ const Template: ComponentStory<typeof TaskExplorer> = function (args) {
                       edges={edges}
                       reload={parseCustomURLParams}
                       allRewards={allRewards}
+                      maxSteps={args.maxSteps}
         />
     );
 };
@@ -70,5 +71,6 @@ Default.args = {
     nodes: default_data[1].nodes,
     onNextTrialHandler: () => {  location.reload()},
     hideTrial: false,
-    allRewards: [-100, -20, 0, 20, 140]
+    allRewards: [-100, -20, 0, 20, 140],
+    maxSteps: 8
 };

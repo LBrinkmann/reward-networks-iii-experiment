@@ -11,6 +11,8 @@ import {Button} from "@mui/material";
 export interface TaskExplorerInterface extends IndividualTrialInterface {
     reload: () => void;
     allRewards: number[];
+
+    maxSteps: number;
 }
 
 const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
