@@ -26,13 +26,14 @@ const useNetworkStates = (
         if (m) {
             setMoves(m)
         } else {
+            // update moves if the nodes have changed
             setMoves([nodes.filter(node => node.starting_node)[0].node_num])
             window.localStorage.setItem('moves', JSON.stringify(moves));
         }
 
         const t = JSON.parse(window.localStorage.getItem('isTimerDone'))
         if (t) setIsTimerDone(t);
-    }, []);
+    }, [nodes]);
 
     // Go to the next trial when the timer is done or the subject has done all the steps
     useEffect(() => {

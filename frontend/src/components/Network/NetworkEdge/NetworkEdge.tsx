@@ -31,6 +31,8 @@ export interface NetworkEdgeInterface {
     showTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** colors */
+    color: string;
 }
 
 const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
@@ -47,21 +49,8 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
         target_x,
         target_y,
         showTutorial = false,
+        color
     } = props;
-
-    // Color class of the edge based on the reward
-    let colorClass: 'large-negative' | 'negative' | 'neutral' | 'positive' | 'large-positive';
-    if (reward <= -100) {
-        colorClass = 'large-negative';
-    } else if (reward < 0) {
-        colorClass = 'negative';
-    } else if (reward == 0) {
-        colorClass = 'neutral';
-    } else if (reward < 50) {
-        colorClass = 'positive';
-    } else {
-        colorClass = 'large-positive';
-    }
 
     // Component indices
     const edgeId = `edge-${props.idx}`;
@@ -112,9 +101,9 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
 
     return (
         <>
-            {/* Background */}
-            {(colorClass === 'neutral') && (
-                <NetworkEdgeStyled colorClass={'background'} strokeWidth={edgeWidthFinal + 0.5}>
+            {/* Background for white color */}
+            {(color === '#f7f7f7') && (
+                <NetworkEdgeStyled color={'black'} strokeWidth={edgeWidthFinal + 0.5}>
                     <animated.path
                         strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                         className="colored-stroke"
@@ -140,7 +129,7 @@ const NetworkEdge: React.FC<NetworkEdgeInterface> = props => {
                 placement="top">
 
                 {/* Edge */}
-                <NetworkEdgeStyled colorClass={colorClass} strokeWidth={edgeWidthFinal}>
+                <NetworkEdgeStyled color={color} strokeWidth={edgeWidthFinal}>
                     <animated.path
                         strokeDashoffset={dashOffset ? dashOffset.to((x: number) => x) : 0}
                         className="colored-stroke"

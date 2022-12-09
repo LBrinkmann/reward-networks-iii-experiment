@@ -10,10 +10,13 @@ import {Button} from "@mui/material";
 
 export interface TaskExplorerInterface extends IndividualTrialInterface {
     reload: () => void;
+    allRewards: number[];
+
+    maxSteps: number;
 }
 
 const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
-    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100} = props;
+    const {timer = 25, maxSteps = 8, incompleteTrialPunishment = -100, allRewards} = props;
     const {
         step,
         points,
@@ -37,6 +40,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
             edges={props.edges}
             onNodeClickParentHandler={onNextStepHandler}
             isDisabled={isTimerDone || step >= maxSteps}
+            allRewards={allRewards}
         />
     )
 
@@ -47,6 +51,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
                 step={step}
                 cumulativePoints={points}
                 showComment={false}
+                showLegend={false}
             />
 
             <Button variant="contained" onClick={reloadData} sx={{marginTop: "20px"}}>Reload</Button>
@@ -59,6 +64,7 @@ const TaskExplorer: React.FC<TaskExplorerInterface> = (props) => {
             edges={props.edges}
             moves={moves}
             title={""}
+            allRewards={allRewards}
         />
     )
 
