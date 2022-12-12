@@ -37,6 +37,12 @@ async def default_client():
 
 
 @pytest.fixture(scope="session")
+async def admin_client():
+    async with AsyncClient(app=api, base_url="http://testserver/", auth=('admin', 'admin')) as client:
+        yield client
+
+
+@pytest.fixture(scope="session")
 async def e_config(default_client):
     # find an active configuration
     config = await ExperimentSettings.find_one(
