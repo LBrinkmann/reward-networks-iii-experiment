@@ -8,7 +8,6 @@ from models.subject import Subject
 @pytest.mark.asyncio
 async def test_get_progress(default_client: httpx.AsyncClient,
                             create_empty_experiment):
-
     url = f'/progress/'
 
     response = await default_client.get(url, auth=('admin', 'admin'))

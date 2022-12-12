@@ -97,6 +97,44 @@ async def test_multiple_subjects(default_client: httpx.AsyncClient,
     await Subject.find().delete()
 
 
+@pytest.mark.asyncio
+@pytest.mark.very_slow  # > 1 minute
+async def test_multiple_subjects_and_progress_check(default_client: httpx.AsyncClient,
+                                                    e_config: ExperimentSettings,
+                                                    create_empty_experiment):
+    """Test multiple parallel subjects from the generation 0 and 1"""
+    # generation 0
+    tasks = []
+    for i in range(30):
+        task = asyncio.create_task(one_subject(default_client, e_config, i))
+        tasks.append(task)
+        # check progress
+        task = asyncio.create_task(check_progress(default_client))
+        tasks.append(task)
+    [await t for t in tasks]
+
+    subjects = await Subject.find().to_list()
+
+    assert len(subjects) == 30
+
+    sessions = await Session.find(
+        In(Session.subject_id, [s.id for s in subjects])).to_list()
+
+    assert len(
+        sessions) == e_config.n_sessions_first_generation - e_config.n_ai_players
+
+    # Clean up resources
+    await Session.find().delete()
+    await Subject.find().delete()
+
+
+async def check_progress(client):
+    url = f'/progress/'
+
+    response = await client.get(url, auth=('admin', 'admin'))
+    assert response.status_code == 200
+
+
 async def one_subject(default_client: httpx.AsyncClient,
                       e_config: ExperimentSettings,
                       subj: int,
