@@ -18,3 +18,5 @@ const TrialContextProvider = ({children}: any) => {
         </TrialContext.Provider>
     );
 };
+
+export default TrialContextProvider;
