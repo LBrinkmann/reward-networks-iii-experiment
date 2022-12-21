@@ -10,7 +10,6 @@ import {
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 import {renderTrial, setHeaderTitle} from "./RenderTrialComponent";
 import {TrialContext, TrialContextType} from "../../contexts/TrialContext";
-import {ResultContext, ResultContextType} from "../../contexts/ResultContext";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
@@ -18,7 +17,6 @@ interface TrialInterface {
 
 const Trial: React.FC<TrialInterface> = (props) => {
     // const {trial, updateTrial} = useContext(TrialContext) as TrialContextType;
-    // const {result, updateResult} = useContext(ResultContext) as ResultContextType;
 
     const {trial, loading, error, axiosGet, axiosPost} = useTrialAPI();
 
