@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useTrialAPI} from "../../apis";
 import Header from "../Header";
 import {
@@ -9,12 +9,17 @@ import {
 } from "../../apis/apiTypes";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 import {renderTrial, setHeaderTitle} from "./RenderTrialComponent";
+import {TrialContext, TrialContextType} from "../../contexts/TrialContext";
+import {ResultContext, ResultContextType} from "../../contexts/ResultContext";
 
 interface TrialInterface {
     nextTrialHandler: () => null;
 }
 
 const Trial: React.FC<TrialInterface> = (props) => {
+    // const {trial, updateTrial} = useContext(TrialContext) as TrialContextType;
+    // const {result, updateResult} = useContext(ResultContext) as ResultContextType;
+
     const {trial, loading, error, axiosGet, axiosPost} = useTrialAPI();
 
     const [trialType, setTrialType] = useState<string>('');

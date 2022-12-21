@@ -9,7 +9,7 @@ export type TrialContextType = {
 };
 
 
-const TrialContext = createContext<TrialContextType | null>(null);
+export const TrialContext = createContext<TrialContextType | null>(null);
 
 
 const TrialContextProvider = ({children}: any) => {

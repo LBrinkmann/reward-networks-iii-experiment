@@ -8,7 +8,7 @@ export type ResultContextType = {
     updateResult: (newResult: Solution | Advisor | WrittenStrategy | PostSurvey) => void;
 }
 
-const ResultContext = createContext<ResultContextType | null>(null);
+export const ResultContext = createContext<ResultContextType | null>(null);
 
 
 const ResultContextProvider = ({children}: any) => {
