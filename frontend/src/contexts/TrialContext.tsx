@@ -4,6 +4,7 @@ import {Advisor, PostSurvey, Solution, Trial, WrittenStrategy} from "../apis/api
 const LOCAL_STORAGE_TRIAL_KEY = 'trialData';
 const LOCAL_STORAGE_RESULT_KEY = 'resultData';
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
+const LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY = 'socialLearningState';
 
 export type NetworkState = {
     step: number;
@@ -13,13 +14,21 @@ export type NetworkState = {
     currentNode: number;
 }
 
+export type SocialLearningState = {
+    socialLearningType: string;
+    teacherInx: number;
+    learningExampleInx: number;
+}
+
 export type TrialContextType = {
     trial: Trial | null;
     result: Solution | Advisor | WrittenStrategy | PostSurvey;
     networkState: NetworkState | null;
+    socialLearningState: SocialLearningState | null;
     updateTrial: (newTrial: Trial) => void;
     updateResult: (newResult: Solution | Advisor | WrittenStrategy | PostSurvey) => void;
     updateNetworkState: (newNetworkState: NetworkState) => void;
+    updateSocialLearningState: (newSocialLearningState: SocialLearningState) => void;
 };
 
 
@@ -33,6 +42,8 @@ const TrialContextProvider = ({children}: any) => {
         JSON.parse(localStorage.getItem(LOCAL_STORAGE_RESULT_KEY)));
     const [networkState, setNetworkState] = useState<NetworkState | null>(
         JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)));
+    const [socialLearningState, setSocialLearningState] = useState<SocialLearningState | null>(
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY)));
 
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_TRIAL_KEY, JSON.stringify(trial));
@@ -48,8 +59,19 @@ const TrialContextProvider = ({children}: any) => {
 
     const updateNetworkState = (newNetworkState: NetworkState) => setNetworkState(newNetworkState)
 
+    const updateSocialLearningState = (newSocialLearningState: SocialLearningState) => setSocialLearningState(newSocialLearningState)
+
     return (
-        <TrialContext.Provider value={{trial, result, networkState, updateTrial, updateResult, updateNetworkState}}>
+        <TrialContext.Provider value={{
+            trial,
+            result,
+            networkState,
+            socialLearningState,
+            updateTrial,
+            updateResult,
+            updateNetworkState,
+            updateSocialLearningState
+        }}>
             {children}
         </TrialContext.Provider>
     );
