@@ -18,7 +18,7 @@ const ExperimentTrial: FC = () => {
     const {trial, socialLearningState, updateResult, updateSocialLearningState, updateSessionState} = useTrialContext();
 
     const OnNextTrial = () => {
-        // updateResult();
+        // updateResult
     }
 
     const onSocialLearningSelectionClickHandler = (advisorId: string, inx: number) => {
