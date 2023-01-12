@@ -1,5 +1,5 @@
 import {ReactQueryDevtools} from 'react-query/devtools'
-import React from "react";
+import React, {useEffect} from "react";
 import ExperimentTrial from "../Trials";
 import TrialContextProvider from "../../contexts/TrialContext";
 import {QueryClient, QueryClientProvider} from 'react-query';
@@ -11,19 +11,22 @@ import {v4 as uuid4} from "uuid";
 const queryClient = new QueryClient()
 
 
-
 const App = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    if (!searchParams.get("PROLIFIC_PID")) {
-        setSearchParams({...searchParams, PROLIFIC_PID: uuid4().toString()});
-    }
+    useEffect(() => {
+        if (!searchParams.get("PROLIFIC_PID")) {
+            setSearchParams({...searchParams, PROLIFIC_PID: uuid4().toString()});
+        }
+    }, []);
 
 
     return (
         <QueryClientProvider client={queryClient}>
             <TrialContextProvider>
-                <ExperimentTrial prolificId={searchParams.get("PROLIFIC_PID")}/>
+                <TrialContextProvider>
+                    <ExperimentTrial prolificId={searchParams.get("PROLIFIC_PID")}/>
+                </TrialContextProvider>
             </TrialContextProvider>
             <ReactQueryDevtools initialIsOpen={false}/>
         </QueryClientProvider>
