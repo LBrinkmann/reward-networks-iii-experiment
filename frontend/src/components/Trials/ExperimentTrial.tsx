@@ -12,10 +12,13 @@ import IndividualTrial from "./IndividualTrial";
 import WrittenStrategy from "./WrittenStrategy";
 import PostSurvey from "./Outro/PostSurvey";
 import Debriefing from "./Outro/Debriefing";
+import {useQuery} from "react-query";
+import {getTrial} from "../../apis/TrialAPI";
 
 
 const ExperimentTrial: FC = () => {
-    const {trial, socialLearningState, updateResult, updateSocialLearningState, updateSessionState} = useTrialContext();
+    const {socialLearningState, updateResult, updateSocialLearningState, updateSessionState} = useTrialContext();
+    const {status, data, error} = useQuery("trial", () => getTrial("test"));
 
     const OnNextTrial = () => {
         // updateResult
@@ -29,88 +32,95 @@ const ExperimentTrial: FC = () => {
         // updateSessionState
     }
 
-    switch (trial.trial_type) {
-        case 'consent':
-            return <ConsentForm
-                onClickAgreeHandler={OnNextTrial}
-                onDisagreeRedirect={trial.redirect_url}
-            />;
-        case 'instruction_welcome':
-            return <Instruction instructionId={"welcome"} onClick={OnNextTrial}/>;
-        case 'practice':
-            return <PracticeNetworkTrial onNextTrialHandler={OnNextTrial}/>;
-        case 'instruction_learning_selection':
-            return <Instruction instructionId={"learning_selection"} onClick={OnNextTrial}/>;
-        case 'social_learning_selection':
-            return <Selection
-                advisors={
-                    trial.advisor_selection.scores.map((score: number, inx: number) => {
-                        return {
-                            advisorId: trial.advisor_selection.advisor_ids[inx],
-                            averageScore: score
-                        }
-                    })
+    if (status === "loading") {
+        return <div>loading...</div>
+    } else if (status === "error") {
+        return <div>error: {error}</div>
+    } else {
+
+        switch (data.trial_type) {
+            case 'consent':
+                return <ConsentForm
+                    onClickAgreeHandler={OnNextTrial}
+                    onDisagreeRedirect={data.redirect_url}
+                />;
+            case 'instruction_welcome':
+                return <Instruction instructionId={"welcome"} onClick={OnNextTrial}/>;
+            case 'practice':
+                return <PracticeNetworkTrial onNextTrialHandler={OnNextTrial}/>;
+            case 'instruction_learning_selection':
+                return <Instruction instructionId={"learning_selection"} onClick={OnNextTrial}/>;
+            case 'social_learning_selection':
+                return <Selection
+                    advisors={
+                        data.advisor_selection.scores.map((score: number, inx: number) => {
+                            return {
+                                advisorId: data.advisor_selection.advisor_ids[inx],
+                                averageScore: score
+                            }
+                        })
+                    }
+                    onClickHandler={onSocialLearningSelectionClickHandler}
+                    showTutorial={data.id === 4}
+                />;
+            case 'instruction_learning':
+                return <Instruction instructionId={"learning"} onClick={OnNextTrial}/>;
+            case 'social_learning':
+                if (socialLearningState.socialLearningType === 'observation') {
+                    return <ObservationTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={socialLearningState.teacherInx}
+                        onNextTrialHandler={OnNextTrial}
+                        showTutorial={data.id === 6}  // show tutorial only for the very first social learning trial
+                    />;
+                } else if (socialLearningState.socialLearningType === 'repeat') {
+                    return <RepeatTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={socialLearningState.teacherInx}
+                        onNextTrialHandler={OnNextTrial}
+                    />;
+                } else {  // tryyourself
+                    return <TryYourselfTrial
+                        nodes={data.network.nodes}
+                        edges={data.network.edges}
+                        moves={data.advisor.solution.moves}
+                        teacherId={socialLearningState.teacherInx}
+                        onNextTrialHandler={OnNextTrial}
+                    />;
                 }
-                onClickHandler={onSocialLearningSelectionClickHandler}
-                showTutorial={trial.id === 4}
-            />;
-        case 'instruction_learning':
-            return <Instruction instructionId={"learning"} onClick={OnNextTrial}/>;
-        case 'social_learning':
-            if (socialLearningState.socialLearningType === 'observation') {
-                return <ObservationTrial
-                    nodes={trial.network.nodes}
-                    edges={trial.network.edges}
-                    moves={trial.advisor.solution.moves}
-                    teacherId={socialLearningState.teacherInx}
+            case 'instruction_individual':
+                return <Instruction instructionId={"individual"} onClick={OnNextTrial}/>;
+            case  'individual':
+                return <IndividualTrial
+                    nodes={data.network.nodes}
+                    edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
-                    showTutorial={trial.id === 6}  // show tutorial only for the very first social learning trial
+                    updateTotalScore={updateTotalPoints}
                 />;
-            } else if (socialLearningState.socialLearningType === 'repeat') {
-                return <RepeatTrial
-                    nodes={trial.network.nodes}
-                    edges={trial.network.edges}
-                    moves={trial.advisor.solution.moves}
-                    teacherId={socialLearningState.teacherInx}
+            case 'instruction_demonstration':
+                return <Instruction instructionId={"demonstration"} onClick={OnNextTrial}/>;
+            case 'demonstration':
+                return <IndividualTrial
+                    timer={2 * 60}
+                    nodes={data.network.nodes}
+                    edges={data.network.edges}
                     onNextTrialHandler={OnNextTrial}
                 />;
-            } else {  // tryyourself
-                return <TryYourselfTrial
-                    nodes={trial.network.nodes}
-                    edges={trial.network.edges}
-                    moves={trial.advisor.solution.moves}
-                    teacherId={socialLearningState.teacherInx}
-                    onNextTrialHandler={OnNextTrial}
-                />;
-            }
-        case 'instruction_individual':
-            return <Instruction instructionId={"individual"} onClick={OnNextTrial}/>;
-        case  'individual':
-            return <IndividualTrial
-                nodes={trial.network.nodes}
-                edges={trial.network.edges}
-                onNextTrialHandler={OnNextTrial}
-                updateTotalScore={updateTotalPoints}
-            />;
-        case 'instruction_demonstration':
-            return <Instruction instructionId={"demonstration"} onClick={OnNextTrial}/>;
-        case 'demonstration':
-            return <IndividualTrial
-                timer={2 * 60}
-                nodes={trial.network.nodes}
-                edges={trial.network.edges}
-                onNextTrialHandler={OnNextTrial}
-            />;
-        case 'instruction_written_strategy':
-            return <Instruction instructionId={"written_strategy"} onClick={OnNextTrial}/>;
-        case  'written_strategy':
-            return <WrittenStrategy onClickContinue={OnNextTrial}/>;
-        case 'post_survey':
-            return <PostSurvey onContinueHandler={OnNextTrial}/>;
-        case 'debriefing':
-            return <Debriefing redirect={trial.redirect_url}/>;
-        default:
-            return <> </>;
+            case 'instruction_written_strategy':
+                return <Instruction instructionId={"written_strategy"} onClick={OnNextTrial}/>;
+            case  'written_strategy':
+                return <WrittenStrategy onClickContinue={OnNextTrial}/>;
+            case 'post_survey':
+                return <PostSurvey onContinueHandler={OnNextTrial}/>;
+            case 'debriefing':
+                return <Debriefing redirect={data.redirect_url}/>;
+            default:
+                return <> </>;
+        }
     }
 
 }
