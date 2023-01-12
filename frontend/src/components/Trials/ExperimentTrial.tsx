@@ -15,10 +15,13 @@ import Debriefing from "./Outro/Debriefing";
 import {useQuery} from "react-query";
 import {getTrial} from "../../apis/TrialAPI";
 
+type ExperimentTrialProps = {
+    prolificId: string;
+}
 
-const ExperimentTrial: FC = () => {
+const ExperimentTrial: FC<ExperimentTrialProps> = ({prolificId}) => {
     const {socialLearningState, updateResult, updateSocialLearningState, updateSessionState} = useTrialContext();
-    const {status, data, error} = useQuery("trial", () => getTrial("test"));
+    const {status, data, error} = useQuery("trial", () => getTrial(prolificId));
 
     const OnNextTrial = () => {
         // updateResult

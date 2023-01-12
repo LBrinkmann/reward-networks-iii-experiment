@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
-import {Advisor, PostSurvey, Solution, Trial, WrittenStrategy} from "../apis/apiTypes";
+import {Advisor, PostSurvey, Solution, WrittenStrategy} from "../apis/apiTypes";
 
 const LOCAL_STORAGE_RESULT_KEY = 'resultData';
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
