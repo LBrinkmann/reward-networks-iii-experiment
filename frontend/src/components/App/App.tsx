@@ -1,15 +1,12 @@
 import React from "react";
-import Trial from "../Trials";
+import ExperimentTrial from "../Trials";
 import TrialContextProvider from "../../contexts/TrialContext";
-
 
 
 const App = () => {
     return (
         <TrialContextProvider>
-
-                <Trial nextTrialHandler={() => null}/>
-
+            <ExperimentTrial/>
         </TrialContextProvider>
     );
 };
