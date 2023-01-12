@@ -10,6 +10,7 @@ export type NetworkState = {
     moves: number[];
     time: number;
     currentNode: number;
+    tutorialId?: number;
 }
 
 export type SocialLearningState = {
