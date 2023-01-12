@@ -3,9 +3,9 @@ import {Button, Grid, Paper, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Instruction from "../../Instruction";
+import {ExperimentTrialsProps} from "../../ExperimentTrial";
 
-interface ConsentFormProps {
-    onClickAgreeHandler: () => void;
+interface ConsentFormProps extends ExperimentTrialsProps {
     /* Redirect URL */
     onDisagreeRedirect: string;
 }
@@ -157,7 +157,7 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
                                 <Button
                                     variant="contained"
                                     color="success"
-                                    onClick={props.onClickAgreeHandler}
+                                    onClick={() => props.onTrialFinished({moves: []})}
                                     startIcon={<CheckIcon/>}>️
                                     I consent to participate in the study and agree to the collection, storage, and use
                                     of

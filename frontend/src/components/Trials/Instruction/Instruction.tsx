@@ -3,10 +3,10 @@ import React, {FC} from "react";
 import {InstructionContent} from "./InstructionContent";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+import {ExperimentTrialsProps} from "../ExperimentTrial";
 
-interface InstructionInterface {
+interface InstructionInterface extends ExperimentTrialsProps{
     instructionId: string;
-    onClick: () => void;
 }
 
 
@@ -31,7 +31,7 @@ export const Instruction: FC<InstructionInterface> = props => {
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={props.onClick}
+                                onClick={() => props.onTrialFinished({moves: []})}
                                 startIcon={<CheckIcon/>}>️
                                 Continue
                             </Button>

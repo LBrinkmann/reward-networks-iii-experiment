@@ -8,11 +8,12 @@ import LinearSolution from "../../Network/LinearSolution";
 
 import {edges, nodes} from "./PracticeData";
 import Header from "../../Header";
+import {ExperimentTrialsProps} from "../ExperimentTrial";
 
 
-export interface PracticeNetworkTrialInterface {
+export interface PracticeNetworkTrialInterface extends ExperimentTrialsProps {
     /** Handle the end of the trial */
-    onNextTrialHandler: (moves?: number[]) => void;
+    onNextTrialHandler?: (moves?: number[]) => void;
     /** Timer duration in seconds; 30 seconds by default */
     timer?: number;
     /** The maximum number of steps in the trial. Default is 8 steps*/
@@ -69,7 +70,7 @@ const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) =>
                 break;
         }
 
-        onNextStepHandler(currentNode, nextNode)
+        props.onTrialFinished({moves: moves, score: points});
     }
 
     const renderNetwork = () => {
