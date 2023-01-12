@@ -26,7 +26,8 @@ const ConsentForm: React.FC<ConsentFormProps> = (props: ConsentFormProps) => {
         window.open(props.onDisagreeRedirect, "_self");  // , "_blank" to open in a new tab
     };
 
-    const renderDisagreePage = () => <Instruction instructionId={"consent_decline"} onClick={redirectToProlific}/>
+    const renderDisagreePage = () => <Instruction onTrialFinished={props.onTrialFinished}
+                                                  instructionId={"consent_decline"}/>
 
     const renderConsent = () => {
         return (
