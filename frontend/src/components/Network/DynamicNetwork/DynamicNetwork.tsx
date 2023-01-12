@@ -15,6 +15,8 @@ export interface DynamicNetworkInterface {
     showEdgeTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** all rewards */
+    allRewards?: number[];
 }
 
 export interface MovesInterface {
@@ -30,13 +32,17 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
         edges,
         onNodeClickParentHandler,
         isDisabled = false,
+        allRewards = [-100, -20, 0, 20, 140]
     } = props;
 
-    // get starting node
-    const startingNode = nodes.filter(node => node.starting_node)[0];
-
-    const [currentNodeInx, setCurrentNodeInx] = useState<number>(startingNode.node_num);
+    const [currentNodeInx, setCurrentNodeInx] = useState<number>(nodes.filter(node => node.starting_node)[0].node_num);
     const [moves, setMoves] = useState<MovesInterface>({possibleMoves: [], previousMoves: []});
+
+    useEffect(() => {
+        const currentNode = nodes.filter(node => node.starting_node)[0].node_num;
+        setCurrentNodeInx(currentNode);
+        window.localStorage.setItem('currentNodeInx', JSON.stringify(currentNode));
+    }, [nodes]);
 
     // get states from local storage to prevent losing state on refresh
     useEffect(() => {
@@ -47,15 +53,15 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
     }, []);
 
     useEffect(() => {
-        setMoves((moves: MovesInterface) => ({
-                possibleMoves: selectPossibleMoves(edges, currentNodeInx),
-                previousMoves: moves.previousMoves.concat([currentNodeInx])
-            })
-        );
+        const _moves = {
+            possibleMoves: selectPossibleMoves(edges, currentNodeInx),
+            previousMoves: moves.previousMoves.concat([currentNodeInx])
+        }
+        setMoves(_moves);
         // save states to local storage to prevent losing state on refresh
         window.localStorage.setItem('currentNodeInx', JSON.stringify(currentNodeInx));
-        window.localStorage.setItem('movesDynamicNetwork', JSON.stringify(moves));
-    }, [currentNodeInx]);
+        window.localStorage.setItem('movesDynamicNetwork', JSON.stringify(_moves));
+    }, [currentNodeInx, edges]);
 
 
     // select edges starting from the node with the `currentNodeId` index
@@ -80,6 +86,7 @@ const DynamicNetwork: React.FC<DynamicNetworkInterface> = props => {
             currentNodeId={currentNodeInx}
             possibleMoves={moves.possibleMoves}
             onNodeClickHandler={isDisabled ? null : onNodeClickHandler}
+            allRewards={allRewards}
             {...props}
         />
     )

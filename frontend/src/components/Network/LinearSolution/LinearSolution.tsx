@@ -30,6 +30,8 @@ interface LinearSolutionInterface {
     showTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** Rewards range */
+    allRewards?: number[];
 }
 
 
@@ -45,7 +47,59 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         moves,
         id = 100,
         showTutorial = false,
+        allRewards = [-100, -20, 0, 20, 140]
     } = props;
+
+    let colors = [
+        '#7b3294',
+        '#c2a5cf',
+        '#f7f7f7',
+        '#a6dba0',
+        '#008837',
+    ]
+
+    // see https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
+    function lerpColor(a: string, b: string, amount: number) {
+
+        const ah = parseInt(a.replace(/#/g, ''), 16),
+            ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+            bh = parseInt(b.replace(/#/g, ''), 16),
+            br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+            rr = ar + amount * (br - ar),
+            rg = ag + amount * (bg - ag),
+            rb = ab + amount * (bb - ab);
+
+        return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+    }
+
+    function interpolateColors(startColor: string, endColor: string, numColors: number): string[] {
+        let interpolatedColors = [];
+        let interval = 1 / (numColors - 1);
+
+        // Interpolate colors from start to middle
+        for (let i = 0; i < numColors; i++) {
+            let amount = i * interval;
+            interpolatedColors.push(lerpColor(startColor, endColor, amount));
+        }
+        return interpolatedColors;
+    }
+
+    // interpolate colors
+    if (allRewards.length !== colors.length) {
+        switch (allRewards.length) {
+            case 2:
+                colors = ['#7b3294', '#008837'];
+                break;
+            case 3:
+                colors = ['#7b3294', '#f7f7f7', '#008837'];
+                break;
+            case 4:
+                colors = ['#7b3294', '#c2a5cf', '#a6dba0', '#008837'];
+                break;
+            default:
+                colors = interpolateColors('#c2a5cf', '#a6dba0', allRewards.length);
+        }
+    }
 
     const plotEdge = (moveIdx: number) => {
         if (moveIdx < moves.length - 1) {
@@ -72,6 +126,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                     target_x={targetX}
                     target_y={size.height / 2}
                     key={'linear-solution-edge-' + moveIdx}
+                    color={colors[allRewards.indexOf(edge.reward)]}
                 />
             );
         } else {

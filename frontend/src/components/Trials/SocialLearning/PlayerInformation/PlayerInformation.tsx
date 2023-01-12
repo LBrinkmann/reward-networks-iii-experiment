@@ -17,6 +17,8 @@ interface PlayerInformationProps {
     showTutorialComment?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    /** Show the legend for the rewards */
+    showLegend?: boolean;
 }
 
 const Item = styled(Paper)(() => ({
@@ -25,7 +27,7 @@ const Item = styled(Paper)(() => ({
     textAlign: 'left',
 }));
 
-const PlayerInfoItem:FC = ({children}) => {
+const PlayerInfoItem: FC = ({children}) => {
     return (
         <Item elevation={0}>
             {children}
@@ -36,16 +38,19 @@ const PlayerInfoItem:FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showLegend = true} = props;
     return (
 
         <Stack spacing={1} sx={{paddingTop: "20px"}}>
             <PlayerInfoItem>
-                <CardMedia
-                    component="img"
-                    image={rewardsImg}
-                    alt="You earn or lose points depending on the color of the arrow."
-                />
+                {/*show if showLegend*/}
+                {showLegend && (
+                    <CardMedia
+                        component="img"
+                        image={rewardsImg}
+                        alt="You earn or lose points depending on the color of the arrow."
+                    />
+                )}
             </PlayerInfoItem>
             <PlayerInfoItem>
                 <Typography gutterBottom variant="h5" component="div">
