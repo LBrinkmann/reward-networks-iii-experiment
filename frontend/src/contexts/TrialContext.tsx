@@ -5,6 +5,7 @@ const LOCAL_STORAGE_TRIAL_KEY = 'trialData';
 const LOCAL_STORAGE_RESULT_KEY = 'resultData';
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
 const LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY = 'socialLearningState';
+const LOCAL_STORAGE_SESSION_STATE_KEY = 'sessionState';
 
 export type NetworkState = {
     step: number;
@@ -20,11 +21,19 @@ export type SocialLearningState = {
     learningExampleInx: number;
 }
 
+export type SessionState = {
+    totalPoints: number;
+    prolificId: string;
+    currentTrial: number;
+}
+
 export type TrialContextType = {
     trial: Trial | null;
     result: Solution | Advisor | WrittenStrategy | PostSurvey;
     networkState: NetworkState | null;
     socialLearningState: SocialLearningState | null;
+    sessionState: SessionState | null;
+    updateSessionState: (newSessionState: SessionState) => void;
     updateTrial: (newTrial: Trial) => void;
     updateResult: (newResult: Solution | Advisor | WrittenStrategy | PostSurvey) => void;
     updateNetworkState: (newNetworkState: NetworkState) => void;
@@ -37,13 +46,20 @@ export const TrialContext = createContext<TrialContextType | null>(null);
 
 const TrialContextProvider = ({children}: any) => {
     const [trial, setTrial] = useState<Trial | null>(
-        JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRIAL_KEY)));
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRIAL_KEY))
+    );
     const [result, setResult] = useState<Solution | Advisor | WrittenStrategy | PostSurvey | null>(
-        JSON.parse(localStorage.getItem(LOCAL_STORAGE_RESULT_KEY)));
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_RESULT_KEY))
+    );
     const [networkState, setNetworkState] = useState<NetworkState | null>(
-        JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)));
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY))
+    );
     const [socialLearningState, setSocialLearningState] = useState<SocialLearningState | null>(
-        JSON.parse(localStorage.getItem(LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY)));
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY))
+    );
+    const [sessionState, setSessionState] = useState<SessionState | null>(
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_SESSION_STATE_KEY))
+    );
 
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_TRIAL_KEY, JSON.stringify(trial));
@@ -53,6 +69,18 @@ const TrialContextProvider = ({children}: any) => {
         localStorage.setItem(LOCAL_STORAGE_RESULT_KEY, JSON.stringify(result));
     }, [result]);
 
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(networkState));
+    }, [networkState]);
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_SOCIAL_LEARNING_STATE_KEY, JSON.stringify(socialLearningState));
+    }, [socialLearningState]);
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_SESSION_STATE_KEY, JSON.stringify(sessionState));
+    }, [sessionState]);
+
     const updateTrial = (newTrial: Trial) => setTrial(newTrial)
 
     const updateResult = (newResult: Solution | Advisor | WrittenStrategy | PostSurvey) => setResult(newResult)
@@ -61,16 +89,20 @@ const TrialContextProvider = ({children}: any) => {
 
     const updateSocialLearningState = (newSocialLearningState: SocialLearningState) => setSocialLearningState(newSocialLearningState)
 
+    const updateSessionState = (newSessionState: SessionState) => setSessionState(newSessionState)
+
     return (
         <TrialContext.Provider value={{
             trial,
             result,
             networkState,
             socialLearningState,
+            sessionState,
             updateTrial,
             updateResult,
             updateNetworkState,
-            updateSocialLearningState
+            updateSocialLearningState,
+            updateSessionState
         }}>
             {children}
         </TrialContext.Provider>
