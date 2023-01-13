@@ -17,7 +17,7 @@ import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 
 const TRIAL_TYPE = {
     CONSENT: "consent",
-    INSTRUCTION_WELCOME: "instruction_welcome",
+    INSTRUCTION: "instruction_welcome",
     PRACTICE: "practice",
     INSTRUCTION_LEARNING_SELECTION: "instruction_learning_selection",
     SOCIAL_LEARNING_SELECTION: "social_learning_selection",
@@ -46,8 +46,8 @@ const ExperimentTrial: FC<ExperimentTrialProps> = ({prolificId}) => {
         switch (data.trial_type) {
             case TRIAL_TYPE.CONSENT:
                 return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
-            case TRIAL_TYPE.INSTRUCTION_WELCOME:
-                return <Instruction endTrial={submitResults} instructionId={"welcome"}/>;
+            case TRIAL_TYPE.INSTRUCTION:
+                return <Instruction endTrial={submitResults} instructionText={"TODO: get text from backend"}/>;
             // case 'practice':
             //     return <PracticeNetworkTrial/>;
             // case 'instruction_learning_selection':

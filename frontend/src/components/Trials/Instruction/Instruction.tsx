@@ -1,23 +1,20 @@
 import React, {FC} from "react";
 
-import {InstructionContent} from "./InstructionContent";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
 
 interface InstructionInterface {
-    instructionId: string;
+    instructionText: string
     endTrial: (data: any) => void;
 }
 
 
-export const Instruction: FC<InstructionInterface> = ({instructionId, endTrial}) => {
+export const Instruction: FC<InstructionInterface> = ({instructionText, endTrial}) => {
 
     const onClickHandler = () => endTrial({moves: []});
 
     const renderInstruction = () => {
-        // select instruction content based on instructionId
-        const content = InstructionContent.filter(c => c.id === instructionId)[0];
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12}>
@@ -27,7 +24,7 @@ export const Instruction: FC<InstructionInterface> = ({instructionId, endTrial})
                          p={3} // box padding
                     >
                         <Typography variant="h5" align='justify'>
-                            {content.text}
+                            {instructionText}
                         </Typography>
 
                         <Grid item xs={12} textAlign={"center"} p={2}>
