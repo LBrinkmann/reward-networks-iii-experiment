@@ -23,4 +23,5 @@ export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
     onDisagreeRedirect: "https://www.prolific.co/",
+    endTrial: ({moves: []}) => {},
 };
