@@ -1,1 +1,0 @@
-export { useTrialAPI } from './apis';
