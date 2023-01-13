@@ -3,18 +3,21 @@ import React, {FC} from "react";
 import {InstructionContent} from "./InstructionContent";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import {ExperimentTrialsProps} from "../ExperimentTrial";
 
-interface InstructionInterface extends ExperimentTrialsProps{
+
+interface InstructionInterface {
     instructionId: string;
+    endTrial: (data: any) => void;
 }
 
 
-export const Instruction: FC<InstructionInterface> = props => {
+export const Instruction: FC<InstructionInterface> = ({instructionId, endTrial}) => {
+
+    const onClickHandler = () => endTrial({moves: []});
 
     const renderInstruction = () => {
         // select instruction content based on instructionId
-        const content = InstructionContent.filter(c => c.id === props.instructionId)[0];
+        const content = InstructionContent.filter(c => c.id === instructionId)[0];
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12}>
@@ -31,7 +34,7 @@ export const Instruction: FC<InstructionInterface> = props => {
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={() => props.onTrialFinished({moves: []})}
+                                onClick={onClickHandler}
                                 startIcon={<CheckIcon/>}>️
                                 Continue
                             </Button>

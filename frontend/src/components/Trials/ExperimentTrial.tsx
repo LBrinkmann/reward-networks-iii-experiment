@@ -1,6 +1,5 @@
 import React from "react";
 import {FC} from "react";
-import {useTrialContext} from "../../contexts/TrialContext";
 import ConsentForm from "./Intro/Consent";
 import Instruction from "./Instruction";
 import PracticeNetworkTrial from "./PracticeNetworkTrial";
@@ -15,66 +14,59 @@ import Debriefing from "./Outro/Debriefing";
 import {useMutation, useQuery} from "react-query";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 
-export interface ExperimentTrialsProps {
-    onTrialFinished: (trialResultsData: postTrialType['trialResults']) => void;
+
+const TRIAL_TYPE = {
+    CONSENT: "consent",
+    INSTRUCTION_WELCOME: "instruction_welcome",
+    PRACTICE: "practice",
+    INSTRUCTION_LEARNING_SELECTION: "instruction_learning_selection",
+    SOCIAL_LEARNING_SELECTION: "social_learning_selection",
 }
 
-type ExperimentTrialProps = {
-    prolificId: string;
+interface ExperimentTrialProps {
+    prolificId: string
 }
+
 
 const ExperimentTrial: FC<ExperimentTrialProps> = ({prolificId}) => {
-    const {socialLearningState, updateSocialLearningState, updateSessionState} = useTrialContext()
-    const {status, data, error, refetch} = useQuery("trial", () => getTrial(prolificId))
+    const {status, data, error, refetch} = useQuery("trial", () => getTrial(prolificId));
     const mutation = useMutation((params: postTrialType) => postTrial(params),
         {onSuccess: () => refetch()})
 
-    const OnNextTrial = (trialResultsData: postTrialType['trialResults']) => {
-        mutation.mutate({
-            prolificID: prolificId,
-            trialType: data.trial_type,
-            trialResults: trialResultsData
-        })
+    const submitResults = (result: postTrialType['trialResults']) => {
+        mutation.mutate({prolificID: prolificId, trialType: data.trial_type, trialResults: result})
     }
 
-    const onSocialLearningSelectionClickHandler = (advisorId: string, inx: number) => {
-        // updateSocialLearningState
-    }
-
-    const updateTotalPoints = (points: number) => {
-        // updateSessionState
-    }
 
     if (status === "loading") {
         return <div>loading...</div>
     } else if (status === "error") {
         return <div>error: {error}</div>
     } else {
-
         switch (data.trial_type) {
-            case 'consent':
-                return <ConsentForm onTrialFinished={OnNextTrial} onDisagreeRedirect={data.redirect_url}/>;
-            case 'instruction_welcome':
-                return <Instruction onTrialFinished={OnNextTrial} instructionId={"welcome"}/>;
-            case 'practice':
-                return <PracticeNetworkTrial onTrialFinished={OnNextTrial}/>;
-            case 'instruction_learning_selection':
-                return <Instruction onTrialFinished={OnNextTrial} instructionId={"learning_selection"}/>;
-            case 'social_learning_selection':
-                return <Selection
-                    advisors={
-                        data.advisor_selection.scores.map((score: number, inx: number) => {
-                            return {
-                                advisorId: data.advisor_selection.advisor_ids[inx],
-                                averageScore: score
-                            }
-                        })
-                    }
-                    onClickHandler={onSocialLearningSelectionClickHandler}
-                    showTutorial={data.id === 4}
-                />;
-            case 'instruction_learning':
-                return <Instruction onTrialFinished={OnNextTrial} instructionId={"learning"}/>;
+            case TRIAL_TYPE.CONSENT:
+                return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
+            case TRIAL_TYPE.INSTRUCTION_WELCOME:
+                return <Instruction endTrial={submitResults} instructionId={"welcome"}/>;
+            // case 'practice':
+            //     return <PracticeNetworkTrial/>;
+            // case 'instruction_learning_selection':
+            //     return <Instruction instructionId={"learning_selection"}/>;
+            // case 'social_learning_selection':
+            //     return <Selection
+            //         advisors={
+            //             data.advisor_selection.scores.map((score: number, inx: number) => {
+            //                 return {
+            //                     advisorId: data.advisor_selection.advisor_ids[inx],
+            //                     averageScore: score
+            //                 }
+            //             })
+            //         }
+            //         onClickHandler={onSocialLearningSelectionClickHandler}
+            //         showTutorial={data.id === 4}
+            //     />;
+            // case 'instruction_learning':
+            //     return <Instruction instructionId={"learning"}/>;
             // case 'social_learning':
             //     if (socialLearningState.socialLearningType === 'observation') {
             //         return <ObservationTrial

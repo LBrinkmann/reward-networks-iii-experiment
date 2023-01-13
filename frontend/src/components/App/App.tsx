@@ -1,10 +1,11 @@
 import {ReactQueryDevtools} from 'react-query/devtools'
 import React, {useEffect} from "react";
 import ExperimentTrial from "../Trials";
-import TrialContextProvider from "../../contexts/TrialContext";
+import NetworkContextProvider from "../../contexts/NetworkContext";
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
+import SessionContextProvider from "../../contexts/SessionContext";
 
 
 // Create a client
@@ -23,12 +24,12 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <TrialContextProvider>
-                <TrialContextProvider>
+            <SessionContextProvider>
+                <NetworkContextProvider>
                     <ExperimentTrial prolificId={searchParams.get("PROLIFIC_PID")}/>
-                </TrialContextProvider>
-            </TrialContextProvider>
-            <ReactQueryDevtools initialIsOpen={false}/>
+                    <ReactQueryDevtools initialIsOpen={false}/>
+                </NetworkContextProvider>
+            </SessionContextProvider>
         </QueryClientProvider>
     );
 };
