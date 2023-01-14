@@ -1,14 +1,22 @@
 import React, {FC} from "react";
 import {NETWORK_ACTIONS, useNetworkContext} from "../../../contexts/NetworkContext";
 import {Divider, Grid} from "@mui/material";
-import StaticNetwork, {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../../Network/StaticNetwork/StaticNetwork";
+import StaticNetwork from "../../Network/StaticNetwork/StaticNetwork";
+import PlayerInformation from "../SocialLearning/PlayerInformation";
+import LinearSolution from "../../Network/LinearSolution";
+import Timer from "../../Timer";
 
 interface NetworkTrialInterface {
-    nodes: StaticNetworkNodeInterface[];
-    edges: StaticNetworkEdgeInterface[];
+    showLegend?: boolean;
+    showComment?: boolean;
+    showLinearNetwork?: boolean;
+    showTimer?: boolean;
+    time?: number;
+
 }
 
-const NetworkTrial: FC = () => {
+const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
+    const {showLinearNetwork = true, showTimer = true, time = 35} = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
@@ -23,21 +31,21 @@ const NetworkTrial: FC = () => {
             <Grid item sx={{p: 1}} xs={3}>
                 <Grid container direction="column">
                     <Grid item xs={4}>
-                        {/*{showTimer &&*/}
-                        {/*    <Timer*/}
-                        {/*        time={25}*/}
-                        {/*        invisibleTime={5} // 5 seconds before the timer starts*/}
-                        {/*        // OnTimeEndHandler={() => setIsTimerDone(true)}*/}
-                        {/*    />*/}
-                        {/*}*/}
+                        {showTimer &&
+                            <Timer
+                                time={time}
+                                invisibleTime={5} // 5 seconds before the timer starts
+                                // OnTimeEndHandler={() => setIsTimerDone(true)}
+                            />
+                        }
                     </Grid>
                     <Grid item xs={8}>
-                        {/*<PlayerInformation*/}
-                        {/*    id={1}*/}
-                        {/*    step={step}*/}
-                        {/*    cumulativePoints={points}*/}
-                        {/*    showComment={false}*/}
-                        {/*/>*/}
+                        <PlayerInformation
+                            id={1}
+                            step={networkState.step}
+                            cumulativePoints={networkState.points}
+                            showComment={false}
+                        />
                     </Grid>
                 </Grid>
             </Grid>
@@ -54,9 +62,13 @@ const NetworkTrial: FC = () => {
                         <Divider variant="middle" light/>
                     </Grid>
                     <Grid item sx={{marginTop: '10px'}}>
-                        {/*{showLinearSolution &&*/}
-                        {/*    <LinearSolution/>*/}
-                        {/*}*/}
+                        {showLinearNetwork &&
+                            <LinearSolution
+                                edges={networkState.network.edges}
+                                nodes={networkState.network.nodes}
+                                moves={networkState.moves}
+                            />
+                        }
                     </Grid>
                 </Grid>
             </Grid>
