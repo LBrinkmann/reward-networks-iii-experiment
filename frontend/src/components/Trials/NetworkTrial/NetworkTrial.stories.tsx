@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import NetworkTrial from "./NetworkTrial";
 
 import data from "../../Network/examples";
-import NetworkContextProvider from "../../../contexts/NetworkContext";
+import NetworkContextProvider, {useNetworkContext} from "../../../contexts/NetworkContext";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
@@ -24,10 +24,24 @@ export default {
 } as ComponentMeta<typeof NetworkTrial>;
 
 const Template: ComponentStory<typeof NetworkTrial> = function (args) {
+    const [counter, setCounter] = React.useState(0);
+    const {networkState, networkDispatcher} = useNetworkContext();
+
+    const OnClick = () => {
+        networkDispatcher({
+            type: 'setNetwork',
+            payload: {network: {edges: data[examples_rand[counter]].edges, nodes: data[examples_rand[counter]].nodes}}
+        });
+        setCounter(counter + 1);
+    }
+
 
     return (
+        <>
+            {networkState.network && <NetworkTrial  {...args}/>}
+            <button onClick={OnClick}>Next Network</button>
+        </>
 
-        <NetworkTrial  {...args}/>
 
     );
 };

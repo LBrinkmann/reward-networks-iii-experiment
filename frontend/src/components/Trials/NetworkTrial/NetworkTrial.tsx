@@ -8,11 +8,14 @@ interface NetworkTrialInterface {
     edges: StaticNetworkEdgeInterface[];
 }
 
-const NetworkTrial: FC<NetworkTrialInterface> = ({nodes, edges}) => {
+const NetworkTrial: FC = () => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
-        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {edges, nodeIdx}});
+        networkDispatcher({
+            type: NETWORK_ACTIONS.NEXT_NODE,
+            payload: {nodeIdx}
+        });
     }
 
     return (
@@ -42,8 +45,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = ({nodes, edges}) => {
                 <Grid container direction="row" justifyContent="space-around">
                     <Grid item>
                         <StaticNetwork
-                            edges={edges}
-                            nodes={nodes}
+                            edges={networkState.network.edges}
+                            nodes={networkState.network.nodes}
                             currentNodeId={networkState.currentNode}
                             possibleMoves={networkState.possibleMoves}
                             onNodeClickHandler={networkState.isNetworkDisabled ? null : NodeClickHandler}

@@ -1,9 +1,13 @@
 import React, {createContext, useContext, useEffect, useReducer} from "react";
-import {StaticNetworkEdgeInterface} from "../components/Network/StaticNetwork/StaticNetwork";
+import {
+    StaticNetworkEdgeInterface,
+    StaticNetworkNodeInterface
+} from "../components/Network/StaticNetwork/StaticNetwork";
 
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
 
 export const NETWORK_ACTIONS = {
+    SET_NETWORK: 'setNetwork',
     NEXT_NODE: 'nextNode',
     TIMER_DONE: 'timerDone',
     DISABLE: 'disable',
@@ -11,6 +15,7 @@ export const NETWORK_ACTIONS = {
 
 
 export type NetworkState = {
+    network: {edges: StaticNetworkEdgeInterface[], nodes: StaticNetworkNodeInterface[] } | undefined;
     step: number;
     points: number;
     moves: number[];
@@ -38,16 +43,13 @@ const NetworkContextProvider = ({children}: any) => {
         currentNode: 0,
         possibleMoves: Array.from({length: 10}, (_, i) => i),
         isNetworkDisabled: false,
+        network: undefined,
     });
     // JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY))
 
     // useEffect(() => {
     //     localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(networkState));
     // }, [networkState]);
-
-    useEffect(() => {
-        console.log('state', state);
-    }, [state]);
 
     return (
         <NetworkContext.Provider value={{networkState: state, networkDispatcher: dispatch}}>
@@ -59,19 +61,25 @@ const NetworkContextProvider = ({children}: any) => {
 const networkReducer = (state: NetworkState, action: any) => {
     console.log('reducer', state, action);
     switch (action.type) {
-        case NETWORK_ACTIONS.NEXT_NODE:
-            // const possibleMoves = selectPossibleMoves(action.payload.edges, state.currentNode);
+        case NETWORK_ACTIONS.SET_NETWORK:
+            return {
+                ...state,
+                network: action.payload.network,
+            }
 
-            if (state.possibleMoves.includes(action.payload.nodeIdx)) {
+        case NETWORK_ACTIONS.NEXT_NODE:
+            const nextNode = action.payload.nodeIdx;
+            if (state.possibleMoves.includes(nextNode)) {
+                const currentEdge = state.network.edges.filter(
+                    (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode)[0];
+
                 return {
-                    // ...state,
-                    currentNode: action.payload.nodeIdx,
-                    moves: state.moves.concat([action.payload.nodeIdx]),
-                    points: state.points + action.payload.reward,
+                    ...state,
+                    currentNode: nextNode,
+                    moves: state.moves.concat([nextNode]),
+                    points: state.points + currentEdge.reward,
                     step: state.step + 1,
-                    possibleMoves: selectPossibleMoves(action.payload.edges, action.payload.nodeIdx),
-                    isNetworkDisabled: state.isNetworkDisabled,
-                    time: state.time,
+                    possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
                 }
             } else return state;
         case NETWORK_ACTIONS.DISABLE:
