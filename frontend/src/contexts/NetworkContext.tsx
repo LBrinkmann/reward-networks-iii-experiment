@@ -15,7 +15,7 @@ export const NETWORK_ACTIONS = {
 
 
 export type NetworkState = {
-    network: {edges: StaticNetworkEdgeInterface[], nodes: StaticNetworkNodeInterface[] } | undefined;
+    network: { edges: StaticNetworkEdgeInterface[], nodes: StaticNetworkNodeInterface[] } | undefined;
     step: number;
     points: number;
     moves: number[];
@@ -65,6 +65,8 @@ const networkReducer = (state: NetworkState, action: any) => {
             return {
                 ...state,
                 network: action.payload.network,
+                currentNode: action.payload.network.nodes.filter(
+                    (node: StaticNetworkNodeInterface) => node.starting_node)[0].node_num
             }
 
         case NETWORK_ACTIONS.NEXT_NODE:
