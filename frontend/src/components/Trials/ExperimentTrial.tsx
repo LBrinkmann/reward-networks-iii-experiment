@@ -13,6 +13,7 @@ import PostSurvey from "./Outro/PostSurvey";
 import Debriefing from "./Outro/Debriefing";
 import {useMutation, useQuery} from "react-query";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
+import {useProlificId} from "../App/App";
 
 
 const TRIAL_TYPE = {
@@ -23,12 +24,9 @@ const TRIAL_TYPE = {
     SOCIAL_LEARNING_SELECTION: "social_learning_selection",
 }
 
-interface ExperimentTrialProps {
-    prolificId: string
-}
 
-
-const ExperimentTrial: FC<ExperimentTrialProps> = ({prolificId}) => {
+const ExperimentTrial: FC = () => {
+    const prolificId = useProlificId();
     const {status, data, error, refetch} = useQuery("trial", () => getTrial(prolificId));
     const mutation = useMutation((params: postTrialType) => postTrial(params),
         {onSuccess: () => refetch()})
@@ -48,7 +46,7 @@ const ExperimentTrial: FC<ExperimentTrialProps> = ({prolificId}) => {
                 return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
             case TRIAL_TYPE.INSTRUCTION:
                 return <Instruction endTrial={submitResults} instructionText={"TODO: get text from backend"}/>;
-            // case 'practice':
+            // case TRIAL_TYPE.PRACTICE:
             //     return <PracticeNetworkTrial/>;
             // case 'instruction_learning_selection':
             //     return <Instruction instructionId={"learning_selection"}/>;
