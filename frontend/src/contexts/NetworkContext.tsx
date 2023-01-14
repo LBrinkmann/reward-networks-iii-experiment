@@ -3,15 +3,9 @@ import {
     StaticNetworkEdgeInterface,
     StaticNetworkNodeInterface
 } from "../components/Network/StaticNetwork/StaticNetwork";
+import networkReducer from "../reducers/NetworkReducer";
 
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
-
-export const NETWORK_ACTIONS = {
-    SET_NETWORK: 'setNetwork',
-    NEXT_NODE: 'nextNode',
-    TIMER_DONE: 'timerDone',
-    DISABLE: 'disable',
-}
 
 
 export type NetworkState = {
@@ -23,6 +17,7 @@ export type NetworkState = {
     currentNode: number;
     possibleMoves: number[];
     isNetworkDisabled: boolean;
+    isNetworkFinished: boolean;
 }
 
 export type NetworkContextType = {
@@ -31,25 +26,30 @@ export type NetworkContextType = {
 };
 
 
-export const NetworkContext = createContext<NetworkContextType | null>(null);
+const NetworkContext = createContext<NetworkContextType | null>(null);
 
+const networkInitialState: NetworkState = {
+    step: 0,
+    points: 0,
+    moves: [],
+    time: 0,
+    currentNode: undefined,
+    possibleMoves: undefined,
+    isNetworkDisabled: false,
+    network: undefined,
+    isNetworkFinished: false,
+}
 
-const NetworkContextProvider = ({children}: any) => {
-    const [state, dispatch] = useReducer(networkReducer, {
-        step: 0,
-        points: 0,
-        moves: [],
-        time: 0,
-        currentNode: undefined,
-        possibleMoves: undefined,
-        isNetworkDisabled: false,
-        network: undefined,
-    });
-    // JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY))
+const networkInitializer = (initialState: NetworkState) => {
+    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) || initialState;
+}
 
-    // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(networkState));
-    // }, [networkState]);
+export const NetworkContextProvider = ({children}: any) => {
+    const [state, dispatch] = useReducer(networkReducer, networkInitialState, networkInitializer);
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
+    }, [state]);
 
     return (
         <NetworkContext.Provider value={{networkState: state, networkDispatcher: dispatch}}>
@@ -58,58 +58,7 @@ const NetworkContextProvider = ({children}: any) => {
     );
 };
 
-const networkReducer = (state: NetworkState, action: any) => {
-    console.log('reducer', state, action);
-    switch (action.type) {
-        case NETWORK_ACTIONS.SET_NETWORK:
-            const {edges, nodes} = action.payload.network;
-            const startNode = nodes.filter((node: StaticNetworkNodeInterface) => node.starting_node)[0].node_num;
-            const possibleMoves = selectPossibleMoves(edges, startNode);
 
-            return {
-                ...state,
-                network: action.payload.network,
-                currentNode: startNode,
-                possibleMoves: possibleMoves,
-                moves: [startNode],
-            }
-        case NETWORK_ACTIONS.TIMER_DONE:
-                return {
-                    ...state,
-                    isNetworkDisabled: true,
-                }
+const useNetworkContext = () => useContext(NetworkContext);
 
-        case NETWORK_ACTIONS.NEXT_NODE:
-            const nextNode = action.payload.nodeIdx;
-            if (state.possibleMoves.includes(nextNode)) {
-                const currentEdge = state.network.edges.filter(
-                    (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode)[0];
-
-                return {
-                    ...state,
-                    currentNode: nextNode,
-                    moves: state.moves.concat([nextNode]),
-                    points: state.points + currentEdge.reward,
-                    step: state.step + 1,
-                    possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
-                }
-            } else return state;
-        case NETWORK_ACTIONS.DISABLE:
-            return {
-                ...state,
-                isNetworkDisabled: true,
-            }
-        default:
-            return state;
-    }
-}
-
-const selectPossibleMoves = (allEdges: StaticNetworkEdgeInterface[], currentNodeId: number) => {
-    return allEdges
-        .filter((edge) => edge.source_num === currentNodeId)
-        .map((edge) => edge.target_num);
-}
-
-export default NetworkContextProvider;
-
-export const useNetworkContext = () => useContext(NetworkContext);
+export default useNetworkContext;

@@ -1,7 +1,7 @@
 import {ReactQueryDevtools} from 'react-query/devtools'
 import React, {useContext, useEffect} from "react";
 import ExperimentTrial from "../Trials";
-import NetworkContextProvider from "../../contexts/NetworkContext";
+import {NetworkContextProvider} from "../../contexts/NetworkContext";
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";

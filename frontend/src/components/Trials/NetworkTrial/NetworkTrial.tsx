@@ -1,10 +1,11 @@
 import React, {FC} from "react";
-import {NETWORK_ACTIONS, useNetworkContext} from "../../../contexts/NetworkContext";
+import useNetworkContext from "../../../contexts/NetworkContext";
 import {Divider, Grid} from "@mui/material";
 import StaticNetwork from "../../Network/StaticNetwork/StaticNetwork";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
+import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 
 interface NetworkTrialInterface {
     showLegend?: boolean;
