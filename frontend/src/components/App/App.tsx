@@ -1,5 +1,5 @@
 import {ReactQueryDevtools} from 'react-query/devtools'
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import ExperimentTrial from "../Trials";
 import NetworkContextProvider from "../../contexts/NetworkContext";
 import {QueryClient, QueryClientProvider} from 'react-query';
@@ -10,6 +10,7 @@ import SessionContextProvider from "../../contexts/SessionContext";
 
 // Create a client
 const queryClient = new QueryClient()
+const ProlificIdContext = React.createContext<string | null>(null);
 
 
 const App = () => {
@@ -24,14 +25,18 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <SessionContextProvider>
-                <NetworkContextProvider>
-                    <ExperimentTrial prolificId={searchParams.get("PROLIFIC_PID")}/>
-                    <ReactQueryDevtools initialIsOpen={false}/>
-                </NetworkContextProvider>
-            </SessionContextProvider>
+            <ProlificIdContext.Provider value={searchParams.get("PROLIFIC_PID")}>
+                <SessionContextProvider>
+                    <NetworkContextProvider>
+                        {searchParams.get("PROLIFIC_PID") && <ExperimentTrial/>}
+                        <ReactQueryDevtools initialIsOpen={false}/>
+                    </NetworkContextProvider>
+                </SessionContextProvider>
+            </ProlificIdContext.Provider>
         </QueryClientProvider>
     );
 };
 
 export default App;
+
+export const useProlificId = () => useContext(ProlificIdContext);
