@@ -30,13 +30,13 @@ export const NetworkContext = createContext<NetworkContextType | null>(null);
 
 
 const NetworkContextProvider = ({children}: any) => {
-    const [networkState, networkDispatcher] = useReducer(reducer, {
+    const [state, dispatch] = useReducer(networkReducer, {
         step: 0,
         points: 0,
         moves: [],
         time: 0,
         currentNode: 0,
-        possibleMoves: [],
+        possibleMoves: Array.from({length: 10}, (_, i) => i),
         isNetworkDisabled: false,
     });
     // JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY))
@@ -45,26 +45,33 @@ const NetworkContextProvider = ({children}: any) => {
     //     localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(networkState));
     // }, [networkState]);
 
+    useEffect(() => {
+        console.log('state', state);
+    }, [state]);
 
     return (
-        <NetworkContext.Provider value={{networkState, networkDispatcher}}>
+        <NetworkContext.Provider value={{networkState: state, networkDispatcher: dispatch}}>
             {children}
         </NetworkContext.Provider>
     );
 };
 
-const reducer = (state: NetworkState, action: any) => {
+const networkReducer = (state: NetworkState, action: any) => {
+    console.log('reducer', state, action);
     switch (action.type) {
         case NETWORK_ACTIONS.NEXT_NODE:
-            const possibleMoves = selectPossibleMoves(action.payload.edges, state.currentNode);
+            // const possibleMoves = selectPossibleMoves(action.payload.edges, state.currentNode);
 
-            if (possibleMoves.includes(action.payload.nodeIdx)) {
+            if (state.possibleMoves.includes(action.payload.nodeIdx)) {
                 return {
-                    ...state,
+                    // ...state,
                     currentNode: action.payload.nodeIdx,
                     moves: state.moves.concat([action.payload.nodeIdx]),
                     points: state.points + action.payload.reward,
                     step: state.step + 1,
+                    possibleMoves: selectPossibleMoves(action.payload.edges, action.payload.nodeIdx),
+                    isNetworkDisabled: state.isNetworkDisabled,
+                    time: state.time,
                 }
             } else return state;
         case NETWORK_ACTIONS.DISABLE:

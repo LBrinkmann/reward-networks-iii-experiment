@@ -11,8 +11,8 @@ interface NetworkTrialInterface {
 const NetworkTrial: FC<NetworkTrialInterface> = ({nodes, edges}) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
-    const NodeClickHandler = (nodeIndex: number) => {
-        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {edges, nodeIndex}});
+    const NodeClickHandler = (nodeIdx: number) => {
+        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {edges, nodeIdx}});
     }
 
     return (
