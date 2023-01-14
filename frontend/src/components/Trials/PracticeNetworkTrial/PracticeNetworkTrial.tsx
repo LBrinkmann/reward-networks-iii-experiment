@@ -1,19 +1,18 @@
-import React, { FC } from "react";
+import React, {useEffect, useState} from "react";
 import DynamicNetwork from "../../Network/DynamicNetwork";
 import Timer from "../../Timer";
 import PlayerInformation from "../SocialLearning/PlayerInformation";
 import TrialWithNetworkLayout from "../TrialWithNetworkLayout";
+import useNetworkStates from "../IndividualTrial/NetworkStates";
 import LinearSolution from "../../Network/LinearSolution";
 
 import {edges, nodes} from "./PracticeData";
 import Header from "../../Header";
-import {ExperimentTrialsProps} from "../ExperimentTrial";
-import {useTrialContext} from "../../../contexts/TrialContext";
 
 
-export interface PracticeNetworkTrialInterface extends ExperimentTrialsProps {
+export interface PracticeNetworkTrialInterface {
     /** Handle the end of the trial */
-    onNextTrialHandler?: (moves?: number[]) => void;
+    onNextTrialHandler: (moves?: number[]) => void;
     /** Timer duration in seconds; 30 seconds by default */
     timer?: number;
     /** The maximum number of steps in the trial. Default is 8 steps*/
@@ -25,30 +24,52 @@ export interface PracticeNetworkTrialInterface extends ExperimentTrialsProps {
 
 }
 
-const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
+const PracticeNetworkTrial: React.FC<PracticeNetworkTrialInterface> = (props) => {
     const {timer = 25, maxSteps = 9} = props;
-    const { networkState, updateNetworkState } = useTrialContext();
+    const {
+        step,
+        points,
+        isTimerDone,
+        moves,
+        setIsTimerDone,
+        setStep,
+        onNextStepHandler
+    } = useNetworkStates(props.onNextTrialHandler, edges, nodes, maxSteps)
+    const [tutorialId, setTutorialId] = useState<number>(1);
+
+    useEffect(() => {
+        const t = JSON.parse(window.localStorage.getItem('tutorialId'));
+        if (t) setTutorialId(t);
+    }, []);
+
+    const onLastTooltipClick = () => {
+        setStep(step + 1)
+        // reset local storage
+        window.localStorage.setItem('tutorialId', JSON.stringify(1));
+    }
+
+    const onTooltipClick = () => {
+        setTutorialId(tutorialId + 1);
+        window.localStorage.setItem('tutorialId', JSON.stringify(tutorialId + 1));
+    }
 
     const onNextNodeClick = (currentNode: number, nextNode: number) => {
         switch (nextNode) {
             case 5: // node F (the second node in the path)
-                updateNetworkState({...networkState, tutorialId: 3});
+                setTutorialId(3)
+                window.localStorage.setItem('tutorialId', JSON.stringify(3));
                 break;
             case 8: // node I (the third node in the path)
-                updateNetworkState({...networkState, tutorialId: 4});
+                setTutorialId(4)
+                window.localStorage.setItem('tutorialId', JSON.stringify(4));
                 break;
             case 9: // node J (the last node in the path)
-                updateNetworkState({...networkState, tutorialId: 5});
+                setTutorialId(5)
+                window.localStorage.setItem('tutorialId', JSON.stringify(5));
                 break;
         }
-    }
 
-    const onTutorialClose = () => {
-        updateNetworkState({...networkState, step: networkState.step + 1});
-    }
-
-    const onLastTooltipClick = () => {
-        props.onTrialFinished({moves: networkState.moves, score: networkState.points});
+        onNextStepHandler(currentNode, nextNode)
     }
 
     const renderNetwork = () => {
@@ -57,12 +78,12 @@ const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
                 nodes={nodes}
                 edges={edges}
                 onNodeClickParentHandler={onNextNodeClick}
-                isDisabled={networkState.time > timer || networkState.step >= maxSteps || networkState.tutorialId < 2}
+                isDisabled={isTimerDone || step >= maxSteps || tutorialId < 2}
                 // very first tooltip
-                showNodeTutorial={networkState.tutorialId === 1}
+                showNodeTutorial={tutorialId === 1}
                 // the second tooltip without the OK button
-                showEdgeTutorial={networkState.tutorialId === 2 && networkState.moves.length === 1}
-                onTutorialClose={onTutorialClose}
+                showEdgeTutorial={tutorialId === 2 && moves.length === 1}
+                onTutorialClose={onTooltipClick}
             />
         )
     }
@@ -70,10 +91,10 @@ const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
     const renderPlayerInformation = () => (
         <PlayerInformation
             id={1}
-            step={networkState.step}
-            cumulativePoints={networkState.points}
+            step={step}
+            cumulativePoints={points}
             showComment={false}
-            showTutorialScore={(networkState.moves.length >= 2) && (networkState.moves.length < 3)}  // tutorialId === 3
+            showTutorialScore={(moves.length >= 2) && (moves.length < 3)}  // tutorialId === 3
             onTutorialClose={null}  // No need for the OK button in the tooltip
         />
     )
@@ -83,9 +104,9 @@ const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
             <LinearSolution
                 nodes={nodes}
                 edges={edges}
-                moves={networkState.moves}
+                moves={moves}
                 title={""}
-                showTutorial={(networkState.moves.length >= 3) && (networkState.moves.length < 9)}  // tutorialId === 4 && moves.length > 2
+                showTutorial={(moves.length >= 3) && (moves.length < 9)}  // tutorialId === 4 && moves.length > 2
                 onTutorialClose={null}  // No need for the OK button in the tooltip
             />
         )
@@ -95,10 +116,10 @@ const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
         return (
             <Timer
                 time={timer}
-                // OnTimeEndHandler={() => setIsTimerDone(true)}
+                OnTimeEndHandler={() => setIsTimerDone(true)}
                 pause={true}
-                showTutorial={networkState.tutorialId === 5 && networkState.moves.length === maxSteps}
-                onTutorialClose={onTutorialClose}
+                showTutorial={tutorialId === 5 && moves.length === maxSteps}
+                onTutorialClose={onTooltipClick}
             />
         )
     }
@@ -108,7 +129,7 @@ const PracticeNetworkTrial: FC<PracticeNetworkTrialInterface> = (props) => {
         <>
             <Header
                 title={"Practice"}
-                showTutorial={networkState.tutorialId === 6 && networkState.moves.length === maxSteps}
+                showTutorial={tutorialId === 6 && moves.length === maxSteps}
                 showTip={false}
                 onTutorialClose={onLastTooltipClick}
                 totalPoints={0}
