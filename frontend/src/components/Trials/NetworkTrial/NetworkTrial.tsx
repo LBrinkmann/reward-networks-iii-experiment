@@ -26,6 +26,12 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         });
     }
 
+    const TimerDoneHandler = () => {
+        networkDispatcher({
+            type: NETWORK_ACTIONS.TIMER_DONE,
+        });
+    }
+
     return (
         <Grid container sx={{margin: 'auto', width: '85%'}} justifyContent="space-around">
             <Grid item sx={{p: 1}} xs={3}>
@@ -35,7 +41,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             <Timer
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
-                                // OnTimeEndHandler={() => setIsTimerDone(true)}
+                                OnTimeEndHandler={TimerDoneHandler}
                             />
                         }
                     </Grid>

@@ -73,6 +73,11 @@ const networkReducer = (state: NetworkState, action: any) => {
                 possibleMoves: possibleMoves,
                 moves: [startNode],
             }
+        case NETWORK_ACTIONS.TIMER_DONE:
+                return {
+                    ...state,
+                    isNetworkDisabled: true,
+                }
 
         case NETWORK_ACTIONS.NEXT_NODE:
             const nextNode = action.payload.nodeIdx;
