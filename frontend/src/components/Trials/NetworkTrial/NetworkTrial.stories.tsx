@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useEffect} from 'react';
 
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
@@ -27,13 +27,28 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
     const [counter, setCounter] = React.useState(0);
     const {networkState, networkDispatcher} = useNetworkContext();
 
+    useEffect(() => {
+        if (!networkState.network) {
+            networkDispatcher({
+                type: 'setNetwork',
+                payload: {
+                    network: {
+                        edges: data[examples_rand[counter]].edges,
+                        nodes: data[examples_rand[counter]].nodes
+                    }
+                }
+            });
+        }
+
+    }, []);
+
     const OnClick = () => {
         networkDispatcher({
             type: 'setNetwork',
             payload: {network: {edges: data[examples_rand[counter]].edges, nodes: data[examples_rand[counter]].nodes}}
         });
         setCounter(counter + 1);
-    }
+    };
 
 
     return (
