@@ -40,8 +40,8 @@ const NetworkContextProvider = ({children}: any) => {
         points: 0,
         moves: [],
         time: 0,
-        currentNode: 0,
-        possibleMoves: Array.from({length: 10}, (_, i) => i),
+        currentNode: undefined,
+        possibleMoves: undefined,
         isNetworkDisabled: false,
         network: undefined,
     });
@@ -62,11 +62,16 @@ const networkReducer = (state: NetworkState, action: any) => {
     console.log('reducer', state, action);
     switch (action.type) {
         case NETWORK_ACTIONS.SET_NETWORK:
+            const {edges, nodes} = action.payload.network;
+            const startNode = nodes.filter((node: StaticNetworkNodeInterface) => node.starting_node)[0].node_num;
+            const possibleMoves = selectPossibleMoves(edges, startNode);
+
             return {
                 ...state,
                 network: action.payload.network,
-                currentNode: action.payload.network.nodes.filter(
-                    (node: StaticNetworkNodeInterface) => node.starting_node)[0].node_num
+                currentNode: startNode,
+                possibleMoves: possibleMoves,
+                moves: [startNode],
             }
 
         case NETWORK_ACTIONS.NEXT_NODE:
