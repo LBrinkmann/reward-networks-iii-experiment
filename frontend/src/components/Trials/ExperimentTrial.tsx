@@ -14,6 +14,10 @@ import Debriefing from "./Outro/Debriefing";
 import {useMutation, useQuery} from "react-query";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 import {useProlificId} from "../App/App";
+import NetworkTrial from "./NetworkTrial";
+import useNetworkContext from "../../contexts/NetworkContext";
+
+import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
 
 
 const TRIAL_TYPE = {
@@ -27,7 +31,25 @@ const TRIAL_TYPE = {
 
 const ExperimentTrial: FC = () => {
     const prolificId = useProlificId();
-    const {status, data, error, refetch} = useQuery("trial", () => getTrial(prolificId));
+    const {networkState, networkDispatcher} = useNetworkContext();
+    const {status, data, error, refetch} = useQuery("trial",
+        () => getTrial(prolificId),
+        {
+            onSuccess: (data) => {
+                switch (data.trial_type) {
+                    case TRIAL_TYPE.PRACTICE:
+                        networkDispatcher({
+                            type: 'setNetwork',
+                            payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isTutorial: true}
+                        });
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        }
+    );
     const mutation = useMutation((params: postTrialType) => postTrial(params),
         {onSuccess: () => refetch()})
 
@@ -46,8 +68,11 @@ const ExperimentTrial: FC = () => {
                 return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
             case TRIAL_TYPE.INSTRUCTION:
                 return <Instruction endTrial={submitResults} instructionText={"TODO: get text from backend"}/>;
-            // case TRIAL_TYPE.PRACTICE:
-            //     return <PracticeNetworkTrial/>;
+            case TRIAL_TYPE.PRACTICE:
+                if (networkState.network) {
+                    return <NetworkTrial isPractice={true}/>
+                }
+                return <>loading...</>;
             // case 'instruction_learning_selection':
             //     return <Instruction instructionId={"learning_selection"}/>;
             // case 'social_learning_selection':
