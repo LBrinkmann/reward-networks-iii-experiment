@@ -64,7 +64,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             nodes={networkState.network.nodes}
                             currentNodeId={networkState.currentNode}
                             possibleMoves={networkState.possibleMoves}
-                            onNodeClickHandler={networkState.isNetworkDisabled ? null : NodeClickHandler}
+                            onNodeClickHandler={NodeClickHandler}
                         />
                         <Divider variant="middle" light/>
                     </Grid>

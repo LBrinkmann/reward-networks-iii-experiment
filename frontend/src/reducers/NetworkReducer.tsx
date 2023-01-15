@@ -40,21 +40,27 @@ const networkReducer = (state: NetworkState, action: any) => {
             const nextNode = action.payload.nodeIdx;
             const maxStep = action.payload?.maxSteps || 8;
 
-            if (state.possibleMoves.includes(nextNode)) {
-                const currentEdge = state.network.edges.filter(
-                    (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode)[0];
+            // if timer is done or max steps reached, do nothing
+            if (state.isNetworkFinished || state.step >= maxStep) return state;
 
-                return {
-                    ...state,
-                    currentNode: nextNode,
-                    moves: state.moves.concat([nextNode]),
-                    points: state.points + currentEdge.reward,
-                    step: state.step + 1,
-                    possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
-                    isNetworkDisabled: state.step + 1 >= maxStep,
-                    isNetworkFinished: state.step + 1 >= maxStep,
-                }
-            } else return state;
+            // if node is not in possible moves, do nothing
+            if (!state.possibleMoves.includes(nextNode)) return state;
+
+            // find the current edge
+            const currentEdge = state.network.edges.filter(
+                (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode)[0];
+
+            return {
+                ...state,
+                currentNode: nextNode,
+                moves: state.moves.concat([nextNode]),
+                points: state.points + currentEdge.reward,
+                step: state.step + 1,
+                possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
+                isNetworkDisabled: state.step + 1 >= maxStep,
+                isNetworkFinished: state.step + 1 >= maxStep,
+            }
+
         case NETWORK_ACTIONS.DISABLE:
             return {
                 ...state,

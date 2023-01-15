@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 
-import {ComponentStory, ComponentMeta} from '@storybook/react';
+import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import NetworkTrial from "./NetworkTrial";
 
 import data from "../../Network/examples";
-import NetworkContextProvider, {useNetworkContext} from "../../../contexts/NetworkContext";
+import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
