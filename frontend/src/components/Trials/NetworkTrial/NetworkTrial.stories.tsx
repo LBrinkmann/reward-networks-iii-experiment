@@ -44,7 +44,8 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
                         network: {
                             edges: data[examples_rand[counter]].edges,
                             nodes: data[examples_rand[counter]].nodes
-                        }
+                        },
+                        isTutorial: false
                     }
                 });
             }

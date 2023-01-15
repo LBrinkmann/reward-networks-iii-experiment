@@ -30,9 +30,12 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkDisabled: false,
                 isNetworkFinished: false,
                 // Tutorial
-                isTutorial: action.payload.isTutorial || false,
-                tutorialStep: 1,
-                tutorialOptions: {...networkInitialState.tutorialOptions, node: true},
+                isTutorial: action.payload.isTutorial,
+                tutorialStep: action.payload.isTutorial ? 1 : networkInitialState.tutorialStep,
+                tutorialOptions: action.payload.isTutorial ? {
+                    ...networkInitialState.tutorialOptions,
+                    node: true
+                } : networkInitialState.tutorialOptions,
             }
         case NETWORK_ACTIONS.TIMER_DONE:
             return {
