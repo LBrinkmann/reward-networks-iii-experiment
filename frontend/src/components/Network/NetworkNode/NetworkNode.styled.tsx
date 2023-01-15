@@ -8,9 +8,12 @@ type NetworkNodeProps = {
 }
 
 const colors = {
-    'disabled': 'rgb(228, 227, 227)',
-    'active': 'rgb(155, 155, 155)',
-    'invalid-click': 'rgb(221, 44, 0)',
+    // neutral 200 from Tailwind
+    'disabled': '#e5e5e5',
+    // neutral 500 from Tailwind
+    'active': '#737373',
+    // red 500 from Tailwind
+    'invalid-click': '#ef4444',
     'starting': 'rgb(193, 145, 207)',
     'normal': 'white'
 }
@@ -21,7 +24,7 @@ const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
       case 'disabled':
         return 'not-allowed';
       case 'active':
-        return 'not-allowed';
+        return 'default';
       case 'starting':
         return 'not-allowed';
       default:
