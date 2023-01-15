@@ -13,11 +13,12 @@ interface NetworkTrialInterface {
     showLinearNetwork?: boolean;
     showTimer?: boolean;
     time?: number;
+    isPractice?: boolean;
 
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
-    const {showLinearNetwork = true, showTimer = true, time = 35} = props;
+    const {showLinearNetwork = true, showTimer = true, time = 35, isPractice = false} = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
@@ -32,6 +33,12 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const TimerDoneHandler = () => {
         networkDispatcher({
             type: NETWORK_ACTIONS.TIMER_DONE,
+        });
+    }
+
+    const NextTutorialStepHandler = () => {
+        networkDispatcher({
+            type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,
         });
     }
 

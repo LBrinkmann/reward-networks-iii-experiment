@@ -6,6 +6,7 @@ import NetworkTrial from "./NetworkTrial";
 
 import data from "../../Network/examples";
 import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
+import {edges, nodes} from "./PracticeData";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
@@ -29,15 +30,25 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
 
     useEffect(() => {
         if (!networkState.network) {
-            networkDispatcher({
-                type: 'setNetwork',
-                payload: {
-                    network: {
-                        edges: data[examples_rand[counter]].edges,
-                        nodes: data[examples_rand[counter]].nodes
+
+            if (args.isPractice) {
+                networkDispatcher({
+                    type: 'setNetwork',
+                    payload: {network: {edges: edges, nodes: nodes}}
+                });
+
+            } else {
+                networkDispatcher({
+                    type: 'setNetwork',
+                    payload: {
+                        network: {
+                            edges: data[examples_rand[counter]].edges,
+                            nodes: data[examples_rand[counter]].nodes
+                        }
                     }
-                }
-            });
+                });
+            }
+
         }
 
     }, []);
@@ -54,16 +65,21 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
     return (
         <>
             {networkState.network && <NetworkTrial  {...args}/>}
-            <button onClick={OnClick}>Next Network</button>
+            {!args.isPractice && <button onClick={OnClick}>Next</button>}
         </>
 
 
     );
 };
 
-export const ExampleOne = Template.bind({});
+export const IndividualTrial = Template.bind({});
 
-ExampleOne.args = {
-    edges: data[examples_rand[0]].edges,
-    nodes: data[examples_rand[0]].nodes,
+IndividualTrial.args = {
+    isPractice: false,
+};
+
+export const PracticeTrial = Template.bind({});
+
+PracticeTrial.args = {
+    isPractice: true
 };

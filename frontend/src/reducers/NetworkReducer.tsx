@@ -9,6 +9,7 @@ export const NETWORK_ACTIONS = {
     NEXT_NODE: 'nextNode',
     TIMER_DONE: 'timerDone',
     DISABLE: 'disable',
+    NEXT_TUTORIAL_STEP: 'nextTutorialStep',
 }
 
 
@@ -61,6 +62,8 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkDisabled: state.step + 1 >= maxStep,
                 isNetworkFinished: state.step + 1 >= maxStep,
             }
+        case NETWORK_ACTIONS.NEXT_TUTORIAL_STEP:
+            return state;
 
         case NETWORK_ACTIONS.DISABLE:
             return {

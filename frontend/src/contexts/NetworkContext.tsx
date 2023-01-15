@@ -18,6 +18,16 @@ export type NetworkState = {
     possibleMoves: number[];
     isNetworkDisabled: boolean;
     isNetworkFinished: boolean;
+    isTutorial?: boolean;
+    tutorialOptions?: {
+        node: boolean;
+        edge: boolean;
+        reward: boolean;
+        step: boolean;
+        time: boolean;
+        points: boolean;
+        linearSolution: boolean;
+    }
 }
 
 export type NetworkContextType = {
