@@ -114,7 +114,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         Radius={nodeRadius}
                                         onNodeClick={() => {
                                         }}
-                                        isActive={false}
+                                        status={'disabled'}
                                         isValidMove={false}
                                         key={"linear-solution-node-" + idx}
                                     />
