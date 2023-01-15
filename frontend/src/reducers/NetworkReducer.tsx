@@ -2,7 +2,7 @@ import {
     StaticNetworkEdgeInterface,
     StaticNetworkNodeInterface
 } from "../components/Network/StaticNetwork/StaticNetwork";
-import {NetworkState} from "../contexts/NetworkContext";
+import {networkInitialState, NetworkState} from "../contexts/NetworkContext";
 
 export const NETWORK_ACTIONS = {
     SET_NETWORK: 'setNetwork',
@@ -29,6 +29,10 @@ const networkReducer = (state: NetworkState, action: any) => {
                 moves: [startNode],
                 isNetworkDisabled: false,
                 isNetworkFinished: false,
+                // Tutorial
+                isTutorial: action.payload.isTutorial || false,
+                tutorialStep: 1,
+                tutorialOptions: {...networkInitialState.tutorialOptions, node: true},
             }
         case NETWORK_ACTIONS.TIMER_DONE:
             return {
@@ -63,7 +67,47 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkFinished: state.step + 1 >= maxStep,
             }
         case NETWORK_ACTIONS.NEXT_TUTORIAL_STEP:
-            return state;
+            if (!state.isTutorial) return state;
+
+            if (state.tutorialStep === 1) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, edge: true},
+                }
+            }
+            if (state.tutorialStep === 2) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, points: true},
+                }
+            }
+
+            if (state.tutorialStep === 3 && !(state.moves.length >= 2 && state.moves.length < 3)) {
+
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, linearSolution: true},
+                }
+            }
+
+            if (state.tutorialStep === 4 && !(state.moves.length >= 3 && state.moves.length < 9)) {
+
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, time: true},
+                }
+            }
+
+            return {
+                ...state,
+                // clear tutorial options
+                tutorialOptions: networkInitialState.tutorialOptions,
+            };
+
 
         case NETWORK_ACTIONS.DISABLE:
             return {

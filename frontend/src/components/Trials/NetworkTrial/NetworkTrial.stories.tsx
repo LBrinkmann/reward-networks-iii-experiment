@@ -34,7 +34,7 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
             if (args.isPractice) {
                 networkDispatcher({
                     type: 'setNetwork',
-                    payload: {network: {edges: edges, nodes: nodes}}
+                    payload: {network: {edges: edges, nodes: nodes}, isTutorial: true}
                 });
 
             } else {

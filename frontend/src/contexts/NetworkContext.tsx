@@ -18,15 +18,15 @@ export type NetworkState = {
     possibleMoves: number[];
     isNetworkDisabled: boolean;
     isNetworkFinished: boolean;
-    isTutorial?: boolean;
-    tutorialOptions?: {
+    isTutorial: boolean;
+    tutorialStep: number;
+    tutorialOptions: {
         node: boolean;
-        edge: boolean;
-        reward: boolean;
-        step: boolean;
-        time: boolean;
-        points: boolean;
-        linearSolution: boolean;
+        edge: boolean,
+        points: boolean,
+        linearSolution: boolean,
+        time: boolean,
+        totalScore: boolean,
     }
 }
 
@@ -38,7 +38,7 @@ export type NetworkContextType = {
 
 const NetworkContext = createContext<NetworkContextType | null>(null);
 
-const networkInitialState: NetworkState = {
+export const networkInitialState: NetworkState = {
     step: 0,
     points: 0,
     moves: [],
@@ -48,6 +48,16 @@ const networkInitialState: NetworkState = {
     isNetworkDisabled: false,
     network: undefined,
     isNetworkFinished: false,
+    isTutorial: false,
+    tutorialStep: 0,
+    tutorialOptions: {
+        node: false,
+        edge: false,
+        points: false,
+        linearSolution: false,
+        time: false,
+        totalScore: false,
+    }
 }
 
 const networkInitializer = (initialState: NetworkState) => {

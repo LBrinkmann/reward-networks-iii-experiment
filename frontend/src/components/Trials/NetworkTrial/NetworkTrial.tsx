@@ -24,23 +24,16 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const NodeClickHandler = (nodeIdx: number) => {
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
-        networkDispatcher({
-            type: NETWORK_ACTIONS.NEXT_NODE,
-            payload: {nodeIdx}
-        });
+
+        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
+
+        if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
 
-    const TimerDoneHandler = () => {
-        networkDispatcher({
-            type: NETWORK_ACTIONS.TIMER_DONE,
-        });
-    }
+    const TimerDoneHandler = () => networkDispatcher({type: NETWORK_ACTIONS.TIMER_DONE,});
 
-    const NextTutorialStepHandler = () => {
-        networkDispatcher({
-            type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,
-        });
-    }
+    const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
+
 
     return (
         <Grid container sx={{margin: 'auto', width: '85%'}} justifyContent="space-around">
@@ -52,6 +45,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
                                 OnTimeEndHandler={TimerDoneHandler}
+                                pause={isPractice}
+                                showTutorial={networkState.tutorialOptions.time}
+                                onTutorialClose={NextTutorialStepHandler}
                             />
                         }
                     </Grid>
@@ -61,6 +57,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             step={networkState.step}
                             cumulativePoints={networkState.points}
                             showComment={false}
+                            showTutorialScore={networkState.tutorialOptions.points}
                         />
                     </Grid>
                 </Grid>
@@ -75,6 +72,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             possibleMoves={networkState.possibleMoves}
                             onNodeClickHandler={NodeClickHandler}
                             disableClick={networkState.isNetworkDisabled}
+                            showEdgeTutorial={networkState.tutorialOptions.edge}
+                            showNodeTutorial={networkState.tutorialOptions.node}
+                            onTutorialClose={NextTutorialStepHandler}
                         />
                         <Divider variant="middle" light/>
                     </Grid>
@@ -84,6 +84,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                                 edges={networkState.network.edges}
                                 nodes={networkState.network.nodes}
                                 moves={networkState.moves}
+                                showTutorial={networkState.tutorialOptions.linearSolution}
                             />
                         }
                     </Grid>
