@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import NetworkNodeStyled from "./NetworkNode.styled";
 import TutorialTip from "../../Tutorial/TutorialTip";
@@ -31,44 +31,17 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
     const {showTutorial = false} = props;
     const [wrongClick, setWrongClick] = useState(false);
 
-    // const [state, dispatch] = useReducer(
-    //     nodeStateReducer,
-    //     {status: ''},
-    //     () => props.isActive ? {status: 'active' as NetworkNodeStatus} : {status: '' as NetworkNodeStatus});
-
-    // useEffect(() => {
-    //     if (state.status === 'invalid-click') {
-    //         // set timeout to reset status
-    //         setTimeout(() => {
-    //             dispatch({
-    //                 type: 'resetStatus',
-    //                 payload: {isActive: props.isActive}
-    //             });
-    //         }, 300);
-    //     } else if (status === "active" && !props.isActive) { // override status with the props value
-    //         setStatus("");
-    //     } else if (props.isActive) {
-    //         setStatus("active");
-    //     }
-    //
-    // }, [state, props.isActive]);
-
     useEffect(() => {
         if (wrongClick) {
             // set timeout to reset status
             setTimeout(() => {
                 setWrongClick(false);
-            }, 300);
+            }, 400);
         }
     }, [wrongClick]);
 
     const nodeClickHandler = () => {
         props.onNodeClick(props.nodeInx);
-        // dispatch({
-        //     type: 'nodeClick',
-        //     payload: {isValidMove: props.isValidMove, newStatus: props.isActive}
-        // });
-
         if (props.status === "normal" && !props.isValidMove) {
             setWrongClick(true);
         }
@@ -95,35 +68,6 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
         </TutorialTip>
     );
 };
-
-// type nodeState = {
-//     status: NetworkNodeStatus;
-//
-// }
-//
-// const nodeStateReducer = (state: nodeState, action: any) => {
-//     switch (action.type) {
-//         case 'nodeClick':
-//             if (action.payload.isValidMove) {
-//                 return {status: 'active' as NetworkNodeStatus};
-//             }
-//             if (!action.payload.isValidMove) {
-//                 // do not change status if the node is already active
-//                 if (action.payload.isActive) {
-//                     return {status: 'active' as NetworkNodeStatus};
-//                 }
-//                 return {status: 'invalid-click' as NetworkNodeStatus};
-//             }
-//             return state;
-//         case 'resetStatus':
-//             if (action.payload.isActive) {
-//                 return {status: 'active' as NetworkNodeStatus};
-//             }
-//             return {status: '' as NetworkNodeStatus};
-//         default:
-//             return state;
-//     }
-// }
 
 
 export default NetworkNode;
