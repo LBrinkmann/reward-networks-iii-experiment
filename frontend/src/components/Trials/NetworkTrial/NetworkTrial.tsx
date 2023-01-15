@@ -21,6 +21,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
+        // skip update if network is disabled or finished
+        if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
         networkDispatcher({
             type: NETWORK_ACTIONS.NEXT_NODE,
             payload: {nodeIdx}
