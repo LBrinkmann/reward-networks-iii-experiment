@@ -63,6 +63,7 @@ export interface StaticNetworkInterface {
     /** Rewards range */
     allRewards?: number[];
     colors?: string[];
+    disableClick?: boolean;
 }
 
 const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
@@ -80,13 +81,20 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
         showEdgeTutorial = false,
         blur = false,
         allRewards = [-100, -20, 0, 20, 140],
-        colors = ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837',]
+        colors = ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837',],
+        disableClick = false,
     } = props;
 
     // Scale node coordinates
     const multiplier = 2;
     const scaleSizeX = (val: number) => val * multiplier + size / 2;
     const scaleSizeY = (val: number) => val * multiplier + size / 2;
+
+    const setNodeStatus = (active: boolean) => {
+        if (active) return 'active';
+        if (disableClick || blur) return 'disabled';
+        return 'normal';
+    }
 
     return (
         <svg width={size} height={size}>
@@ -132,7 +140,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
                                 Text={node.display_name}
                                 Radius={nodeSize}
                                 onNodeClick={onNodeClickHandler}
-                                isActive={isActive}
+                                status={setNodeStatus(isActive)}
                                 isValidMove={possibleMoves.includes(node.node_num)}
                                 key={'node-' + idx}
                                 showTutorial={showNodeTutorial && isActive}
