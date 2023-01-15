@@ -4,6 +4,7 @@ import {NetworkNodeStatus} from "./NetworkNode";
 type NetworkNodeProps = {
     status: NetworkNodeStatus;
     fontSize: number;
+    wrongClick: boolean;
 }
 
 const colors = {
@@ -11,28 +12,46 @@ const colors = {
     'active': 'rgb(155, 155, 155)',
     'invalid-click': 'rgb(221, 44, 0)',
     'starting': 'rgb(193, 145, 207)',
-    '': 'white'
+    'normal': 'white'
 }
 
 const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
-  cursor: ${({status}) => status != "disabled" && "pointer"};
-  
+  cursor: ${({status}) => {
+    switch (status) {
+      case 'disabled':
+        return 'not-allowed';
+      case 'active':
+        return 'not-allowed';
+      case 'starting':
+        return 'not-allowed';
+      default:
+        return 'pointer';
+    }
+
+  }};
+
   circle {
     stroke-width: 1px;
     stroke: rgba(30, 30, 30, 1);
-    
-    fill: ${({status}) => colors[status] ? colors[status] : colors['disabled']};
+
+    fill: ${({
+               status,
+               wrongClick
+             }) => wrongClick ? colors['invalid-click'] : colors[status] ? colors[status] : colors['disabled']};
     transition: ${({status}) => {
       switch (status) {
         case 'active':
           return 'fill 0.1s';
-        case 'invalid-click':
-          return 'fill 0.01s';
+        case 'starting':
+          return 'fill 0.1s';
+        case 'disabled':
+          return 'fill 0.1s';
         default:
           return 'fill 0.75s';
       }
     }};
   }
+
   text {
     font-size: ${({fontSize}) => fontSize};
   }
