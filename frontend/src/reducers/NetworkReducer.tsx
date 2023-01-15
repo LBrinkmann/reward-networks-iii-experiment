@@ -34,14 +34,15 @@ const networkReducer = (state: NetworkState, action: any) => {
                 ...state,
                 isNetworkDisabled: true,
                 isNetworkFinished: true,
+                currentNode: undefined,
             }
 
         case NETWORK_ACTIONS.NEXT_NODE:
+            // if network is disabled or finished, do nothing
+            if (state.isNetworkFinished || state.isNetworkDisabled) return state;
+
             const nextNode = action.payload.nodeIdx;
             const maxStep = action.payload?.maxSteps || 8;
-
-            // if timer is done or max steps reached, do nothing
-            if (state.isNetworkFinished || state.step >= maxStep) return state;
 
             // if node is not in possible moves, do nothing
             if (!state.possibleMoves.includes(nextNode)) return state;

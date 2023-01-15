@@ -41,15 +41,16 @@ const networkInitialState: NetworkState = {
 }
 
 const networkInitializer = (initialState: NetworkState) => {
-    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) || initialState;
+    // JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) ||
+    return initialState;
 }
 
 export const NetworkContextProvider = ({children}: any) => {
     const [state, dispatch] = useReducer(networkReducer, networkInitialState, networkInitializer);
 
-    useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
-    }, [state]);
+    // useEffect(() => {
+    //     localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
+    // }, [state]);
 
     return (
         <NetworkContext.Provider value={{networkState: state, networkDispatcher: dispatch}}>
