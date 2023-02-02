@@ -20,7 +20,7 @@ const Observation: FC<IObservation> = (props) => {
     useEffect(() => {
         if (playAnimation) {
             setTimeout(() => {
-                if (networkState.step < solution.length - 1) {
+                if (networkState.step < solution.length) {
                     networkDispatcher({
                             type: NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE,
                             payload: {
@@ -30,13 +30,13 @@ const Observation: FC<IObservation> = (props) => {
                             }
                         }
                     );
-                }
-                if (networkState.step < solution.length) {
                     networkDispatcher({
                             type: NETWORK_ACTIONS.NEXT_NODE,
                             payload: {nodeIdx: solution[networkState.step + 1]}
                         }
                     );
+                } else {
+                    networkDispatcher({type: NETWORK_ACTIONS.RESET_EDGE_STYLES});
                 }
             }, delayBetweenMoves);
         }

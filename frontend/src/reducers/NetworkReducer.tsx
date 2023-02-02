@@ -12,6 +12,7 @@ export const NETWORK_ACTIONS = {
     DISABLE: 'disable',
     NEXT_TUTORIAL_STEP: 'nextTutorialStep',
     HIGHLIGHT_EDGE_TO_CHOOSE: 'highlightEdgeToRepeat',
+    RESET_EDGE_STYLES: 'resetEdgeStyles',
 }
 
 
@@ -123,13 +124,14 @@ const networkReducer = (state: NetworkState, action: any) => {
             // set all edges to default style
             state.network.edges.forEach((edge: any) => edge.edgeStyle = "normal");
 
-            edgeToFollow.edgeStyle = edgeStyle as NetworkEdgeStyle;
-
-            return {
-                ...state,
-                possibleMoves: [target],
-
-            }
+            if (edgeToFollow) {
+                edgeToFollow.edgeStyle = edgeStyle;
+                return {...state, possibleMoves: [target],}
+            } else
+                return state;
+        case NETWORK_ACTIONS.RESET_EDGE_STYLES:
+            state.network.edges.forEach((edge: any) => edge.edgeStyle = "normal");
+            return state;
         default:
             return state;
     }
