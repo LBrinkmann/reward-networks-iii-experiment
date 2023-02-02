@@ -39,7 +39,7 @@ class PostSurvey(BaseModel):
 
 class Trial(BaseModel):
     id: int  # trial number in session
-    trial_type: Literal[
+    trial_type: Literal[  # TODO: merge instruction trials together
         'consent',
         'instruction_welcome',
         'practice',
