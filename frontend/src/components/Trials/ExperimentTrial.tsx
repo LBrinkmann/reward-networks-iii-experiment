@@ -19,20 +19,22 @@ import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/Pra
 
 
 const TRIAL_TYPE = {
+    // before the experiment
     CONSENT: "consent",
     INSTRUCTION: "instruction",
-    WRITTEN_STRATEGY: "written_strategy",
-    POST_SURVEY: "post_survey",
-    DEBRIEFING: "debriefing",
+    PRACTICE: "practice",
     // Social learning selection
     SOCIAL_LEARNING_SELECTION: "social_learning_selection",
     // Network trials
-    PRACTICE: "practice",
     OBSERVATION: "observation",
     REPEAT: "repeat",
     TRY_YOURSELF: "try_yourself",
     INDIVIDUAL: "individual_trial",
     DEMONSTRATION: "demonstration",
+    // after the experiment
+    WRITTEN_STRATEGY: "written_strategy",
+    POST_SURVEY: "post_survey",
+    DEBRIEFING: "debriefing",
 }
 
 
@@ -86,7 +88,7 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.CONSENT:
                 return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
             case TRIAL_TYPE.INSTRUCTION:
-                return <Instruction endTrial={submitResults} instructionText={"TODO: get text from backend"}/>;
+                return <Instruction endTrial={submitResults} />;
             case TRIAL_TYPE.PRACTICE:
                 return <NetworkTrial isPractice={true}/>;
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:

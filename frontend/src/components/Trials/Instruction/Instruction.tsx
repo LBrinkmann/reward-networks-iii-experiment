@@ -3,14 +3,16 @@ import React, {FC} from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
+import instructions from "./InstructionContent";
+
 
 interface InstructionInterface {
-    instructionText: string
     endTrial: (data: any) => void;
+    instructionType: keyof typeof instructions;
 }
 
 
-export const Instruction: FC<InstructionInterface> = ({instructionText, endTrial}) => {
+export const Instruction: FC<InstructionInterface> = ({endTrial, instructionType}) => {
 
     const onClickHandler = () => endTrial({moves: []});
 
@@ -24,7 +26,7 @@ export const Instruction: FC<InstructionInterface> = ({instructionText, endTrial
                          p={3} // box padding
                     >
                         <Typography variant="h5" align='justify'>
-                            {instructionText}
+                            {instructions[instructionType]}
                         </Typography>
 
                         <Grid item xs={12} textAlign={"center"} p={2}>
