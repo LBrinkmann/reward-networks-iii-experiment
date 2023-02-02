@@ -2,7 +2,7 @@ import React, {FC} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {Divider, Grid} from "@mui/material";
 import StaticNetwork from "../../Network/StaticNetwork/StaticNetwork";
-import PlayerInformation from "../SocialLearning/PlayerInformation";
+import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
