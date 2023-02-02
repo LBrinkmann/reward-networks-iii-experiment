@@ -5,13 +5,13 @@ import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 
 import {useProlificId} from "../App/App";
 
-import ConsentForm from "./Intro/Consent";
+import ConsentForm from "./Consent";
 import Instruction from "./Instruction";
 import WrittenStrategy from "./WrittenStrategy";
-import PostSurvey from "./Outro/PostSurvey";
+import PostSurvey from "./PostSurvey";
 import Repeat from "./Repeat";
 import Observation from "./Observation";
-import Debriefing from "./Outro/Debriefing";
+import Debriefing from "./Debriefing";
 import NetworkTrial from "./NetworkTrial";
 import useNetworkContext from "../../contexts/NetworkContext";
 

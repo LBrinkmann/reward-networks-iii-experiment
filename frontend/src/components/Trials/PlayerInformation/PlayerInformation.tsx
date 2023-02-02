@@ -1,6 +1,6 @@
 import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
-import TutorialTip from "../../../Tutorial/TutorialTip";
+import TutorialTip from "../../Tutorial/TutorialTip";
 import rewardsImg from "../../../../images/legend.png";
 import styled from "@emotion/styled";
 
