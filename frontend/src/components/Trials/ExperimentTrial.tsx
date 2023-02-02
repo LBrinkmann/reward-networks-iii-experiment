@@ -3,7 +3,7 @@ import {useMutation, useQuery} from "react-query";
 
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 
-import {useProlificId} from "../App/App";
+import {useProlificId} from "../App";
 
 import ConsentForm from "./Consent";
 import Instruction from "./Instruction";
