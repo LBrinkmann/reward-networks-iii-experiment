@@ -128,7 +128,7 @@ async def one_subject(default_client: httpx.AsyncClient,
     trial_num += 1
 
     # welcome
-    await get_post_trial(default_client, 'instruction_welcome', trial_num, url)
+    await get_post_trial(default_client, 'instruction', trial_num, url)
     trial_num += 1
 
     # practice
@@ -139,9 +139,7 @@ async def one_subject(default_client: httpx.AsyncClient,
         for i in range(e_config.n_social_learning_trials):
             if i == 0:
                 # instruction_learning_selection
-                await get_post_trial(default_client,
-                                     'instruction_learning_selection',
-                                     trial_num, url)
+                await get_post_trial(default_client, 'instruction', trial_num, url)
                 trial_num += 1
 
             # social learning selection
@@ -149,17 +147,16 @@ async def one_subject(default_client: httpx.AsyncClient,
                                  trial_num, url, headers=headers)
             trial_num += 1
 
-            for ii in range(3 * e_config.n_demonstration_trials):
-                if i == 0 and ii == 0:
-                    # instruction_learning_selection
-                    await get_post_trial(default_client,
-                                         'instruction_learning',
-                                         trial_num, url)
-                    trial_num += 1
+            await get_post_trial(default_client, 'instruction', trial_num, url)
+            trial_num += 1
 
-                # social learning
-                await get_post_trial(default_client, 'social_learning',
-                                     trial_num, url, solution, headers)
+            # social learning
+            for _ in range(e_config.n_demonstration_trials):
+                await get_post_trial(default_client, 'observation', trial_num, url, solution, headers)
+                trial_num += 1
+                await get_post_trial(default_client, 'repeat', trial_num, url, solution, headers)
+                trial_num += 1
+                await get_post_trial(default_client, 'try_yourself', trial_num, url, solution, headers)
                 trial_num += 1
 
     if generation > 0:
@@ -171,8 +168,8 @@ async def one_subject(default_client: httpx.AsyncClient,
 
     for i in range(n_individual_trials):
         if i == 0:
-            # instruction_learning_selection
-            await get_post_trial(default_client, 'instruction_individual',
+            # instruction individual
+            await get_post_trial(default_client, 'instruction',
                                  trial_num, url)
             trial_num += 1
 
@@ -184,8 +181,8 @@ async def one_subject(default_client: httpx.AsyncClient,
     # demonstration trial
     for i in range(e_config.n_demonstration_trials):
         if i == 0:
-            # instruction_learning_selection
-            await get_post_trial(default_client, 'instruction_demonstration',
+            # instruction demonstration
+            await get_post_trial(default_client, 'instruction',
                                  trial_num, url)
             trial_num += 1
 
@@ -194,7 +191,7 @@ async def one_subject(default_client: httpx.AsyncClient,
         trial_num += 1
 
     # written strategy trial
-    await get_post_trial(default_client, 'instruction_written_strategy',
+    await get_post_trial(default_client, 'instruction',
                          trial_num, url)
     trial_num += 1
 
