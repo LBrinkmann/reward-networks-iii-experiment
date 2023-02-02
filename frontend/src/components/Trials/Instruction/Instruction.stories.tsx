@@ -7,13 +7,7 @@ import Header from "../../Header";
 
 export default {
     title: 'Trials/Instruction',
-    component: Instruction,
-    argTypes: {
-        instructionId: {
-            control: 'select',
-            options: ['welcome', 'learning_selection', 'learning', 'individual', 'demonstration', 'written_strategy']
-        }
-    }
+    component: Instruction
 
 } as ComponentMeta<typeof Instruction>;
 
@@ -29,5 +23,6 @@ const Template: ComponentStory<typeof Instruction> = function (args) {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    instructionId: "welcome",
+    endTrial: ({moves: []}) => {},
+    instructionText: "instruction text",
 };

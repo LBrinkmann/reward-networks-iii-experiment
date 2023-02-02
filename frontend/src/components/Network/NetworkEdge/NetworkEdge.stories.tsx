@@ -26,7 +26,7 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
                 Text={'0'}
                 nodeInx={0}
                 onNodeClick={() => {}}
-                isActive={true}
+                status={'active'}
                 isValidMove={false}
             />
             <NetworkNode
@@ -36,7 +36,7 @@ const Template: ComponentStory<typeof NetworkEdge> = (args) => {
                 Text={'2'}
                 nodeInx={0}
                 onNodeClick={() => {}}
-                isActive={true}
+                status={'normal'}
                 isValidMove={false}
             />
             <NetworkEdge {...args}/>

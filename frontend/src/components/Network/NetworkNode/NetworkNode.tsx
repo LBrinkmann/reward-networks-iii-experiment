@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import NetworkNodeStyled from "./NetworkNode.styled";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
-export type NetworkNodeStatus = "starting" | "active" | "disabled" | "invalid-click" | "";
+export type NetworkNodeStatus = "normal" | "starting" | "active" | "disabled";
 
 export interface NetworkNodeInterface {
     /** Node index */
@@ -19,35 +19,31 @@ export interface NetworkNodeInterface {
     /** Callback to handle node click */
     onNodeClick: (nodeIdx: number) => void;
     isValidMove: boolean;
-    isActive: boolean;
+    status: NetworkNodeStatus;
     /** show tutorial tip */
     showTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
 }
 
+
 const NetworkNode: React.FC<NetworkNodeInterface> = props => {
     const {showTutorial = false} = props;
-    const [status, setStatus] = useState<NetworkNodeStatus>(() => props.isActive ? 'active' : '');
+    const [wrongClick, setWrongClick] = useState(false);
 
     useEffect(() => {
-        if (status === "invalid-click") {
+        if (wrongClick) {
+            // set timeout to reset status
             setTimeout(() => {
-                setStatus("");
-            }, 300);
-        } else if (status === "active" && !props.isActive) { // override status with the props value
-            setStatus("");
-        } else if (props.isActive) {
-            setStatus("active");
+                setWrongClick(false);
+            }, 400);
         }
-    }, [status, props.isActive]);
+    }, [wrongClick]);
 
-    const onNodeClick = () => {
+    const nodeClickHandler = () => {
         props.onNodeClick(props.nodeInx);
-        if (props.isValidMove) {
-            setStatus("active");
-        } else if (!props.isValidMove && !props.isActive) {
-            setStatus("invalid-click");
+        if (props.status === "normal" && !props.isValidMove) {
+            setWrongClick(true);
         }
     }
 
@@ -58,7 +54,12 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
             isShowTip={false}
             onTutorialClose={props.onTutorialClose}
             placement="left">
-            <NetworkNodeStyled status={status} fontSize={props.Radius} onClick={onNodeClick}>
+            <NetworkNodeStyled
+                status={props.status}
+                fontSize={props.Radius}
+                onClick={nodeClickHandler}
+                wrongClick={wrongClick}
+            >
                 <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
                 <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>
                     {props.Text}
@@ -67,5 +68,6 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
         </TutorialTip>
     );
 };
+
 
 export default NetworkNode;

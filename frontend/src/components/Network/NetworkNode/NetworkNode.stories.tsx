@@ -29,18 +29,40 @@ ActiveNode.args = {
     Radius: 100,
     x: 200,
     y: 200,
-    isActive: true
+    status: 'active',
+};
+
+export const StartingNode = Template.bind({});
+
+StartingNode.args = {
+    nodeInx: 0,
+    Text: 'A',
+    Radius: 100,
+    x: 200,
+    y: 200,
+    status: 'starting',
+};
+
+export const DisabledNode = Template.bind({});
+
+DisabledNode.args = {
+    nodeInx: 0,
+    Text: 'A',
+    Radius: 100,
+    x: 200,
+    y: 200,
+    status: 'disabled',
 };
 
 export const ValidClickNode = Template.bind({});
 
 ValidClickNode.args = {
     nodeInx: 0,
-    Text: 'A',
+    Text: 'B',
     Radius: 100,
     x: 200,
     y: 200,
-    isActive: false,
+    status: 'normal',
     isValidMove: true
 };
 
@@ -48,10 +70,10 @@ export const InvalidClickNode = Template.bind({});
 
 InvalidClickNode.args = {
     nodeInx: 0,
-    Text: 'A',
+    Text: 'C',
     Radius: 100,
     x: 200,
     y: 200,
-    isActive: false,
+    status: 'normal',
     isValidMove: false
 };

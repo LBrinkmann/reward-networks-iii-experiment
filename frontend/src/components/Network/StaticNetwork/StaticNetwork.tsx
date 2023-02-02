@@ -62,6 +62,8 @@ export interface StaticNetworkInterface {
     blur?: boolean;
     /** Rewards range */
     allRewards?: number[];
+    colors?: string[];
+    disableClick?: boolean;
 }
 
 const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
@@ -78,7 +80,9 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
         showNodeTutorial = false,
         showEdgeTutorial = false,
         blur = false,
-        allRewards = [-100, -20, 0, 20, 140]
+        allRewards = [-100, -20, 0, 20, 140],
+        colors = ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837',],
+        disableClick = false,
     } = props;
 
     // Scale node coordinates
@@ -86,55 +90,10 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
     const scaleSizeX = (val: number) => val * multiplier + size / 2;
     const scaleSizeY = (val: number) => val * multiplier + size / 2;
 
-    let colors = [
-        '#7b3294',
-        '#c2a5cf',
-        '#f7f7f7',
-        '#a6dba0',
-        '#008837',
-    ]
-
-    // see https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
-    function lerpColor(a: string, b: string, amount: number) {
-
-        const ah = parseInt(a.replace(/#/g, ''), 16),
-            ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
-            bh = parseInt(b.replace(/#/g, ''), 16),
-            br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
-            rr = ar + amount * (br - ar),
-            rg = ag + amount * (bg - ag),
-            rb = ab + amount * (bb - ab);
-
-        return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
-    }
-
-    function interpolateColors(startColor: string, endColor: string, numColors: number): string[] {
-        let interpolatedColors = [];
-        let interval = 1 / (numColors - 1);
-
-        // Interpolate colors from start to middle
-        for (let i = 0; i < numColors; i++) {
-            let amount = i * interval;
-            interpolatedColors.push(lerpColor(startColor, endColor, amount));
-        }
-        return interpolatedColors;
-    }
-
-    // interpolate colors
-    if (allRewards.length !== colors.length) {
-        switch (allRewards.length) {
-            case 2:
-                colors = ['#7b3294', '#008837'];
-                break;
-            case 3:
-                colors = ['#7b3294', '#f7f7f7', '#008837'];
-                break;
-            case 4:
-                colors = ['#7b3294', '#c2a5cf', '#a6dba0', '#008837'];
-                break;
-            default:
-                colors = interpolateColors('#c2a5cf', '#a6dba0', allRewards.length);
-        }
+    const setNodeStatus = (active: boolean) => {
+        if (active) return 'active';
+        if (disableClick || blur) return 'disabled';
+        return 'normal';
     }
 
     return (
@@ -181,7 +140,7 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
                                 Text={node.display_name}
                                 Radius={nodeSize}
                                 onNodeClick={onNodeClickHandler}
-                                isActive={isActive}
+                                status={setNodeStatus(isActive)}
                                 isValidMove={possibleMoves.includes(node.node_num)}
                                 key={'node-' + idx}
                                 showTutorial={showNodeTutorial && isActive}
