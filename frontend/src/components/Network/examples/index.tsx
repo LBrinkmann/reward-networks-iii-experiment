@@ -1,5 +1,4 @@
 const data = require('../../Network/examples/train_viz.json');
-export const solution = require('../../Network/examples/solution_moves_take_first_loss_viz.json');
 
 // const nodeLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 

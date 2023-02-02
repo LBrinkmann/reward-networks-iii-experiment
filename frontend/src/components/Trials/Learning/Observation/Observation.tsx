@@ -19,7 +19,7 @@ const Observation: FC<IObservation> = (props) => {
     useEffect(() => {
         if (playAnimation) {
             setTimeout(() => {
-                if (networkState.step < solution.length - 1) {
+                if (networkState.step < solution.length) {
                     networkDispatcher({
                             type: NETWORK_ACTIONS.NEXT_NODE,
                             payload: {nodeIdx: solution[networkState.step + 1]}

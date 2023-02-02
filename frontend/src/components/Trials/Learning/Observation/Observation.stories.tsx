@@ -55,5 +55,5 @@ const Template: ComponentStory<typeof Observation> = function (args) {
 export const Default = Template.bind({});
 
 Default.args = {
-    solution: [0, 1, 4, 3, 2, 1, 5],
+    solution: [0, 1, 4, 3, 2, 1, 5, 2, 1],
 };

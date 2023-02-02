@@ -14,7 +14,6 @@ export const NETWORK_ACTIONS = {
 
 
 const networkReducer = (state: NetworkState, action: any) => {
-    console.log('reducer', state, action);
     switch (action.type) {
         case NETWORK_ACTIONS.SET_NETWORK:
             const {edges, nodes} = action.payload.network;
