@@ -59,21 +59,24 @@ export interface Trial {
   id: number;
   trial_type:
     | "consent"
-    | "instruction_welcome"
+    | "instruction"
     | "practice"
-    | "instruction_learning_selection"
     | "social_learning_selection"
-    | "instruction_learning"
-    | "social_learning"
-    | "instruction_individual"
+    | "observation"
+    | "repeat"
+    | "try_yourself"
     | "individual"
-    | "instruction_demonstration"
     | "demonstration"
-    | "instruction_written_strategy"
     | "written_strategy"
     | "post_survey"
     | "debriefing";
-  social_learning_type?: "observation" | "repeat" | "tryyourself";
+  instruction_type?:
+    | "welcome"
+    | "learning_selection"
+    | "learning"
+    | "individual"
+    | "demonstration"
+    | "written_strategy";
   finished?: boolean;
   started_at?: string;
   finished_at?: string;

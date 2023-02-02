@@ -178,7 +178,7 @@ const ConsentForm: React.FC<ConsentFormProps> = ({onDisagreeRedirect, endTrial})
                     </Paper>
                 </Grid>
             </Grid> :
-            <Instruction endTrial={redirectToProlific} instructionText={"consent_decline"}/>
+            <Instruction endTrial={redirectToProlific} instructionType={"consent_decline"}/>
         } </>
     )
 };

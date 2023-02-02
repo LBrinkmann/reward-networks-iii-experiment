@@ -16,6 +16,7 @@ import NetworkTrial from "./NetworkTrial";
 import useNetworkContext from "../../contexts/NetworkContext";
 
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
+import instructions from "./Instruction/InstructionContent";
 
 
 const TRIAL_TYPE = {
@@ -29,7 +30,7 @@ const TRIAL_TYPE = {
     OBSERVATION: "observation",
     REPEAT: "repeat",
     TRY_YOURSELF: "try_yourself",
-    INDIVIDUAL: "individual_trial",
+    INDIVIDUAL: "individual",
     DEMONSTRATION: "demonstration",
     // after the experiment
     WRITTEN_STRATEGY: "written_strategy",
@@ -68,7 +69,9 @@ const ExperimentTrial: FC = () => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished &&
-            (data.trial_type === TRIAL_TYPE.INDIVIDUAL ||
+            (
+                data.trial_type === TRIAL_TYPE.PRACTICE ||
+                data.trial_type === TRIAL_TYPE.INDIVIDUAL ||
                 data.trial_type === TRIAL_TYPE.OBSERVATION ||
                 data.trial_type === TRIAL_TYPE.REPEAT ||
                 data.trial_type === TRIAL_TYPE.TRY_YOURSELF ||
@@ -88,7 +91,8 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.CONSENT:
                 return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
             case TRIAL_TYPE.INSTRUCTION:
-                return <Instruction endTrial={submitResults} />;
+                return <Instruction endTrial={submitResults}
+                                    instructionType={data.instruction_type as keyof typeof instructions}/>;
             case TRIAL_TYPE.PRACTICE:
                 return <NetworkTrial isPractice={true}/>;
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
