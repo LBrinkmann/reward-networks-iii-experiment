@@ -131,7 +131,7 @@ const networkReducer = (state: NetworkState, action: any) => {
                 return state;
         case NETWORK_ACTIONS.RESET_EDGE_STYLES:
             const resetEdges = state.network.edges;
-            resetEdges.forEach((edge: any) => console.log(edge.edgeStyle));
+            resetEdges.forEach((edge: any) => edge.edgeStyle = "normal");
             return {...state, network: {...state.network, edges: resetEdges}};
         default:
             return state;
