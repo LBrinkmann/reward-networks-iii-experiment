@@ -4,8 +4,8 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import Observation from "./Observation";
 
-import data from "../../../Network/examples";
-import useNetworkContext, {NetworkContextProvider} from "../../../../contexts/NetworkContext";
+import data from "../../Network/examples";
+import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
 
 
 export default {

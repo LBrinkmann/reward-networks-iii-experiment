@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from "react";
-import NetworkTrial from "../../NetworkTrial";
-import useNetworkContext from "../../../../contexts/NetworkContext";
-import {NETWORK_ACTIONS} from "../../../../reducers/NetworkReducer";
+import NetworkTrial from "../NetworkTrial";
+import useNetworkContext from "../../../contexts/NetworkContext";
+import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 
 
 interface IObservation {
