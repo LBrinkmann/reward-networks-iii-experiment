@@ -3,6 +3,7 @@ import {
     StaticNetworkNodeInterface
 } from "../components/Network/StaticNetwork/StaticNetwork";
 import {networkInitialState, NetworkState} from "../contexts/NetworkContext";
+import {NetworkEdgeStyle} from "../components/Network/NetworkEdge/NetworkEdge";
 
 export const NETWORK_ACTIONS = {
     SET_NETWORK: 'setNetwork',
@@ -10,6 +11,7 @@ export const NETWORK_ACTIONS = {
     TIMER_DONE: 'timerDone',
     DISABLE: 'disable',
     NEXT_TUTORIAL_STEP: 'nextTutorialStep',
+    HIGHLIGHT_EDGE_TO_CHOOSE: 'highlightEdgeToRepeat',
 }
 
 
@@ -112,6 +114,21 @@ const networkReducer = (state: NetworkState, action: any) => {
             return {
                 ...state,
                 isNetworkDisabled: true,
+            }
+        case NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE:
+            const {source, target, edgeStyle} = action.payload;
+            const edgeToFollow = state.network.edges.filter(
+                (edge: any) => edge.source_num === source && edge.target_num === target)[0];
+
+            // set all edges to default style
+            state.network.edges.forEach((edge: any) => edge.edgeStyle = "normal");
+
+            edgeToFollow.edgeStyle = edgeStyle as NetworkEdgeStyle;
+
+            return {
+                ...state,
+                possibleMoves: [target],
+
             }
         default:
             return state;

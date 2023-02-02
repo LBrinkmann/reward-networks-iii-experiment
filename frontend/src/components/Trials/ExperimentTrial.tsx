@@ -3,7 +3,7 @@ import {FC} from "react";
 import ConsentForm from "./Intro/Consent";
 import Instruction from "./Instruction";
 import PracticeNetworkTrial from "./PracticeNetworkTrial";
-import Selection from "./SocialLearning/Selection";
+import Selection from "./Selection";
 import ObservationTrial from "./SocialLearning/Observation";
 import RepeatTrial from "./SocialLearning/Repeat";
 import TryYourselfTrial from "./SocialLearning/TryYourself";

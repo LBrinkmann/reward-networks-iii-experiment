@@ -1,5 +1,5 @@
 import NetworkTrial from "../NetworkTrial";
-import React, {FC} from "react";
+import React, {FC, useEffect} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {Typography} from "@mui/material";
 
@@ -11,6 +11,11 @@ interface IRepeat {
 
 const Repeat: FC<IRepeat> = ({solution}) => {
     const {networkState, networkDispatcher} = useNetworkContext();
+
+    useEffect(() => {
+
+
+    }, [networkState.step]);
 
 
     return (

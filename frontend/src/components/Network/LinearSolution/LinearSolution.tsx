@@ -72,7 +72,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                 <NetworkEdge
                     reward={edge.reward}
                     edgeWidth={edgeWidth}
-                    edgeStyle={edge.edgeStyle}
+                    edgeStyle={"normal"}
                     idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
                     showRewardText={false}
                     arc_type={edge.arc_type}

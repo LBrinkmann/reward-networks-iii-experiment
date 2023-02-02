@@ -20,6 +20,17 @@ const Observation: FC<IObservation> = (props) => {
     useEffect(() => {
         if (playAnimation) {
             setTimeout(() => {
+                if (networkState.step < solution.length - 1) {
+                    networkDispatcher({
+                            type: NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE,
+                            payload: {
+                                source: solution[networkState.step],
+                                target: solution[networkState.step + 1],
+                                edgeStyle: "highlighted"
+                            }
+                        }
+                    );
+                }
                 if (networkState.step < solution.length) {
                     networkDispatcher({
                             type: NETWORK_ACTIONS.NEXT_NODE,
