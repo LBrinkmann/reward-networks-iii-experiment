@@ -3,7 +3,6 @@ import {
     StaticNetworkNodeInterface
 } from "../components/Network/StaticNetwork/StaticNetwork";
 import {networkInitialState, NetworkState} from "../contexts/NetworkContext";
-import {NetworkEdgeStyle} from "../components/Network/NetworkEdge/NetworkEdge";
 
 export const NETWORK_ACTIONS = {
     SET_NETWORK: 'setNetwork',

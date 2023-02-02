@@ -1,19 +1,17 @@
-import React from "react";
-import {FC} from "react";
+import React, {FC, useEffect} from "react";
+import {useMutation, useQuery} from "react-query";
+
+import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
+
+import {useProlificId} from "../App/App";
+
 import ConsentForm from "./Intro/Consent";
 import Instruction from "./Instruction";
-import PracticeNetworkTrial from "./PracticeNetworkTrial";
-import Selection from "./Selection";
-import ObservationTrial from "./SocialLearning/Observation";
-import RepeatTrial from "./SocialLearning/Repeat";
-import TryYourselfTrial from "./SocialLearning/TryYourself";
-import IndividualTrial from "./IndividualTrial";
 import WrittenStrategy from "./WrittenStrategy";
 import PostSurvey from "./Outro/PostSurvey";
+import Repeat from "./Repeat";
+import Observation from "./Observation";
 import Debriefing from "./Outro/Debriefing";
-import {useMutation, useQuery} from "react-query";
-import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
-import {useProlificId} from "../App/App";
 import NetworkTrial from "./NetworkTrial";
 import useNetworkContext from "../../contexts/NetworkContext";
 
@@ -22,10 +20,19 @@ import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/Pra
 
 const TRIAL_TYPE = {
     CONSENT: "consent",
-    INSTRUCTION: "instruction_welcome",
-    PRACTICE: "practice",
-    INSTRUCTION_LEARNING_SELECTION: "instruction_learning_selection",
+    INSTRUCTION: "instruction",
+    WRITTEN_STRATEGY: "written_strategy",
+    POST_SURVEY: "post_survey",
+    DEBRIEFING: "debriefing",
+    // Social learning selection
     SOCIAL_LEARNING_SELECTION: "social_learning_selection",
+    // Network trials
+    PRACTICE: "practice",
+    OBSERVATION: "observation",
+    REPEAT: "repeat",
+    TRY_YOURSELF: "try_yourself",
+    INDIVIDUAL: "individual_trial",
+    DEMONSTRATION: "demonstration",
 }
 
 
@@ -57,6 +64,18 @@ const ExperimentTrial: FC = () => {
         mutation.mutate({prolificID: prolificId, trialType: data.trial_type, trialResults: result})
     }
 
+    useEffect(() => {
+        if (networkState.isNetworkFinished &&
+            (data.trial_type === TRIAL_TYPE.INDIVIDUAL ||
+                data.trial_type === TRIAL_TYPE.OBSERVATION ||
+                data.trial_type === TRIAL_TYPE.REPEAT ||
+                data.trial_type === TRIAL_TYPE.TRY_YOURSELF ||
+                data.trial_type === TRIAL_TYPE.DEMONSTRATION
+            )) {
+            submitResults({moves: networkState.moves})
+        }
+    }, [networkState.isNetworkFinished]);
+
 
     if (status === "loading") {
         return <div>loading...</div>
@@ -69,80 +88,25 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.INSTRUCTION:
                 return <Instruction endTrial={submitResults} instructionText={"TODO: get text from backend"}/>;
             case TRIAL_TYPE.PRACTICE:
-                if (networkState.network) {
-                    return <NetworkTrial isPractice={true}/>
-                }
-                return <>loading...</>;
-            // case 'instruction_learning_selection':
-            //     return <Instruction instructionId={"learning_selection"}/>;
-            // case 'social_learning_selection':
-            //     return <Selection
-            //         advisors={
-            //             data.advisor_selection.scores.map((score: number, inx: number) => {
-            //                 return {
-            //                     advisorId: data.advisor_selection.advisor_ids[inx],
-            //                     averageScore: score
-            //                 }
-            //             })
-            //         }
-            //         onClickHandler={onSocialLearningSelectionClickHandler}
-            //         showTutorial={data.id === 4}
-            //     />;
-            // case 'instruction_learning':
-            //     return <Instruction instructionId={"learning"}/>;
-            // case 'social_learning':
-            //     if (socialLearningState.socialLearningType === 'observation') {
-            //         return <ObservationTrial
-            //             nodes={data.network.nodes}
-            //             edges={data.network.edges}
-            //             moves={data.advisor.solution.moves}
-            //             teacherId={socialLearningState.teacherInx}
-            //             onNextTrialHandler={OnNextTrial}
-            //             showTutorial={data.id === 6}  // show tutorial only for the very first social learning trial
-            //         />;
-            //     } else if (socialLearningState.socialLearningType === 'repeat') {
-            //         return <RepeatTrial
-            //             nodes={data.network.nodes}
-            //             edges={data.network.edges}
-            //             moves={data.advisor.solution.moves}
-            //             teacherId={socialLearningState.teacherInx}
-            //             onNextTrialHandler={OnNextTrial}
-            //         />;
-            //     } else {  // tryyourself
-            //         return <TryYourselfTrial
-            //             nodes={data.network.nodes}
-            //             edges={data.network.edges}
-            //             moves={data.advisor.solution.moves}
-            //             teacherId={socialLearningState.teacherInx}
-            //             onNextTrialHandler={OnNextTrial}
-            //         />;
-            //     }
-            // case 'instruction_individual':
-            //     return <Instruction instructionId={"individual"} onClick={OnNextTrial}/>;
-            // case  'individual':
-            //     return <IndividualTrial
-            //         nodes={data.network.nodes}
-            //         edges={data.network.edges}
-            //         onNextTrialHandler={OnNextTrial}
-            //         updateTotalScore={updateTotalPoints}
-            //     />;
-            // case 'instruction_demonstration':
-            //     return <Instruction instructionId={"demonstration"} onClick={OnNextTrial}/>;
-            // case 'demonstration':
-            //     return <IndividualTrial
-            //         timer={2 * 60}
-            //         nodes={data.network.nodes}
-            //         edges={data.network.edges}
-            //         onNextTrialHandler={OnNextTrial}
-            //     />;
-            // case 'instruction_written_strategy':
-            //     return <Instruction instructionId={"written_strategy"} onClick={OnNextTrial}/>;
-            // case  'written_strategy':
-            //     return <WrittenStrategy onClickContinue={OnNextTrial}/>;
-            // case 'post_survey':
-            //     return <PostSurvey onContinueHandler={OnNextTrial}/>;
-            // case 'debriefing':
-            //     return <Debriefing redirect={data.redirect_url}/>;
+                return <NetworkTrial isPractice={true}/>;
+            case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
+                return <> </>; // <Selection />
+            case TRIAL_TYPE.OBSERVATION:
+                return <Observation solution={data.solution.moves}/>;
+            case TRIAL_TYPE.REPEAT:
+                return <Repeat solution={data.solution.moves}/>;
+            case TRIAL_TYPE.TRY_YOURSELF:
+                return  <> </>; // <TryYourself/>;
+            case TRIAL_TYPE.INDIVIDUAL:
+                return <NetworkTrial/>;
+            case TRIAL_TYPE.DEMONSTRATION:
+                return <> </>; // <Demonstration/>;
+            case  TRIAL_TYPE.WRITTEN_STRATEGY:
+                return <WrittenStrategy onClickContinue={()=>{}}/>;
+            case TRIAL_TYPE.POST_SURVEY:
+                return <PostSurvey onContinueHandler={()=>{}}/>;
+            case TRIAL_TYPE.DEBRIEFING:
+                return <Debriefing redirect={data.redirect_url}/>;
             default:
                 return <> </>;
         }
