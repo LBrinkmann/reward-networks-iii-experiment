@@ -14,11 +14,12 @@ interface NetworkTrialInterface {
     showTimer?: boolean;
     time?: number;
     isPractice?: boolean;
+    isTimerPaused?: boolean;
 
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
-    const {showLinearNetwork = true, showTimer = true, time = 35, isPractice = false} = props;
+    const {showLinearNetwork = true, showTimer = true, time = 35, isPractice = false, isTimerPaused = false} = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
@@ -45,7 +46,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
                                 OnTimeEndHandler={TimerDoneHandler}
-                                pause={isPractice}
+                                pause={isPractice || isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
                                 showTutorial={networkState.tutorialOptions.time}
                                 onTutorialClose={NextTutorialStepHandler}
                             />

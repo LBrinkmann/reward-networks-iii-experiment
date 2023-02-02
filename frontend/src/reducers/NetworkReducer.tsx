@@ -43,7 +43,6 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkFinished: true,
                 currentNode: undefined,
             }
-
         case NETWORK_ACTIONS.NEXT_NODE:
             // if network is disabled or finished, do nothing
             if (state.isNetworkFinished || state.isNetworkDisabled) return state;
@@ -109,8 +108,6 @@ const networkReducer = (state: NetworkState, action: any) => {
                 // clear tutorial options
                 tutorialOptions: networkInitialState.tutorialOptions,
             };
-
-
         case NETWORK_ACTIONS.DISABLE:
             return {
                 ...state,
