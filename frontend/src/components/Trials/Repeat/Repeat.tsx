@@ -14,7 +14,7 @@ const Repeat: FC<IRepeat> = ({solution}) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     useEffect(() => {
-        if (networkState.step < solution.length) {
+        if (networkState.step + 1 < solution.length) {
             networkDispatcher({
                     type: NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE,
                     payload: {

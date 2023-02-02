@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardActions, CardContent, Button, Typography} from "@mui/material";
 import PersonIcon from '@mui/icons-material/Person';
-import TutorialTip from "../../../Tutorial/TutorialTip";
+import TutorialTip from "../../Tutorial/TutorialTip";
 
 
 interface SocialLearningSelectionOneCardProps {

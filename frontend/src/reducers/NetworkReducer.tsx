@@ -119,10 +119,10 @@ const networkReducer = (state: NetworkState, action: any) => {
         case NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE:
             const {source, target, edgeStyle} = action.payload;
             const edgeToFollow = state.network.edges.filter(
-                (edge: any) => edge.source_num === source && edge.target_num === target)[0];
+                (edge: StaticNetworkEdgeInterface) => edge.source_num === source && edge.target_num === target)[0];
 
             // set all edges to default style
-            state.network.edges.forEach((edge: any) => edge.edgeStyle = "normal");
+            state.network.edges.forEach((edge: StaticNetworkEdgeInterface) => edge.edgeStyle = "normal");
 
             if (edgeToFollow) {
                 edgeToFollow.edgeStyle = edgeStyle;
@@ -130,8 +130,9 @@ const networkReducer = (state: NetworkState, action: any) => {
             } else
                 return state;
         case NETWORK_ACTIONS.RESET_EDGE_STYLES:
-            state.network.edges.forEach((edge: any) => edge.edgeStyle = "normal");
-            return state;
+            const resetEdges = state.network.edges;
+            resetEdges.forEach((edge: any) => console.log(edge.edgeStyle));
+            return {...state, network: {...state.network, edges: resetEdges}};
         default:
             return state;
     }
