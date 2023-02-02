@@ -2,6 +2,7 @@ import React, {FC, useEffect} from "react";
 import NetworkTrial from "../NetworkTrial";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
+import {Typography} from "@mui/material";
 
 
 interface IObservation {
@@ -25,21 +26,21 @@ const Observation: FC<IObservation> = (props) => {
                             payload: {nodeIdx: solution[networkState.step + 1]}
                         }
                     );
-                } else {
-
                 }
             }, delayBetweenMoves);
         }
 
     }, [networkState.step])
 
-
     return (
         <>
-            <NetworkTrial/>
+            <Typography variant="h3" align='center'>
+                Watch player [TODO: player id] solves the task
+            </Typography>
+
+            <NetworkTrial/>;
         </>
     );
-
 }
 
 export default Observation;
