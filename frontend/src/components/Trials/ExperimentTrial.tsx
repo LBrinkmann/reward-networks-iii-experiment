@@ -17,6 +17,7 @@ import useNetworkContext from "../../contexts/NetworkContext";
 
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
 import instructions from "./Instruction/InstructionContent";
+import {NETWORK_ACTIONS} from "../../reducers/NetworkReducer";
 
 
 const TRIAL_TYPE = {
@@ -49,8 +50,21 @@ const ExperimentTrial: FC = () => {
                 switch (data.trial_type) {
                     case TRIAL_TYPE.PRACTICE:
                         networkDispatcher({
-                            type: 'setNetwork',
+                            type: NETWORK_ACTIONS.SET_NETWORK,
                             payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isTutorial: true}
+                        });
+                        break;
+                    case TRIAL_TYPE.OBSERVATION:
+                    case TRIAL_TYPE.REPEAT:
+                    case TRIAL_TYPE.TRY_YOURSELF:
+                    case TRIAL_TYPE.INDIVIDUAL:
+                    case TRIAL_TYPE.DEMONSTRATION:
+                        networkDispatcher({
+                            type: NETWORK_ACTIONS.SET_NETWORK,
+                            payload: {
+                                network: {edges: data.network.edges, nodes: data.network.nodes},
+                                isTutorial: false
+                            }
                         });
                         break;
                     default:
@@ -98,19 +112,31 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
                 return <> </>; // <Selection />
             case TRIAL_TYPE.OBSERVATION:
+                if (!networkState.network)
+                    return <div>loading...</div>
                 return <Observation solution={data.solution.moves}/>;
             case TRIAL_TYPE.REPEAT:
+                if (!networkState.network)
+                    return <div>loading...</div>
                 return <Repeat solution={data.solution.moves}/>;
             case TRIAL_TYPE.TRY_YOURSELF:
-                return  <> </>; // <TryYourself/>;
+                if (!networkState.network)
+                    return <div>loading...</div>
+                return <> </>; // <TryYourself/>;
             case TRIAL_TYPE.INDIVIDUAL:
+                if (!networkState.network)
+                    return <div>loading...</div>
                 return <NetworkTrial/>;
             case TRIAL_TYPE.DEMONSTRATION:
+                if (!networkState.network)
+                    return <div>loading...</div>
                 return <> </>; // <Demonstration/>;
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
-                return <WrittenStrategy onClickContinue={()=>{}}/>;
+                return <WrittenStrategy onClickContinue={() => {
+                }}/>;
             case TRIAL_TYPE.POST_SURVEY:
-                return <PostSurvey onContinueHandler={()=>{}}/>;
+                return <PostSurvey onContinueHandler={() => {
+                }}/>;
             case TRIAL_TYPE.DEBRIEFING:
                 return <Debriefing redirect={data.redirect_url}/>;
             default:
