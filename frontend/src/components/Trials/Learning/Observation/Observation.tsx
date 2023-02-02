@@ -31,7 +31,7 @@ const Observation: FC<IObservation> = (props) => {
             }, delayBetweenMoves);
         }
 
-    }, [])
+    }, [networkState.step])
 
 
     return (
