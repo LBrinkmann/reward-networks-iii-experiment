@@ -2,6 +2,7 @@ import NetworkTrial from "../NetworkTrial";
 import React, {FC, useEffect} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {Typography} from "@mui/material";
+import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 
 
 interface IRepeat {
@@ -13,6 +14,19 @@ const Repeat: FC<IRepeat> = ({solution}) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     useEffect(() => {
+        if (networkState.step < solution.length) {
+            networkDispatcher({
+                    type: NETWORK_ACTIONS.HIGHLIGHT_EDGE_TO_CHOOSE,
+                    payload: {
+                        source: solution[networkState.step],
+                        target: solution[networkState.step + 1],
+                        edgeStyle: "animated"
+                    }
+                }
+            );
+        } else {
+            networkDispatcher({type: NETWORK_ACTIONS.RESET_EDGE_STYLES});
+        }
 
 
     }, [networkState.step]);
