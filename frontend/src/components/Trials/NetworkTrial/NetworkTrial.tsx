@@ -31,8 +31,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
 
-    const TimerDoneHandler = () => networkDispatcher({type: NETWORK_ACTIONS.TIMER_DONE,});
-
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
 
 
@@ -45,7 +43,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             <Timer
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
-                                OnTimeEndHandler={TimerDoneHandler}
                                 pause={isPractice || isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
                                 showTutorial={networkState.tutorialOptions.time}
                                 onTutorialClose={NextTutorialStepHandler}

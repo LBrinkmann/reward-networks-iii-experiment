@@ -1,14 +1,14 @@
 import {Box, CircularProgress, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import TutorialTip from "../Tutorial/TutorialTip";
+import useNetworkContext from "../../contexts/NetworkContext";
+import {NETWORK_ACTIONS} from "../../reducers/NetworkReducer";
 
 interface TimerInterface {
     /** Time in seconds */
     time: number;
     /** Invisible time: time when timer has no visual changes but the time is ticking */
     invisibleTime?: number;
-    /** Callback to handle timer end */
-    OnTimeEndHandler?: () => void;
     /** Pause the timer */
     pause?: boolean;
     /** show tutorial tip */
@@ -18,56 +18,20 @@ interface TimerInterface {
 }
 
 const Timer: React.FC<TimerInterface> = (props) => {
-    const {time, OnTimeEndHandler, invisibleTime = 0, pause = false, showTutorial = false} = props;
-    const [timePassed, setTimePassed] = useState<number>(0);
-    const [isDone, setIsDone] = useState<boolean>(false);
-    const [isPaused, setIsPaused] = useState<boolean>(pause);
+    const {time, invisibleTime = 0, pause = false, showTutorial = false} = props;
+    const {networkState, networkDispatcher} = useNetworkContext();
     const [isVisibleTimerChanges, setIsVisibleTimerChanges] = useState<boolean>(invisibleTime === 0);
 
-    // get states from local storage to prevent losing state on refresh
     useEffect(() => {
-        const t = JSON.parse(window.localStorage.getItem('timePassed'))
-        if (t) setTimePassed(t);
-    }, []);
+        if (invisibleTime - networkState.timer.timePassed < 0) setIsVisibleTimerChanges(true);
 
-    useEffect(() => {
-        if (pause) {
-            setIsPaused(true);
-        } else {
-            setIsPaused(false);
-        }
-    }, [pause]);
+        const interval = setInterval(() => {
+            networkDispatcher({type: NETWORK_ACTIONS.TIMER_UPDATE, time: time, paused: pause})
+        }, 1000);
+        return () => clearInterval(interval);
 
-    useEffect(() => {
-        if (isDone) {
-            OnTimeEndHandler();
-        } else if (isPaused) {
-            return;
-        } else {
-            const interval = setInterval(() => {
-                setTimePassed(prevTime => prevTime + 1)
-            }, 1000);
-            return () => clearInterval(interval);
-        }
-    }, [isDone, isPaused]);
+    }, [networkState.timer.timePassed, pause, time]);
 
-    useEffect(() => {
-        if (invisibleTime - timePassed < 0) {
-            setIsVisibleTimerChanges(true);
-        }
-
-    }, [timePassed]);
-
-
-    useEffect(() => {
-        // save states to local storage to prevent losing state on refresh
-        window.localStorage.setItem('timePassed', JSON.stringify(timePassed + 1));
-
-        if (timePassed >= time + invisibleTime) {
-            window.localStorage.removeItem('timePassed');
-            setIsDone(true);
-        }
-    }, [timePassed]);
 
     // Convert seconds to minutes and seconds
     const fmtMSS = (s: number) => {
@@ -95,13 +59,13 @@ const Timer: React.FC<TimerInterface> = (props) => {
         >
             <Box display='flex' justifyContent='center' alignItems='center'>
                 <Typography position="absolute" variant="h5" component="div" color="text.secondary">
-                    {fmtMSS(isVisibleTimerChanges ? time - (timePassed - invisibleTime) : time)}
+                    {fmtMSS(isVisibleTimerChanges ? time - (networkState.timer.timePassed - invisibleTime) : time)}
                 </Typography>
 
                 <CircularProgress
-                    color={selectColor((timePassed - invisibleTime) / time)}
+                    color={selectColor((networkState.timer.timePassed - invisibleTime) / time)}
                     variant="determinate"
-                    value={isVisibleTimerChanges ? (((timePassed - invisibleTime) + time) / time) * 100: 100}
+                    value={isVisibleTimerChanges ? (((networkState.timer.timePassed - invisibleTime) + time) / time) * 100 : 100}
                     size={120}/>
             </Box>
         </TutorialTip>

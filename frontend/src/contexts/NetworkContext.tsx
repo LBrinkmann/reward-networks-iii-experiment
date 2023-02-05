@@ -8,12 +8,20 @@ import networkReducer from "../reducers/NetworkReducer";
 const LOCAL_STORAGE_NETWORK_STATE_KEY = 'networkState';
 
 
+type timerState = {
+    timePassed: number;
+    isTimerPaused: boolean;
+    isTimerDone: boolean;
+
+}
+
+
 export type NetworkState = {
     network: { edges: StaticNetworkEdgeInterface[], nodes: StaticNetworkNodeInterface[] } | undefined;
     step: number;
     points: number;
     moves: number[];
-    time: number;
+    timer: timerState;
     currentNode: number;
     possibleMoves: number[];
     isNetworkDisabled: boolean;
@@ -42,7 +50,11 @@ export const networkInitialState: NetworkState = {
     step: 0,
     points: 0,
     moves: [],
-    time: 0,
+    timer: {
+        timePassed: 0,
+        isTimerPaused: false,
+        isTimerDone: false,
+    },
     currentNode: undefined,
     possibleMoves: undefined,
     isNetworkDisabled: false,

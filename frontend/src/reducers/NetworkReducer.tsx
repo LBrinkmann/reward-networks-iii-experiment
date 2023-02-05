@@ -7,7 +7,7 @@ import {networkInitialState, NetworkState} from "../contexts/NetworkContext";
 export const NETWORK_ACTIONS = {
     SET_NETWORK: 'setNetwork',
     NEXT_NODE: 'nextNode',
-    TIMER_DONE: 'timerDone',
+    TIMER_UPDATE: 'timeUpdate',
     DISABLE: 'disable',
     NEXT_TUTORIAL_STEP: 'nextTutorialStep',
     HIGHLIGHT_EDGE_TO_CHOOSE: 'highlightEdgeToRepeat',
@@ -38,12 +38,37 @@ const networkReducer = (state: NetworkState, action: any) => {
                     node: true
                 } : networkInitialState.tutorialOptions,
             }
-        case NETWORK_ACTIONS.TIMER_DONE:
+
+        case NETWORK_ACTIONS.TIMER_UPDATE:
+            // if timer is done
+            if (action.payload.time === state.timer.timePassed) {
+                return {
+                    ...state,
+                    isNetworkDisabled: true,
+                    isNetworkFinished: true,
+                    currentNode: undefined,
+                    timer: {
+                        ...state.timer,
+                        isTimerDone: true,
+                    }
+                };
+            }
+            // if timer is paused
+            if (action.payload.paused) return {
+                ...state,
+                timer: {
+                    ...state.timer,
+                    isTimerPaused: true,
+                }
+            };
+
+            // if timer is not done
             return {
                 ...state,
-                isNetworkDisabled: true,
-                isNetworkFinished: true,
-                currentNode: undefined,
+                timer: {
+                    ...state.timer,
+                    timePassed: state.timer.timePassed + 1,
+                }
             }
         case NETWORK_ACTIONS.NEXT_NODE:
             // if network is disabled or finished, do nothing
