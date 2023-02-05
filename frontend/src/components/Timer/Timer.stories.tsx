@@ -3,11 +3,21 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import Timer from './Timer';
+import {NetworkContextProvider} from "../../contexts/NetworkContext";
 
 
 export default {
     title: 'Utils/Timer',
     component: Timer,
+    decorators: [
+        (ComponentStory) => {
+            return (
+                <NetworkContextProvider>
+                    <ComponentStory/>
+                </NetworkContextProvider>
+            );
+        },
+    ]
 } as ComponentMeta<typeof Timer>;
 
 const Template: ComponentStory<typeof Timer> = function (args) {
@@ -41,5 +51,4 @@ invisible5seconds.args = {
     pause: false,
     time: 25,
     invisibleTime: 5,
-    OnTimeEndHandler: () => {location.reload()},
 };

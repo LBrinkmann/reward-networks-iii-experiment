@@ -26,7 +26,7 @@ const Timer: React.FC<TimerInterface> = (props) => {
         if (invisibleTime - networkState.timer.timePassed < 0) setIsVisibleTimerChanges(true);
 
         const interval = setInterval(() => {
-            networkDispatcher({type: NETWORK_ACTIONS.TIMER_UPDATE, time: time, paused: pause})
+            networkDispatcher({type: NETWORK_ACTIONS.TIMER_UPDATE, payload: {time: time, paused: pause}})
         }, 1000);
         return () => clearInterval(interval);
 
