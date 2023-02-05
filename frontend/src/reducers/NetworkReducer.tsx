@@ -23,7 +23,7 @@ const networkReducer = (state: NetworkState, action: any) => {
             const possibleMoves = selectPossibleMoves(edges, startNode);
 
             return {
-                ...state,
+                ...networkInitialState,
                 network: action.payload.network,
                 currentNode: startNode,
                 possibleMoves: possibleMoves,
