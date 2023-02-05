@@ -61,19 +61,19 @@ const Timer: React.FC<TimerInterface> = (props) => {
                 <Typography position="absolute" variant="h5" component="div" color="text.secondary">
                     {invisibleTime - networkState.timer.timePassed < 0 ?
                         // show the time left
-                        fmtMSS(time - (networkState.timer.timePassed - invisibleTime)) :
+                        fmtMSS(time - networkState.timer.timePassed) :
                         // show the total visible time
-                        fmtMSS(time)
+                        fmtMSS(time - invisibleTime)
                     }
                 </Typography>
 
                 <CircularProgress
-                    color={selectColor((networkState.timer.timePassed - invisibleTime) / time)}
+                    color={selectColor(networkState.timer.timePassed / time)}
                     variant="determinate"
                     value={
                         invisibleTime - networkState.timer.timePassed < 0 ?
                             // show the time left clockwise
-                            (((networkState.timer.timePassed - invisibleTime) + time) / time) * 100 :
+                            ((networkState.timer.timePassed - invisibleTime + time - invisibleTime) / (time - invisibleTime)) * 100 :
                             // show the full circle
                             100
                     }
