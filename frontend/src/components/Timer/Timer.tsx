@@ -18,15 +18,16 @@ interface TimerInterface {
 }
 
 const Timer: React.FC<TimerInterface> = (props) => {
-    const {time, invisibleTime = 0, pause = false, showTutorial = false} = props;
+    const {time, invisibleTime = 0, pause = false, showTutorial = false, onTutorialClose} = props;
     const {networkState, networkDispatcher} = useNetworkContext();
-    const [isVisibleTimerChanges, setIsVisibleTimerChanges] = useState<boolean>(invisibleTime === 0);
 
     useEffect(() => {
-        if (invisibleTime - networkState.timer.timePassed < 0) setIsVisibleTimerChanges(true);
-
         const interval = setInterval(() => {
-            networkDispatcher({type: NETWORK_ACTIONS.TIMER_UPDATE, payload: {time: time, paused: pause}})
+            networkDispatcher({
+                    type: NETWORK_ACTIONS.TIMER_UPDATE,
+                    payload: {time: time, paused: pause}
+                }
+            )
         }, 1000);
         return () => clearInterval(interval);
 
@@ -54,7 +55,7 @@ const Timer: React.FC<TimerInterface> = (props) => {
             tutorialId={"practice_timer"}
             isTutorial={showTutorial}
             isShowTip={false}
-            onTutorialClose={props.onTutorialClose}
+            onTutorialClose={onTutorialClose}
             placement="bottom"
         >
             <Box display='flex' justifyContent='center' alignItems='center'>
@@ -72,7 +73,8 @@ const Timer: React.FC<TimerInterface> = (props) => {
                     variant="determinate"
                     value={
                         invisibleTime - networkState.timer.timePassed < 0 ?
-                            // show the time left clockwise
+                            // show the time left clockwise: 100% + time passed in %
+                            // it is necessary to subtract the invisible time
                             ((networkState.timer.timePassed - invisibleTime + time - invisibleTime) / (time - invisibleTime)) * 100 :
                             // show the full circle
                             100
