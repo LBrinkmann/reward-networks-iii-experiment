@@ -19,6 +19,7 @@ import {
     PostSurveyTrial, PracticeTrial, RepeatTrial, SelectionTrial, TryYourselfTrial, WrittenStrategyTrial
 } from "./Trials";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
+import ErrorMessage from "./ErrorMessage";
 
 
 export const TRIAL_TYPE = {
@@ -118,7 +119,8 @@ const ExperimentTrial: FC = () => {
     if (status === "loading") {
         return <WaitForNextTrialScreen/>
     } else if (status === "error") {
-        return <div>error: {error}</div>
+        console.error(error);
+        return <ErrorMessage />
     } else {
         switch (data.trial_type) {
             case TRIAL_TYPE.CONSENT:
