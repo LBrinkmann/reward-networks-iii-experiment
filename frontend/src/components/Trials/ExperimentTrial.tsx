@@ -120,8 +120,8 @@ const ExperimentTrial: FC = () => {
             )) submitResults({moves: networkState.moves})
 
         if (networkState.isNetworkFinished && data.trial_type === TRIAL_TYPE.TRY_YOURSELF)
-            // wait for 4 seconds before submitting the results to give the user time to compare the solutions
-            setInterval(() => {
+            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
+            setTimeout(() => {
                 submitResults({moves: networkState.moves})
             }, 4000);
 
