@@ -93,10 +93,12 @@ const ExperimentTrial: FC = () => {
     }
 
     const onTrialEnd = () => {
-        sessionDispatcher({
-            type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
-            payload: {points: networkState.points ? networkState.points : 0}
-        });
+        if (sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) {
+            sessionDispatcher({
+                type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
+                payload: {points: networkState.points ? networkState.points : 0}
+            });
+        }
         refetch();
     }
 
@@ -114,7 +116,7 @@ const ExperimentTrial: FC = () => {
     }
 
     if (status === "loading") {
-        return <WaitForNextTrialScreen />
+        return <WaitForNextTrialScreen/>
     } else if (status === "error") {
         return <div>error: {error}</div>
     } else {
