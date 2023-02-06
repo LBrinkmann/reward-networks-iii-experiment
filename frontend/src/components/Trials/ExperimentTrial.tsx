@@ -86,7 +86,9 @@ const ExperimentTrial: FC = () => {
                                 network: {edges: data.network.edges, nodes: data.network.nodes},
                                 isPractice: false,
                                 teacherComment: data.advisor.written_strategy,
-                                commentTutorial: TRIAL_TYPE.OBSERVATION && sessionState.showTutorialInCurrentTrial,
+                                // show comment tutorial only for the first observation trial
+                                commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
+                                    sessionState.showTutorialInCurrentTrial,
                             }
                         });
                         break;
@@ -145,7 +147,7 @@ const ExperimentTrial: FC = () => {
                 return <Selection
                     advisors={sessionState.advisors}
                     onAdvisorSelected={selectAdvisor}
-                    showTutorial={data.id === 3}
+                    showTutorial={sessionState.showTutorialInCurrentTrial}
                 />;
             case TRIAL_TYPE.OBSERVATION:
                 if (!networkState.network)
