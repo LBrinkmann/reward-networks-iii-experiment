@@ -258,17 +258,16 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             # Social learning selection
             if i == 0:
                 # instruction
-                trials.append(Trial(
-                    id=trial_n, trial_type='instruction', instruction_type='learning_selection'))
+                trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='learning_selection'))
                 trial_n += 1
 
-            trials.append(Trial(id=trial_n,
-                                trial_type='social_learning_selection'))
+            trials.append(Trial(id=trial_n, trial_type='social_learning_selection'))
             trial_n += 1
 
             # instruction before learning
-            trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='learning'))
-            trial_n += 1
+            if i == 0:
+                trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='learning'))
+                trial_n += 1
 
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
