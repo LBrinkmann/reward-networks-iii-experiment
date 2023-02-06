@@ -1,8 +1,7 @@
 import NetworkTrial from "../NetworkTrial";
-import React, {FC, useEffect} from "react";
+import React, {FC} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {Box, Typography} from "@mui/material";
-import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 import LinearSolution from "../../Network/LinearSolution";
 
 
@@ -13,19 +12,11 @@ interface ITryYour {
 }
 
 const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore}) => {
-    const {networkState, networkDispatcher} = useNetworkContext();
-
+    const {networkState} = useNetworkContext();
 
     return (
         <>
             {networkState.isNetworkFinished ? (
-                <>
-                    <Typography variant="h3" align='center'>
-                        Now try on your own!
-                    </Typography>
-                    <NetworkTrial/>
-                </>
-            ) : (
 
                 <Box
                     sx={{width: '600px'}}
@@ -53,6 +44,13 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore}) => 
                         id={150}
                     />
                 </Box>
+            ) : (
+                <>
+                    <Typography variant="h3" align='center'>
+                        Now try on your own!
+                    </Typography>
+                    <NetworkTrial/>
+                </>
             )}
         </>
     );
