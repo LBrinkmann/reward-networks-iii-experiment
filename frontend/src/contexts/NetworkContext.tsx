@@ -35,7 +35,8 @@ export type NetworkState = {
         linearSolution: boolean,
         time: boolean,
         totalScore: boolean,
-    }
+    };
+    teacherComment: string;
 }
 
 export type NetworkContextType = {
@@ -69,7 +70,8 @@ export const networkInitialState: NetworkState = {
         linearSolution: false,
         time: false,
         totalScore: false,
-    }
+    },
+    teacherComment: '',
 }
 
 const networkInitializer = (initialState: NetworkState) => {

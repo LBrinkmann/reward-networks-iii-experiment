@@ -84,7 +84,8 @@ const ExperimentTrial: FC = () => {
                             type: NETWORK_ACTIONS.SET_NETWORK,
                             payload: {
                                 network: {edges: data.network.edges, nodes: data.network.nodes},
-                                isTutorial: false
+                                isTutorial: false,
+                                teacherComment: data.advisor.written_strategy
                             }
                         });
                         break;

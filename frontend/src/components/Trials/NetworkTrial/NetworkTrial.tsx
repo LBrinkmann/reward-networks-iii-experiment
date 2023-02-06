@@ -19,7 +19,14 @@ interface NetworkTrialInterface {
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
-    const {showLinearNetwork = true, showTimer = true, time = 35, isPractice = false, isTimerPaused = false} = props;
+    const {
+        showComment = false,
+        showLinearNetwork = true,
+        showTimer = true,
+        time = 35,
+        isPractice = false,
+        isTimerPaused = false
+    } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
@@ -54,7 +61,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             id={1}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
-                            showComment={false}
+                            showComment={showComment}
+                            comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
                         />
                     </Grid>

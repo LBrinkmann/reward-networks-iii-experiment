@@ -37,6 +37,7 @@ const networkReducer = (state: NetworkState, action: any) => {
                     ...networkInitialState.tutorialOptions,
                     node: true
                 } : networkInitialState.tutorialOptions,
+                teacherComment: action.payload.teacherComment,
             }
         case NETWORK_ACTIONS.TIMER_UPDATE:
             // if timer is done
