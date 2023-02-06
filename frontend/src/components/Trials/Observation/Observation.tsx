@@ -7,15 +7,17 @@ import {Typography} from "@mui/material";
 
 interface IObservation {
     solution: number[];
+    teacherId: number;
     /** Delay in ms between each played move. Default is 2000ms. */
     delayBetweenMoves?: number;
     /** Start the animation from the parent component. Default is true. */
     playAnimation?: boolean;
+
 }
 
 const Observation: FC<IObservation> = (props) => {
     const {networkState, networkDispatcher} = useNetworkContext();
-    const {solution, playAnimation = true, delayBetweenMoves = 2000} = props;
+    const {solution, teacherId, playAnimation = true, delayBetweenMoves = 2000} = props;
 
     useEffect(() => {
         if (playAnimation) {
@@ -46,7 +48,7 @@ const Observation: FC<IObservation> = (props) => {
     return (
         <>
             <Typography variant="h3" align='center'>
-                Watch player [TODO: player id] solves the task
+                Watch player {teacherId} solves the task
             </Typography>
 
             <NetworkTrial/>;
