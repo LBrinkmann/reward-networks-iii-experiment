@@ -88,7 +88,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Learning Selection'}/>
+            <Header title={'Learning Selection'} totalPoints={sessionState.totalPoints}/>
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
@@ -118,7 +118,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Watching Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber}/>
+                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}/>
             </>);
@@ -143,7 +143,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Repeating Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber}/>
+                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}/>
             </>);
@@ -179,7 +179,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Trying Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber}/>
+                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}/>
@@ -189,6 +189,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
 
 export const IndividualTrial: FC<ITrial> = (props) => {
     const {networkState} = useNetworkContext();
+    const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
@@ -203,7 +204,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Individual Performance'}/>
+                <Header title={'Individual Performance'} totalPoints={sessionState.totalPoints}/>
                 <NetworkTrial/>
             </>
         );
@@ -211,6 +212,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
 
 export const DemonstrationTrial: FC<ITrial> = (props) => {
     const {networkState} = useNetworkContext();
+    const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
@@ -225,7 +227,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Demonstration'}/>
+                <Header title={'Demonstration'} totalPoints={sessionState.totalPoints}/>
                 <NetworkTrial/>
             </>
         );
@@ -233,28 +235,32 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
 
 
 export const WrittenStrategyTrial: FC<ITrial> = (props) => {
+    const {sessionState} = useSessionContext();
+
     return (
         <>
-            <Header title={'Written Strategy'}/>
+            <Header title={'Written Strategy'} totalPoints={sessionState.totalPoints}/>
             <WrittenStrategy endTrial={props.endTrial}/>
         </>
     );
 };
 
 export const PostSurveyTrial: FC<ITrial> = (props) => {
+    const {sessionState} = useSessionContext();
     return (
         <>
-            <Header/>
+            <Header totalPoints={sessionState.totalPoints}/>
             <PostSurvey endTrial={props.endTrial}/>
         </>
     );
 }
 
 export const DebriefingTrial: FC<ITrial> = (props) => {
+    const {sessionState} = useSessionContext();
     // TODO: post trial on redirect
     return (
         <>
-            <Header/>
+            <Header totalPoints={sessionState.totalPoints}/>
             <Debriefing redirect={props.data.redirect_url}/>
         </>
     );

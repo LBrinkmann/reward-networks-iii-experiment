@@ -42,7 +42,7 @@ export const TRIAL_TYPE = {
 
 const ExperimentTrial: FC = () => {
     const prolificId = useProlificId();
-    const {networkDispatcher} = useNetworkContext();
+    const {networkState, networkDispatcher} = useNetworkContext();
     const {sessionState, sessionDispatcher} = useSessionContext();
 
     const onTrialStart = (data: Trial) => {
@@ -91,6 +91,14 @@ const ExperimentTrial: FC = () => {
         }
     }
 
+    const onTrialEnd = () => {
+        sessionDispatcher({
+            type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
+            payload: {points: networkState.points ? networkState.points : 0}
+        });
+        refetch();
+    }
+
     const {status, data, error, refetch} = useQuery(
         "trial",
         () => getTrial(prolificId),
@@ -98,12 +106,11 @@ const ExperimentTrial: FC = () => {
 
     const mutation = useMutation(
         (params: postTrialType) => postTrial(params),
-        {onSuccess: () => refetch()})
+        {onSuccess: onTrialEnd})
 
     const submitResults = (result: postTrialType['trialResults']) => {
         mutation.mutate({prolificID: prolificId, trialType: data.trial_type, trialResults: result})
     }
-
 
     if (status === "loading") {
         return <div>loading...</div>

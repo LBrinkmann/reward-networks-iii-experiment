@@ -5,6 +5,7 @@ export const SESSION_ACTIONS = {
     SET_CURRENT_TRIAL: 'setTrialType',
     SET_ADVISORS: 'setAdvisors',
     SET_SELECTED_ADVISOR: 'setSelectedAdvisor',
+    UPDATE_TOTAL_POINTS: 'updateTotalPoints',
 }
 
 const sessionReducer = (state: SessionState, action: any) => {
@@ -28,6 +29,11 @@ const sessionReducer = (state: SessionState, action: any) => {
                 ...state,
                 selectedAdvisor: action.payload.selectedAdvisor,
             };
+        case SESSION_ACTIONS.UPDATE_TOTAL_POINTS:
+            return {
+                ...state,
+                totalPoints: state.totalPoints + action.payload.points,
+            }
         default:
             return state;
     }
