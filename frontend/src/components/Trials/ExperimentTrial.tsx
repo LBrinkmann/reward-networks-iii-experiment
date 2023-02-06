@@ -193,8 +193,7 @@ const ExperimentTrial: FC = () => {
                     return <div>loading...</div>
                 return <NetworkTrial/>;
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
-                return <WrittenStrategy onClickContinue={() => {
-                }}/>;
+                return <WrittenStrategy endTrial={submitResults}/>;
             case TRIAL_TYPE.POST_SURVEY:
                 return <PostSurvey onContinueHandler={() => {
                 }}/>;
