@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
-import {Box, Divider, Grid, Typography} from "@mui/material";
+import {Box, Divider, Grid} from "@mui/material";
 import StaticNetwork from "../../Network/StaticNetwork/StaticNetwork";
 import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
