@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer} from "react";
+import React, {createContext, useContext, useEffect, useReducer} from "react";
 import sessionReducer from "../reducers/SessionReducer";
 import {Advisor, AdvisorSelection, PostSurvey, Solution, WrittenStrategy} from "../apis/apiTypes";
 
@@ -42,9 +42,9 @@ export const SessionContextProvider = ({children}: any) => {
     // const [sessionState, setSessionState] = useState<SessionState | null>(
     //     JSON.parse(localStorage.getItem(LOCAL_STORAGE_SESSION_STATE_KEY))
     // );
-    // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_SESSION_STATE_KEY, JSON.stringify(sessionState));
-    // }, [sessionState]);
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_SESSION_STATE_KEY, JSON.stringify(state));
+    }, [state]);
     // const updateSessionState = (newSessionState: SessionState) => setSessionState(newSessionState)
 
     return (

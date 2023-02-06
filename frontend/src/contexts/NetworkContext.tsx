@@ -84,9 +84,9 @@ const networkInitializer = (initialState: NetworkState) => {
 export const NetworkContextProvider = ({children}: any) => {
     const [state, dispatch] = useReducer(networkReducer, networkInitialState, networkInitializer);
 
-    // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
-    // }, [state]);
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
+    }, [state]);
 
     return (
         <NetworkContext.Provider value={{networkState: state, networkDispatcher: dispatch}}>
