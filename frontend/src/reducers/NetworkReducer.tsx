@@ -38,7 +38,6 @@ const networkReducer = (state: NetworkState, action: any) => {
                     node: true
                 } : networkInitialState.tutorialOptions,
             }
-
         case NETWORK_ACTIONS.TIMER_UPDATE:
             // if timer is done
             if (action.payload.time === state.timer.timePassed) {

@@ -14,10 +14,13 @@ import Observation from "./Observation";
 import Debriefing from "./Debriefing";
 import NetworkTrial from "./NetworkTrial";
 import useNetworkContext from "../../contexts/NetworkContext";
+import Selection from "./Selection";
 
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
 import instructions from "./Instruction/InstructionContent";
 import {NETWORK_ACTIONS} from "../../reducers/NetworkReducer";
+import {useSessionContext} from "../../contexts/SessionContext";
+import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 
 
 const TRIAL_TYPE = {
@@ -43,15 +46,33 @@ const TRIAL_TYPE = {
 const ExperimentTrial: FC = () => {
     const prolificId = useProlificId();
     const {networkState, networkDispatcher} = useNetworkContext();
+    const {sessionState, sessionDispatcher} = useSessionContext();
+
     const {status, data, error, refetch} = useQuery("trial",
         () => getTrial(prolificId),
         {
             onSuccess: (data) => {
+                // check if the trial was already fetched
+                if (data.id === sessionState.currentTrialId) return;
+
+                // update session state
+                sessionDispatcher({
+                    type: SESSION_ACTIONS.SET_CURRENT_TRIAL,
+                    payload: {currentTrialId: data.id, currentTrialType: data.trial_type}
+                });
+
+
                 switch (data.trial_type) {
                     case TRIAL_TYPE.PRACTICE:
                         networkDispatcher({
                             type: NETWORK_ACTIONS.SET_NETWORK,
                             payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isTutorial: true}
+                        });
+                        break;
+                    case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
+                        sessionDispatcher({
+                            type: SESSION_ACTIONS.SET_ADVISORS,
+                            payload: {advisors: data.advisor_selection}
                         });
                         break;
                     case TRIAL_TYPE.OBSERVATION:
@@ -96,6 +117,15 @@ const ExperimentTrial: FC = () => {
     }, [networkState.isNetworkFinished]);
 
 
+    const selectAdvisor = (advisorId: string, advisorNumber: number) => {
+        sessionDispatcher({
+            type: SESSION_ACTIONS.SET_SELECTED_ADVISOR,
+            payload: {selectedAdvisor: {advisorId: advisorId, advisorNumber: advisorNumber}}
+        });
+        submitResults({advisor_id: advisorId})
+    }
+
+
     if (status === "loading") {
         return <div>loading...</div>
     } else if (status === "error") {
@@ -110,7 +140,11 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.PRACTICE:
                 return <NetworkTrial isPractice={true}/>;
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
-                return <> </>; // <Selection />
+                return <Selection
+                    advisors={sessionState.advisors}
+                    onAdvisorSelected={selectAdvisor}
+                    showTutorial={data.id === 3}
+                />;
             case TRIAL_TYPE.OBSERVATION:
                 if (!networkState.network)
                     return <div>loading...</div>

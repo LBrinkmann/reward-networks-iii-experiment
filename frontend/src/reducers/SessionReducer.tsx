@@ -3,7 +3,8 @@ import {SessionState} from "../contexts/SessionContext";
 
 export const SESSION_ACTIONS = {
     SET_CURRENT_TRIAL: 'setTrialType',
-    SELECT_SOCIAL_LEARNING_TEACHER: 'selectSocialLearningTeacher',
+    SET_ADVISORS: 'setAdvisors',
+    SET_SELECTED_ADVISOR: 'setSelectedAdvisor',
 }
 
 const sessionReducer = (state: SessionState, action: any) => {
@@ -14,8 +15,16 @@ const sessionReducer = (state: SessionState, action: any) => {
                 currentTrialType: action.payload.trialType,
                 currentTrialId: action.payload.trialId,
             }
-        case SESSION_ACTIONS.SELECT_SOCIAL_LEARNING_TEACHER:
-            return state;
+        case SESSION_ACTIONS.SET_ADVISORS:
+            return {
+                ...state,
+                advisors: action.payload.advisors,
+            };
+        case SESSION_ACTIONS.SET_SELECTED_ADVISOR:
+            return {
+                ...state,
+                selectedAdvisor: action.payload.selectedAdvisor,
+            };
         default:
             return state;
     }
