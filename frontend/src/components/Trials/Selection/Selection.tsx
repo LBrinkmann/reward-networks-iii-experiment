@@ -13,13 +13,7 @@ interface SocialLearningSelectionProps {
 
 const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
     const {advisors, onAdvisorSelected, showTutorial = false} = props;
-
-
     const [tutorialInx, setTutorialInx] = React.useState(1);
-
-    const onTutorialClose = () => {
-        setTutorialInx(tutorialInx + 1);
-    }
 
     return (
         <>
@@ -36,7 +30,7 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
                                     averageScore={score}
                                     onClickHandler={() => onAdvisorSelected(advisors.advisor_ids[inx], inx + 1)}
                                     showTutorial={showTutorial && inx === 1}
-                                    onTutorialClose={onTutorialClose}
+                                    onTutorialClose={() => setTutorialInx(tutorialInx + 1)}
                                     disabled={showTutorial && tutorialInx === 1}
                                 />
                             </Grid>
