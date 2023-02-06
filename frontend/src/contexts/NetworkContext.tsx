@@ -38,6 +38,7 @@ export type NetworkState = {
         comment: boolean,
     };
     teacherComment: string;
+    currentReward?: number;
 }
 
 export type NetworkContextType = {
@@ -74,6 +75,7 @@ export const networkInitialState: NetworkState = {
         comment: false,
     },
     teacherComment: '',
+    currentReward: undefined,
 }
 
 const networkInitializer = (initialState: NetworkState) => {
