@@ -34,9 +34,14 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
 
-        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
-
-        if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
+        if (isPractice) {
+            if (networkState.tutorialStep === 2 || networkState.tutorialStep === 3 || networkState.tutorialStep === 4) {
+                networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
+                networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
+            }
+        } else {
+            networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
+        }
     }
 
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
@@ -111,7 +116,7 @@ interface IFlashingReward {
     show?: boolean;
 }
 
-const FlashingReward:FC = () => {
+const FlashingReward: FC = () => {
     const allRewards = [-50, 0, 100, 200, 400];
     const colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];
     const {networkState} = useNetworkContext();
@@ -138,7 +143,7 @@ const FlashingReward:FC = () => {
                 borderRadius: '50%',
                 width: '60px',
                 height: '40px',
-                bgcolor: networkState.currentReward? colors[allRewards.indexOf(networkState.currentReward)] : 'white',
+                bgcolor: networkState.currentReward !== undefined ? colors[allRewards.indexOf(networkState.currentReward)] : 'white',
                 typography: 'h4',
                 textAlign: 'center',
                 px: "40px",
