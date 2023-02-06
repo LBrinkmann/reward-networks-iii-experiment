@@ -1,36 +1,36 @@
 import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
 import TutorialTip from "../Tutorial/TutorialTip";
+import useSessionContext from "../../contexts/SessionContext";
+import {TRIAL_TYPE} from "../Trials/ExperimentTrial";
 
-interface HeaderInterface {
-    /** Collected in the experiment points */
-    totalPoints?: number;
-    title?: string;
-    /** show tutorial tip */
-    showTutorial?: boolean;
+interface IHeader {
     showTip?: boolean;
-    /** Callback to handle tutorial tip close */
-    onTutorialClose?: () => void;
 }
 
-const Header: FC<HeaderInterface> = (props) => {
-    const {totalPoints = null, title = "", showTutorial = false, showTip = true} = props;
+const Header: FC<IHeader> = ({showTip= true}) => {
+    const {sessionState, sessionDispatcher} = useSessionContext();
+
+    const onTutorialClose = () => {
+        // sessionDispatcher
+    }
+
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" sx={{flexGrow: 1}}>
-                        {title}
+                        {sessionState.trialTitle}
                     </Typography>
                     <TutorialTip
                         tutorialId={"practice_total_score"}
-                        isTutorial={showTutorial}
+                        isTutorial={sessionState.currentTrialType === TRIAL_TYPE.PRACTICE}
                         isShowTip={showTip}
-                        onTutorialClose={props.onTutorialClose}
+                        onTutorialClose={onTutorialClose}
                         placement="bottom"
                     >
                         <Typography variant="h6" sx={{mr: 2}}>
-                            {totalPoints && (<>{totalPoints} points</>)}
+                            {sessionState.totalPoints} points
                         </Typography>
                     </TutorialTip>
                 </Toolbar>
