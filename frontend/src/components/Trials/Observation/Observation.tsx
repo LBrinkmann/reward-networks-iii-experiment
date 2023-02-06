@@ -43,14 +43,14 @@ const Observation: FC<IObservation> = (props) => {
             }, delayBetweenMoves);
         }
 
-    }, [networkState.step])
+    }, [networkState.step, playAnimation])
 
     return (
         <>
             <Typography variant="h3" align='center'>
                 Watch player {teacherId} solves the task
             </Typography>
-            <NetworkTrial showComment={true} teacherId={teacherId}/>
+            <NetworkTrial showComment={true} teacherId={teacherId} isTimerPaused={!playAnimation}/>
         </>
     );
 }

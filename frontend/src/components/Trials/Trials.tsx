@@ -106,7 +106,6 @@ export const ObservationTrial: FC<ITrial> = (props) => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
             setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
             }, TIME_BETWEEN_TRIALS);
@@ -121,7 +120,9 @@ export const ObservationTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisorExampleId + ' Player ' +
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Observation solution={props.data.advisor.solution.moves}
-                             teacherId={sessionState.selectedAdvisor.advisorNumber}/>
+                             teacherId={sessionState.selectedAdvisor.advisorNumber}
+                             playAnimation={!networkState.tutorialOptions.comment}
+                />
             </>);
 }
 
@@ -131,7 +132,6 @@ export const RepeatTrial: FC<ITrial> = (props) => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
             setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
             }, TIME_BETWEEN_TRIALS);
@@ -194,7 +194,6 @@ export const IndividualTrial: FC<ITrial> = (props) => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
             setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
             }, TIME_BETWEEN_TRIALS);
@@ -217,7 +216,6 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished)
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
             setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
             }, TIME_BETWEEN_TRIALS);
