@@ -23,6 +23,7 @@ import Selection from "./Selection";
 import TryYourself from "./TryYourself";
 import instructions from "./Instruction/InstructionContent";
 import {StaticNetworkEdgeInterface} from "../Network/StaticNetwork/StaticNetwork";
+import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 
 const TIME_BETWEEN_TRIALS = 1000;
 
@@ -112,7 +113,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished]);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution || networkState.isNetworkFinished)
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     else
         return (
             <>
@@ -137,7 +138,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished]);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution || networkState.isNetworkFinished)
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     else
         return (
             <>
@@ -173,7 +174,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     }, []);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     else
         return (
             <>
@@ -200,7 +201,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished]);
 
     if (!networkState.network || networkState.isNetworkFinished)
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     else
         return (
             <>
@@ -223,7 +224,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished]);
 
     if (!networkState.network || networkState.isNetworkFinished)
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     else
         return (
             <>

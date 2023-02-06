@@ -18,6 +18,7 @@ import {
     ConsentTrial, DebriefingTrial, DemonstrationTrial, IndividualTrial, InstructionTrial, ObservationTrial,
     PostSurveyTrial, PracticeTrial, RepeatTrial, SelectionTrial, TryYourselfTrial, WrittenStrategyTrial
 } from "./Trials";
+import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 
 
 export const TRIAL_TYPE = {
@@ -113,7 +114,7 @@ const ExperimentTrial: FC = () => {
     }
 
     if (status === "loading") {
-        return <div>loading...</div>
+        return <WaitForNextTrialScreen />
     } else if (status === "error") {
         return <div>error: {error}</div>
     } else {
