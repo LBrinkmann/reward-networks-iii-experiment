@@ -1,33 +1,26 @@
-import React, {FC, useCallback, useEffect} from "react";
+import React, {FC} from "react";
 import {useMutation, useQuery} from "react-query";
 
-// Trials
-import ConsentForm from "./Consent";
-import Instruction from "./Instruction";
-import WrittenStrategy from "./WrittenStrategy";
-import PostSurvey from "./PostSurvey";
-import Repeat from "./Repeat";
-import Observation from "./Observation";
-import Debriefing from "./Debriefing";
-import NetworkTrial from "./NetworkTrial";
+// Contexts & APIs
 import useNetworkContext from "../../contexts/NetworkContext";
-import Selection from "./Selection";
-import TryYourself from "./TryYourself";
-
-// Utils
 import {NETWORK_ACTIONS} from "../../reducers/NetworkReducer";
-import {useSessionContext} from "../../contexts/SessionContext";
+import useSessionContext from "../../contexts/SessionContext";
 import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 import {useProlificId} from "../App";
+import {Trial} from "../../apis/apiTypes";
 
 // Data
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
-import instructions from "./Instruction/InstructionContent";
-import {StaticNetworkEdgeInterface} from "../Network/StaticNetwork/StaticNetwork";
+
+// Trials
+import {
+    ConsentTrial, DebriefingTrial, DemonstrationTrial, IndividualTrial, InstructionTrial, ObservationTrial,
+    PostSurveyTrial, PracticeTrial, RepeatTrial, SelectionTrial, TryYourselfTrial, WrittenStrategyTrial
+} from "./Trials";
 
 
-const TRIAL_TYPE = {
+export const TRIAL_TYPE = {
     // before the experiment
     CONSENT: "consent",
     INSTRUCTION: "instruction",
@@ -49,104 +42,67 @@ const TRIAL_TYPE = {
 
 const ExperimentTrial: FC = () => {
     const prolificId = useProlificId();
-    const {networkState, networkDispatcher} = useNetworkContext();
+    const {networkDispatcher} = useNetworkContext();
     const {sessionState, sessionDispatcher} = useSessionContext();
 
-    const {status, data, error, refetch} = useQuery("trial",
-        () => getTrial(prolificId),
-        {
-            onSuccess: (data) => {
-                // check if the trial was already fetched
-                if (data.id === sessionState.currentTrialId) return;
+    const onTrialStart = (data: Trial) => {
+        // check if the trial was already fetched
+        if (data.id === sessionState.currentTrialId) return;
 
-                // update session state
-                sessionDispatcher({
-                    type: SESSION_ACTIONS.SET_CURRENT_TRIAL,
-                    payload: {currentTrialId: data.id, currentTrialType: data.trial_type}
+        // update session state
+        sessionDispatcher({
+            type: SESSION_ACTIONS.SET_CURRENT_TRIAL,
+            payload: {currentTrialId: data.id, currentTrialType: data.trial_type}
+        });
+
+        switch (data.trial_type) {
+            case TRIAL_TYPE.PRACTICE:
+                networkDispatcher({
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isPractice: true}
                 });
+                break;
+            case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
+                sessionDispatcher({
+                    type: SESSION_ACTIONS.SET_ADVISORS,
+                    payload: {advisors: data.advisor_selection}
+                });
+                break;
+            case TRIAL_TYPE.OBSERVATION:
+            case TRIAL_TYPE.REPEAT:
+            case TRIAL_TYPE.TRY_YOURSELF:
+            case TRIAL_TYPE.INDIVIDUAL:
+            case TRIAL_TYPE.DEMONSTRATION:
+                networkDispatcher({
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {
+                        network: {edges: data.network.edges, nodes: data.network.nodes},
+                        isPractice: false,
+                        teacherComment: data.advisor && data.advisor.written_strategy,
+                        // show comment tutorial only for the first observation trial
+                        commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
+                            sessionState.showTutorialInCurrentTrial,
+                    }
+                });
+                break;
+            default:
+                break;
 
-
-                switch (data.trial_type) {
-                    case TRIAL_TYPE.PRACTICE:
-                        networkDispatcher({
-                            type: NETWORK_ACTIONS.SET_NETWORK,
-                            payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isPractice: true}
-                        });
-                        break;
-                    case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
-                        sessionDispatcher({
-                            type: SESSION_ACTIONS.SET_ADVISORS,
-                            payload: {advisors: data.advisor_selection}
-                        });
-                        break;
-                    case TRIAL_TYPE.OBSERVATION:
-                    case TRIAL_TYPE.REPEAT:
-                    case TRIAL_TYPE.TRY_YOURSELF:
-                    case TRIAL_TYPE.INDIVIDUAL:
-                    case TRIAL_TYPE.DEMONSTRATION:
-                        networkDispatcher({
-                            type: NETWORK_ACTIONS.SET_NETWORK,
-                            payload: {
-                                network: {edges: data.network.edges, nodes: data.network.nodes},
-                                isPractice: false,
-                                teacherComment: data.advisor && data.advisor.written_strategy,
-                                // show comment tutorial only for the first observation trial
-                                commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
-                                    sessionState.showTutorialInCurrentTrial,
-                            }
-                        });
-                        break;
-                    default:
-                        break;
-
-                }
-            }
         }
-    );
-    const mutation = useMutation((params: postTrialType) => postTrial(params),
+    }
+
+    const {status, data, error, refetch} = useQuery(
+        "trial",
+        () => getTrial(prolificId),
+        {onSuccess: onTrialStart});
+
+    const mutation = useMutation(
+        (params: postTrialType) => postTrial(params),
         {onSuccess: () => refetch()})
 
     const submitResults = (result: postTrialType['trialResults']) => {
         mutation.mutate({prolificID: prolificId, trialType: data.trial_type, trialResults: result})
     }
-
-    useEffect(() => {
-        if (networkState.isNetworkFinished &&
-            (data.trial_type === TRIAL_TYPE.PRACTICE ||
-                data.trial_type === TRIAL_TYPE.INDIVIDUAL ||
-                data.trial_type === TRIAL_TYPE.OBSERVATION ||
-                data.trial_type === TRIAL_TYPE.REPEAT ||
-                data.trial_type === TRIAL_TYPE.DEMONSTRATION
-            )) submitResults({moves: networkState.moves})
-
-        if (networkState.isNetworkFinished && data.trial_type === TRIAL_TYPE.TRY_YOURSELF)
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
-            setTimeout(() => {
-                submitResults({moves: networkState.moves})
-            }, 4000);
-
-    }, [networkState.isNetworkFinished]);
-
-
-    const selectAdvisor = (advisorId: string, advisorNumber: number) => {
-        sessionDispatcher({
-            type: SESSION_ACTIONS.SET_SELECTED_ADVISOR,
-            payload: {selectedAdvisor: {advisorId: advisorId, advisorNumber: advisorNumber}}
-        });
-        submitResults({advisor_id: advisorId})
-    }
-
-
-    const calculateScore = useCallback( (moves: number[], edges: StaticNetworkEdgeInterface[]) => {
-        let score = 0;
-        for (let i = 0; i < moves.length - 1; i++) {
-            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
-            if (edge) {
-                score += edge.reward;
-            }
-        }
-        return score;
-    }, []);
 
 
     if (status === "loading") {
@@ -156,48 +112,29 @@ const ExperimentTrial: FC = () => {
     } else {
         switch (data.trial_type) {
             case TRIAL_TYPE.CONSENT:
-                return <ConsentForm endTrial={submitResults} onDisagreeRedirect={data.redirect_url}/>;
+                return <ConsentTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.INSTRUCTION:
-                return <Instruction endTrial={submitResults}
-                                    instructionType={data.instruction_type as keyof typeof instructions}/>;
+                return <InstructionTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.PRACTICE:
-                return <NetworkTrial isPractice={true}/>;
+                return <PracticeTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
-                return <Selection
-                    advisors={sessionState.advisors}
-                    onAdvisorSelected={selectAdvisor}
-                    showTutorial={sessionState.showTutorialInCurrentTrial}
-                />;
+                return <SelectionTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.OBSERVATION:
-                if (!networkState.network || !data.advisor || !data.advisor.solution)
-                    return <div>loading...</div>
-                return <Observation solution={data.advisor.solution.moves}
-                                    teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
+                return <ObservationTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.REPEAT:
-                if (!networkState.network || !data.advisor || !data.advisor.solution)
-                    return <div>loading...</div>
-                return <Repeat solution={data.advisor.solution.moves}
-                               teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
+                return <RepeatTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.TRY_YOURSELF:
-                if (!networkState.network || !data.advisor || !data.advisor.solution)
-                    return <div>loading...</div>
-                return <TryYourself solution={data.advisor.solution.moves}
-                                    teacherTotalScore={calculateScore(data.advisor.solution.moves, data.network.edges)}
-                                    teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
+                return <TryYourselfTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.INDIVIDUAL:
-                if (!networkState.network)
-                    return <div>loading...</div>
-                return <NetworkTrial/>;
+                return <IndividualTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.DEMONSTRATION:
-                if (!networkState.network)
-                    return <div>loading...</div>
-                return <NetworkTrial/>;
+                return <DemonstrationTrial endTrial={submitResults} data={data}/>;
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
-                return <WrittenStrategy endTrial={submitResults}/>;
+                return <WrittenStrategyTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.POST_SURVEY:
-                return <PostSurvey endTrial={submitResults}/>;
+                return <PostSurveyTrial endTrial={submitResults} data={data}/>;
             case TRIAL_TYPE.DEBRIEFING:
-                return <Debriefing redirect={data.redirect_url}/>;
+                return <DebriefingTrial endTrial={submitResults} data={data}/>;
             default:
                 return <> </>;
         }

@@ -16,6 +16,7 @@ const sessionReducer = (state: SessionState, action: any) => {
                 currentTrialId: action.payload.currentTrialId,
                 // show tutorial for social learning selection and observation trials
                 showTutorialInCurrentTrial: action.payload.currentTrialId < 8,
+                isTrialFinished: false,
             }
         case SESSION_ACTIONS.SET_ADVISORS:
             return {
