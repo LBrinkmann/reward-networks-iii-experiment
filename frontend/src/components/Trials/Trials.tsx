@@ -59,10 +59,10 @@ export const PracticeTrial: FC<ITrial> = (props) => {
     const {networkState} = useNetworkContext();
 
     useEffect(() => {
-        if (networkState.tutorialStep === 5) {
+        if (networkState.tutorialStep === 5 && !networkState.tutorialOptions.time) {
             setShowTotalScoreTutorial(true);
         }
-    }, [networkState.tutorialStep]);
+    }, [networkState.tutorialStep, networkState.tutorialOptions.time]);
 
     const endTrial = () => {
         props.endTrial({moves: []})
@@ -70,7 +70,7 @@ export const PracticeTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Practice'} showTutorial={showTotalScoreTutorial} onTutorialClose={endTrial}/>
+            <Header title={'Practice'} showTutorial={showTotalScoreTutorial} onTutorialClose={endTrial} showTip={false}/>
             <NetworkTrial isPractice={true}/>
         </>
     );
