@@ -89,7 +89,7 @@ const ExperimentTrial: FC = () => {
                             payload: {
                                 network: {edges: data.network.edges, nodes: data.network.nodes},
                                 isPractice: false,
-                                teacherComment: data.advisor.written_strategy,
+                                teacherComment: data.advisor && data.advisor.written_strategy,
                                 // show comment tutorial only for the first observation trial
                                 commentTutorial: data.trial_type === TRIAL_TYPE.OBSERVATION &&
                                     sessionState.showTutorialInCurrentTrial,
