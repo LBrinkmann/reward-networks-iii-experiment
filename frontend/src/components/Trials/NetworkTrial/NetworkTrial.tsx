@@ -15,7 +15,6 @@ interface NetworkTrialInterface {
     time?: number;
     isPractice?: boolean;
     isTimerPaused?: boolean;
-
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
@@ -25,7 +24,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         showTimer = true,
         time = 35,
         isPractice = false,
-        isTimerPaused = false
+        isTimerPaused = false,
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
@@ -39,6 +38,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     }
 
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
+
+    const onTutorialCommentClose = () => networkDispatcher({type: NETWORK_ACTIONS.FINISH_COMMENT_TUTORIAL,});
 
 
     return (
@@ -64,6 +65,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showComment={showComment}
                             comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
+                            showTutorialComment={networkState.tutorialOptions.comment}
+                            onTutorialCommentClose={onTutorialCommentClose}
                         />
                     </Grid>
                 </Grid>
@@ -81,6 +84,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showEdgeTutorial={networkState.tutorialOptions.edge}
                             showNodeTutorial={networkState.tutorialOptions.node}
                             onTutorialClose={NextTutorialStepHandler}
+                            blur={networkState.tutorialOptions.comment || networkState.isNetworkFinished}
                         />
                         <Divider variant="middle" light/>
                     </Grid>

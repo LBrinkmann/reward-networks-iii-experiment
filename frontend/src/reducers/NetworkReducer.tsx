@@ -10,6 +10,7 @@ export const NETWORK_ACTIONS = {
     TIMER_UPDATE: 'timeUpdate',
     DISABLE: 'disable',
     NEXT_TUTORIAL_STEP: 'nextTutorialStep',
+    FINISH_COMMENT_TUTORIAL: 'finishCommentTutorial',
     HIGHLIGHT_EDGE_TO_CHOOSE: 'highlightEdgeToRepeat',
     RESET_EDGE_STYLES: 'resetEdgeStyles',
 }
@@ -31,12 +32,13 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkDisabled: false,
                 isNetworkFinished: false,
                 // Tutorial
-                isTutorial: action.payload.isTutorial,
-                tutorialStep: action.payload.isTutorial ? 1 : networkInitialState.tutorialStep,
-                tutorialOptions: action.payload.isTutorial ? {
+                isPractice: action.payload.isPractice,
+                tutorialStep: action.payload.isPractice ? 1 : networkInitialState.tutorialStep,
+                tutorialOptions: {
                     ...networkInitialState.tutorialOptions,
-                    node: true
-                } : networkInitialState.tutorialOptions,
+                    node: action.payload.isPractice,
+                    comment: action.payload.commentTutorial,
+                },
                 teacherComment: action.payload.teacherComment,
             }
         case NETWORK_ACTIONS.TIMER_UPDATE:
@@ -95,7 +97,7 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkFinished: state.step + 1 >= maxStep,
             }
         case NETWORK_ACTIONS.NEXT_TUTORIAL_STEP:
-            if (!state.isTutorial) return state;
+            if (!state.isPractice) return state;
 
             if (state.tutorialStep === 1) {
                 return {
@@ -135,6 +137,11 @@ const networkReducer = (state: NetworkState, action: any) => {
                 // clear tutorial options
                 tutorialOptions: networkInitialState.tutorialOptions,
             };
+        case NETWORK_ACTIONS.FINISH_COMMENT_TUTORIAL:
+            return {
+                ...state,
+                tutorialOptions: {...state.tutorialOptions, comment: false},
+            }
         case NETWORK_ACTIONS.DISABLE:
             return {
                 ...state,

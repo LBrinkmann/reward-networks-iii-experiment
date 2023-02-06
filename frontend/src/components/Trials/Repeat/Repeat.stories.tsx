@@ -34,7 +34,7 @@ const Template: ComponentStory<typeof Repeat> = function (args) {
                         edges: data[0].edges,
                         nodes: data[0].nodes
                     },
-                    isTutorial: false
+                    isPractice: false
                 }
             });
         }

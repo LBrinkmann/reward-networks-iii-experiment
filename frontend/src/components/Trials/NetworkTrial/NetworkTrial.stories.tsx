@@ -7,6 +7,7 @@ import NetworkTrial from "./NetworkTrial";
 import data from "../../Network/examples";
 import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
 import {edges, nodes} from "./PracticeData";
+import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
@@ -33,19 +34,31 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
 
             if (args.isPractice) {
                 networkDispatcher({
-                    type: 'setNetwork',
-                    payload: {network: {edges: edges, nodes: nodes}, isTutorial: true}
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {network: {edges: edges, nodes: nodes}, isPractice: true}
                 });
 
-            } else {
+            } else if (args.showComment) {
                 networkDispatcher({
-                    type: 'setNetwork',
+                    type: NETWORK_ACTIONS.SET_NETWORK,
                     payload: {
                         network: {
                             edges: data[examples_rand[counter]].edges,
                             nodes: data[examples_rand[counter]].nodes
                         },
-                        isTutorial: false
+                        isPractice: false,
+                        commentTutorial: true
+                    }
+                });
+            } else {
+                networkDispatcher({
+                    type: NETWORK_ACTIONS.SET_NETWORK,
+                    payload: {
+                        network: {
+                            edges: data[examples_rand[counter]].edges,
+                            nodes: data[examples_rand[counter]].nodes
+                        },
+                        isPractice: false
                     }
                 });
             }
@@ -83,4 +96,11 @@ export const PracticeTrial = Template.bind({});
 
 PracticeTrial.args = {
     isPractice: true
+};
+
+export const CommentTutorial = Template.bind({});
+
+CommentTutorial.args = {
+    isPractice: false,
+    showComment: true
 };

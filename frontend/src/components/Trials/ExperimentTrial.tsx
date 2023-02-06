@@ -66,7 +66,7 @@ const ExperimentTrial: FC = () => {
                     case TRIAL_TYPE.PRACTICE:
                         networkDispatcher({
                             type: NETWORK_ACTIONS.SET_NETWORK,
-                            payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isTutorial: true}
+                            payload: {network: {edges: practiceEdges, nodes: practiceNodes}, isPractice: true}
                         });
                         break;
                     case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
@@ -84,8 +84,9 @@ const ExperimentTrial: FC = () => {
                             type: NETWORK_ACTIONS.SET_NETWORK,
                             payload: {
                                 network: {edges: data.network.edges, nodes: data.network.nodes},
-                                isTutorial: false,
-                                teacherComment: data.advisor.written_strategy
+                                isPractice: false,
+                                teacherComment: data.advisor.written_strategy,
+                                commentTutorial: TRIAL_TYPE.OBSERVATION && sessionState.showTutorialInCurrentTrial,
                             }
                         });
                         break;

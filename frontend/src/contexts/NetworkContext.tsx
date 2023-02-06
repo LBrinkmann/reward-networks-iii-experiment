@@ -26,7 +26,7 @@ export type NetworkState = {
     possibleMoves: number[];
     isNetworkDisabled: boolean;
     isNetworkFinished: boolean;
-    isTutorial: boolean;
+    isPractice: boolean;
     tutorialStep: number;
     tutorialOptions: {
         node: boolean;
@@ -35,6 +35,7 @@ export type NetworkState = {
         linearSolution: boolean,
         time: boolean,
         totalScore: boolean,
+        comment: boolean,
     };
     teacherComment: string;
 }
@@ -61,7 +62,7 @@ export const networkInitialState: NetworkState = {
     isNetworkDisabled: false,
     network: undefined,
     isNetworkFinished: false,
-    isTutorial: false,
+    isPractice: false,
     tutorialStep: 0,
     tutorialOptions: {
         node: false,
@@ -70,6 +71,7 @@ export const networkInitialState: NetworkState = {
         linearSolution: false,
         time: false,
         totalScore: false,
+        comment: false,
     },
     teacherComment: '',
 }

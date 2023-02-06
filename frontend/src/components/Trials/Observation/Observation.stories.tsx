@@ -34,7 +34,7 @@ const Template: ComponentStory<typeof Observation> = function (args) {
                         edges: data[0].edges,
                         nodes: data[0].nodes
                     },
-                    isTutorial: false
+                    isPractice: false
                 }
             });
         }
