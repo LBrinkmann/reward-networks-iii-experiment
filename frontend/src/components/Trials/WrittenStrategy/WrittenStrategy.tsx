@@ -2,15 +2,11 @@ import React from "react";
 import {Typography, Grid, Paper, TextField, Button} from "@mui/material";
 
 interface WrittenStrategyInterface {
-    /** On click continue handler */
-    onClickContinue: (moves: number[],
-                      selectedAdvisorId: string,
-                      writtenStrategy: string,
-                      postSurveyAnswers: object) => void;
+    endTrial: (data: any) => void;
 }
 
 
-const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) => {
+const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({endTrial}) => {
     const [writtenStrategy, setWrittenStrategy] = React.useState<string>("");
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +14,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({onClickContinue}) 
     }
 
     const onClickContinueHandler = () => {
-        onClickContinue([], '', writtenStrategy, {});
+        endTrial({strategy: writtenStrategy});
     }
 
     return (
