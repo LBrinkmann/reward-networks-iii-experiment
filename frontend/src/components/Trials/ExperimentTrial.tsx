@@ -97,7 +97,11 @@ const ExperimentTrial: FC = () => {
         if (sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) {
             sessionDispatcher({
                 type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
-                payload: {points: networkState.points ? networkState.points : 0}
+                payload: {
+                    points: networkState.points ? networkState.points : 0,
+                    // NOTE: the max number of steps is assumed to be 8
+                    missingSteps: 8 - networkState.step,
+                }
             });
         }
         refetch();

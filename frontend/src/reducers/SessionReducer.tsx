@@ -37,7 +37,7 @@ const sessionReducer = (state: SessionState, action: any) => {
         case SESSION_ACTIONS.UPDATE_TOTAL_POINTS:
             return {
                 ...state,
-                totalPoints: state.totalPoints + action.payload.points,
+                totalPoints: state.totalPoints + action.payload.points + action.payload.missingSteps * -50,
             }
         default:
             return state;
