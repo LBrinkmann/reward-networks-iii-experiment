@@ -50,8 +50,7 @@ const Observation: FC<IObservation> = (props) => {
             <Typography variant="h3" align='center'>
                 Watch player {teacherId} solves the task
             </Typography>
-
-            <NetworkTrial/>;
+            <NetworkTrial showComment={true} teacherId={teacherId}/>;
         </>
     );
 }

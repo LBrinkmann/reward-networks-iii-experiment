@@ -176,7 +176,8 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.REPEAT:
                 if (!networkState.network)
                     return <div>loading...</div>
-                return <Repeat solution={data.solution.moves}/>;
+                return <Repeat solution={data.solution.moves}
+                               teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
             case TRIAL_TYPE.TRY_YOURSELF:
                 if (!networkState.network)
                     return <div>loading...</div>

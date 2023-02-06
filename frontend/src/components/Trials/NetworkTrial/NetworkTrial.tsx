@@ -10,6 +10,7 @@ import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 interface NetworkTrialInterface {
     showLegend?: boolean;
     showComment?: boolean;
+    teacherId?: number;
     showLinearNetwork?: boolean;
     showTimer?: boolean;
     time?: number;
@@ -20,6 +21,7 @@ interface NetworkTrialInterface {
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const {
         showComment = false,
+        teacherId = 1,
         showLinearNetwork = true,
         showTimer = true,
         time = 35,
@@ -59,7 +61,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         <PlayerInformation
-                            id={1}
+                            id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
                             showComment={showComment}
