@@ -60,7 +60,6 @@ TenNodes.args = {
     size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    allRewards: [-100, -20, 0, 20, 140]
 };
 
 export const TenNodesBlured = Template.bind({});
@@ -73,5 +72,4 @@ TenNodesBlured.args = {
     size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    allRewards: [-100, -20, 0, 20, 140]
 };

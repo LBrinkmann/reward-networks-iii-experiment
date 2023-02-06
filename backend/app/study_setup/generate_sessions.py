@@ -14,14 +14,14 @@ from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score, estimate_average_player_score
 
 # load all networks
-network_data = json.load(open(Path('data') / 'train_viz.json'))
+network_data = json.load(open(Path('data') / 'networks.json'))
 
 # randomize the order of the networks
 random.shuffle(network_data)
 
 # load all ai solutions
 solutions = json.load(
-    open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+    open(Path('data') / 'solutions_loss.json'))
 
 
 async def generate_experiment_sessions():

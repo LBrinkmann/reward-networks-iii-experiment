@@ -1,4 +1,4 @@
-const data = require('../../Network/examples/train_viz.json');
+const data = require('../../Network/examples/networks.json');
 
 // const nodeLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
