@@ -191,7 +191,7 @@ const ExperimentTrial: FC = () => {
             case TRIAL_TYPE.DEMONSTRATION:
                 if (!networkState.network)
                     return <div>loading...</div>
-                return <> </>; // <Demonstration/>;
+                return <NetworkTrial/>;
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
                 return <WrittenStrategy onClickContinue={() => {
                 }}/>;
