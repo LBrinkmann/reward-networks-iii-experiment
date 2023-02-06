@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Button, Grid, Paper, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Instruction from "../../Instruction";
+import Instruction from "../Instruction";
 
 interface ConsentFormProps {
     /* Redirect URL */
@@ -178,7 +178,7 @@ const ConsentForm: React.FC<ConsentFormProps> = ({onDisagreeRedirect, endTrial})
                     </Paper>
                 </Grid>
             </Grid> :
-            <Instruction endTrial={redirectToProlific} instructionText={"consent_decline"}/>
+            <Instruction endTrial={redirectToProlific} instructionType={"consent_decline"}/>
         } </>
     )
 };

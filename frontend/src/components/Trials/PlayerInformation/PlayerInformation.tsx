@@ -1,7 +1,7 @@
 import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
 import TutorialTip from "../../Tutorial/TutorialTip";
-import rewardsImg from "../../../../images/legend.png";
+import rewardsImg from "../../../images/legend.png";
 import styled from "@emotion/styled";
 
 interface PlayerInformationProps {
@@ -16,7 +16,7 @@ interface PlayerInformationProps {
     showTutorialScore?: boolean;
     showTutorialComment?: boolean;
     /** Callback to handle tutorial tip close */
-    onTutorialClose?: () => void;
+    onTutorialCommentClose?: () => void;
     /** Show the legend for the rewards */
     showLegend?: boolean;
 }
@@ -62,7 +62,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     tutorialId={"practice_step_score"}
                     isTutorial={showTutorialScore}
                     isShowTip={false}
-                    onTutorialClose={props.onTutorialClose}
+                    onTutorialClose={() => {}}
                 >
                     <Typography gutterBottom variant="h5" component="div">
                         Points {props.cumulativePoints}
@@ -79,7 +79,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                         tutorialId={"social_learning_observation_comment"}
                         isTutorial={showTutorialComment}
                         isShowTip={false}
-                        onTutorialClose={props.onTutorialClose}
+                        onTutorialClose={props.onTutorialCommentClose}
                         placement={"right"}
                     >
                         <TextField

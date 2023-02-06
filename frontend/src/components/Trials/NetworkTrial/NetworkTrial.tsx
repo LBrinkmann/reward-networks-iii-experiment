@@ -2,7 +2,7 @@ import React, {FC} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
 import {Divider, Grid} from "@mui/material";
 import StaticNetwork from "../../Network/StaticNetwork/StaticNetwork";
-import PlayerInformation from "../SocialLearning/PlayerInformation";
+import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
@@ -10,16 +10,24 @@ import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 interface NetworkTrialInterface {
     showLegend?: boolean;
     showComment?: boolean;
+    teacherId?: number;
     showLinearNetwork?: boolean;
     showTimer?: boolean;
     time?: number;
     isPractice?: boolean;
     isTimerPaused?: boolean;
-
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
-    const {showLinearNetwork = true, showTimer = true, time = 35, isPractice = false, isTimerPaused = false} = props;
+    const {
+        showComment = false,
+        teacherId = 1,
+        showLinearNetwork = true,
+        showTimer = true,
+        time = 35,
+        isPractice = false,
+        isTimerPaused = false,
+    } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
@@ -31,9 +39,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
 
-    const TimerDoneHandler = () => networkDispatcher({type: NETWORK_ACTIONS.TIMER_DONE,});
-
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
+
+    const onTutorialCommentClose = () => networkDispatcher({type: NETWORK_ACTIONS.FINISH_COMMENT_TUTORIAL,});
 
 
     return (
@@ -45,7 +53,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             <Timer
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
-                                OnTimeEndHandler={TimerDoneHandler}
                                 pause={isPractice || isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
                                 showTutorial={networkState.tutorialOptions.time}
                                 onTutorialClose={NextTutorialStepHandler}
@@ -54,11 +61,14 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         <PlayerInformation
-                            id={1}
+                            id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
-                            showComment={false}
+                            showComment={showComment}
+                            comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
+                            showTutorialComment={networkState.tutorialOptions.comment}
+                            onTutorialCommentClose={onTutorialCommentClose}
                         />
                     </Grid>
                 </Grid>
@@ -76,6 +86,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showEdgeTutorial={networkState.tutorialOptions.edge}
                             showNodeTutorial={networkState.tutorialOptions.node}
                             onTutorialClose={NextTutorialStepHandler}
+                            blur={networkState.tutorialOptions.comment}
                         />
                         <Divider variant="middle" light/>
                     </Grid>

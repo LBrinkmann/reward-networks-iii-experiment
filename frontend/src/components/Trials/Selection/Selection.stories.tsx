@@ -6,7 +6,7 @@ import Selection from './Selection';
 import Header from "../../Header";
 
 export default {
-    title: 'Trials/SocialLearning/Selection',
+    title: 'Trials/Selection',
     component: Selection,
 } as ComponentMeta<typeof Selection>;
 
@@ -22,24 +22,18 @@ const Template: ComponentStory<typeof Selection> = function (args) {
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    advisors: [
-        {advisorInx: 1, averageScore: 120},
-        {advisorInx: 2, averageScore: -500},
-        {advisorInx: 3, averageScore: -60},
-        {advisorInx: 4, averageScore: 800},
-        {advisorInx: 5, averageScore: -1000},
-    ],
+    advisors: {
+        scores: [120, -500, -60, 800, -1000],
+        advisor_ids: ["id_1", "id_2", "id_3", "id_4", "id_5"]
+    },
 };
 
 export const Tutorial = Template.bind({});
 
 Tutorial.args = {
-    advisors: [
-        {advisorInx: 1, averageScore: 120},
-        {advisorInx: 2, averageScore: -500},
-        {advisorInx: 3, averageScore: -60},
-        {advisorInx: 4, averageScore: 800},
-        {advisorInx: 5, averageScore: -1000},
-    ],
+    advisors: {
+        scores: [120, -500, -60, 800, -1000],
+        advisor_ids: ["id_1", "id_2", "id_3", "id_4", "id_5"]
+    },
     showTutorial: true,
 };

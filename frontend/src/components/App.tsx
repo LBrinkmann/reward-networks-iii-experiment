@@ -5,7 +5,8 @@ import {NetworkContextProvider} from "../contexts/NetworkContext";
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
-import SessionContextProvider from "../contexts/SessionContext";
+import {SessionContextProvider} from "../contexts/SessionContext";
+import Header from "./Header";
 
 
 // Create a client
@@ -28,7 +29,9 @@ const App = () => {
             <ProlificIdContext.Provider value={searchParams.get("PROLIFIC_PID")}>
                 <SessionContextProvider>
                     <NetworkContextProvider>
-                        {searchParams.get("PROLIFIC_PID") && <ExperimentTrial/>}
+                        {searchParams.get("PROLIFIC_PID") &&
+                            <ExperimentTrial/>
+                        }
                         <ReactQueryDevtools initialIsOpen={false}/>
                     </NetworkContextProvider>
                 </SessionContextProvider>

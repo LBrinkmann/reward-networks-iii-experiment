@@ -86,14 +86,9 @@ async def test_create_trials(default_client: httpx.AsyncClient,
 
     assert len(session.trials) == n_all_trials
     for t in session.trials:
-        assert t.trial_type not in ['social_learning_selection',
-                                    'social_learning']
-        assert t.trial_type in ['consent', 'demonstration', 'written_strategy',
-                                'debriefing', 'individual', 'post_survey',
-                                'instruction_welcome',
-                                'instruction_individual',
-                                'instruction_demonstration',
-                                'instruction_written_strategy', 'practice']
+        assert t.trial_type not in ['social_learning_selection', 'observation', 'repeat', 'try_yourself']
+        assert t.trial_type in ['consent', 'instruction', 'demonstration', 'written_strategy',
+                                'debriefing', 'individual', 'post_survey', 'practice']
 
     session = create_trials(
         config_id=e_config.id,
@@ -111,9 +106,6 @@ async def test_create_trials(default_client: httpx.AsyncClient,
     assert len(session.trials) == n_all_trials + n_soc_learning + 2
     for t in session.trials:
         assert t.trial_type in [
-            'consent', 'demonstration', 'written_strategy', 'debriefing',
-            'individual', 'social_learning', 'social_learning_selection',
-            'instruction_learning_selection', 'instruction_learning',
-            'instruction_individual', 'instruction_demonstration',
-            'instruction_written_strategy', 'instruction_welcome', 'practice',
-            'post_survey']
+            'consent', 'instruction', 'demonstration', 'written_strategy',
+            'debriefing', 'individual', 'post_survey', 'practice',
+            'social_learning_selection', 'observation', 'repeat', 'try_yourself']

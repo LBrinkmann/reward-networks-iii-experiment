@@ -2,19 +2,17 @@ import React, {FC} from "react";
 import {AppBar, Toolbar, Typography, Box} from "@mui/material";
 import TutorialTip from "../Tutorial/TutorialTip";
 
-interface HeaderInterface {
-    /** Collected in the experiment points */
-    totalPoints?: number;
-    title?: string;
-    /** show tutorial tip */
-    showTutorial?: boolean;
+interface IHeader {
     showTip?: boolean;
-    /** Callback to handle tutorial tip close */
+    showTutorial?: boolean;
+    title?: string;
+    totalPoints?: number;
     onTutorialClose?: () => void;
 }
 
-const Header: FC<HeaderInterface> = (props) => {
-    const {totalPoints = null, title = "", showTutorial = false, showTip = true} = props;
+const Header: FC<IHeader> = (props) => {
+    const {showTip= true, showTutorial=false, title='', totalPoints=0, onTutorialClose} = props;
+
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
             <AppBar position="static">
@@ -26,11 +24,11 @@ const Header: FC<HeaderInterface> = (props) => {
                         tutorialId={"practice_total_score"}
                         isTutorial={showTutorial}
                         isShowTip={showTip}
-                        onTutorialClose={props.onTutorialClose}
+                        onTutorialClose={onTutorialClose}
                         placement="bottom"
                     >
                         <Typography variant="h6" sx={{mr: 2}}>
-                            {totalPoints && (<>{totalPoints} points</>)}
+                            {totalPoints} points
                         </Typography>
                     </TutorialTip>
                 </Toolbar>

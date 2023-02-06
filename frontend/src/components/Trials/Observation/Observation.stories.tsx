@@ -34,7 +34,7 @@ const Template: ComponentStory<typeof Observation> = function (args) {
                         edges: data[0].edges,
                         nodes: data[0].nodes
                     },
-                    isTutorial: false
+                    isPractice: false
                 }
             });
         }
@@ -56,4 +56,5 @@ export const Default = Template.bind({});
 
 Default.args = {
     solution: [0, 1, 4, 3, 2, 1, 5, 2, 1],
+    teacherId: 1,
 };

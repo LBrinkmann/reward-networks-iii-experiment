@@ -3,7 +3,7 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import PostSurvey from './PostSurvey';
-import Header from "../../../Header";
+import Header from "../../Header";
 
 export default {
     title: 'Trials/PostSurvey',
