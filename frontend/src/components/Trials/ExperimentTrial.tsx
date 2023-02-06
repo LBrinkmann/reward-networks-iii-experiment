@@ -169,20 +169,20 @@ const ExperimentTrial: FC = () => {
                     showTutorial={sessionState.showTutorialInCurrentTrial}
                 />;
             case TRIAL_TYPE.OBSERVATION:
-                if (!networkState.network)
+                if (!networkState.network || !data.advisor || !data.advisor.solution)
                     return <div>loading...</div>
-                return <Observation solution={data.solution.moves}
+                return <Observation solution={data.advisor.solution.moves}
                                     teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
             case TRIAL_TYPE.REPEAT:
-                if (!networkState.network)
+                if (!networkState.network || !data.advisor || !data.advisor.solution)
                     return <div>loading...</div>
-                return <Repeat solution={data.solution.moves}
+                return <Repeat solution={data.advisor.solution.moves}
                                teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
             case TRIAL_TYPE.TRY_YOURSELF:
-                if (!networkState.network)
+                if (!networkState.network || !data.advisor || !data.advisor.solution)
                     return <div>loading...</div>
-                return <TryYourself solution={data.solution.moves}
-                                    teacherTotalScore={calculateScore(data.solution.moves, data.network.edges)}
+                return <TryYourself solution={data.advisor.solution.moves}
+                                    teacherTotalScore={calculateScore(data.advisor.solution.moves, data.network.edges)}
                                     teacherId={sessionState.selectedAdvisor.advisorNumber}/>;
             case TRIAL_TYPE.INDIVIDUAL:
                 if (!networkState.network)

@@ -86,7 +86,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showEdgeTutorial={networkState.tutorialOptions.edge}
                             showNodeTutorial={networkState.tutorialOptions.node}
                             onTutorialClose={NextTutorialStepHandler}
-                            blur={networkState.tutorialOptions.comment || networkState.isNetworkFinished}
+                            blur={networkState.tutorialOptions.comment}
                         />
                         <Divider variant="middle" light/>
                     </Grid>
