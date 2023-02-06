@@ -10,31 +10,14 @@ interface SocialLearningSelectionProps {
     showTutorial?: boolean;
 }
 
-const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearningSelectionProps) => {
-    const {showTutorial = false} = props;
+const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
+    const {advisors, onClickHandler, showTutorial = false} = props;
+
 
     const [tutorialInx, setTutorialInx] = React.useState(1);
 
     const onTutorialClose = () => {
         setTutorialInx(tutorialInx + 1);
-    }
-
-    const renderOneCard = (advisor: { advisorId: string, averageScore: number }, inx: number) => {
-        const onClickHandler = () => {
-            props.onClickHandler(advisor.advisorId, inx + 1);
-        }
-        return (
-                <Grid item key={inx}>
-                    <SelectionOneCard
-                        personInx={inx + 1}
-                        averageScore={advisor.averageScore}
-                        onClickHandler={onClickHandler}
-                        showTutorial={showTutorial && inx === 1}
-                        onTutorialClose={onTutorialClose}
-                        disabled={showTutorial && tutorialInx === 1}
-                    />
-                </Grid>
-        )
     }
 
     return (
@@ -43,9 +26,22 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props: SocialLearning
                 Select a player to learn from
             </Typography>
             <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
-                {props.advisors.map((advisor, inx) => {
-                    return renderOneCard(advisor, inx);
-                })}
+                {
+                    advisors.map((advisor, inx) => {
+                        return (
+                            <Grid item key={inx}>
+                                <SelectionOneCard
+                                    personInx={inx + 1}
+                                    averageScore={advisor.averageScore}
+                                    onClickHandler={() => onClickHandler(advisor.advisorId, inx + 1)}
+                                    showTutorial={showTutorial && inx === 1}
+                                    onTutorialClose={onTutorialClose}
+                                    disabled={showTutorial && tutorialInx === 1}
+                                />
+                            </Grid>
+                        )
+                    })
+                }
             </ Grid>
         </>
     );
