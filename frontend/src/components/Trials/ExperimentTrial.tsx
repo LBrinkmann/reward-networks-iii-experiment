@@ -195,8 +195,7 @@ const ExperimentTrial: FC = () => {
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
                 return <WrittenStrategy endTrial={submitResults}/>;
             case TRIAL_TYPE.POST_SURVEY:
-                return <PostSurvey onContinueHandler={() => {
-                }}/>;
+                return <PostSurvey endTrial={submitResults}/>;
             case TRIAL_TYPE.DEBRIEFING:
                 return <Debriefing redirect={data.redirect_url}/>;
             default:

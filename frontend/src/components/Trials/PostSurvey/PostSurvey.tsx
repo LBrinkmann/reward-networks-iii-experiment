@@ -113,10 +113,7 @@ const LikertQuestion: React.FC<LikertQuestionProps> = (props) => {
 }
 
 interface PostSurveyProps {
-    onContinueHandler: (moves: number[],
-                        selectedAdvisorId: string,
-                        writtenStrategy: string,
-                        postSurveyAnswers: object) => void;
+    endTrial: (data: any) => void;
     requiredFields?: boolean[];
 }
 
@@ -149,7 +146,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
     const onContinueHandler = () => {
         if (allQuestionsAnswered) {
             // const answersObject = answers.map((answer, ind) => { return {ind: answer} });
-            props.onContinueHandler([], '', '', { ...answers});
+            props.endTrial({questions: { ...answers}});
         } else {
             setShowError(true);
         }
