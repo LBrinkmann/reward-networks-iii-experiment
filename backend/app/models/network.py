@@ -19,7 +19,7 @@ class Node(BaseModel):
 
     @validator('level')
     def max_four_levels(cls, n):
-        if n < 0 or n > 3:
+        if n < 0 or n > 5:
             raise ValueError('level must be a number between 0 and 3')
         return n
 
@@ -66,7 +66,7 @@ class Edge(BaseModel):
 
     @validator('reward')
     def check_reward(cls, n):
-        possible_rewards = [-100, -20, 0, 20, 140]
+        possible_rewards = [-50, 0, 100, 200, 400]
         if n not in possible_rewards:
             raise ValueError(f'reward must be a value in {possible_rewards}')
         return n
@@ -109,4 +109,4 @@ class Network(BaseModel):
     nodes: List[Node]
     edges: List[Edge]
     starting_node: int
-    max_reward: int
+    max_reward: Optional[int]
