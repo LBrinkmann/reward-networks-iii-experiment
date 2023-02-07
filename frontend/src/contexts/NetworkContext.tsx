@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useReducer} from "react";
+import React, {createContext, FC, useContext, useEffect, useReducer} from "react";
 import {
     StaticNetworkEdgeInterface,
     StaticNetworkNodeInterface
@@ -82,11 +82,18 @@ const networkInitializer = (initialState: NetworkState) => {
     return JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) || initialState;
 }
 
-export const NetworkContextProvider = ({children}: any) => {
+interface INetworkContextProvider {
+    children: any;
+    saveToLocalStorage?: boolean;
+}
+
+export const NetworkContextProvider: FC<INetworkContextProvider> = (props) => {
+    const {children, saveToLocalStorage=true} = props;
     const [state, dispatch] = useReducer(networkReducer, networkInitialState, networkInitializer);
 
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
+        if(saveToLocalStorage)
+            localStorage.setItem(LOCAL_STORAGE_NETWORK_STATE_KEY, JSON.stringify(state));
     }, [state]);
 
     return (

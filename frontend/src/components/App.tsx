@@ -6,7 +6,6 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import {useSearchParams} from "react-router-dom";
 import {v4 as uuid4} from "uuid";
 import {SessionContextProvider} from "../contexts/SessionContext";
-import Header from "./Header";
 
 
 // Create a client
@@ -19,7 +18,8 @@ const App = () => {
 
     useEffect(() => {
         if (!searchParams.get("PROLIFIC_PID")) {
-            setSearchParams({...searchParams, PROLIFIC_PID: uuid4().toString()});
+            searchParams.set("PROLIFIC_PID", uuid4().toString());
+            setSearchParams(searchParams);
         }
     }, []);
 

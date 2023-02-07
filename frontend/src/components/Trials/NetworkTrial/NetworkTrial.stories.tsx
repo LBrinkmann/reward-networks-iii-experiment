@@ -17,7 +17,7 @@ export default {
     decorators: [
         (ComponentStory) => {
             return (
-                <NetworkContextProvider>
+                <NetworkContextProvider saveToLocalStorage={false}>
                     <ComponentStory/>
                 </NetworkContextProvider>
             );
