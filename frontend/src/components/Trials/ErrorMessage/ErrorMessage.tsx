@@ -9,7 +9,7 @@ export const ErrorMessage: FC<IErrorMessage> = ({message = undefined}) => {
 
     return (
         <Box
-            sx={{width: '25%'}}
+            sx={{width: '40%'}}
             style={{margin: 'auto', marginTop: '20%'}}
             justifyContent="center"
             alignItems="center"

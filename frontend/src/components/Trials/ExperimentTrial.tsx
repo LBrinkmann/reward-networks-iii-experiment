@@ -51,7 +51,7 @@ const ExperimentTrial: FC = () => {
         data = data as Trial;
 
         // check if data is valid
-        if (!data.id || !data.trial_type) {
+        if (!data.trial_type) {
             console.error("Invalid trial data", data);
             return;
         }
@@ -136,7 +136,7 @@ const ExperimentTrial: FC = () => {
     } else {
         const trialData = data as Trial;
         // check if data contains an error
-        if (!trialData.id || !trialData.trial_type) {
+        if (!trialData.trial_type) {
             const error = data as SessionError;
             return <ErrorMessage message={error?.message ? error.message : undefined}/>;
         }
