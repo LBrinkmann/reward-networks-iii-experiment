@@ -8,7 +8,7 @@ import useSessionContext from "../../contexts/SessionContext";
 import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 import {useProlificId} from "../App";
-import {Trial} from "../../apis/apiTypes";
+import {SessionError, Trial} from "../../apis/apiTypes";
 
 // Data
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
@@ -47,7 +47,15 @@ const ExperimentTrial: FC = () => {
     const {networkState, networkDispatcher} = useNetworkContext();
     const {sessionState, sessionDispatcher} = useSessionContext();
 
-    const onTrialStart = (data: Trial) => {
+    const onTrialStart = (data: Trial | SessionError) => {
+        data = data as Trial;
+
+        // check if data is valid
+        if (!data.id || !data.trial_type) {
+            console.error("Invalid trial data", data);
+            return;
+        }
+
         // check if the trial was already fetched
         if (data.id === sessionState.currentTrialId) return;
 
@@ -117,40 +125,48 @@ const ExperimentTrial: FC = () => {
         {onSuccess: onTrialEnd})
 
     const submitResults = (result: postTrialType['trialResults']) => {
-        mutation.mutate({prolificID: prolificId, trialType: data.trial_type, trialResults: result})
+        mutation.mutate({prolificID: prolificId, trialType: sessionState.currentTrialType, trialResults: result})
     }
 
     if (status === "loading") {
         return <WaitForNextTrialScreen/>
     } else if (status === "error") {
         console.error(error);
-        return <ErrorMessage />
+        return <ErrorMessage/>
     } else {
-        switch (data.trial_type) {
+        const trialData = data as Trial;
+        // check if data contains an error
+        if (!trialData.id || !trialData.trial_type) {
+            const error = data as SessionError;
+            return <ErrorMessage message={error?.message ? error.message : undefined}/>;
+        }
+
+
+        switch (trialData.trial_type) {
             case TRIAL_TYPE.CONSENT:
-                return <ConsentTrial endTrial={submitResults} data={data}/>;
+                return <ConsentTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.INSTRUCTION:
-                return <InstructionTrial endTrial={submitResults} data={data}/>;
+                return <InstructionTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.PRACTICE:
-                return <PracticeTrial endTrial={submitResults} data={data}/>;
+                return <PracticeTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.SOCIAL_LEARNING_SELECTION:
-                return <SelectionTrial endTrial={submitResults} data={data}/>;
+                return <SelectionTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.OBSERVATION:
-                return <ObservationTrial endTrial={submitResults} data={data}/>;
+                return <ObservationTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.REPEAT:
-                return <RepeatTrial endTrial={submitResults} data={data}/>;
+                return <RepeatTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.TRY_YOURSELF:
-                return <TryYourselfTrial endTrial={submitResults} data={data}/>;
+                return <TryYourselfTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.INDIVIDUAL:
-                return <IndividualTrial endTrial={submitResults} data={data}/>;
+                return <IndividualTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.DEMONSTRATION:
-                return <DemonstrationTrial endTrial={submitResults} data={data}/>;
+                return <DemonstrationTrial endTrial={submitResults} data={trialData}/>;
             case  TRIAL_TYPE.WRITTEN_STRATEGY:
-                return <WrittenStrategyTrial endTrial={submitResults} data={data}/>;
+                return <WrittenStrategyTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.POST_SURVEY:
-                return <PostSurveyTrial endTrial={submitResults} data={data}/>;
+                return <PostSurveyTrial endTrial={submitResults} data={trialData}/>;
             case TRIAL_TYPE.DEBRIEFING:
-                return <DebriefingTrial endTrial={submitResults} data={data}/>;
+                return <DebriefingTrial endTrial={submitResults} data={trialData}/>;
             default:
                 return <> </>;
         }

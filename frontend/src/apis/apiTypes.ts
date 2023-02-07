@@ -55,6 +55,9 @@ export interface PostSurvey {
   trial_id?: number;
   finished_at?: string;
 }
+export interface SessionError {
+  message: string;
+}
 export interface Trial {
   id: number;
   trial_type:
