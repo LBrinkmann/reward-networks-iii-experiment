@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Advisor, PostSurvey, SessionError, Solution, Trial, WrittenStrategy} from "./apiTypes";
+import {Advisor, PostSurvey, SessionError, Solution, Trial, TrialError, TrialSaved, WrittenStrategy} from "./apiTypes";
 
 
 import config from "./configLoader";
@@ -10,7 +10,7 @@ axios.defaults.baseURL = config.backendUrl + '/session/';
 
 export type postTrialType = {
     prolificID: string,
-    trialType: string,
+    trialId: number,
     trialResults: Solution | Advisor | WrittenStrategy | PostSurvey
 }
 
@@ -25,5 +25,6 @@ export const getTrial = async (prolificID: string) => {
 }
 
 export const postTrial = async (params: postTrialType) => {
-    await axios.post(`${params.prolificID}/${params.trialType}`, params.trialResults);
+    const {data} = await axios.post(`${params.prolificID}/${params.trialId}`, params.trialResults);
+    return data as TrialSaved | TrialError;
 }

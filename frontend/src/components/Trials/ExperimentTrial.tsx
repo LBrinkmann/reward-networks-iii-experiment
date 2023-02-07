@@ -8,7 +8,7 @@ import useSessionContext from "../../contexts/SessionContext";
 import {SESSION_ACTIONS} from "../../reducers/SessionReducer";
 import {getTrial, postTrial, postTrialType} from "../../apis/TrialAPI";
 import {useProlificId} from "../App";
-import {SessionError, Trial} from "../../apis/apiTypes";
+import {SessionError, Trial, TrialError, TrialSaved} from "../../apis/apiTypes";
 
 // Data
 import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
@@ -101,7 +101,8 @@ const ExperimentTrial: FC = () => {
         }
     }
 
-    const onTrialEnd = () => {
+    const onTrialEnd = (data: TrialSaved | TrialError) => {
+        console.log("posted data response:", data);
         if (sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) {
             sessionDispatcher({
                 type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
@@ -125,7 +126,7 @@ const ExperimentTrial: FC = () => {
         {onSuccess: onTrialEnd})
 
     const submitResults = (result: postTrialType['trialResults']) => {
-        mutation.mutate({prolificID: prolificId, trialType: sessionState.currentTrialType, trialResults: result})
+        mutation.mutate({prolificID: prolificId, trialId: sessionState.currentTrialId, trialResults: result})
     }
 
     if (status === "loading") {
