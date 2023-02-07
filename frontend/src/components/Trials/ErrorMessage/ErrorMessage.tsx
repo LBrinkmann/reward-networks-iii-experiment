@@ -1,7 +1,12 @@
-import {Box, Typography} from "@mui/material";
-import React from "react";
+import {Alert, AlertTitle, Box, Typography} from "@mui/material";
+import React, {FC} from "react";
 
-export const ErrorMessage = () => {
+interface IErrorMessage {
+    message?: string
+}
+
+export const ErrorMessage: FC<IErrorMessage> = ({message = undefined}) => {
+
     return (
         <Box
             sx={{width: '25%'}}
@@ -10,9 +15,25 @@ export const ErrorMessage = () => {
             alignItems="center"
             minHeight="90vh"
         >
-            <Typography variant="h6" align={'center'}>
-                Something went wrong. Please return the study on Prolific.
-            </Typography>
+            <Alert severity="error">
+                {message === undefined ?
+                    (
+                        <>
+                            <AlertTitle>
+                                Something went wrong
+                            </AlertTitle>
+                            Please return the study on Prolific or ask the organizers for support
+                        </>
+                    ) : (
+                        <>
+                            <AlertTitle>
+                                Error
+                            </AlertTitle>
+                            {message}
+                        </>
+                    )
+                }
+            </Alert>
         </Box>
     )
 }

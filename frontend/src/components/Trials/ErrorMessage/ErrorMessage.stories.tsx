@@ -18,8 +18,13 @@ const Template: ComponentStory<typeof ErrorMessage> = function (args) {
     );
 };
 
-export const DefaultStory = Template.bind({});
+export const UnknownError = Template.bind({});
 
-DefaultStory.args = {
-    onClickContinue: null
+UnknownError.args = {
+};
+
+export const ErrorWithKnownMessage = Template.bind({});
+
+ErrorWithKnownMessage.args = {
+    message: "No available sessions"
 };
