@@ -32,7 +32,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     elif len(subjects_with_id) > 1:
         # if more than one subject with the same prolific id return error
         return SessionError(
-            message='Multiple subjects with the same prolific id')
+            message=f'Prolific ID {prolific_id} already exists')
     else:
         subject = subjects_with_id[0]
 
@@ -40,7 +40,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
         # this happens when all available sessions are taken
-        return SessionError(message='No available session for the subject')
+        return SessionError(message='No available sessions')
 
     # this will happen only for a new subject
     if subject.session_id is None:
