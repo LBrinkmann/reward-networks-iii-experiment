@@ -17,6 +17,9 @@ async def get_progress(experiment_num: int = 0,
     or
     http://localhost:5000/progress/?experiment_num=0
     """
-    file_path = await create_sessions_network(experiment_num)
-    # return html document with the progress graph
-    return FileResponse(file_path)
+    try:
+        file_path = await create_sessions_network(experiment_num)
+        # return html document with the progress graph
+        return FileResponse(file_path)
+    except Exception as e:
+        return {'error': str(e)}
