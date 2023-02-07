@@ -24,7 +24,6 @@ async def save_trial(body, session, trial, trial_type):
         trials = session.trials[sl_start:sl_start + sl_end]
         await save_social_learning_selection(trials, session.subject_id, body)
         session.trials[sl_start:sl_start + sl_end] = trials
-        print([t.trial_type for t in trials])
     elif trial_type == 'observation':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'repeat':
