@@ -32,7 +32,7 @@ export const EightSteps = Template.bind({});
 EightSteps.args = {
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 1, 4, 0, 6, 7, 9, 8, 9],
+    moves: [0, 3, 8, 7, 4, 6, 7, 4, 6],
     title: "Player 3 solution",
     size: {width: 600, height: 50},
     nodeRadius: 20,
@@ -46,7 +46,7 @@ export const FourSteps = Template.bind({});
 FourSteps.args = {
     edges: data[0].edges,
     nodes: data[0].nodes,
-    moves: [0, 1, 4, 0],
+    moves: [0, 3, 8, 7],
     title: "Player 3 solution",
     size: {width: 600, height: 50},
     nodeRadius: 20,

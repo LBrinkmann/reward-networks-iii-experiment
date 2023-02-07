@@ -60,7 +60,6 @@ TenNodes.args = {
     size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    allRewards: [-100, -20, 0, 20, 140]
 };
 
 export const TenNodesBlured = Template.bind({});
@@ -73,19 +72,4 @@ TenNodesBlured.args = {
     size: 470,
     edges: data[0].edges,
     nodes: data[0].nodes,
-    allRewards: [-100, -20, 0, 20, 140]
 };
-
-export const InterpolateRewardColors = Template.bind({});
-
-InterpolateRewardColors.args = {
-    nodeSize: 20,
-    edgeWidth: 2.5,
-    showRewardText: false,
-    blur: false,
-    size: 470,
-    edges: data[0].edges,
-    nodes: data[0].nodes,
-    allRewards: [-100, -90, -20, -10, 0, 10, 20, 90, 140]
-};
-

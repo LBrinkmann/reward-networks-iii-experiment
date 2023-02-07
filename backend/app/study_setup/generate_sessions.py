@@ -14,14 +14,13 @@ from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score, estimate_average_player_score
 
 # load all networks
-network_data = json.load(open(Path('data') / 'train_viz.json'))
+network_data = json.load(open(Path('data') / 'networks.json'))
 
 # randomize the order of the networks
 random.shuffle(network_data)
 
 # load all ai solutions
-solutions = json.load(
-    open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+solutions = json.load(open(Path('data') / 'solutions_loss.json'))
 
 
 async def generate_experiment_sessions():
@@ -246,7 +245,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
                     redirect_url='https://www.prolific.co/')]
     trial_n += 1
 
-    trials.append(Trial(id=trial_n, trial_type='instruction_welcome'))
+    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='welcome'))
     trial_n += 1
 
     trials.append(Trial(id=trial_n, trial_type='practice'))
@@ -258,40 +257,33 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             # Social learning selection
             if i == 0:
                 # instruction
-                trials.append(Trial(
-                    id=trial_n, trial_type='instruction_learning_selection'))
+                trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='learning_selection'))
                 trial_n += 1
 
-            trials.append(Trial(id=trial_n,
-                                trial_type='social_learning_selection'))
+            trials.append(Trial(id=trial_n, trial_type='social_learning_selection'))
             trial_n += 1
+
+            # instruction before learning
+            if i == 0:
+                trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='learning'))
+                trial_n += 1
 
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
-                if i == 0 and ii == 0:
-                    # instruction
-                    trials.append(Trial(
-                        id=trial_n, trial_type='instruction_learning'))
-                    trial_n += 1
-
                 # Social learning
-                trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                    social_learning_type='observation'))
+                trials.append(Trial(id=trial_n, trial_type='observation'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                    social_learning_type='repeat'))
+                trials.append(Trial(id=trial_n, trial_type='repeat'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='social_learning',
-                                    social_learning_type='tryyourself'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
                 trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very
         # first generation
-        n_individual_trials += n_social_learning_trials \
-                               * n_demonstration_trials * 3
+        n_individual_trials += n_social_learning_trials * n_demonstration_trials * 3
 
     # Individual trials
-    trials.append(Trial(id=trial_n, trial_type='instruction_individual'))
+    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual'))
     trial_n += 1
 
     for i in range(n_individual_trials):
@@ -308,7 +300,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         trial_n += 1
 
     # Demonstration trials
-    trials.append(Trial(id=trial_n, trial_type='instruction_demonstration'))
+    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='demonstration'))
     trial_n += 1
     for i in range(n_demonstration_trials):
         net, _ = get_net_solution()
@@ -325,7 +317,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         trial_n += 1
 
     # Written strategy
-    trials.append(Trial(id=trial_n, trial_type='instruction_written_strategy'))
+    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='written_strategy'))
     trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
@@ -425,7 +417,7 @@ def get_net_solution():
     # TODO: maybe change this behavior later
     if len(network_data) == 0:
         # load all networks
-        network_data = json.load(open(Path('data') / 'train_viz.json'))
+        network_data = json.load(open(Path('data') / 'networks.json'))
 
         # randomize the order of the networks
         random.shuffle(network_data)
@@ -438,5 +430,8 @@ def get_net_solution():
 
     # get the solution for the network
     moves = [s for s in solutions if s['network_id'] == network.network_id]
+
+    # for some reason the first move is always 0, so we need to replace it
+    moves[0]['moves'][0] = network.starting_node
 
     return network, moves[0]['moves']

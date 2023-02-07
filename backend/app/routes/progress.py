@@ -22,5 +22,4 @@ async def get_progress(experiment_num: int = 0,
         # return html document with the progress graph
         return FileResponse(file_path)
     except Exception as e:
-        print(e)
-        return "Error: " + str(e)
+        return {'error': str(e)}

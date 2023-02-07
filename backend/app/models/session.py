@@ -37,10 +37,3 @@ class Session(Document):
         schema_extra = {
             "example": {}
         }
-
-
-class SessionError(BaseModel):
-    message: Literal[
-        'No available session for the subject',
-        'Multiple subjects with the same prolific id'
-    ]

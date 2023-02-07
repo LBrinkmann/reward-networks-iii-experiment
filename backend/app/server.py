@@ -8,6 +8,7 @@ from fastapi.security import HTTPBasicCredentials
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from database.connection import DatabaseSettings
+from models.trial import SessionError
 from routes.admin import admin_router
 from routes.progress import progress_router
 from routes.results import results_router
@@ -37,6 +38,17 @@ api.include_router(session_router, prefix="/session")
 api.include_router(progress_router, prefix="/progress")
 api.include_router(results_router, prefix="/results")
 api.include_router(admin_router, prefix="/admin")
+
+
+# Routes for testing
+@api.get("/session_error/{prolific_id}")
+async def get_current_trial(prolific_id: str, error_id: int) -> SessionError:
+    if error_id == 0:
+        return SessionError(message=f"Prolific ID {prolific_id} already exists")
+    elif error_id == 1:
+        return SessionError(message="No available sessions")
+    elif error_id == 2:
+        return SessionError()
 
 
 @api.on_event("startup")

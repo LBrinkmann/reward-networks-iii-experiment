@@ -41,26 +41,26 @@ class Trial(BaseModel):
     id: int  # trial number in session
     trial_type: Literal[
         'consent',
-        'instruction_welcome',
+        'instruction',
         'practice',
-        'instruction_learning_selection',
         'social_learning_selection',
-        'instruction_learning',
-        'social_learning',
-        'instruction_individual',
+        'observation',
+        'repeat',
+        'try_yourself',
         'individual',
-        'instruction_demonstration',
         'demonstration',
-        'instruction_written_strategy',
         'written_strategy',
         'post_survey',
         'debriefing'
     ]
-    # social learning trial related field
-    social_learning_type: Optional[Literal[
-        'observation',
-        'repeat',
-        'tryyourself'
+    # instruction trial relevant field
+    instruction_type: Optional[Literal[
+        'welcome',
+        'learning_selection',
+        'learning',
+        'individual',
+        'demonstration',
+        'written_strategy',
     ]]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]
@@ -94,3 +94,7 @@ class TrialError(BaseModel):
         'Trial results are missing',
         'Advisor session is not found'
     ]
+
+
+class SessionError(BaseModel):
+    message: str

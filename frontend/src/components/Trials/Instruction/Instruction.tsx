@@ -1,20 +1,22 @@
 import React, {FC} from "react";
 
-import {InstructionContent} from "./InstructionContent";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
+import instructions from "./InstructionContent";
+
+
 interface InstructionInterface {
-    instructionId: string;
-    onClick: () => void;
+    endTrial: (data: any) => void;
+    instructionType: keyof typeof instructions;
 }
 
 
-export const Instruction: FC<InstructionInterface> = props => {
+export const Instruction: FC<InstructionInterface> = ({endTrial, instructionType}) => {
+
+    const onClickHandler = () => endTrial({moves: []});
 
     const renderInstruction = () => {
-        // select instruction content based on instructionId
-        const content = InstructionContent.filter(c => c.id === props.instructionId)[0];
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12}>
@@ -24,14 +26,14 @@ export const Instruction: FC<InstructionInterface> = props => {
                          p={3} // box padding
                     >
                         <Typography variant="h5" align='justify'>
-                            {content.text}
+                            {instructions[instructionType]}
                         </Typography>
 
                         <Grid item xs={12} textAlign={"center"} p={2}>
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={props.onClick}
+                                onClick={onClickHandler}
                                 startIcon={<CheckIcon/>}>️
                                 Continue
                             </Button>

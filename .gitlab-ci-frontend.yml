@@ -27,7 +27,7 @@ build:
     - .tags
     - .services
 
-  image: node:12
+  image: node:16
 
   cache:
     paths:
@@ -43,7 +43,7 @@ build:
     - rm -rf backend
 
   script:
-    - npm ci
+    - npm install
     - npm run build-prod
 
 docker:

@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof WaitForNextTrialScreen> = function (args) 
     return (
         <>
             <Header totalPoints={0} title={"Wait for the next trial"}/>
-            <WaitForNextTrialScreen {...args}/>
+            <WaitForNextTrialScreen />
         </>
     );
 };
@@ -22,5 +22,4 @@ const Template: ComponentStory<typeof WaitForNextTrialScreen> = function (args) 
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
-    onClickContinue: null
 };

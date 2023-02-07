@@ -24,7 +24,11 @@ async def save_trial(body, session, trial, trial_type):
         trials = session.trials[sl_start:sl_start + sl_end]
         await save_social_learning_selection(trials, session.subject_id, body)
         session.trials[sl_start:sl_start + sl_end] = trials
-    elif trial_type == 'social_learning':
+    elif trial_type == 'observation':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'repeat':
+        save_individual_demonstration_trial(trial, body)
+    elif trial_type == 'try_yourself':
         save_individual_demonstration_trial(trial, body)
     elif trial_type == 'demonstration':
         save_individual_demonstration_trial(trial, body)
@@ -32,11 +36,7 @@ async def save_trial(body, session, trial, trial_type):
         save_written_strategy(trial, body)
     elif trial_type == 'post_survey':
         save_survey_trial(trial, body)
-    elif trial_type in ['consent', 'n_practice', 'debriefing',
-                        'instruction_welcome', 'instruction_learning_selection',
-                        'instruction_learning', 'instruction_learning',
-                        'instruction_individual', 'instruction_demonstration',
-                        'instruction_written_strategy']:
+    elif trial_type in ['consent', 'practice', 'debriefing', 'instruction']:
         save_empty_trial(trial)
 
     # update session with the trial
@@ -93,7 +93,7 @@ async def save_social_learning_selection(trials: List[Trial],
     sl_trials = trials[1:]
 
     # remove instruction trial if it is in the list of social learning trials
-    sl_trials = [t for t in sl_trials if t.trial_type != 'instruction_learning']
+    sl_trials = [t for t in sl_trials if t.trial_type != 'instruction']
 
     # get advisor session
     ad_s = await Session.get(body.advisor_id)
