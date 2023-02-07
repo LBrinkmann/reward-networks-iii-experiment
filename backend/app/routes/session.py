@@ -2,9 +2,8 @@ from typing import Union
 
 from fastapi import APIRouter
 
-from models.session import SessionError
 from models.trial import Trial, Solution, TrialSaved, TrialError, \
-    WrittenStrategy, Advisor, PostSurvey
+    WrittenStrategy, Advisor, PostSurvey, SessionError
 from .session_utils.prepare_trial import prepare_trial
 from .session_utils.save_trial import save_trial
 from .session_utils.session_lifecycle import update_session

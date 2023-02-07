@@ -5,7 +5,8 @@ from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 
 from models.config import ExperimentSettings
-from models.session import Session, SessionError
+from models.session import Session
+from models.trial import SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
 from utils.utils import estimate_average_player_score

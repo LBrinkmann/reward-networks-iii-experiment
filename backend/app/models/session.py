@@ -37,7 +37,3 @@ class Session(Document):
         schema_extra = {
             "example": {}
         }
-
-
-class SessionError(BaseModel):
-    message: str
