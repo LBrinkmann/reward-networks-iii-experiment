@@ -31,10 +31,10 @@ async def get_current_trial(prolific_id: str) -> Union[Trial, SessionError]:
     return trial
 
 
-@session_router.post('/{prolific_id}/{trial_type}')
+@session_router.post('/{prolific_id}/{trial_id}')
 async def post_current_trial_results(
         prolific_id: str,
-        trial_type: str,
+        trial_id: int,
         body: Union[Solution, WrittenStrategy, Advisor, PostSurvey, None
         ] = None) -> Union[TrialSaved, SessionError, TrialError]:
     # find session assigned to the subject
@@ -48,10 +48,10 @@ async def post_current_trial_results(
     trial = session.trials[session.current_trial_num]
 
     # check if trial type is correct
-    if trial.trial_type != trial_type:
+    if trial.id != trial_id:
         return TrialError(message='Trial type is not correct')
 
-    await save_trial(body, session, trial, trial_type)
+    await save_trial(body, session, trial, trial.trial_type)
 
     await update_session(session)
 
