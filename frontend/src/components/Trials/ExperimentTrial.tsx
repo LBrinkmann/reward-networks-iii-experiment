@@ -102,7 +102,8 @@ const ExperimentTrial: FC = () => {
     }
 
     const onTrialEnd = (data: TrialSaved | TrialError) => {
-        console.log("posted data response:", data);
+        // TODO: handle error
+        // console.log("posted data response:", data);
         if (sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) {
             sessionDispatcher({
                 type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
