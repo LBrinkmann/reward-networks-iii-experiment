@@ -94,3 +94,7 @@ class TrialError(BaseModel):
         'Trial results are missing',
         'Advisor session is not found'
     ]
+
+
+class SessionError(BaseModel):
+    message: str

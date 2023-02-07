@@ -25,7 +25,7 @@ export interface Network {
   nodes: Node[];
   edges: Edge[];
   starting_node: number;
-  max_reward: number;
+  max_reward?: number;
 }
 export interface Node {
   node_num: number;
@@ -54,6 +54,9 @@ export interface PostSurvey {
   };
   trial_id?: number;
   finished_at?: string;
+}
+export interface SessionError {
+  message: string;
 }
 export interface Trial {
   id: number;

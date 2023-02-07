@@ -86,7 +86,7 @@ export const edges = [
     {
         "source_num": 0,
         "target_num": 5,
-        "reward": 100,
+        "reward": 400,
         "arc_type": "straight",
         "source_x": 88.55743415023434,
         "source_y": -9.701037972931204e-7,
@@ -98,7 +98,7 @@ export const edges = [
     {
         "source_num": 5,
         "target_num": 8,
-        "reward": 0,
+        "reward": 100,
         "arc_type": "straight",
         "source_x": -90.0549362307683,
         "source_y": 7.225516537822729,
@@ -110,7 +110,7 @@ export const edges = [
     {
         "source_num": 8,
         "target_num": 7,
-        "reward": 0,
+        "reward": 200,
         "arc_type": "straight",
         "source_x": 19.45879958605914,
         "source_y": 95.1056460036234,
@@ -122,7 +122,7 @@ export const edges = [
     {
         "source_num": 7,
         "target_num": 1,
-        "reward": -20,
+        "reward": 0,
         "arc_type": "straight",
         "source_x": -23.121568280940142,
         "source_y": 84.39719928384046,
@@ -134,7 +134,7 @@ export const edges = [
     {
         "source_num": 1,
         "target_num": 3,
-        "reward": -100,
+        "reward": -50,
         "arc_type": "straight",
         "source_x": 69.81450684495366,
         "source_y": -62.3809726491924,
@@ -146,7 +146,7 @@ export const edges = [
     {
         "source_num": 3,
         "target_num": 4,
-        "reward": 20,
+        "reward": 0,
         "arc_type": "straight",
         "source_x": -40.845854638294064,
         "source_y": -87.88079959835886,
@@ -158,7 +158,7 @@ export const edges = [
     {
         "source_num": 4,
         "target_num": 6,
-        "reward": -20,
+        "reward": 0,
         "arc_type": "straight",
         "source_x": -80.9016984395772,
         "source_y": -44.1753764543827,
@@ -170,7 +170,7 @@ export const edges = [
     {
         "source_num": 6,
         "target_num": 9,
-        "reward": 20,
+        "reward": 100,
         "arc_type": "straight",
         "source_x": -69.45946604703788,
         "source_y": 58.77852853864661,

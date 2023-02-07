@@ -91,6 +91,7 @@ const networkReducer = (state: NetworkState, action: any) => {
                 currentNode: nextNode,
                 moves: state.moves.concat([nextNode]),
                 points: state.points + currentEdge.reward,
+                currentReward: currentEdge.reward,
                 step: state.step + 1,
                 possibleMoves: selectPossibleMoves(state.network.edges, nextNode),
                 isNetworkDisabled: state.step + 1 >= maxStep,

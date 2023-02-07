@@ -68,7 +68,7 @@ const Template: ComponentStory<typeof TryYourself> = function (args) {
 export const Default = Template.bind({});
 
 Default.args = {
-    solution: [0, 1, 4, 3, 2, 1, 5, 2, 1],
+    solution: [0, 3, 8, 7, 4, 6, 7, 4, 6],
     teacherId: 1,
     teacherTotalScore: 10
 };

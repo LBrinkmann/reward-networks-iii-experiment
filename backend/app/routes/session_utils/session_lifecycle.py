@@ -5,7 +5,8 @@ from beanie.odm.operators.find.comparison import In
 from beanie.odm.operators.update.general import Set
 
 from models.config import ExperimentSettings
-from models.session import Session, SessionError
+from models.session import Session
+from models.trial import SessionError
 from models.subject import Subject
 from study_setup.generate_sessions import create_trials
 from utils.utils import estimate_average_player_score
@@ -32,7 +33,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     elif len(subjects_with_id) > 1:
         # if more than one subject with the same prolific id return error
         return SessionError(
-            message='Multiple subjects with the same prolific id')
+            message=f'Prolific ID {prolific_id} already exists')
     else:
         subject = subjects_with_id[0]
 
@@ -40,7 +41,7 @@ async def get_session(prolific_id) -> Union[Session, SessionError]:
     session = await Session.find_one(Session.subject_id == subject.id)
     if session is None:
         # this happens when all available sessions are taken
-        return SessionError(message='No available session for the subject')
+        return SessionError(message='No available sessions')
 
     # this will happen only for a new subject
     if subject.session_id is None:

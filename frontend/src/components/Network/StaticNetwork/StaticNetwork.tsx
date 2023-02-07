@@ -80,8 +80,8 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
         showNodeTutorial = false,
         showEdgeTutorial = false,
         blur = false,
-        allRewards = [-100, -20, 0, 20, 140],
-        colors = ['#7b3294', '#c2a5cf', '#f7f7f7', '#a6dba0', '#008837',],
+        allRewards = [-50, 0, 100, 200, 400],
+        colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',],
         disableClick = false,
     } = props;
 
