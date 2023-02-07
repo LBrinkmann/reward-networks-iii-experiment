@@ -43,7 +43,7 @@ build:
     - rm -rf backend
 
   script:
-    - npm ci
+    - npm install
     - npm run build-prod
 
 docker:
