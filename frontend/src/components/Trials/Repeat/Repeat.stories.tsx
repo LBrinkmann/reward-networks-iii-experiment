@@ -14,7 +14,7 @@ export default {
     decorators: [
         (ComponentStory) => {
             return (
-                <NetworkContextProvider>
+                <NetworkContextProvider saveToLocalStorage={false}>
                     <ComponentStory/>
                 </NetworkContextProvider>
             );
@@ -55,5 +55,5 @@ const Template: ComponentStory<typeof Repeat> = function (args) {
 export const Default = Template.bind({});
 
 Default.args = {
-    solution: [0, 3, 8, 7, 4, 6, 7, 4, 6],
+    solution: [9, 3, 8, 7, 4, 6, 7, 4, 6],
 };
