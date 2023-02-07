@@ -79,8 +79,7 @@ export const networkInitialState: NetworkState = {
 }
 
 const networkInitializer = (initialState: NetworkState) => {
-    // JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) ||
-    return initialState;
+    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_NETWORK_STATE_KEY)) || initialState;
 }
 
 export const NetworkContextProvider = ({children}: any) => {

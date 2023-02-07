@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useReducer} from "react";
 import sessionReducer from "../reducers/SessionReducer";
-import {Advisor, AdvisorSelection, PostSurvey, Solution, WrittenStrategy} from "../apis/apiTypes";
+import {AdvisorSelection} from "../apis/apiTypes";
 
 const LOCAL_STORAGE_SESSION_STATE_KEY = 'sessionState';
 
@@ -36,16 +36,16 @@ export type SessionContextType = {
 
 export const SessionContext = createContext<SessionContextType | null>(null);
 
-export const SessionContextProvider = ({children}: any) => {
-    const [state, dispatch] = useReducer(sessionReducer, sessionInitialState);
+const sessionInitializer = (initialState: SessionState) => {
+    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_SESSION_STATE_KEY)) || initialState;
+}
 
-    // const [sessionState, setSessionState] = useState<SessionState | null>(
-    //     JSON.parse(localStorage.getItem(LOCAL_STORAGE_SESSION_STATE_KEY))
-    // );
+export const SessionContextProvider = ({children}: any) => {
+    const [state, dispatch] = useReducer(sessionReducer, sessionInitialState, sessionInitializer);
+
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_SESSION_STATE_KEY, JSON.stringify(state));
     }, [state]);
-    // const updateSessionState = (newSessionState: SessionState) => setSessionState(newSessionState)
 
     return (
         <SessionContext.Provider value={{sessionState: state, sessionDispatcher: dispatch}}>
