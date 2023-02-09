@@ -26,7 +26,7 @@ import {StaticNetworkEdgeInterface} from "../Network/StaticNetwork/StaticNetwork
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
 
 const TIME_BETWEEN_TRIALS = 1000;
-const TIME_AFTER_LAST_STEP = 1000;
+const TIME_AFTER_LAST_STEP = 2000;
 
 
 interface ITrial {
@@ -104,29 +104,33 @@ export const SelectionTrial: FC<ITrial> = (props) => {
 }
 
 export const ObservationTrial: FC<ITrial> = (props) => {
-    const [isTimeoutAfterLastMove, setIsTimeoutAfterLastMove] = useState(false);
+    const [isTimeoutAfterLastMoveDone, setIsTimeoutAfterLastMoveDone] = useState(false);
     const {networkState} = useNetworkContext();
     const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished) {
             const timer1 = setTimeout(() => {
-                setIsTimeoutAfterLastMove(true);
+                setIsTimeoutAfterLastMoveDone(true);
             }, TIME_AFTER_LAST_STEP);
             return () => clearTimeout(timer1);
+        } else {
+            setIsTimeoutAfterLastMoveDone(false);
         }
     }, [networkState.isNetworkFinished]);
 
     useEffect(() => {
-        if (networkState.isNetworkFinished) {
+        if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
             const timer2 = setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
-            }, TIME_BETWEEN_TRIALS + TIME_AFTER_LAST_STEP);
+            }, TIME_BETWEEN_TRIALS);
             return () => clearTimeout(timer2);
         }
-    }, [networkState.isNetworkFinished]);
+    }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
-    if (!networkState.network || !props.data.advisor || !props.data.advisor.solution || (networkState.isNetworkFinished && isTimeoutAfterLastMove))
+    if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
+        return <WaitForNextTrialScreen/>
+    else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
         return <WaitForNextTrialScreen/>
     else
         return (
@@ -142,29 +146,33 @@ export const ObservationTrial: FC<ITrial> = (props) => {
 }
 
 export const RepeatTrial: FC<ITrial> = (props) => {
-    const [isTimeoutAfterLastMove, setIsTimeoutAfterLastMove] = useState(false);
+    const [isTimeoutAfterLastMoveDone, setIsTimeoutAfterLastMoveDone] = useState(false);
     const {networkState} = useNetworkContext();
     const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished) {
             const timer1 = setTimeout(() => {
-                setIsTimeoutAfterLastMove(true);
+                setIsTimeoutAfterLastMoveDone(true);
             }, TIME_AFTER_LAST_STEP);
             return () => clearTimeout(timer1);
+        } else {
+            setIsTimeoutAfterLastMoveDone(false);
         }
     }, [networkState.isNetworkFinished]);
 
     useEffect(() => {
-        if (networkState.isNetworkFinished) {
+        if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
             const timer2 = setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
-            }, TIME_BETWEEN_TRIALS + TIME_AFTER_LAST_STEP);
+            }, TIME_BETWEEN_TRIALS);
             return () => clearTimeout(timer2);
         }
-    }, [networkState.isNetworkFinished]);
+    }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
-    if (!networkState.network || !props.data.advisor || !props.data.advisor.solution || (networkState.isNetworkFinished && isTimeoutAfterLastMove))
+    if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
+        return <WaitForNextTrialScreen/>
+    else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
         return <WaitForNextTrialScreen/>
     else
         return (
@@ -219,29 +227,33 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
 }
 
 export const IndividualTrial: FC<ITrial> = (props) => {
-    const [isTimeoutAfterLastMove, setIsTimeoutAfterLastMove] = useState(false);
+    const [isTimeoutAfterLastMoveDone, setIsTimeoutAfterLastMoveDone] = useState(false);
     const {networkState} = useNetworkContext();
     const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished) {
             const timer1 = setTimeout(() => {
-                setIsTimeoutAfterLastMove(true);
+                setIsTimeoutAfterLastMoveDone(true);
             }, TIME_AFTER_LAST_STEP);
             return () => clearTimeout(timer1);
+        } else {
+            setIsTimeoutAfterLastMoveDone(false);
         }
     }, [networkState.isNetworkFinished]);
 
     useEffect(() => {
-        if (networkState.isNetworkFinished) {
+        if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
             const timer2 = setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
-            }, TIME_BETWEEN_TRIALS + TIME_AFTER_LAST_STEP);
+            }, TIME_BETWEEN_TRIALS);
             return () => clearTimeout(timer2);
         }
-    }, [networkState.isNetworkFinished]);
+    }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
-    if (!networkState.network || (networkState.isNetworkFinished && isTimeoutAfterLastMove))
+    if (!networkState.network)
+        return <WaitForNextTrialScreen/>
+    else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
         return <WaitForNextTrialScreen/>
     else
         return (
@@ -253,29 +265,33 @@ export const IndividualTrial: FC<ITrial> = (props) => {
 }
 
 export const DemonstrationTrial: FC<ITrial> = (props) => {
-    const [isTimeoutAfterLastMove, setIsTimeoutAfterLastMove] = useState(false);
+    const [isTimeoutAfterLastMoveDone, setIsTimeoutAfterLastMoveDone] = useState(false);
     const {networkState} = useNetworkContext();
     const {sessionState} = useSessionContext();
 
     useEffect(() => {
         if (networkState.isNetworkFinished) {
-            const timer2 = setTimeout(() => {
-                setIsTimeoutAfterLastMove(true);
+            const timer1 = setTimeout(() => {
+                setIsTimeoutAfterLastMoveDone(true);
             }, TIME_AFTER_LAST_STEP);
-            return () => clearTimeout(timer2);
+            return () => clearTimeout(timer1);
+        } else {
+            setIsTimeoutAfterLastMoveDone(false);
         }
     }, [networkState.isNetworkFinished]);
 
     useEffect(() => {
-        if (networkState.isNetworkFinished) {
-            const timer1 = setTimeout(() => {
+        if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
+            const timer2 = setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
-            }, TIME_BETWEEN_TRIALS + TIME_AFTER_LAST_STEP);
-            return () => clearTimeout(timer1);
+            }, TIME_BETWEEN_TRIALS);
+            return () => clearTimeout(timer2);
         }
-    }, [networkState.isNetworkFinished]);
+    }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
-    if (!networkState.network || (networkState.isNetworkFinished && isTimeoutAfterLastMove))
+    if (!networkState.network)
+        return <WaitForNextTrialScreen/>
+    else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
         return <WaitForNextTrialScreen/>
     else
         return (
