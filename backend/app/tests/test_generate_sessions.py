@@ -14,7 +14,7 @@ from study_setup.generate_sessions import generate_sessions, create_trials
     [
         (2, 10, 0, 10, 0),  # pilot 1B (first generation only AI players)
         (1, 10, 0, 10, 0),  # pilot 1A (no AI players, one generation)
-        (3, 13, 3, 20, 5),  # full experiment
+        (3, 13, 3, 20, 5),  # full experiment; TODO: add more data!!!
     ]
 )
 async def test_generate_sessions(default_client: httpx.AsyncClient,
@@ -47,8 +47,7 @@ async def test_generate_sessions(default_client: httpx.AsyncClient,
             # check the number of parents
             assert len(s.advise_ids) == n_advise_per_session
         # collect all network ids
-        net_ids += [t.network.network_id for t in s.trials if
-                    t.network is not None]
+        net_ids += [t.network.network_id for t in s.trials if t.network is not None]
 
     # check that each network is unique
     assert len(net_ids) == len(set(net_ids))
@@ -72,7 +71,7 @@ async def test_create_trials(default_client: httpx.AsyncClient,
     n_all_trials += n_debriefing
     n_all_trials += n_practice
     n_all_trials += n_soc_learning * n_demonstration * 3 + n_ind
-    n_all_trials += 4  # 5 instructions: welcome, individual, demo, w_strategy
+    n_all_trials += 4  # basic instructions: welcome, individual, demo, w_strategy
 
     session = create_trials(
         config_id=e_config.id,
@@ -102,8 +101,9 @@ async def test_create_trials(default_client: httpx.AsyncClient,
     )
 
     # add n_all_trials because social_learning_selection counts as a trial
-    # 2 instructions: social_learning_selection, social_learning
-    assert len(session.trials) == n_all_trials + n_soc_learning + 2
+    # 4 instructions: social_learning_selection, social_learning, written_strategy_start, individual_start
+    # 1 additional written_strategy at the start before the social learning
+    assert len(session.trials) == n_all_trials + n_soc_learning + 4 + 1
     for t in session.trials:
         assert t.trial_type in [
             'consent', 'instruction', 'demonstration', 'written_strategy',
