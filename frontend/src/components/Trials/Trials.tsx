@@ -233,7 +233,9 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
-                             teacherId={sessionState.selectedAdvisor.advisorNumber}/>
+                             teacherId={sessionState.selectedAdvisor.advisorNumber}
+                             endTrial={props.endTrial}
+                />
             </>
         );
 }

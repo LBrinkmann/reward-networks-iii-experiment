@@ -1,7 +1,7 @@
 import NetworkTrial from "../NetworkTrial";
 import React, {FC} from "react";
 import useNetworkContext from "../../../contexts/NetworkContext";
-import {Box, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import LinearSolution from "../../Network/LinearSolution";
 
 
@@ -9,9 +9,10 @@ interface ITryYour {
     solution: number[];
     teacherId: number;
     teacherTotalScore: number;
+    endTrial: (data: any) => void;
 }
 
-const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore}) => {
+const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endTrial}) => {
     const {networkState} = useNetworkContext();
 
     return (
@@ -43,11 +44,16 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore}) => 
                         moves={solution}
                         id={150}
                     />
+                    <Box textAlign="center" marginTop="20px">
+                        <Button onClick={() => endTrial({moves: networkState.moves})} variant="contained"
+                                color="primary">Continue</Button>
+                    </Box>
+
                 </Box>
             ) : (
                 <>
                     <Typography variant="h3" align='center'>
-                        Now try on your own!
+                        Try to collect at least as many points as player {teacherId}!
                     </Typography>
                     <NetworkTrial advisorTotalPoints={teacherTotalScore}/>
                 </>

@@ -43,13 +43,6 @@ const Template: ComponentStory<typeof TryYourself> = function (args) {
         if (!networkState.network) {
             setNetwork();
         }
-
-        if (networkState.isNetworkFinished){
-            setTimeout(() => {
-                setNetwork();
-            }, 4000);
-        }
-
     }, [networkState.isNetworkFinished]);
 
 
@@ -70,5 +63,6 @@ export const Default = Template.bind({});
 Default.args = {
     solution: [9, 3, 8, 7, 4, 6, 7, 4, 6],
     teacherId: 1,
-    teacherTotalScore: 10
+    teacherTotalScore: 10,
+    endTrial: (data: any) => console.log(data),
 };
