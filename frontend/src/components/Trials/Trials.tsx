@@ -309,7 +309,7 @@ export const WrittenStrategyTrial: FC<ITrial> = (props) => {
     return (
         <>
             <Header title={'Written Strategy'} totalPoints={sessionState.totalPoints}/>
-            <WrittenStrategy endTrial={props.endTrial}/>
+            <WrittenStrategy endTrial={props.endTrial} type={sessionState.currentTrialId < 10 ? "start" : "end"}/>
         </>
     );
 };
