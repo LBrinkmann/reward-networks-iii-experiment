@@ -14,11 +14,14 @@ const sessionReducer = (state: SessionState, action: any) => {
         case SESSION_ACTIONS.SET_CURRENT_TRIAL:
             let selectedAdvisorExampleId = action.payload.currentTrialType === TRIAL_TYPE.SOCIAL_LEARNING_SELECTION ?
                 0 : state.selectedAdvisorExampleId;
-            if (action.payload.currentTrialType === TRIAL_TYPE.OBSERVATION) selectedAdvisorExampleId++;
+            if ((action.payload.currentTrialType === TRIAL_TYPE.TRY_YOURSELF) &&
+                (state.previousTrialType === TRIAL_TYPE.SOCIAL_LEARNING_SELECTION ||
+                    state.previousTrialType === TRIAL_TYPE.OBSERVATION)) selectedAdvisorExampleId++;
 
             return {
                 ...state,
                 currentTrialType: action.payload.currentTrialType,
+                previousTrialType: state.currentTrialType,
                 currentTrialId: action.payload.currentTrialId,
                 // show tutorial for social learning selection and observation trials
                 showTutorialInCurrentTrial: action.payload.currentTrialId < 8,
