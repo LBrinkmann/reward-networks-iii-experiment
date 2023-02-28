@@ -128,6 +128,17 @@ export const ObservationTrial: FC<ITrial> = (props) => {
         }
     }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
+    const calculateScore = useCallback((moves: number[], edges: StaticNetworkEdgeInterface[]) => {
+        let score = 0;
+        for (let i = 0; i < moves.length - 1; i++) {
+            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
+            if (edge) {
+                score += edge.reward;
+            }
+        }
+        return score;
+    }, []);
+
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
         return <WaitForNextTrialScreen/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
@@ -140,6 +151,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
+                             teacherTotalPoints={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              playAnimation={!networkState.tutorialOptions.comment}
                 />
             </>);

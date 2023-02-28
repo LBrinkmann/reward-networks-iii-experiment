@@ -12,12 +12,12 @@ interface IObservation {
     delayBetweenMoves?: number;
     /** Start the animation from the parent component. Default is true. */
     playAnimation?: boolean;
-
+    teacherTotalPoints?: number;
 }
 
 const Observation: FC<IObservation> = (props) => {
     const {networkState, networkDispatcher} = useNetworkContext();
-    const {solution, teacherId, playAnimation = true, delayBetweenMoves = 2000} = props;
+    const {solution, teacherId, playAnimation = true, delayBetweenMoves = 2000, teacherTotalPoints} = props;
 
     useEffect(() => {
         if (playAnimation) {
@@ -50,7 +50,8 @@ const Observation: FC<IObservation> = (props) => {
             <Typography variant="h3" align='center'>
                 Watch player {teacherId} solves the task
             </Typography>
-            <NetworkTrial showComment={true} teacherId={teacherId} isTimerPaused={true}/>
+            <NetworkTrial showComment={false} teacherId={teacherId} isTimerPaused={true}
+                          advisorTotalPoints={teacherTotalPoints}/>
         </>
     );
 }

@@ -49,7 +49,7 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore}) => 
                     <Typography variant="h3" align='center'>
                         Now try on your own!
                     </Typography>
-                    <NetworkTrial/>
+                    <NetworkTrial advisorTotalPoints={teacherTotalScore}/>
                 </>
             )}
         </>
