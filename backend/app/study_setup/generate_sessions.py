@@ -253,6 +253,25 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
     # Social learning trials (not relevant for the very first generation)
     if generation > 0:
+        # Individual trials
+        trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual_start'))
+        trial_n += 1
+
+        for i in range(2):
+            net, _ = get_net_solution()
+            # individual trial
+            trial = Trial(trial_type='individual', id=trial_n, network=net)
+            # update the starting node
+            trial.network.nodes[trial.network.starting_node].starting_node = True
+            trials.append(trial)
+            trial_n += 1
+
+        # Written strategy
+        trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='written_strategy_start'))
+        trial_n += 1
+        trials.append(Trial(id=trial_n, trial_type='written_strategy'))
+        trial_n += 1
+
         for i in range(n_social_learning_trials):
             # Social learning selection
             if i == 0:
@@ -271,9 +290,9 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
                 # Social learning
-                trials.append(Trial(id=trial_n, trial_type='observation'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='repeat'))
+                trials.append(Trial(id=trial_n, trial_type='observation'))
                 trial_n += 1
                 trials.append(Trial(id=trial_n, trial_type='try_yourself'))
                 trial_n += 1
@@ -286,7 +305,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual'))
     trial_n += 1
 
-    for i in range(n_individual_trials):
+    for i in range(n_individual_trials - 2 if generation > 0 else n_individual_trials):
         net, _ = get_net_solution()
         # individual trial
         trial = Trial(

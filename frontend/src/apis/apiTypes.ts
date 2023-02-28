@@ -78,8 +78,10 @@ export interface Trial {
     | "learning_selection"
     | "learning"
     | "individual"
+    | "individual_start"
     | "demonstration"
-    | "written_strategy";
+    | "written_strategy"
+    | "written_strategy_start";
   finished?: boolean;
   started_at?: string;
   finished_at?: string;
