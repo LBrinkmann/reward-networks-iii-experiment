@@ -96,6 +96,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
+                ownScore={sessionState.totalPoints / 2}
                 showTutorial={sessionState.showTutorialInCurrentTrial}
             />
         </>
