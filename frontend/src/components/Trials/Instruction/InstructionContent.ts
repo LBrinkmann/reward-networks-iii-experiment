@@ -8,7 +8,7 @@ const instructions = {
         "Note that you cannot collect points in these rounds, they are for learning only.\n",
     individual: "From now on you are on your own again. Try to maximize your points in the next 4 rounds: half of your bonus will depend on your performance during these rounds!",
     demonstration: "Well done! Now you will play two final rounds that serve as demonstrations for future players to learn from. You will not earn points directly, but the second half of your bonus payment depends on the performance of people that learn from you, so try your best!",
-    written_strategy: "Lastly, please write down your strategy in solving the task for the other players to learn from.",
+    written_strategy: "Please write down your strategy in solving the task.",
     consent_decline: "You have declined to participate in the experiment. Thank you for your time. Please return the study on Prolific.",
 };
 
