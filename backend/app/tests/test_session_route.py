@@ -144,10 +144,6 @@ async def one_subject(default_client: httpx.AsyncClient,
             trial_num += 1
 
         # written_strategy_start
-        await get_post_trial(default_client, 'instruction', trial_num, url)
-        trial_num += 1
-
-        # written_strategy
         await get_post_trial(default_client, 'written_strategy', trial_num, url, written_strategy, headers)
         trial_num += 1
 
@@ -204,9 +200,6 @@ async def one_subject(default_client: httpx.AsyncClient,
         trial_num += 1
 
     # written strategy trial
-    await get_post_trial(default_client, 'instruction', trial_num, url)
-    trial_num += 1
-
     await get_post_trial(default_client, 'written_strategy', trial_num, url, written_strategy, headers)
     trial_num += 1
 

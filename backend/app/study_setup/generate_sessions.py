@@ -267,8 +267,6 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             trial_n += 1
 
         # Written strategy
-        trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='written_strategy_start'))
-        trial_n += 1
         trials.append(Trial(id=trial_n, trial_type='written_strategy'))
         trial_n += 1
 
@@ -336,8 +334,6 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         trial_n += 1
 
     # Written strategy
-    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='written_strategy'))
-    trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='post_survey'))
