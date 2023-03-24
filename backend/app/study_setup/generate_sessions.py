@@ -21,6 +21,7 @@ random.shuffle(network_data)
 
 # load all ai solutions
 solutions = json.load(open(Path('data') / 'solutions_loss.json'))
+solutions_myopic = json.load(open(Path('data') / 'solutions_myopic.json'))
 
 
 async def generate_experiment_sessions():
@@ -212,15 +213,21 @@ async def create_generation(config_id: PydanticObjectId,
 
     # if there are AI players, create sessions for them
     if n_ai_players > 0:
-        for session_idx in range(n_sessions_per_generation - n_ai_players,
-                                 n_sessions_per_generation):
+        solution_type = 'loss'
+        for session_idx in range(n_sessions_per_generation - n_ai_players, n_sessions_per_generation):
+            # TODO: remove after Pilot 3B
+            # Select AI solution type
+            if session_idx >= 3:
+                solution_type = 'myopic'
             session = create_ai_trials(
                 config_id=config_id,
                 experiment_num=experiment_num,
                 experiment_type=experiment_type,
                 generation=generation,
                 session_idx=session_idx,
-                n_demonstration_trials=n_demonstration_trials)
+                n_demonstration_trials=n_demonstration_trials,
+                solution_type=solution_type
+            )
             # save session
             await session.save()
             sessions.append(session)
@@ -361,12 +368,12 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
 def create_ai_trials(config_id: PydanticObjectId, experiment_num,
                      experiment_type, generation, session_idx,
-                     n_demonstration_trials, n_individual_trials=4):
+                     n_demonstration_trials, n_individual_trials=4, solution_type='loss'):
     trials = []
     trial_n = 0
     # Individual trials
     for i in range(n_individual_trials):
-        net, moves = get_net_solution()
+        net, moves = get_net_solution(solution_type)
 
         # individual trial
         trial = Trial(
@@ -385,7 +392,7 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
 
     # Demonstration trial
     for i in range(n_demonstration_trials):
-        net, moves = get_net_solution()
+        net, moves = get_net_solution(solution_type)
 
         dem_trial = Trial(
             id=trial_n,
@@ -424,7 +431,7 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
     return session
 
 
-def get_net_solution():
+def get_net_solution(solution_type='loss'):
     # get networks list from the global variable
     global network_data
 
@@ -444,7 +451,11 @@ def get_net_solution():
     network = Network.parse_obj(network_raw)
 
     # get the solution for the network
-    moves = [s for s in solutions if s['network_id'] == network.network_id]
+    if solution_type == 'loss':
+        moves = [s for s in solutions if s['network_id'] == network.network_id]
+    else:
+        # myopic solution
+        moves = [s for s in solutions_myopic if s['network_id'] == network.network_id]
 
     # for some reason the first move is always 0, so we need to replace it
     moves[0]['moves'][0] = network.starting_node
