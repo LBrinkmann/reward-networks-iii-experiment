@@ -25,8 +25,13 @@ def estimate_solution_score(network: Network, moves: List[int],
 def estimate_average_player_score(session) -> int:
     """ Estimate average player score """
     # get all trials
-    trials_to_consider = ['individual']
+    trials_to_consider = ['individual', 'demonstration']
+
     trials = [t for t in session.trials if t.trial_type in trials_to_consider]
+
+    # if this is the generation is not 0, we need to consider only the individual trials after the social learning
+    if session.generation != 0:
+        trials = [t for t in trials if t.id > 10]
 
     # get all player scores
     player_scores = [t.solution.score for t in trials]
