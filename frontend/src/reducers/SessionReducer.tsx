@@ -7,6 +7,7 @@ export const SESSION_ACTIONS = {
     SET_ADVISORS: 'setAdvisors',
     SET_SELECTED_ADVISOR: 'setSelectedAdvisor',
     UPDATE_TOTAL_POINTS: 'updateTotalPoints',
+    CLEAN_TOTAL_POINTS: 'cleanTotalPoints',
 }
 
 const sessionReducer = (state: SessionState, action: any) => {
@@ -41,6 +42,11 @@ const sessionReducer = (state: SessionState, action: any) => {
             return {
                 ...state,
                 totalPoints: state.totalPoints + action.payload.points + action.payload.missingSteps * -50,
+            };
+        case SESSION_ACTIONS.CLEAN_TOTAL_POINTS:
+            return {
+                ...state,
+                totalPoints: 0,
             }
         default:
             return state;
