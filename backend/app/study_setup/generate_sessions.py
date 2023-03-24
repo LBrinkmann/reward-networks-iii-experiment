@@ -361,7 +361,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
 def create_ai_trials(config_id: PydanticObjectId, experiment_num,
                      experiment_type, generation, session_idx,
-                     n_demonstration_trials, n_individual_trials=6):
+                     n_demonstration_trials, n_individual_trials=4):
     trials = []
     trial_n = 0
     # Individual trials
