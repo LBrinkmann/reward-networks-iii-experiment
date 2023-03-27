@@ -7,9 +7,8 @@ from models.session import Session
 from models.trial import Trial, Solution, WrittenStrategy
 from utils.utils import estimate_solution_score, estimate_average_player_score
 
-network_data = json.load(open(Path('data') / 'train_viz.json'))
-solutions = json.load(
-    open(Path('data') / 'solution_moves_take_first_loss_viz.json'))
+network_data = json.load(open(Path('data') / 'networks.json'))
+solutions = json.load(open(Path('data') / 'solutions_loss.json'))
 
 
 async def simulate_data(generation, config):
@@ -25,10 +24,8 @@ async def simulate_data(generation, config):
             for i in range(config.n_individual_trials):
                 network = Network.parse_obj(
                     network_data[random.randint(0, network_data.__len__() - 1)])
-                moves = \
-                    [s for s in solutions if
-                     s['network_id'] == network.network_id][
-                        0]['moves']
+                moves = [s for s in solutions if s['network_id'] == network.network_id][0]['moves']
+                moves[0] = network.starting_node
                 ind_trial = Trial(
                     id=n_trial,
                     trial_type='individual',
@@ -39,8 +36,7 @@ async def simulate_data(generation, config):
                     )
                 )
                 # update the starting node
-                ind_trial.network.nodes[
-                    ind_trial.network.starting_node].starting_node = True
+                ind_trial.network.nodes[ind_trial.network.starting_node].starting_node = True
                 trials.append(ind_trial)
                 n_trial += 1
 
@@ -48,10 +44,8 @@ async def simulate_data(generation, config):
             for i in range(config.n_demonstration_trials):
                 network = Network.parse_obj(
                     network_data[random.randint(0, network_data.__len__() - 1)])
-                moves = \
-                    [s for s in solutions if
-                     s['network_id'] == network.network_id][
-                        0]['moves']
+                moves = [s for s in solutions if s['network_id'] == network.network_id][0]['moves']
+                moves[0] = network.starting_node
                 dem_trial = Trial(
                     id=n_trial,
                     trial_type='demonstration',

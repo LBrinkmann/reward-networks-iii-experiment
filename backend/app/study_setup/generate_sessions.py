@@ -21,6 +21,7 @@ random.shuffle(network_data)
 
 # load all ai solutions
 solutions = json.load(open(Path('data') / 'solutions_loss.json'))
+solutions_myopic = json.load(open(Path('data') / 'solutions_myopic.json'))
 
 
 async def generate_experiment_sessions():
@@ -212,15 +213,21 @@ async def create_generation(config_id: PydanticObjectId,
 
     # if there are AI players, create sessions for them
     if n_ai_players > 0:
-        for session_idx in range(n_sessions_per_generation - n_ai_players,
-                                 n_sessions_per_generation):
+        solution_type = 'loss'
+        for session_idx in range(n_sessions_per_generation - n_ai_players, n_sessions_per_generation):
+            # TODO: remove after Pilot 3B
+            # Select AI solution type
+            if session_idx >= 3:
+                solution_type = 'myopic'
             session = create_ai_trials(
                 config_id=config_id,
                 experiment_num=experiment_num,
                 experiment_type=experiment_type,
                 generation=generation,
                 session_idx=session_idx,
-                n_demonstration_trials=n_demonstration_trials)
+                n_demonstration_trials=n_demonstration_trials,
+                solution_type=solution_type
+            )
             # save session
             await session.save()
             sessions.append(session)
@@ -253,6 +260,23 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
     # Social learning trials (not relevant for the very first generation)
     if generation > 0:
+        # Individual trials
+        trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual_start'))
+        trial_n += 1
+
+        for i in range(2):
+            net, _ = get_net_solution()
+            # individual trial
+            trial = Trial(trial_type='individual', id=trial_n, network=net)
+            # update the starting node
+            trial.network.nodes[trial.network.starting_node].starting_node = True
+            trials.append(trial)
+            trial_n += 1
+
+        # Written strategy
+        trials.append(Trial(id=trial_n, trial_type='written_strategy'))
+        trial_n += 1
+
         for i in range(n_social_learning_trials):
             # Social learning selection
             if i == 0:
@@ -271,9 +295,9 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
                 # Social learning
-                trials.append(Trial(id=trial_n, trial_type='observation'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='repeat'))
+                trials.append(Trial(id=trial_n, trial_type='observation'))
                 trial_n += 1
                 trials.append(Trial(id=trial_n, trial_type='try_yourself'))
                 trial_n += 1
@@ -286,7 +310,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual'))
     trial_n += 1
 
-    for i in range(n_individual_trials):
+    for i in range(n_individual_trials - 2 if generation > 0 else n_individual_trials):
         net, _ = get_net_solution()
         # individual trial
         trial = Trial(
@@ -317,8 +341,6 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         trial_n += 1
 
     # Written strategy
-    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='written_strategy'))
-    trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))
     trial_n += 1
     trials.append(Trial(id=trial_n, trial_type='post_survey'))
@@ -346,12 +368,12 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
 def create_ai_trials(config_id: PydanticObjectId, experiment_num,
                      experiment_type, generation, session_idx,
-                     n_demonstration_trials, n_individual_trials=6):
+                     n_demonstration_trials, n_individual_trials=4, solution_type='loss'):
     trials = []
     trial_n = 0
     # Individual trials
     for i in range(n_individual_trials):
-        net, moves = get_net_solution()
+        net, moves = get_net_solution(solution_type)
 
         # individual trial
         trial = Trial(
@@ -370,7 +392,7 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
 
     # Demonstration trial
     for i in range(n_demonstration_trials):
-        net, moves = get_net_solution()
+        net, moves = get_net_solution(solution_type)
 
         dem_trial = Trial(
             id=trial_n,
@@ -409,7 +431,7 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
     return session
 
 
-def get_net_solution():
+def get_net_solution(solution_type='loss'):
     # get networks list from the global variable
     global network_data
 
@@ -429,7 +451,11 @@ def get_net_solution():
     network = Network.parse_obj(network_raw)
 
     # get the solution for the network
-    moves = [s for s in solutions if s['network_id'] == network.network_id]
+    if solution_type == 'loss':
+        moves = [s for s in solutions if s['network_id'] == network.network_id]
+    else:
+        # myopic solution
+        moves = [s for s in solutions_myopic if s['network_id'] == network.network_id]
 
     # for some reason the first move is always 0, so we need to replace it
     moves[0]['moves'][0] = network.starting_node

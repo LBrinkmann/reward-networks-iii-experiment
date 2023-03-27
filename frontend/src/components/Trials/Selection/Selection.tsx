@@ -7,18 +7,22 @@ import {AdvisorSelection} from "../../../apis/apiTypes";
 interface SocialLearningSelectionProps {
     advisors: AdvisorSelection;
     onAdvisorSelected: (advisorId: string, inx: number) => void;
+    ownScore: number;
     /** show tutorial tip */
     showTutorial?: boolean;
 }
 
 const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
-    const {advisors, onAdvisorSelected, showTutorial = false} = props;
+    const {advisors, onAdvisorSelected, ownScore, showTutorial = false} = props;
     const [tutorialInx, setTutorialInx] = React.useState(1);
 
     return (
         <>
             <Typography variant="h3" align='center'>
                 Select a player to learn from
+            </Typography>
+            <Typography variant="h3" align='center'>
+                Your Score:  {ownScore}
             </Typography>
             <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
                 {

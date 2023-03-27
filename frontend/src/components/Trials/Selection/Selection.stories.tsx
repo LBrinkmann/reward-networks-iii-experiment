@@ -26,6 +26,7 @@ DefaultStory.args = {
         scores: [120, -500, -60, 800, -1000],
         advisor_ids: ["id_1", "id_2", "id_3", "id_4", "id_5"]
     },
+    ownScore: 100,
 };
 
 export const Tutorial = Template.bind({});
@@ -35,5 +36,6 @@ Tutorial.args = {
         scores: [120, -500, -60, 800, -1000],
         advisor_ids: ["id_1", "id_2", "id_3", "id_4", "id_5"]
     },
+    ownScore: 100,
     showTutorial: true,
 };

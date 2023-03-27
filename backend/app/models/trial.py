@@ -59,8 +59,10 @@ class Trial(BaseModel):
         'learning_selection',
         'learning',
         'individual',
+        'individual_start',
         'demonstration',
         'written_strategy',
+        'written_strategy_start',
     ]]
     finished: Optional[bool] = False
     started_at: Optional[datetime.datetime]

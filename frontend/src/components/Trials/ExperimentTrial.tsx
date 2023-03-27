@@ -95,6 +95,11 @@ const ExperimentTrial: FC = () => {
                     }
                 });
                 break;
+            case TRIAL_TYPE.INSTRUCTION:
+                // if this is instruction before the first individual trial clean up the total points
+                if (data.instruction_type === "individual")
+                    sessionDispatcher({type: SESSION_ACTIONS.CLEAN_TOTAL_POINTS});
+                break;
             default:
                 break;
 

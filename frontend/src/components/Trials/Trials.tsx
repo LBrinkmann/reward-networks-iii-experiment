@@ -96,6 +96,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
+                ownScore={sessionState.totalPoints / 2}
                 showTutorial={sessionState.showTutorialInCurrentTrial}
             />
         </>
@@ -128,6 +129,17 @@ export const ObservationTrial: FC<ITrial> = (props) => {
         }
     }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
+    const calculateScore = useCallback((moves: number[], edges: StaticNetworkEdgeInterface[]) => {
+        let score = 0;
+        for (let i = 0; i < moves.length - 1; i++) {
+            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
+            if (edge) {
+                score += edge.reward;
+            }
+        }
+        return score;
+    }, []);
+
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
         return <WaitForNextTrialScreen/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
@@ -140,6 +152,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
+                             teacherTotalPoints={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              playAnimation={!networkState.tutorialOptions.comment}
                 />
             </>);
@@ -221,7 +234,9 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
-                             teacherId={sessionState.selectedAdvisor.advisorNumber}/>
+                             teacherId={sessionState.selectedAdvisor.advisorNumber}
+                             endTrial={props.endTrial}
+                />
             </>
         );
 }
@@ -309,7 +324,7 @@ export const WrittenStrategyTrial: FC<ITrial> = (props) => {
     return (
         <>
             <Header title={'Written Strategy'} totalPoints={sessionState.totalPoints}/>
-            <WrittenStrategy endTrial={props.endTrial}/>
+            <WrittenStrategy endTrial={props.endTrial} type={sessionState.currentTrialId < 10 ? "start" : "end"}/>
         </>
     );
 };

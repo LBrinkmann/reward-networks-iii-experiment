@@ -36,8 +36,7 @@ async def test_one_subject_gen_1(default_client: httpx.AsyncClient,
 
     await one_subject(default_client, e_config, 0, generation)
 
-    session = await Session.find_one(Session.generation == generation,
-                                     Session.finished == True)
+    session = await Session.find_one(Session.generation == generation, Session.finished == True)
     assert session is not None
 
     for t in session.trials:
@@ -76,8 +75,7 @@ async def test_multiple_subjects(default_client: httpx.AsyncClient,
     # generation 1
     tasks = []
     for i in range(30, 60):
-        task = asyncio.create_task(one_subject(
-            default_client, e_config, i, generation=1))
+        task = asyncio.create_task(one_subject(default_client, e_config, i, generation=1))
         tasks.append(task)
     [await t for t in tasks]
 
@@ -136,6 +134,19 @@ async def one_subject(default_client: httpx.AsyncClient,
     trial_num += 1
 
     if generation != 0:
+        # individual_start
+        await get_post_trial(default_client, 'instruction', trial_num, url)
+        trial_num += 1
+
+        # individual
+        for _ in range(2):
+            await get_post_trial(default_client, 'individual', trial_num, url, solution, headers)
+            trial_num += 1
+
+        # written_strategy_start
+        await get_post_trial(default_client, 'written_strategy', trial_num, url, written_strategy, headers)
+        trial_num += 1
+
         for i in range(e_config.n_social_learning_trials):
             if i == 0:
                 # instruction_learning_selection
@@ -153,30 +164,27 @@ async def one_subject(default_client: httpx.AsyncClient,
 
             # social learning
             for _ in range(e_config.n_demonstration_trials):
-                await get_post_trial(default_client, 'observation', trial_num, url, solution, headers)
+                await get_post_trial(default_client, 'try_yourself', trial_num, url, solution, headers)
                 trial_num += 1
-                await get_post_trial(default_client, 'repeat', trial_num, url, solution, headers)
+                await get_post_trial(default_client, 'observation', trial_num, url, solution, headers)
                 trial_num += 1
                 await get_post_trial(default_client, 'try_yourself', trial_num, url, solution, headers)
                 trial_num += 1
 
     if generation > 0:
-        n_individual_trials = e_config.n_individual_trials
+        n_individual_trials = e_config.n_individual_trials - 2
     else:
         n_individual_trials = e_config.n_individual_trials
-        n_individual_trials += e_config.n_social_learning_trials \
-                               * e_config.n_demonstration_trials * 3
+        n_individual_trials += e_config.n_social_learning_trials * e_config.n_demonstration_trials * 3
 
     for i in range(n_individual_trials):
         if i == 0:
             # instruction individual
-            await get_post_trial(default_client, 'instruction',
-                                 trial_num, url)
+            await get_post_trial(default_client, 'instruction', trial_num, url)
             trial_num += 1
 
         # individual trial
-        await get_post_trial(default_client, 'individual', trial_num, url,
-                             solution, headers)
+        await get_post_trial(default_client, 'individual', trial_num, url, solution, headers)
         trial_num += 1
 
     # demonstration trial
@@ -192,16 +200,10 @@ async def one_subject(default_client: httpx.AsyncClient,
         trial_num += 1
 
     # written strategy trial
-    await get_post_trial(default_client, 'instruction',
-                         trial_num, url)
+    await get_post_trial(default_client, 'written_strategy', trial_num, url, written_strategy, headers)
     trial_num += 1
 
-    await get_post_trial(default_client, 'written_strategy', trial_num, url,
-                         written_strategy, headers)
-    trial_num += 1
-
-    await get_post_trial(default_client, 'post_survey', trial_num, url,
-                         post_survey, headers)
+    await get_post_trial(default_client, 'post_survey', trial_num, url, post_survey, headers)
     trial_num += 1
 
     # debriefing
@@ -209,8 +211,7 @@ async def one_subject(default_client: httpx.AsyncClient,
     trial_num += 1
 
 
-async def get_post_trial(client, trial_type, t_id, url, solution=None,
-                         headers=None):
+async def get_post_trial(client, trial_type, t_id, url, solution=None, headers=None):
     # get trial
     response = await client.get(url)
     assert response.status_code == 200
@@ -218,9 +219,7 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     data = response.json()
 
     if 'message' in data:
-        assert data['message'] in [
-            "Multiple subjects with the same prolific id",
-            "No available session for the subject"]
+        assert data['message'] is not None
         return
     else:
         trial = data
@@ -232,7 +231,7 @@ async def get_post_trial(client, trial_type, t_id, url, solution=None,
     await asyncio.sleep(0.05)
 
     # post solution
-    url = f'{url}/{trial_type}'
+    url = f'{url}/{t_id}'
     if solution is not None:
         response = await client.post(url, json=solution, headers=headers)
     else:

@@ -19,6 +19,7 @@ interface PlayerInformationProps {
     onTutorialCommentClose?: () => void;
     /** Show the legend for the rewards */
     showLegend?: boolean;
+    playerScore?: number | null;
 }
 
 const Item = styled(Paper)(() => ({
@@ -38,7 +39,7 @@ const PlayerInfoItem: FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showLegend = true} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showLegend = true, playerScore = null} = props;
     return (
 
         <Stack spacing={1} sx={{paddingTop: "20px"}}>
@@ -94,6 +95,14 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     </TutorialTip>
                 </PlayerInfoItem>
             ) : null}
+            {playerScore !== null &&
+                <PlayerInfoItem>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Player {props.id} score: {playerScore}
+                    </Typography>
+                </PlayerInfoItem>
+            }
+
         </Stack>
 
     )

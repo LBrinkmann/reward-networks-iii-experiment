@@ -57,4 +57,5 @@ export const Default = Template.bind({});
 Default.args = {
     solution: [9, 3, 8, 7, 4, 6, 7, 4, 6],
     teacherId: 1,
+    teacherTotalPoints: 10
 };

@@ -10,6 +10,7 @@ export type SessionState = {
     trialTitle: string;
     currentTrialId: number;
     currentTrialType: string;
+    previousTrialType: string;
     advisors: AdvisorSelection | null;
     selectedAdvisor: { advisorId: string, advisorNumber: number } | null;
     selectedAdvisorExampleId: number;
@@ -22,6 +23,7 @@ const sessionInitialState: SessionState = {
     trialTitle: '',
     currentTrialId: 0,
     currentTrialType: '',
+    previousTrialType: '',
     advisors: null,
     selectedAdvisor: null,
     selectedAdvisorExampleId: 0,

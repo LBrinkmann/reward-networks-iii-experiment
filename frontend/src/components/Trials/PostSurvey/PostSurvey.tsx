@@ -118,7 +118,7 @@ interface PostSurveyProps {
 }
 
 export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) => {
-    const {requiredFields = [true, true, true, true, true, false]} = props;
+    const {requiredFields = [true, true, true, true, false]} = props;
     const numberOfQuestions = requiredFields.length;
     const initialAnswers = new Array(numberOfQuestions).fill("");
     const [allQuestionsAnswered, setAllQuestionsAnswered] = useState<boolean>(false);
@@ -146,7 +146,7 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
     const onContinueHandler = () => {
         if (allQuestionsAnswered) {
             // const answersObject = answers.map((answer, ind) => { return {ind: answer} });
-            props.endTrial({questions: { ...answers}});
+            props.endTrial({questions: {...answers}});
         } else {
             setShowError(true);
         }
@@ -159,22 +159,17 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
               container
               spacing={3}
         >
-            <Grid item>
-                <OpenQuestion
-                    question={"Which strategies did you use to solve the task, if any?"}
-                    id={0}
-                    isRequired={requiredFields[0]}
-                    value={answers[0]}
-                    showErrorMessage={showError}
-                    onChangeHandler={onChangeHandler}
-                />
+            <Grid item style={{textAlign: "center"}}>
+                <Typography variant="h5" component="div">
+                    Finally, please answer some questions about the overall experiment experience
+                </Typography>
             </Grid>
             <Grid item>
                 <LikertQuestion
                     question={"How well was the task explained?"}
-                    id={1}
-                    isRequired={requiredFields[1]}
-                    value={answers[1]}
+                    id={0}
+                    isRequired={requiredFields[0]}
+                    value={answers[0]}
                     showErrorMessage={showError}
                     minValueExplanation={"I felt lost at times"}
                     maxValueExplanation={"I always knew what to do"}
@@ -184,9 +179,9 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
             <Grid item>
                 <LikertQuestion
                     question={"Please rate the difficulty of the task"}
-                    id={2}
-                    isRequired={requiredFields[2]}
-                    value={answers[2]}
+                    id={1}
+                    isRequired={requiredFields[1]}
+                    value={answers[1]}
                     showErrorMessage={showError}
                     minValueExplanation={"very easy"}
                     maxValueExplanation={"very hard"}
@@ -196,9 +191,9 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
             <Grid item>
                 <LikertQuestion
                     question={"Did you experience the time limit as sufficient to concentrate?"}
-                    id={3}
-                    isRequired={requiredFields[3]}
-                    value={answers[3]}
+                    id={2}
+                    isRequired={requiredFields[2]}
+                    value={answers[2]}
                     showErrorMessage={showError}
                     minValueExplanation={"way too short"}
                     maxValueExplanation={"way too long"}
@@ -208,9 +203,9 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
             <Grid item>
                 <LikertQuestion
                     question={"How hard was it to tell apart the colors for the different arrows?"}
-                    id={4}
-                    isRequired={requiredFields[4]}
-                    value={answers[4]}
+                    id={3}
+                    isRequired={requiredFields[3]}
+                    value={answers[3]}
                     showErrorMessage={showError}
                     minValueExplanation={"very easy"}
                     maxValueExplanation={"very hard"}
@@ -220,9 +215,9 @@ export const PostSurvey: React.FC<PostSurveyProps> = (props: PostSurveyProps) =>
             <Grid item>
                 <OpenQuestion
                     question={"Do you have any additional comments on the experiment you would like to share?"}
-                    id={5}
-                    isRequired={requiredFields[5]}
-                    value={answers[5]}
+                    id={4}
+                    isRequired={requiredFields[4]}
+                    value={answers[4]}
                     showErrorMessage={showError}
                     onChangeHandler={onChangeHandler}
                 />
