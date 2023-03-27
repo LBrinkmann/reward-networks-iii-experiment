@@ -83,8 +83,16 @@ const networkReducer = (state: NetworkState, action: any) => {
             if (!state.possibleMoves.includes(nextNode)) return state;
 
             // find the current edge
-            const currentEdge = state.network.edges.filter(
-                (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode)[0];
+            const currentEdges = state.network.edges.filter(
+                (edge: any) => edge.source_num === state.currentNode && edge.target_num === nextNode);
+
+            // if edge is not found, do nothing and return state
+            if (currentEdges.length !== 1) return state;
+
+            const currentEdge = currentEdges[0];
+
+            // if edge is undefined, do nothing and return state
+            if (!currentEdge || typeof currentEdge.reward === 'undefined' || typeof currentEdge === 'undefined') return state;
 
             return {
                 ...state,
