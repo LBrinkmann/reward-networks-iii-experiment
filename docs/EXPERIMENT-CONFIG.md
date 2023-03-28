@@ -1,6 +1,6 @@
 # How to configure the experiment settings
 
-There are multiple admin routs that can be used to configure the experiment. It is most convenient to use Postman RN-III config collection to configure the experiment.
+There are multiple admin routes that can be used to configure the experiment. It is most convenient to use Postman RN-III config collection to configure the experiment.
 
 ### Get the current study configuration
 
