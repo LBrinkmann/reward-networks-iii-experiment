@@ -1,70 +1,11 @@
 # Reward Network III
 
-## Admin API
+## Deployment
 
-### Create a new study
-
-`POST https://rn-iii-backend.eks-test-default.mpg-chm.com/admin/config`
-
-#### Pilot 1A
-
-```json
-
-{
-  "active": true,
-  "redirect_url": "https://app.prolific.co/submissions/complete?cc=<code>",
-  "experiment_type": "rn-iii-pilot-1a",
-  "rewrite_previous_data": false,
-  "n_generations": 1,
-  "n_sessions_first_generation": 10,
-  "n_ai_players": 0,
-  "n_sessions_per_generation": 10,
-  "n_advise_per_session": 5,
-  "n_session_tree_replications": 1,
-  "n_social_learning_trials": 2,
-  "n_individual_trials": 6,
-  "n_demonstration_trials": 2
-}
-
-```
-
-#### Pilot 1B
-
-```json
-
-{
-  "active": true,
-  "redirect_url": "https://app.prolific.co/submissions/complete?cc=<code>",
-  "experiment_type": "rn-iii-pilot-1a",
-  "rewrite_previous_data": false,
-  "n_generations": 2,
-  "n_sessions_first_generation": 10,
-  "n_ai_players": 10,
-  "n_sessions_per_generation": 10,
-  "n_advise_per_session": 5,
-  "n_session_tree_replications": 1,
-  "n_social_learning_trials": 2,
-  "n_individual_trials": 6,
-  "n_demonstration_trials": 2
-}
-
-```
-
-### Get the current study configuration
-
-`GET https://rn-iii-backend.eks-test-default.mpg-chm.com/admin/config`
-
-### Get the current study session tree
-
-`GET https://rn-iii-backend.eks-test-default.mpg-chm.com/progress/`
-
-### Get all results in the database
-
-`GET https://rn-iii-backend.eks-test-default.mpg-chm.com/results/sessions`
-
-### Get results for a specific experiment
-
-`GET https://rn-iii-backend.eks-test-default.mpg-chm.com/results/sessions?experiment_type=rn-iii-pilot-1a&finished=true`
+- Frontend
+  URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
+- Backend
+  URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
 
 ## DB models
 
@@ -119,6 +60,13 @@ docker-compose -f docker-compose-dev.yml down --volumes
 
 ```
 
+### Links when the docker-compose-dev.yml is running
+
+- React: http://localhost:9000/
+- Storybook: http://localhost:6006/
+- FastAPI: http://localhost:5000/
+- Swagger UI FastAPI: http://localhost:5000/docs
+
 ### Run pytest
 
 Create the virtual environment in the backend folder:
@@ -172,29 +120,7 @@ docker system prune --volumes --force # clean up unused volumes
 
 ```
 
-### Links for development
-
-- React: http://localhost:9000/
-- Storybook: http://localhost:6006/
-- Swagger UI FastAPI: http://localhost:5000/docs
-
-## Deployment
-
-GitLab repo is available
-at [https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii](https://gitlab.gwdg.de/mpib/chm/hci/reward-networks/reward-network-iii)
-
-- Frontend
-  URL:  [https://rn-iii-frontend.eks-test-default.mpg-chm.com](https://rn-iii-frontend.eks-test-default.mpg-chm.com)
-- Backend
-  URL: [https://rn-iii-backend.eks-test-default.mpg-chm.com](https://rn-iii-backend.eks-test-default.mpg-chm.com)
-
-### Logs in New Relic
-
-- Frontend pod
-  logs: [https://onenr.io/0vwBm6lgoQp](https://onenr.io/0vwBm6lgoQp)
-- Backend pod logs: [https://onenr.io/0gR7DGq3xjo](https://onenr.io/0gR7DGq3xjo)
-
-### Deployment notes
+## Deployment notes
 
 - Frontend and backend pipelines are triggered by the parent
   pipeline [`.gitlab-ci.yml`](.gitlab-ci.yml).
