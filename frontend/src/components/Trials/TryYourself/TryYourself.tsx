@@ -24,7 +24,7 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                     sx={{width: '600px'}}
                     justifyContent="center"
                     alignItems="center"
-                    style={{margin: 'auto', marginTop: '15%'}}
+                    style={{margin: 'auto', marginTop: '8%'}}
                 >
                     <Typography variant="h6" gutterBottom align={'left'}>
                         Player {teacherId} comment:
