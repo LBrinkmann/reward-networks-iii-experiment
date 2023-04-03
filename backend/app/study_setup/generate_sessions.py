@@ -382,7 +382,8 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
             network=net,
             solution=Solution(
                 moves=moves,
-                score=estimate_solution_score(net, moves)
+                score=estimate_solution_score(net, moves),
+                solution_type=solution_type
             )
         )
         # update the starting node
@@ -400,7 +401,8 @@ def create_ai_trials(config_id: PydanticObjectId, experiment_num,
             network=net,
             solution=Solution(
                 moves=moves,
-                score=estimate_solution_score(net, moves)
+                score=estimate_solution_score(net, moves),
+                solution_type=solution_type
             )
         )
         # update the starting node
