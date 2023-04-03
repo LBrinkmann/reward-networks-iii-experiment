@@ -15,6 +15,7 @@ export interface Solution {
   score?: number;
   trial_id?: number;
   finished_at?: string;
+  solution_type?: "myopic" | "loss";
 }
 export interface AdvisorSelection {
   advisor_ids: string[];
