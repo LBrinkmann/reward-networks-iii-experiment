@@ -204,10 +204,10 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
 
     useEffect(() => {
         if (networkState.isNetworkFinished) {
-            // wait for 4 seconds before submitting the results to give participant time to compare the solutions
+            // wait for 30 seconds before submitting the results to give participant time to compare the solutions
             const timer1 = setTimeout(() => {
                 props.endTrial({moves: networkState.moves})
-            }, 4000);
+            }, 30 * 1000);
 
             return () => clearTimeout(timer1);
         }
@@ -236,6 +236,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              endTrial={props.endTrial}
+                             teacherWrittenSolution={props.data.advisor.written_strategy}
                 />
             </>
         );

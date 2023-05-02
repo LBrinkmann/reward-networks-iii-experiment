@@ -12,6 +12,7 @@ class Solution(BaseModel):
     score: Optional[int]  # solution score
     trial_id: Optional[int]  # trial number in session
     finished_at: Optional[datetime.datetime]
+    solution_type: Optional[Literal['myopic', 'loss']]
 
 
 class Advisor(BaseModel):

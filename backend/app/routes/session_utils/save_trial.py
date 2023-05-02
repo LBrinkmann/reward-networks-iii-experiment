@@ -92,15 +92,6 @@ async def save_social_learning_selection(trials: List[Trial],
     sl_selection = trials[0]
     sl_trials = trials[1:]
 
-    # TODO: remove this after pilot 2B !!!
-    # ----------------- Relevant for pilot 2B -----------------
-    # sl_selection.id == 4 is the first social learning selection trial
-    if sl_selection.id == 4:
-        comment = "To be able to get to the arrows with 400 points you first need to take three arrows with -50 points."
-    else:
-        comment = "Follow three red arrows, then follow the highest points possible."
-    # ---------------------------------------------------------
-
     # remove instruction trial if it is in the list of social learning trials
     sl_trials = [t for t in sl_trials if t.trial_type != 'instruction']
 
@@ -112,6 +103,23 @@ async def save_social_learning_selection(trials: List[Trial],
 
     # get advisor demonstration trials
     ad_trials = [t for t in ad_s.trials if t.trial_type == 'demonstration']
+
+    # TODO: remove this after pilot 4B !!!
+    # ----------------- Relevant for pilot 2B and 4B -----------------
+    # sl_selection.id == 8 is the first social learning selection trial
+    if sl_selection.id == 8 and ad_trials[0].solution.solution_type == "myopic":
+        comment = "Always follow the green arrows"
+    elif sl_selection.id == 8 and ad_trials[0].solution.solution_type == "loss":
+        comment = "I tried many different things. It turned out that the best strategy is to take exactly three " \
+                  "violet arrows as early as possible and to go for dark green arrows afterwards. Do not take a dark " \
+                  "green arrow before taking at least three violet arrows first"
+    elif sl_selection.id == 16 and ad_trials[0].solution.solution_type == "myopic":
+        comment = "Try to maximize green, especially dark green"
+    # elif sl_selection.id == 16 and ad_trials[0].solution.solution_type == "loss":
+    else:
+        comment = "To be able to get to the arrows with 400 points you first need to take exactly three arrows with " \
+                  "-50 points. Do it as early as possible"
+    # ---------------------------------------------------------
 
     # select advisor's written strategy
     wr_s = [t.written_strategy for t in ad_s.trials if

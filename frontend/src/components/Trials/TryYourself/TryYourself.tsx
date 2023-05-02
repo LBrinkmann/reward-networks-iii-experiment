@@ -10,9 +10,10 @@ interface ITryYour {
     teacherId: number;
     teacherTotalScore: number;
     endTrial: (data: any) => void;
+    teacherWrittenSolution: string;
 }
 
-const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endTrial}) => {
+const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endTrial, teacherWrittenSolution}) => {
     const {networkState} = useNetworkContext();
 
     return (
@@ -23,8 +24,23 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                     sx={{width: '600px'}}
                     justifyContent="center"
                     alignItems="center"
-                    style={{margin: 'auto', marginTop: '15%'}}
+                    style={{margin: 'auto', marginTop: '8%'}}
                 >
+                    <Typography variant="h6" gutterBottom align={'left'}>
+                        Player {teacherId} comment:
+                    </Typography>
+                    <Typography variant="body1" gutterBottom align={'justify'}>
+                        {teacherWrittenSolution}
+                    </Typography>
+                    <Typography variant="h6" gutterBottom align={'left'}>
+                        Player {teacherId} total score: {teacherTotalScore}
+                    </Typography>
+                    <LinearSolution
+                        edges={networkState.network.edges}
+                        nodes={networkState.network.nodes}
+                        moves={solution}
+                        id={150}
+                    />
                     <Typography variant="h6" gutterBottom align={'left'}>
                         Your solution total score: {networkState.points}
                     </Typography>
@@ -34,15 +50,6 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                         moves={networkState.moves}
                         showTutorial={networkState.tutorialOptions.linearSolution}
                         id={200}
-                    />
-                    <Typography variant="h6" gutterBottom align={'left'}>
-                        Player {teacherId} total score: {teacherTotalScore}
-                    </Typography>
-                    <LinearSolution
-                        edges={networkState.network.edges}
-                        nodes={networkState.network.nodes}
-                        moves={solution}
-                        id={150}
                     />
                     <Box textAlign="center" marginTop="20px">
                         <Button onClick={() => endTrial({moves: networkState.moves})} variant="contained"

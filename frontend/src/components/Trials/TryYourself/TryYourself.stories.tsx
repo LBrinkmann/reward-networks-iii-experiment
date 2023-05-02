@@ -65,4 +65,5 @@ Default.args = {
     teacherId: 1,
     teacherTotalScore: 10,
     endTrial: (data: any) => console.log(data),
+    teacherWrittenSolution: "I tried many different things. It turned out that the best strategy is to take exactly three violet arrows as early as possible and to go for dark green arrows afterwards. Do not take a dark green arrow before taking at least three violet arrows first"
 };

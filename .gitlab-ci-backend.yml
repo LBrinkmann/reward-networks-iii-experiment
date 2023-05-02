@@ -14,7 +14,7 @@ init:
     - cp -r $CHILD_PIPELINE_EXECUTION_CONTEXT/* ./
     - rm -rf frontend
     - rm -rf backend
-    - echo "DATABASE_NAME=rn-iii-pilot-2ab" >>build.env
+    - echo "DATABASE_NAME=rn-iii-pilot-4b" >>build.env
     - cat build.env
   artifacts:
     paths:
