@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
 import {NetworkEdgeStyle} from "../NetworkEdge/NetworkEdge";
@@ -90,11 +90,19 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
     const scaleSizeX = (val: number) => val * multiplier + size / 2;
     const scaleSizeY = (val: number) => val * multiplier + size / 2;
 
-    const setNodeStatus = (active: boolean) => {
+    const setNodeStatus = useCallback((active: boolean, node_num: number) => {
         if (active) return 'active';
         if (disableClick || blur) return 'disabled';
+        // if in possible moves return 'next'
+        if (possibleMoves.includes(node_num)) return 'next';
         return 'normal';
-    }
+    }, [possibleMoves, disableClick, blur]);
+
+    const setNextNodeColor = useCallback((node_num: number) => {
+        const reward = edges.find(edge => (edge.source_num === currentNodeId) && (edge.target_num === node_num))?.reward;
+        // check if reward in not null
+        return reward === null ? '#ffffff' : colors[allRewards.indexOf(reward)];
+    }, [edges, currentNodeId, allRewards, colors]);
 
     return (
         <svg width={size} height={size}>
@@ -140,11 +148,12 @@ const StaticNetwork: React.FC<StaticNetworkInterface> = props => {
                                 Text={node.display_name}
                                 Radius={nodeSize}
                                 onNodeClick={onNodeClickHandler}
-                                status={setNodeStatus(isActive)}
+                                status={setNodeStatus(isActive, node.node_num)}
                                 isValidMove={possibleMoves.includes(node.node_num)}
                                 key={'node-' + idx}
                                 showTutorial={showNodeTutorial && isActive}
                                 onTutorialClose={props.onTutorialClose}
+                                nextNodeColor={setNextNodeColor(node.node_num)}
                             />
                         );
                     })}
