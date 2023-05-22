@@ -52,39 +52,6 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
 
     let colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];
 
-    const plotEdge = (moveIdx: number) => {
-        if (moveIdx < moves.length - 1) {
-            const edge = edges.filter((edge) =>
-                edge.source_num === moves[moveIdx] && edge.target_num === moves[moveIdx + 1])[0];
-
-            // the point on the border of the source node
-            const sourceX = onset + moveIdx * gap + nodeRadius;
-            // the point on the border of the target node
-            const targetX = onset + (moveIdx + 1) * gap - nodeRadius;
-
-            return (
-                <NetworkEdge
-                    reward={edge.reward}
-                    edgeWidth={edgeWidth}
-                    edgeStyle={"normal"}
-                    idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
-                    showRewardText={false}
-                    arc_type={edge.arc_type}
-                    source_x={sourceX}
-                    source_y={size.height / 2}
-                    arc_x={sourceX + (targetX - sourceX)}
-                    arc_y={size.height / 2}
-                    target_x={targetX}
-                    target_y={size.height / 2}
-                    key={'linear-solution-edge-' + moveIdx}
-                    color={colors[allRewards.indexOf(edge.reward)]}
-                />
-            );
-        } else {
-            return null;
-        }
-    }
-
     return (
         <TutorialTip
             tutorialId={"practice_linear_solution"}
@@ -112,7 +79,20 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         isValidMove={false}
                                         key={"linear-solution-node-" + idx}
                                     />
-                                    {plotEdge(idx)}
+                                    <LinearSolutionEdge
+                                        {...props}
+                                        colors={colors}
+                                        allRewards={allRewards}
+                                        edges={edges}
+                                        moves={moves}
+                                        moveIdx={idx}
+                                        gap={gap}
+                                        nodeRadius={nodeRadius}
+                                        onset={onset}
+                                        edgeWidth={edgeWidth}
+                                        id={id}
+                                        size={size}
+                                    />
                                 </ React.Fragment>
                             );
                         })};
@@ -122,5 +102,57 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         </TutorialTip>
     )
 }
+
+interface ILinearSolutionEdge extends LinearSolutionInterface {
+    moveIdx: number;
+    colors: string[];
+}
+
+const LinearSolutionEdge: FC<ILinearSolutionEdge> = (props) => {
+    const {
+        edges,
+        moves,
+        moveIdx,
+        gap,
+        nodeRadius,
+        onset,
+        edgeWidth,
+        id,
+        size,
+        colors,
+        allRewards
+    } = props;
+    if (moveIdx < moves.length - 1) {
+        const edge = edges.filter((edge) =>
+            edge.source_num === moves[moveIdx] && edge.target_num === moves[moveIdx + 1])[0];
+
+        // the point on the border of the source node
+        const sourceX = onset + moveIdx * gap + nodeRadius;
+        // the point on the border of the target node
+        const targetX = onset + (moveIdx + 1) * gap - nodeRadius;
+
+        return (
+            <NetworkEdge
+                reward={edge.reward}
+                edgeWidth={edgeWidth}
+                edgeStyle={"normal"}
+                idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
+                showRewardText={false}
+                arc_type={edge.arc_type}
+                source_x={sourceX}
+                source_y={size.height / 2}
+                arc_x={sourceX + (targetX - sourceX)}
+                arc_y={size.height / 2}
+                target_x={targetX}
+                target_y={size.height / 2}
+                key={'linear-solution-edge-' + moveIdx}
+                color={colors[allRewards.indexOf(edge.reward)]}
+            />
+        );
+    } else {
+        return null;
+    }
+}
+
 
 export default LinearSolution
