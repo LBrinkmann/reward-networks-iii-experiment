@@ -2,7 +2,7 @@ import React, {FC} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
 interface LinearSolutionInterface {
@@ -20,7 +20,7 @@ interface LinearSolutionInterface {
     nodeRadius?: number;
     /** Edge width. Default = 3 */
     edgeWidth?: number;
-    /** Gap between nodes. Default = 70 */
+    /** Gap between nodes. Default = 60 */
     gap?: number;
     /** Onset of the first node. Default = 24 */
     onset?: number;
@@ -61,15 +61,26 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             placement="left"
         >
             <Box>
-                <svg width={size.width} height={size.height}>
+                <Typography variant="h4" align='center'>
+                    Steps
+                </Typography>
+                <svg width={size.width} height={size.height + gap / 2}>
                     <g>
                         {moves.map((move, idx) => {
                             const node = nodes[move];
                             return (
                                 <React.Fragment key={"move" + idx}>
-                                    <NetworkNode
+                                    <text
                                         x={onset + idx * gap}
                                         y={size.height / 2}
+                                        style={{fontWeight: "bold", fontSize: '25px'}}
+                                        textAnchor="middle"
+                                    >
+                                        {idx + 1}
+                                    </text>
+                                    <NetworkNode
+                                        x={onset + idx * gap}
+                                        y={size.height / 2 + gap / 2}
                                         nodeInx={node.node_num}
                                         Text={node.display_name}
                                         Radius={nodeRadius}
@@ -140,11 +151,11 @@ const LinearSolutionEdge: FC<ILinearSolutionEdge> = (props) => {
                 showRewardText={false}
                 arc_type={edge.arc_type}
                 source_x={sourceX}
-                source_y={size.height / 2}
+                source_y={size.height / 2 + gap / 2}
                 arc_x={sourceX + (targetX - sourceX)}
-                arc_y={size.height / 2}
+                arc_y={size.height / 2 + gap / 2}
                 target_x={targetX}
-                target_y={size.height / 2}
+                target_y={size.height / 2 + gap / 2}
                 key={'linear-solution-edge-' + moveIdx}
                 color={colors[allRewards.indexOf(edge.reward)]}
             />
