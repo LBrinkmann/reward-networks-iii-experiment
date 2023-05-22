@@ -26,3 +26,11 @@ DefaultStory.args = {
     endTrial: ({moves: []}) => {},
     instructionText: "instruction text",
 };
+
+export const Welcome = Template.bind({});
+
+Welcome.args = {
+    endTrial: ({moves: []}) => {},
+    instructionText: "instruction text",
+    instructionType: "welcome",
+};
