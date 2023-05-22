@@ -8,7 +8,6 @@ import data from "../../Network/examples";
 import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
 import {edges, nodes} from "./PracticeData";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
-import {SessionContextProvider} from "../../../contexts/SessionContext";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
 
@@ -18,11 +17,9 @@ export default {
     decorators: [
         (ComponentStory) => {
             return (
-                <SessionContextProvider>
-                    <NetworkContextProvider saveToLocalStorage={false}>
-                        <ComponentStory/>
-                    </NetworkContextProvider>
-                </SessionContextProvider>
+                <NetworkContextProvider saveToLocalStorage={false}>
+                    <ComponentStory/>
+                </NetworkContextProvider>
             );
         },
     ]

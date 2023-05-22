@@ -74,7 +74,7 @@ export const PracticeTrial: FC<ITrial> = (props) => {
         <>
             <Header title={'Practice'} showTutorial={showTotalScoreTutorial} onTutorialClose={endTrial}
                     showTip={false}/>
-            <NetworkTrial isPractice={true}/>
+            <NetworkTrial isPractice={true} playerTotalPoints={0}/>
         </>
     );
 }
@@ -154,6 +154,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              teacherTotalPoints={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              playAnimation={!networkState.tutorialOptions.comment}
+                             playerTotalPoints={sessionState.totalPoints}
                 />
             </>);
 }
@@ -194,7 +195,9 @@ export const RepeatTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisorExampleId + ' Player ' +
                     sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
                 <Repeat solution={props.data.advisor.solution.moves}
-                        teacherId={sessionState.selectedAdvisor.advisorNumber}/>
+                        teacherId={sessionState.selectedAdvisor.advisorNumber}
+                        playerTotalPoints={sessionState.totalPoints}
+                />
             </>);
 }
 
@@ -237,6 +240,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              endTrial={props.endTrial}
                              teacherWrittenSolution={props.data.advisor.written_strategy}
+                             playerTotalPoints={sessionState.totalPoints}
                 />
             </>
         );
@@ -275,7 +279,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
         return (
             <>
                 <Header title={'Individual Performance'} totalPoints={sessionState.totalPoints}/>
-                <NetworkTrial/>
+                <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );
 }
@@ -313,7 +317,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
         return (
             <>
                 <Header title={'Demonstration'} totalPoints={sessionState.totalPoints}/>
-                <NetworkTrial/>
+                <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );
 }

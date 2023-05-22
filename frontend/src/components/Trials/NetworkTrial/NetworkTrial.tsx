@@ -18,6 +18,7 @@ interface NetworkTrialInterface {
     isPractice?: boolean;
     isTimerPaused?: boolean;
     advisorTotalPoints?: number | null;
+    playerTotalPoints?: number;
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
@@ -30,9 +31,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         isPractice = false,
         isTimerPaused = false,
         advisorTotalPoints = null,
+        playerTotalPoints = 0
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
-    const {sessionState} = useSessionContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
         // skip update if network is disabled or finished
@@ -73,7 +74,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
-                            totalScore={sessionState.totalPoints}
+                            totalScore={playerTotalPoints}
                             showComment={showComment}
                             comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}

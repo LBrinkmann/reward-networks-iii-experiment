@@ -11,9 +11,10 @@ interface ITryYour {
     teacherTotalScore: number;
     endTrial: (data: any) => void;
     teacherWrittenSolution: string;
+    playerTotalPoints: number;
 }
 
-const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endTrial, teacherWrittenSolution}) => {
+const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endTrial, teacherWrittenSolution, playerTotalPoints}) => {
     const {networkState} = useNetworkContext();
 
     return (
@@ -62,7 +63,7 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                     <Typography variant="h3" align='center'>
                         Try to beat player {teacherId}'s score: {teacherTotalScore}!
                     </Typography>
-                    <NetworkTrial advisorTotalPoints={teacherTotalScore}/>
+                    <NetworkTrial advisorTotalPoints={teacherTotalScore} playerTotalPoints={playerTotalPoints}/>
                 </>
             )}
         </>

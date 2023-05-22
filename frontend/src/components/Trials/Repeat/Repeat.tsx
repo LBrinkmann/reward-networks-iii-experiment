@@ -8,9 +8,10 @@ import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 interface IRepeat {
     solution: number[];
     teacherId: number;
+    playerTotalPoints: number;
 }
 
-const Repeat: FC<IRepeat> = ({solution, teacherId}) => {
+const Repeat: FC<IRepeat> = ({solution, teacherId, playerTotalPoints}) => {
     const {networkState, networkDispatcher} = useNetworkContext();
 
     useEffect(() => {
@@ -37,7 +38,7 @@ const Repeat: FC<IRepeat> = ({solution, teacherId}) => {
             <Typography variant="h3" align='center'>
                 Repeat the solution by following the dashed line
             </Typography>
-            <NetworkTrial showComment={true} teacherId={teacherId}/>
+            <NetworkTrial showComment={true} teacherId={teacherId} playerTotalPoints={playerTotalPoints}/>
         </>
     );
 
