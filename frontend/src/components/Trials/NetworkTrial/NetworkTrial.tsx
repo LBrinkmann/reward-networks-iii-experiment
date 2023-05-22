@@ -115,8 +115,12 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={2}>
-                <Legend/>
+            <Grid item xs={1}>
+                <Grid container direction="column" justifyContent="center" alignItems="center">
+                    <Grid item style={{position: 'relative'}} mt={"150px"}>
+                        <Legend/>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     );
