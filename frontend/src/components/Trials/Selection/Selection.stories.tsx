@@ -13,7 +13,7 @@ export default {
 const Template: ComponentStory<typeof Selection> = function (args) {
     return (
         <>
-            <Header totalPoints={0} title={"Selection"}/>
+            <Header title={"Selection"}/>
             <Selection {...args}/>
         </>
     );

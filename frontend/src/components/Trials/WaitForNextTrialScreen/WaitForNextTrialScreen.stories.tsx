@@ -13,7 +13,7 @@ export default {
 const Template: ComponentStory<typeof WaitForNextTrialScreen> = function (args) {
     return (
         <>
-            <Header totalPoints={0} title={"Wait for the next trial"}/>
+            <Header title={"Wait for the next trial"}/>
             <WaitForNextTrialScreen />
         </>
     );
