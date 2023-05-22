@@ -38,9 +38,19 @@ ExampleOne.args = {
     id: 1,
     step: 2,
     cumulativePoints: 100,
+    totalScore: 2000,
     comment: "This is a comment",
     showComment: true,
-
-
 };
+
+export const NoComment = Template.bind({});
+
+NoComment.args = {
+    id: 1,
+    step: 2,
+    cumulativePoints: 100,
+    totalScore: 2000,
+    showComment: false,
+};
+
 

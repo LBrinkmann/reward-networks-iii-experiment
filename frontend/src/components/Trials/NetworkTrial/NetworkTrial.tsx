@@ -6,6 +6,7 @@ import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
+import useSessionContext from "../../../contexts/SessionContext";
 
 interface NetworkTrialInterface {
     showLegend?: boolean;
@@ -31,6 +32,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         advisorTotalPoints = null,
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
+    const {sessionState} = useSessionContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
         // skip update if network is disabled or finished
@@ -71,6 +73,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
+                            totalScore={sessionState.totalPoints}
                             showComment={showComment}
                             comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
@@ -114,11 +117,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         </Grid>
     );
 }
-
-interface IFlashingReward {
-    show?: boolean;
-}
-
 const FlashingReward: FC = () => {
     const allRewards = [-50, 0, 100, 200, 400];
     const colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];

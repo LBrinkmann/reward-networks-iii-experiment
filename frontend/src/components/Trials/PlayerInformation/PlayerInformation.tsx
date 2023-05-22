@@ -9,6 +9,7 @@ interface PlayerInformationProps {
     id: number;
     step: number;
     cumulativePoints: number;
+    totalScore: number;
     /** Player's comment */
     comment?: string;
     showComment?: boolean;
@@ -32,7 +33,7 @@ const PlayerInfoItem: FC = ({children}) => {
     return (
         <Item elevation={0}>
             {children}
-            <Divider/>
+            {/*<Divider/>*/}
         </Item>
     )
 };
@@ -53,11 +54,9 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     />
                 )}
             </PlayerInfoItem>
-            <PlayerInfoItem>
-                <Typography gutterBottom variant="h5" component="div">
-                    Step {props.step}
-                </Typography>
-            </PlayerInfoItem>
+            <Typography gutterBottom variant="h4" component="div">
+                Points
+            </Typography>
             <PlayerInfoItem>
                 <TutorialTip
                     tutorialId={"practice_step_score"}
@@ -65,10 +64,15 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     isShowTip={false}
                     onTutorialClose={() => {}}
                 >
-                    <Typography gutterBottom variant="h5" component="div">
-                        Points {props.cumulativePoints}
+                    <Typography variant="h5" component="div">
+                        Current Network: {props.cumulativePoints}
                     </Typography>
                 </TutorialTip>
+            </PlayerInfoItem>
+            <PlayerInfoItem>
+                <Typography variant="h5" component="div">
+                    Total: {props.totalScore}
+                </Typography>
             </PlayerInfoItem>
             {(showComment) ? (
                 <PlayerInfoItem>
