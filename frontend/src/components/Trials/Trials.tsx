@@ -149,7 +149,6 @@ export const ObservationTrial: FC<ITrial> = (props) => {
                     sessionState.selectedAdvisor.advisorNumber}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
-                             teacherTotalPoints={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              playAnimation={!networkState.tutorialOptions.comment}
                              playerTotalPoints={sessionState.totalPoints}
                 />

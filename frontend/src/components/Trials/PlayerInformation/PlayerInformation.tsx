@@ -17,11 +17,10 @@ interface PlayerInformationProps {
     showTutorialComment?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialCommentClose?: () => void;
-    playerScore?: number | null;
 }
 
 const Item = styled(Paper)(() => ({
-    padding: 2,
+    padding: 0,
     elevation: 0,
     textAlign: 'left',
 }));
@@ -37,11 +36,11 @@ const PlayerInfoItem: FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false, playerScore = null} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false} = props;
     return (
 
-        <Stack spacing={1} sx={{paddingTop: "20px"}}>
-            <Typography gutterBottom variant="h4" component="div">
+        <Stack spacing={0} sx={{paddingTop: "20px"}}>
+            <Typography variant="h4" component="div">
                 Points
             </Typography>
             <PlayerInfoItem>
@@ -51,19 +50,19 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     isShowTip={false}
                     onTutorialClose={() => {}}
                 >
-                    <Typography variant="h6" component="div">
+                    <Typography variant="subtitle1" component="div">
                         Current Network: {props.cumulativePoints}
                     </Typography>
                 </TutorialTip>
             </PlayerInfoItem>
             <PlayerInfoItem>
-                <Typography variant="h6" component="div">
+                <Typography variant="subtitle1" component="div">
                     Total: {props.totalScore}
                 </Typography>
             </PlayerInfoItem>
             {(showComment) ? (
                 <PlayerInfoItem>
-                    <Typography gutterBottom variant="h6" component="div">
+                    <Typography gutterBottom variant="subtitle1" component="div">
                         Player {props.id} comment:
                     </Typography>
 
@@ -86,14 +85,6 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     </TutorialTip>
                 </PlayerInfoItem>
             ) : null}
-            {playerScore !== null &&
-                <PlayerInfoItem>
-                    <Typography gutterBottom variant="h6" component="div">
-                        Player {props.id} score: {playerScore}
-                    </Typography>
-                </PlayerInfoItem>
-            }
-
         </Stack>
 
     )

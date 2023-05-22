@@ -17,7 +17,6 @@ interface NetworkTrialInterface {
     time?: number;
     isPractice?: boolean;
     isTimerPaused?: boolean;
-    advisorTotalPoints?: number | null;
     playerTotalPoints?: number;
 }
 
@@ -30,7 +29,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         time = 35,
         isPractice = false,
         isTimerPaused = false,
-        advisorTotalPoints = null,
         playerTotalPoints = 0
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
@@ -58,7 +56,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         <Grid container sx={{margin: 'auto', width: '85%'}} justifyContent="space-around">
             <Grid item sx={{p: 1}} xs={3}>
                 <Grid container direction="column">
-                    <Grid item xs={4}>
+                    <Grid item xs={4} mt={"340px"}>
                         {showTimer &&
                             <Timer
                                 time={time}
@@ -80,7 +78,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showTutorialScore={networkState.tutorialOptions.points}
                             showTutorialComment={networkState.tutorialOptions.comment}
                             onTutorialCommentClose={onTutorialCommentClose}
-                            playerScore={advisorTotalPoints}
                         />
                     </Grid>
                 </Grid>
@@ -101,7 +98,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             onTutorialClose={NextTutorialStepHandler}
                             blur={networkState.tutorialOptions.comment}
                         />
-                        <Divider variant="middle" light/>
                     </Grid>
                     <Grid item sx={{marginTop: '10px'}}>
                         {showLinearNetwork &&
@@ -117,7 +113,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
             </Grid>
             <Grid item xs={1}>
                 <Grid container direction="column" justifyContent="center" alignItems="center">
-                    <Grid item style={{position: 'relative'}} mt={"150px"}>
+                    <Grid item mt={"150px"}>
                         <Legend/>
                     </Grid>
                 </Grid>
