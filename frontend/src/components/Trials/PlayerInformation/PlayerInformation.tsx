@@ -1,7 +1,6 @@
-import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
 import TutorialTip from "../../Tutorial/TutorialTip";
-import rewardsImg from "../../../images/legend.png";
 import styled from "@emotion/styled";
 
 interface PlayerInformationProps {
@@ -18,8 +17,6 @@ interface PlayerInformationProps {
     showTutorialComment?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialCommentClose?: () => void;
-    /** Show the legend for the rewards */
-    showLegend?: boolean;
     playerScore?: number | null;
 }
 
@@ -40,20 +37,10 @@ const PlayerInfoItem: FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showLegend = true, playerScore = null} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false, playerScore = null} = props;
     return (
 
         <Stack spacing={1} sx={{paddingTop: "20px"}}>
-            <PlayerInfoItem>
-                {/*show if showLegend*/}
-                {showLegend && (
-                    <CardMedia
-                        component="img"
-                        image={rewardsImg}
-                        alt="You earn or lose points depending on the color of the arrow."
-                    />
-                )}
-            </PlayerInfoItem>
             <Typography gutterBottom variant="h4" component="div">
                 Points
             </Typography>
@@ -64,19 +51,19 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     isShowTip={false}
                     onTutorialClose={() => {}}
                 >
-                    <Typography variant="h5" component="div">
+                    <Typography variant="h6" component="div">
                         Current Network: {props.cumulativePoints}
                     </Typography>
                 </TutorialTip>
             </PlayerInfoItem>
             <PlayerInfoItem>
-                <Typography variant="h5" component="div">
+                <Typography variant="h6" component="div">
                     Total: {props.totalScore}
                 </Typography>
             </PlayerInfoItem>
             {(showComment) ? (
                 <PlayerInfoItem>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="h6" component="div">
                         Player {props.id} comment:
                     </Typography>
 
@@ -101,7 +88,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
             ) : null}
             {playerScore !== null &&
                 <PlayerInfoItem>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="h6" component="div">
                         Player {props.id} score: {playerScore}
                     </Typography>
                 </PlayerInfoItem>
