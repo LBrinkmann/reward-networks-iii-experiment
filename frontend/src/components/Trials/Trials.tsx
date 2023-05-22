@@ -39,17 +39,15 @@ export const ConsentTrial: FC<ITrial> = (props) => {
     return (
         <>
             <Header title={'Consent Form'}/>
-            <ConsentForm endTrial={props.endTrial}
-                         onDisagreeRedirect={props.data.redirect_url}/>
+            <ConsentForm endTrial={props.endTrial} onDisagreeRedirect={props.data.redirect_url}/>
         </>
     );
 };
 
 export const InstructionTrial: FC<ITrial> = (props) => {
-    const {sessionState} = useSessionContext();
     return (
         <>
-            <Header title={'Instructions'} totalPoints={sessionState.totalPoints}/>
+            <Header title={'Instructions'}/>
             <Instruction endTrial={props.endTrial}
                          instructionType={props.data.instruction_type as keyof typeof instructions}/>
         </>
@@ -72,8 +70,7 @@ export const PracticeTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Practice'} showTutorial={showTotalScoreTutorial} onTutorialClose={endTrial}
-                    showTip={false}/>
+            <Header title={'Practice'}/>
             <NetworkTrial isPractice={true} playerTotalPoints={0}/>
         </>
     );
@@ -92,7 +89,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Learning Selection'} totalPoints={sessionState.totalPoints}/>
+            <Header title={'Learning Selection'}/>
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
@@ -149,7 +146,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Watching Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
+                    sessionState.selectedAdvisor.advisorNumber}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              teacherTotalPoints={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
@@ -193,7 +190,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Repeating Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
+                    sessionState.selectedAdvisor.advisorNumber} />
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
@@ -234,7 +231,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
             <>
                 <Header title={'Learning by Trying Example ' +
                     sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber} totalPoints={sessionState.totalPoints}/>
+                    sessionState.selectedAdvisor.advisorNumber} />
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
@@ -278,7 +275,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Individual Performance'} totalPoints={sessionState.totalPoints}/>
+                <Header title={'Individual Performance'}/>
                 <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );
@@ -316,7 +313,7 @@ export const DemonstrationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Demonstration'} totalPoints={sessionState.totalPoints}/>
+                <Header title={'Demonstration'}/>
                 <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
             </>
         );
@@ -328,28 +325,26 @@ export const WrittenStrategyTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Written Strategy'} totalPoints={sessionState.totalPoints}/>
+            <Header title={'Written Strategy'}/>
             <WrittenStrategy endTrial={props.endTrial} type={sessionState.currentTrialId < 10 ? "start" : "end"}/>
         </>
     );
 };
 
 export const PostSurveyTrial: FC<ITrial> = (props) => {
-    const {sessionState} = useSessionContext();
     return (
         <>
-            <Header totalPoints={sessionState.totalPoints}/>
+            <Header/>
             <PostSurvey endTrial={props.endTrial}/>
         </>
     );
 }
 
 export const DebriefingTrial: FC<ITrial> = (props) => {
-    const {sessionState} = useSessionContext();
     // TODO: post trial on redirect
     return (
         <>
-            <Header totalPoints={sessionState.totalPoints}/>
+            <Header/>
             <Debriefing redirect={props.data.redirect_url}/>
         </>
     );
