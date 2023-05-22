@@ -6,7 +6,7 @@ import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
-import useSessionContext from "../../../contexts/SessionContext";
+import Legend from "./RewardsLegend";
 
 interface NetworkTrialInterface {
     showLegend?: boolean;
@@ -85,7 +85,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={5}>
                 <Grid container direction="row" justifyContent="space-around">
                     <Grid item style={{position: 'relative'}}>
                         <FlashingReward/>
@@ -114,6 +114,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                         }
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid item xs={2}>
+                <Legend/>
             </Grid>
         </Grid>
     );
