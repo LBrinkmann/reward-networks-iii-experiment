@@ -89,7 +89,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
 
     return (
         <>
-            <Header title={'Learning Selection'}/>
+            <Header title={'Learning Opportunity'}/>
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
@@ -144,9 +144,8 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Learning by Watching Example ' +
-                    sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber}/>
+                {/*TODO: Practice Trial X/4 */}
+                <Header title={'Practice Trial'} />
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -187,9 +186,8 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Learning by Repeating Example ' +
-                    sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber} />
+                {/*TODO: Practice Trial X/4 */}
+                <Header title={'Practice Trial'} />
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
@@ -228,9 +226,8 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Learning by Trying Example ' +
-                    sessionState.selectedAdvisorExampleId + ' Player ' +
-                    sessionState.selectedAdvisor.advisorNumber} />
+                {/*TODO: Practice Trial X/4 */}
+                <Header title={'Practice Trial'} />
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}

@@ -4,9 +4,8 @@ const instructions = {
     written_strategy_start: "Please think about how you approached the task and write down the strategy you used in trying to maximize points.",
     learning_selection: "Before you start with the main task, you have the opportunity to learn from the solutions submitted by previous players.\n" +
         "Note that your solutions in the main task might also be presented to future players so that they can learn from them.",
-    learning: "You will now see solutions of the selected player for two different networks.\n" +
-        "For each network, you will first try to solve the network yourself: the selected player's score in this network will also be provided and when you finish the task there will be a visual comparison of your solution and the player's solution. Next, you will see a full replay of the previous player's solution, and finally you will be able to try the network again by yourself.\n" +
-        "Note that you cannot collect points in these rounds, they are for learning only.\n",
+    learning: "Good choice! There will be four rounds in which you can learn from the selected player.\n" +
+        "To give you a full learning experience, in each round you will first have a go yourself and try to beat the selected player’s score on the network. Afterwards, you can read the selected player’s description of their solution and you will  see a full replay of it. Finally, you will navigate the network again by yourself. As these rounds are still for you to learn, the points will again not count towards your bonus payment; but you should still try to maximise them.",
     individual: "Now you will work on the main task, for which you are on your own again. You will navigate through four different networks.\n" +
         "Note that, now, every point you earn in the networks will be converted into a bonus payment for you – so remember what you have learned yourself and from the other player to maximize your points!",
     demonstration: "Well done! Now you will play two final rounds that serve as demonstrations for future players to learn from. You will not earn points directly, but the second half of your bonus payment depends on the performance of people that learn from you, so try your best!",
