@@ -50,7 +50,30 @@ export default Instruction
 
 
 const Welcome: FC = () => {
-    return(
-        <></>
+    return (
+        <>
+            <Typography gutterBottom variant="h5" align='justify'>
+                Welcome to the experiment!
+            </Typography>
+            <Typography variant="body1" align='justify' paragraph>
+                You will be working on a task where your goal is navigate through a series of networks like the one
+                depicted on the right. Depending on the moves you choose, you can earn more or less points. These points
+                will be converted into bonus payments, so your decisions in the main task will have real financial
+                consequences for you.
+            </Typography>
+            <Typography variant="body1" align='justify' paragraph>
+                <span style={{fontWeight: 'bold'}}>
+                    Importantly, there is an ideal pattern of moves that earns the maximum number of points for all
+                    networks.
+                </span> Figuring out that ideal pattern of moves will help you maximise your bonus payment
+                during the
+                main task.
+            </Typography>
+            <Typography variant="body1" align='justify' paragraph>
+                To prepare you for the main task, we will now explain the network in more detail and let you practice
+                some examples.
+            </Typography>
+
+        </>
     )
 }

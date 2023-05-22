@@ -47,7 +47,7 @@ export const ConsentTrial: FC<ITrial> = (props) => {
 export const InstructionTrial: FC<ITrial> = (props) => {
     return (
         <>
-            <Header title={'Instructions'}/>
+            <Header title={props.data.instruction_type === "welcome" ? 'Overview' : 'Instructions'}/>
             <Instruction endTrial={props.endTrial}
                          instructionType={props.data.instruction_type as keyof typeof instructions}/>
         </>
