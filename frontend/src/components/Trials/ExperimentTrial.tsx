@@ -11,7 +11,7 @@ import {useProlificId} from "../App";
 import {SessionError, Trial, TrialError, TrialSaved} from "../../apis/apiTypes";
 
 // Data
-import {edges as practiceEdges, nodes as practiceNodes} from "./NetworkTrial/PracticeData";
+import {edges as practiceEdges, nodes as practiceNodes} from "./Practice/PracticeData";
 
 // Trials
 import {
@@ -62,7 +62,12 @@ const ExperimentTrial: FC = () => {
         // update session state
         sessionDispatcher({
             type: SESSION_ACTIONS.SET_CURRENT_TRIAL,
-            payload: {currentTrialId: data.id, currentTrialType: data.trial_type}
+            payload: {
+                currentTrialId: data.id,
+                currentTrialType: data.trial_type,
+                is_practice: data.is_practice,
+                practice_count: data.practice_count
+            }
         });
 
         switch (data.trial_type) {
@@ -109,7 +114,7 @@ const ExperimentTrial: FC = () => {
     const onTrialEnd = (data: TrialSaved | TrialError) => {
         // TODO: handle error
         // console.log("posted data response:", data);
-        if (sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) {
+        if ((sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) && !sessionState.isPractice) {
             sessionDispatcher({
                 type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
                 payload: {

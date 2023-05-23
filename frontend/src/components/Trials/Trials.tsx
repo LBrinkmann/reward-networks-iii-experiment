@@ -260,7 +260,10 @@ export const IndividualTrial: FC<ITrial> = (props) => {
         return (
             <>
                 <Header title={'Individual Performance'}/>
-                <NetworkTrial playerTotalPoints={sessionState.totalPoints}/>
+                <NetworkTrial
+                    playerTotalPoints={sessionState.totalPoints}
+                    showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials
+                />
             </>
         );
 }

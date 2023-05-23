@@ -34,6 +34,8 @@ const sessionReducer = (state: SessionState, action: any) => {
                 // show tutorial for social learning selection and observation trials
                 showTutorialInCurrentTrial: action.payload.currentTrialId < 8,
                 selectedAdvisorExampleId: selectedAdvisorExampleId,
+                isPractice: action.payload.is_practice,
+                practiceCount: action.payload.practice_count,
             }
         case SESSION_ACTIONS.SET_ADVISORS:
             return {

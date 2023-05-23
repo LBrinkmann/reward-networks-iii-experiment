@@ -15,6 +15,8 @@ export type SessionState = {
     selectedAdvisor: { advisorId: string, advisorNumber: number } | null;
     selectedAdvisorExampleId: number;
     showTutorialInCurrentTrial: boolean;
+    isPractice: boolean;
+    practiceCount: string;
 }
 
 
@@ -28,6 +30,8 @@ const sessionInitialState: SessionState = {
     selectedAdvisor: null,
     selectedAdvisorExampleId: 0,
     showTutorialInCurrentTrial: false,
+    isPractice: false,
+    practiceCount: ''
 }
 
 export type SessionContextType = {
