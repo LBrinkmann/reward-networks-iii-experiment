@@ -51,7 +51,7 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
                 placement="left"
             >
                 {/*div in the center of the screen with width 100*/}
-                <div style={{position: "absolute", top: "30%", left: "40%"}} />
+                <div style={{position: "absolute", top: "30%", left: "35%"}} />
             </TutorialTip>
             <NetworkTrial
                 showLegend={networkState.tutorialOptions.edge || networkState.tutorialStep > 3}

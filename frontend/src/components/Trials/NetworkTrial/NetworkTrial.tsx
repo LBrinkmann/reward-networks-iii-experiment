@@ -59,7 +59,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         <Grid container sx={{margin: 'auto', width: '85%'}} justifyContent="space-around">
             <Grid item sx={{p: 1}} xs={3}>
                 <Grid container direction="column">
-                    <Grid item xs={4} mt={"340px"}>
+                    <Grid item xs={3} mt={"340px"}>
                         {showTimer &&
                             <Timer
                                 time={time}
@@ -89,7 +89,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
                 <Grid container direction="row" justifyContent="space-around">
                     <Grid item style={{position: 'relative'}}>
                         <FlashingReward/>
