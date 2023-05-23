@@ -56,7 +56,7 @@ const Timer: React.FC<TimerInterface> = (props) => {
             isTutorial={showTutorial}
             isShowTip={false}
             onTutorialClose={onTutorialClose}
-            placement="bottom"
+            placement={"right"}
         >
             <Box display='flex' justifyContent='center' alignItems='center'>
                 <Typography position="absolute" variant="h5" component="div" color="text.secondary">

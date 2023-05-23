@@ -176,6 +176,16 @@ const networkReducer = (state: NetworkState, action: any) => {
                     tutorialOptions: {...networkInitialState.tutorialOptions, totalScore: true},
                 }
             }
+
+            // final step
+            if (state.tutorialOptions.totalScore) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: networkInitialState.tutorialOptions,
+                }
+            }
+
             return {
                 ...state,
                 // clear tutorial options

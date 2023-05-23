@@ -24,6 +24,7 @@ interface NetworkTrialInterface {
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const {
+        showLegend = true,
         showComment = false,
         teacherId = 1,
         showLinearNetwork = true,
@@ -115,9 +116,10 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
             </Grid>
             <Grid item xs={1}>
                 <Grid container direction="column" justifyContent="center" alignItems="center">
-                    <Grid item mt={"150px"}>
-                        <Legend/>
-                    </Grid>
+                    {showLegend &&
+                        <Grid item mt={"150px"}>
+                            <Legend/>
+                        </Grid>}
                 </Grid>
             </Grid>
         </Grid>

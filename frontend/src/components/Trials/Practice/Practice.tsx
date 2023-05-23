@@ -20,7 +20,7 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
     }, [networkState.tutorialOptions])
 
     useEffect(() => {
-        if (networkState.tutorialStep === 9)
+        if (networkState.tutorialStep > 9)
         {
             // wait for 3 seconds and end the practice
             const timer = setTimeout(() => {
@@ -53,7 +53,7 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
                 <div/>
             </TutorialTip>
             <NetworkTrial
-                showLegend={true}
+                showLegend={networkState.tutorialOptions.edge || networkState.tutorialStep > 3}
                 showComment={false}
                 showLinearNetwork={networkState.tutorialOptions.linearSolution || networkState.tutorialStep > 5}
                 showTimer={networkState.tutorialOptions.time || networkState.tutorialStep > 6}

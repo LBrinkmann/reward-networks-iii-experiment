@@ -63,6 +63,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                             isTutorial={showTutorialScore}
                             isShowTip={false}
                             onTutorialClose={props.onTutorialClose}
+                            placement={"right"}
                         >
                             <Typography variant="subtitle1" component="div">
                                 Current Network: {props.cumulativePoints}
@@ -75,6 +76,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                             isTutorial={showTutorialTotalScore}
                             isShowTip={false}
                             onTutorialClose={props.onTutorialClose}
+                            placement={"right"}
                         >
                             <Typography variant="subtitle1" component="div">
                                 Total: {props.totalScore}
