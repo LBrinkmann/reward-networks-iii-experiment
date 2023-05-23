@@ -19,6 +19,8 @@ interface PlayerInformationProps {
     /** Callback to handle tutorial tip close */
     onTutorialCommentClose?: () => void;
     onTutorialClose?: () => void;
+    showCumulativePoints?: boolean;
+    showTotalPoints?: boolean;
 }
 
 const Item = styled(Paper)(() => ({
@@ -38,37 +40,49 @@ const PlayerInfoItem: FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showTutorialTotalScore = false} = props;
+    const {
+        showComment = true,
+        showTutorialScore = false,
+        showTutorialComment = false,
+        showTutorialTotalScore = false,
+        showCumulativePoints = true,
+        showTotalPoints = true
+    } = props;
     return (
 
         <Stack spacing={0} sx={{paddingTop: "20px"}}>
-            <Typography variant="h4" component="div">
-                Points
-            </Typography>
-            <PlayerInfoItem>
-                <TutorialTip
-                    tutorialId={"practice_step_score"}
-                    isTutorial={showTutorialScore}
-                    isShowTip={false}
-                    onTutorialClose={props.onTutorialClose}
-                >
-                    <Typography variant="subtitle1" component="div">
-                        Current Network: {props.cumulativePoints}
+            {(showCumulativePoints || showTotalPoints) &&
+                <>
+                    <Typography variant="h4" component="div">
+                        Points
                     </Typography>
-                </TutorialTip>
-            </PlayerInfoItem>
-            <PlayerInfoItem>
-                <TutorialTip
-                    tutorialId={"practice_total_score"}
-                    isTutorial={showTutorialTotalScore}
-                    isShowTip={false}
-                    onTutorialClose={props.onTutorialClose}
-                >
-                    <Typography variant="subtitle1" component="div">
-                        Total: {props.totalScore}
-                    </Typography>
-                </TutorialTip>
-            </PlayerInfoItem>
+
+                    {showCumulativePoints && <PlayerInfoItem>
+                        <TutorialTip
+                            tutorialId={"practice_step_score"}
+                            isTutorial={showTutorialScore}
+                            isShowTip={false}
+                            onTutorialClose={props.onTutorialClose}
+                        >
+                            <Typography variant="subtitle1" component="div">
+                                Current Network: {props.cumulativePoints}
+                            </Typography>
+                        </TutorialTip>
+                    </PlayerInfoItem>}
+                    {showTotalPoints && <PlayerInfoItem>
+                        <TutorialTip
+                            tutorialId={"practice_total_score"}
+                            isTutorial={showTutorialTotalScore}
+                            isShowTip={false}
+                            onTutorialClose={props.onTutorialClose}
+                        >
+                            <Typography variant="subtitle1" component="div">
+                                Total: {props.totalScore}
+                            </Typography>
+                        </TutorialTip>
+                    </PlayerInfoItem>}
+                </>
+            }
             {(showComment) ? (
                 <PlayerInfoItem>
                     <Typography gutterBottom variant="subtitle1" component="div">

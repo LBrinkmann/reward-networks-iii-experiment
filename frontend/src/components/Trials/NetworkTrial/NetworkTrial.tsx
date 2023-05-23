@@ -18,6 +18,8 @@ interface NetworkTrialInterface {
     isPractice?: boolean;
     isTimerPaused?: boolean;
     playerTotalPoints?: number;
+    showCurrentNetworkPoints?: boolean;
+    showTotalPoints?: boolean;
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
@@ -29,7 +31,9 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         time = 35,
         isPractice = false,
         isTimerPaused = false,
-        playerTotalPoints = 0
+        playerTotalPoints = 0,
+        showCurrentNetworkPoints = true,
+        showTotalPoints = true,
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
@@ -74,6 +78,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             onTutorialCommentClose={onTutorialCommentClose}
                             showTutorialTotalScore={networkState.tutorialOptions.totalScore}
                             onTutorialClose={NextTutorialStepHandler}
+                            showCumulativePoints={showCurrentNetworkPoints}
+                            showTotalPoints={showTotalPoints}
                         />
                     </Grid>
                 </Grid>

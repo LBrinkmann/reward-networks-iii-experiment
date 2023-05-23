@@ -60,6 +60,8 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
                 isTimerPaused={true}
                 isPractice={true}
                 playerTotalPoints={0}
+                showCurrentNetworkPoints={networkState.tutorialOptions.points || networkState.tutorialStep > 7}
+                showTotalPoints={networkState.tutorialOptions.totalScore || networkState.tutorialStep > 8}
             />
         </>
     )
