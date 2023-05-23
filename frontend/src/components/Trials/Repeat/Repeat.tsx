@@ -38,7 +38,8 @@ const Repeat: FC<IRepeat> = ({solution, teacherId, playerTotalPoints}) => {
             <Typography variant="h3" align='center'>
                 Repeat the solution by following the dashed line
             </Typography>
-            <NetworkTrial showComment={true} teacherId={teacherId} playerTotalPoints={playerTotalPoints}/>
+            <NetworkTrial showComment={true} teacherId={teacherId} playerTotalPoints={playerTotalPoints}
+            showTotalPoints={false}/>
         </>
     );
 

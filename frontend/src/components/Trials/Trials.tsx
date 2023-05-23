@@ -132,8 +132,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'}/>
+                <Header title={`Practice ${sessionState.practiceCount}`}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -174,8 +173,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'}/>
+                <Header title={`Practice ${sessionState.practiceCount}`}/>
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
@@ -214,8 +212,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'}/>
+                <Header title={`Practice ${sessionState.practiceCount}`}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
@@ -259,7 +256,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={'Individual Performance'}/>
+                <Header title={sessionState.isPractice ? `Practice ${sessionState.practiceCount}` : 'Main Task' }/>
                 <NetworkTrial
                     playerTotalPoints={sessionState.totalPoints}
                     showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials

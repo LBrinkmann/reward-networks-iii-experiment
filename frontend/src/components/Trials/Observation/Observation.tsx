@@ -17,7 +17,7 @@ interface IObservation {
 
 const Observation: FC<IObservation> = (props) => {
     const {networkState, networkDispatcher} = useNetworkContext();
-    const {solution, teacherId, playAnimation = true, delayBetweenMoves = 2000, playerTotalPoints=0} = props;
+    const {solution, teacherId, playAnimation = true, delayBetweenMoves = 2000, playerTotalPoints = 0} = props;
 
     useEffect(() => {
         if (playAnimation) {
@@ -50,8 +50,11 @@ const Observation: FC<IObservation> = (props) => {
             <Typography variant="h3" align='center'>
                 Watch player {teacherId} solving the task
             </Typography>
-            <NetworkTrial showComment={false} teacherId={teacherId} isTimerPaused={true}
+            <NetworkTrial showComment={false}
+                          teacherId={teacherId}
+                          isTimerPaused={true}
                           playerTotalPoints={playerTotalPoints}
+                          showTotalPoints={false}
             />
         </>
     );

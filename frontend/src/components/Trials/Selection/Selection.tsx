@@ -21,9 +21,9 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
             <Typography variant="h3" align='center'>
                 Select a player to learn from
             </Typography>
-            <Typography variant="h3" align='center'>
-                Your Score:  {ownScore}
-            </Typography>
+            {/*<Typography variant="h3" align='center'>*/}
+            {/*    Your Score:  {ownScore}*/}
+            {/*</Typography>*/}
             <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
                 {
                     advisors.scores.map((score, inx) => {

@@ -63,7 +63,7 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                     <Typography variant="h3" align='center'>
                         Try to beat player {teacherId}'s score: {teacherTotalScore}!
                     </Typography>
-                    <NetworkTrial playerTotalPoints={playerTotalPoints}/>
+                    <NetworkTrial playerTotalPoints={playerTotalPoints} showTotalPoints={false}/>
                 </>
             )}
         </>
