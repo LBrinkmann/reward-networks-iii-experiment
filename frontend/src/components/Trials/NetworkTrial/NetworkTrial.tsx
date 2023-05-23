@@ -70,7 +70,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
-                            totalScore={playerTotalPoints}
+                            totalScore={playerTotalPoints + networkState.points}
                             showComment={showComment}
                             comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
