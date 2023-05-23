@@ -1,27 +1,39 @@
 // NOTE: id, title, text and tip should be non-empty strings
 export const tutorialTooltipContent = [
     {
+        id: "start",
+        title: "Start",
+        text: "Each network consists of circles that are connected by arrows of different colour.",
+        tip: "Click OK",
+    },
+    {
         id: "practice_node",
         title: "Circle",
-        text: "You start at the highlighted circle in the network.",
+        text: "You start at the highlighted circle.",
         tip: "Click a node",
+    },
+    {
+        id: "general_edge",
+        title: "ArrowGeneral",
+        text: "From there, you can follow any outgoing arrow. The arrow colour indicates how many points you will lose or gain on the path along the arrow.",
+        tip: "Click OK",
     },
     {
         id: "practice_edge",
         title: "Arrow",
-        text: "Circles are connected by different arrows. Your goal is to select a path along the arrows to earn points. You earn or lose points depending on the color of the arrow. Now click on the next node.",
+        text: "Your goal is to select a path along the arrows to earn points. Now click on the next node.",
         tip: "Click a node",
     },
     {
-        id: "practice_step_score",
+        id: "general_points",
         title: "Score & Step",
-        text: "You always have 8 moves per network. Your goal is to collect the maximum number of points in these 8 moves. Now click on the next node.",
+        text: "You always make 8 moves per network. Your goal is to collect the maximum number of points in these 8 moves.",
         tip: "Current step and cumulative score",
     },
     {
         id: "practice_linear_solution",
         title: "Your Solution",
-        text: "As you proceed in the network, your progress is noted here. Now finish the trial by making your 8 moves.",
+        text: "As you proceed in the network, your progress is noted here. Now finish the round by making your 8 moves.",
         tip: "Your Solution",
     },
     {
@@ -31,9 +43,15 @@ export const tutorialTooltipContent = [
         tip: "Time Constraint",
     },
     {
+        id: "practice_step_score",
+        title: "Current Network Score",
+        text: "Your point-count for the current network will be displayed here.",
+        tip: "Cumulative score",
+    },
+    {
         id: "practice_total_score",
         title: "Total Score",
-        text: "Once you can actually collect points, your total number of points will be displayed here.",
+        text: "Your total point-count will be displayed here, once the main task starts.",
         tip: "Total Score",
 
     },

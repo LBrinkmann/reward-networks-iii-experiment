@@ -29,11 +29,14 @@ export type NetworkState = {
     isPractice: boolean;
     tutorialStep: number;
     tutorialOptions: {
+        start: boolean;
         node: boolean;
+        general_edge: boolean;
         edge: boolean,
-        points: boolean,
+        general_points: boolean,
         linearSolution: boolean,
         time: boolean,
+        points: boolean,
         totalScore: boolean,
         comment: boolean,
     };
@@ -66,12 +69,15 @@ export const networkInitialState: NetworkState = {
     isPractice: false,
     tutorialStep: 0,
     tutorialOptions: {
-        node: false,
-        edge: false,
-        points: false,
-        linearSolution: false,
-        time: false,
-        totalScore: false,
+        start: false,  // 1
+        node: false,  // 2
+        general_edge: false, // 3
+        edge: false,  // 4
+        general_points: false,  // 5
+        linearSolution: false,  // 6
+        time: false,  // 7
+        points: false,  // 8
+        totalScore: false,  // 9
         comment: false,
     },
     teacherComment: '',

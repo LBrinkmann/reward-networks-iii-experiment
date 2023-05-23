@@ -42,7 +42,7 @@ const Template: ComponentStory<typeof Practice> = function (args) {
 
     return (
         <>
-            {networkState.network && <Practice/>}
+            {networkState.network && <Practice {...args}/>}
         </>
     );
 };
@@ -50,4 +50,9 @@ const Template: ComponentStory<typeof Practice> = function (args) {
 
 export const PracticeTrial = Template.bind({});
 
-PracticeTrial.args = {};
+PracticeTrial.args = {
+    onLastTutorialStep: () => {
+        // reload page
+        window.location.reload();
+    }
+};

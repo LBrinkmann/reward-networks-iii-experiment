@@ -37,14 +37,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
 
-        if (isPractice) {
-            if (networkState.tutorialStep === 2 || networkState.tutorialStep === 3 || networkState.tutorialStep === 4) {
-                networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
-                networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
-            }
-        } else {
-            networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
-        }
+        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
+        if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
 
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
@@ -61,7 +55,7 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             <Timer
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
-                                pause={isPractice || isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
+                                pause={isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
                                 showTutorial={networkState.tutorialOptions.time}
                                 onTutorialClose={NextTutorialStepHandler}
                             />
@@ -78,6 +72,8 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             showTutorialScore={networkState.tutorialOptions.points}
                             showTutorialComment={networkState.tutorialOptions.comment}
                             onTutorialCommentClose={onTutorialCommentClose}
+                            showTutorialTotalScore={networkState.tutorialOptions.totalScore}
+                            onTutorialClose={NextTutorialStepHandler}
                         />
                     </Grid>
                 </Grid>

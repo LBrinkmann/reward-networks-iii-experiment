@@ -24,6 +24,7 @@ import TryYourself from "./TryYourself";
 import instructions from "./Instruction/InstructionContent";
 import {StaticNetworkEdgeInterface} from "../Network/StaticNetwork/StaticNetwork";
 import WaitForNextTrialScreen from "./WaitForNextTrialScreen";
+import Practice from "./Practice";
 
 const TIME_BETWEEN_TRIALS = 1000;
 const TIME_AFTER_LAST_STEP = 2000;
@@ -55,23 +56,10 @@ export const InstructionTrial: FC<ITrial> = (props) => {
 };
 
 export const PracticeTrial: FC<ITrial> = (props) => {
-    const [showTotalScoreTutorial, setShowTotalScoreTutorial] = useState(false);
-    const {networkState} = useNetworkContext();
-
-    useEffect(() => {
-        if (networkState.tutorialStep === 5 && !networkState.tutorialOptions.time) {
-            setShowTotalScoreTutorial(true);
-        }
-    }, [networkState.tutorialStep, networkState.tutorialOptions.time]);
-
-    const endTrial = () => {
-        props.endTrial({moves: []})
-    };
-
     return (
         <>
             <Header title={'Practice'}/>
-            <NetworkTrial isPractice={true} playerTotalPoints={0}/>
+            <Practice onLastTutorialStep={() => props.endTrial({moves: []})}/>
         </>
     );
 }
@@ -145,7 +133,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
         return (
             <>
                 {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'} />
+                <Header title={'Practice Trial'}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -187,7 +175,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
         return (
             <>
                 {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'} />
+                <Header title={'Practice Trial'}/>
                 <Repeat solution={props.data.advisor.solution.moves}
                         teacherId={sessionState.selectedAdvisor.advisorNumber}
                         playerTotalPoints={sessionState.totalPoints}
@@ -227,7 +215,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
         return (
             <>
                 {/*TODO: Practice Trial X/4 */}
-                <Header title={'Practice Trial'} />
+                <Header title={'Practice Trial'}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}

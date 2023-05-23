@@ -15,8 +15,10 @@ interface PlayerInformationProps {
     /** show tutorial tip */
     showTutorialScore?: boolean;
     showTutorialComment?: boolean;
+    showTutorialTotalScore?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialCommentClose?: () => void;
+    onTutorialClose?: () => void;
 }
 
 const Item = styled(Paper)(() => ({
@@ -36,7 +38,7 @@ const PlayerInfoItem: FC = ({children}) => {
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false} = props;
+    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showTutorialTotalScore = false} = props;
     return (
 
         <Stack spacing={0} sx={{paddingTop: "20px"}}>
@@ -48,7 +50,7 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     tutorialId={"practice_step_score"}
                     isTutorial={showTutorialScore}
                     isShowTip={false}
-                    onTutorialClose={() => {}}
+                    onTutorialClose={props.onTutorialClose}
                 >
                     <Typography variant="subtitle1" component="div">
                         Current Network: {props.cumulativePoints}
@@ -56,9 +58,16 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                 </TutorialTip>
             </PlayerInfoItem>
             <PlayerInfoItem>
-                <Typography variant="subtitle1" component="div">
-                    Total: {props.totalScore}
-                </Typography>
+                <TutorialTip
+                    tutorialId={"practice_total_score"}
+                    isTutorial={showTutorialTotalScore}
+                    isShowTip={false}
+                    onTutorialClose={props.onTutorialClose}
+                >
+                    <Typography variant="subtitle1" component="div">
+                        Total: {props.totalScore}
+                    </Typography>
+                </TutorialTip>
             </PlayerInfoItem>
             {(showComment) ? (
                 <PlayerInfoItem>
