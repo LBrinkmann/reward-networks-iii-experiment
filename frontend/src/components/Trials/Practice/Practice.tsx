@@ -48,9 +48,10 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
                 isShowTip={false}
                 onTutorialClose={OnTutorialTipClose}
                 arrow={false}
-                placement="top"
+                placement="left"
             >
-                <div/>
+                {/*div in the center of the screen with width 100*/}
+                <div style={{position: "absolute", top: "30%", left: "40%"}} />
             </TutorialTip>
             <NetworkTrial
                 showLegend={networkState.tutorialOptions.edge || networkState.tutorialStep > 3}
