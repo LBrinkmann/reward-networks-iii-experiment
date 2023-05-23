@@ -27,12 +27,12 @@ const TryYourself: FC<ITryYour> = ({solution, teacherId, teacherTotalScore, endT
                     alignItems="center"
                     style={{margin: 'auto', marginTop: '8%'}}
                 >
-                    <Typography variant="h6" gutterBottom align={'left'}>
-                        Player {teacherId} comment:
-                    </Typography>
-                    <Typography variant="body1" gutterBottom align={'justify'}>
-                        {teacherWrittenSolution}
-                    </Typography>
+                    {/*<Typography variant="h6" gutterBottom align={'left'}>*/}
+                    {/*    Player {teacherId} comment:*/}
+                    {/*</Typography>*/}
+                    {/*<Typography variant="body1" gutterBottom align={'justify'}>*/}
+                    {/*    {teacherWrittenSolution}*/}
+                    {/*</Typography>*/}
                     <Typography variant="h6" gutterBottom align={'left'}>
                         Player {teacherId} total score: {teacherTotalScore}
                     </Typography>
