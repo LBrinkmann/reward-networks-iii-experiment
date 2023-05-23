@@ -6,7 +6,6 @@ import NetworkTrial from "./NetworkTrial";
 
 import data from "../../Network/examples";
 import useNetworkContext, {NetworkContextProvider} from "../../../contexts/NetworkContext";
-import {edges, nodes} from "./PracticeData";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
 
 const examples_rand = Array.from({length: data.length}, (v, k) => k + 1).sort(() => Math.random() - 0.5);
@@ -32,13 +31,7 @@ const Template: ComponentStory<typeof NetworkTrial> = function (args) {
     useEffect(() => {
         if (!networkState.network) {
 
-            if (args.isPractice) {
-                networkDispatcher({
-                    type: NETWORK_ACTIONS.SET_NETWORK,
-                    payload: {network: {edges: edges, nodes: nodes}, isPractice: true}
-                });
-
-            } else if (args.showComment) {
+            if (args.showComment) {
                 networkDispatcher({
                     type: NETWORK_ACTIONS.SET_NETWORK,
                     payload: {
@@ -90,12 +83,6 @@ export const IndividualTrial = Template.bind({});
 
 IndividualTrial.args = {
     isPractice: false,
-};
-
-export const PracticeTrial = Template.bind({});
-
-PracticeTrial.args = {
-    isPractice: true
 };
 
 export const CommentTutorial = Template.bind({});
