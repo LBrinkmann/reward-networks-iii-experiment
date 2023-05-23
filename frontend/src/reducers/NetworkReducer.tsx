@@ -106,7 +106,6 @@ const networkReducer = (state: NetworkState, action: any) => {
                 isNetworkFinished: state.step + 1 >= maxStep,
             }
         case NETWORK_ACTIONS.NEXT_TUTORIAL_STEP:
-            console.log(state.tutorialOptions, state.tutorialStep, state.moves);
             if (!state.isPractice) return state;
 
             if (state.tutorialOptions.start) {
@@ -177,33 +176,6 @@ const networkReducer = (state: NetworkState, action: any) => {
                     tutorialOptions: {...networkInitialState.tutorialOptions, totalScore: true},
                 }
             }
-
-            // if (state.tutorialStep === 2) {
-            //     return {
-            //         ...state,
-            //         tutorialStep: state.tutorialStep + 1,
-            //         tutorialOptions: {...networkInitialState.tutorialOptions, points: true},
-            //     }
-            // }
-            //
-            // if (state.tutorialStep === 3 && !(state.moves.length >= 2 && state.moves.length < 3)) {
-            //
-            //     return {
-            //         ...state,
-            //         tutorialStep: state.tutorialStep + 1,
-            //         tutorialOptions: {...networkInitialState.tutorialOptions, linearSolution: true},
-            //     }
-            // }
-            //
-            // if (state.tutorialStep === 4 && !(state.moves.length >= 3 && state.moves.length < 9)) {
-            //
-            //     return {
-            //         ...state,
-            //         tutorialStep: state.tutorialStep + 1,
-            //         tutorialOptions: {...networkInitialState.tutorialOptions, time: true},
-            //     }
-            // }
-
             return {
                 ...state,
                 // clear tutorial options

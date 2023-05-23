@@ -19,10 +19,21 @@ const Practice: FC<IPractice> = ({onLastTutorialStep}) => {
         else if (networkState.tutorialOptions.general_points) setTutorialId("general_points");
     }, [networkState.tutorialOptions])
 
-    const OnTutorialTipClose = useCallback(() => {
-        if (networkState.tutorialOptions.totalScore) {
-            onLastTutorialStep();
+    useEffect(() => {
+        if (networkState.tutorialStep === 9)
+        {
+            // wait for 3 seconds and end the practice
+            const timer = setTimeout(() => {
+                onLastTutorialStep();
+            }, 3000);
+
+            return () => {
+                clearTimeout(timer);
+            }
         }
+    }, [networkState.tutorialOptions.totalScore]);
+
+    const OnTutorialTipClose = useCallback(() => {
         networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }, [])
 
