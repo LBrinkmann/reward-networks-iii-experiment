@@ -42,6 +42,10 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
 
+        // allow clicking only for some tutorial steps
+        if (isPractice && !(networkState.tutorialOptions.edge ||
+            networkState.tutorialOptions.linearSolution)) return;
+
         networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
         if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
