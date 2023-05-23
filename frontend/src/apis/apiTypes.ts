@@ -94,6 +94,8 @@ export interface Trial {
   written_strategy?: WrittenStrategy;
   post_survey?: PostSurvey;
   redirect_url?: string;
+  is_practice?: boolean;
+  practice_count?: string;
 }
 export interface WrittenStrategy {
   strategy: string;

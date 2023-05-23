@@ -267,7 +267,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         for i in range(2):
             net, _ = get_net_solution()
             # individual trial
-            trial = Trial(trial_type='individual', id=trial_n, network=net)
+            trial = Trial(trial_type='individual', id=trial_n, network=net, is_practice=True, practice_count=f'{i+1}/2')
             # update the starting node
             trial.network.nodes[trial.network.starting_node].starting_node = True
             trials.append(trial)
@@ -295,11 +295,11 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
             # show all demonstration trials
             for ii in range(n_demonstration_trials):
                 # Social learning
-                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{i+1}/4'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='observation'))
+                trials.append(Trial(id=trial_n, trial_type='observation', is_practice=True, practice_count=f'{i+1}/4'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{i+1}/4'))
                 trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very

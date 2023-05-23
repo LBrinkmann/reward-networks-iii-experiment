@@ -82,6 +82,8 @@ class Trial(BaseModel):
     post_survey: Optional[PostSurvey]
     # redirect url with the confirmation code
     redirect_url: Optional[str]
+    is_practice: Optional[bool] = False
+    practice_count: Optional[str] = ''
 
     class Config:
         orm_mode = True
