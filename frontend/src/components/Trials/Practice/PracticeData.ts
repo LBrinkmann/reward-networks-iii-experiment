@@ -178,5 +178,43 @@ export const edges = [
         "arc_y": 58.77852853864661,
         "target_x": 68.9143821520453,
         "target_y": 58.77852853864661
-    }
+    },
+    // additional edges
+    {
+        "source_num": 4,
+        "target_num": 2,
+        "reward": -50,
+        "arc_type": "straight",
+        "source_x": -69.9236941174896,
+        "source_y": -62.34549315906632,
+        "arc_x": -24.99950192565081,
+        "arc_y": -76.9422511178176,
+        "target_x": 19.401403820659603,
+        "target_y": -91.36898296778872
+    },
+    {
+        "source_num": 6,
+        "target_num": 2,
+        "reward": 0,
+        "arc_type": "straight",
+        "source_x": -73.1522587556529,
+        "source_y": 48.11235075447509,
+        "arc_x": -25.000153495227593,
+        "arc_y": -18.163346483439426,
+        "target_x": 22.78254464775584,
+        "target_y": -83.93059836593899
+    },
+    {
+        "source_num": 2,
+        "target_num": 9,
+        "reward": 200,
+        "arc_type": "straight",
+        "source_x": 35.187128510266554,
+        "source_y": -81.91645513237017,
+        "arc_x": 55.901889984569955,
+        "arc_y": -18.16296785845477,
+        "target_x": 76.41235820650228,
+        "target_y": 44.9617693677548
+    },
+
 ]
