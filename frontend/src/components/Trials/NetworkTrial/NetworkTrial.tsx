@@ -20,6 +20,7 @@ interface NetworkTrialInterface {
     playerTotalPoints?: number;
     showCurrentNetworkPoints?: boolean;
     showTotalPoints?: boolean;
+    allowNodeClick?: boolean;
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
@@ -35,10 +36,13 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         playerTotalPoints = 0,
         showCurrentNetworkPoints = true,
         showTotalPoints = true,
+        allowNodeClick = true
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
+        if (!allowNodeClick) return;
+
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
 

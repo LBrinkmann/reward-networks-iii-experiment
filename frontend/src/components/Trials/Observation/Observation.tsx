@@ -55,6 +55,7 @@ const Observation: FC<IObservation> = (props) => {
                           isTimerPaused={true}
                           playerTotalPoints={playerTotalPoints}
                           showTotalPoints={false}
+                          allowNodeClick={false}
             />
         </>
     );
