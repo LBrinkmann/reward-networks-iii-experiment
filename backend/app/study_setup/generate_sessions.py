@@ -310,7 +310,7 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual'))
     trial_n += 1
 
-    for i in range(n_individual_trials - 2 if generation > 0 else n_individual_trials):
+    for i in range(n_individual_trials if generation > 0 else n_individual_trials):
         net, _ = get_net_solution()
         # individual trial
         trial = Trial(

@@ -172,7 +172,7 @@ async def one_subject(default_client: httpx.AsyncClient,
                 trial_num += 1
 
     if generation > 0:
-        n_individual_trials = e_config.n_individual_trials - 2
+        n_individual_trials = e_config.n_individual_trials
     else:
         n_individual_trials = e_config.n_individual_trials
         n_individual_trials += e_config.n_social_learning_trials * e_config.n_demonstration_trials * 3
