@@ -1,5 +1,6 @@
 import datetime
-from typing import Optional, List, Literal, Dict
+from typing import Optional, List, Dict
+from typing_extensions import Literal
 
 from beanie import PydanticObjectId
 
