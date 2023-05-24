@@ -14,23 +14,22 @@ export default {
 const Template: ComponentStory<typeof Instruction> = function (args) {
     return (
         <>
-            <Header title={"Instruction"} />
+            <Header title={"Instructions"} />
             <Instruction {...args}/>
         </>
     )
-};
-
-export const DefaultStory = Template.bind({});
-
-DefaultStory.args = {
-    endTrial: ({moves: []}) => {},
-    instructionText: "instruction text",
 };
 
 export const Welcome = Template.bind({});
 
 Welcome.args = {
     endTrial: ({moves: []}) => {},
-    instructionText: "instruction text",
+    instructionText: "Lorem ipsum",
     instructionType: "welcome",
 };
+
+export const Learning = Template.bind({});
+Learning.args = {
+    endTrial: ({moves: []}) => {},
+    instructionType: "learning",
+}
