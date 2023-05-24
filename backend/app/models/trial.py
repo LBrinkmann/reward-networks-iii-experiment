@@ -84,6 +84,8 @@ class Trial(BaseModel):
     redirect_url: Optional[str]
     is_practice: Optional[bool] = False
     practice_count: Optional[str] = ''
+    # relevant for the social learning loop to determine if the trial is the last in the example
+    last_trial_for_current_example: Optional[bool] = False
 
     class Config:
         orm_mode = True

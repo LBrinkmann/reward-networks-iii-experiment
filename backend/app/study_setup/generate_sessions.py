@@ -299,7 +299,8 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
                 trial_n += 1
                 trials.append(Trial(id=trial_n, trial_type='observation', is_practice=True, practice_count=f'{ii+1}/4'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{ii+1}/4'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{ii+1}/4',
+                                    last_trial_for_current_example=True))
                 trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very

@@ -96,6 +96,7 @@ export interface Trial {
   redirect_url?: string;
   is_practice?: boolean;
   practice_count?: string;
+  last_trial_for_current_example?: boolean;
 }
 export interface WrittenStrategy {
   strategy: string;
