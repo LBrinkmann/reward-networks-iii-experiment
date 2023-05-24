@@ -113,10 +113,19 @@ const ExperimentTrial: FC = () => {
 
     const onTrialEnd = (data: TrialSaved | TrialError) => {
         // TODO: handle error
-        // console.log("posted data response:", data);
         if ((sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) && !sessionState.isPractice) {
             sessionDispatcher({
                 type: SESSION_ACTIONS.UPDATE_TOTAL_POINTS,
+                payload: {
+                    points: networkState.points ? networkState.points : 0,
+                    // NOTE: the max number of steps is assumed to be 8
+                    missingSteps: 8 - networkState.step,
+                }
+            });
+        }
+        if ((sessionState.currentTrialType === TRIAL_TYPE.INDIVIDUAL) && sessionState.isPractice) {
+            sessionDispatcher({
+                type: SESSION_ACTIONS.UPDATE_PRACTICE_POINTS,
                 payload: {
                     points: networkState.points ? networkState.points : 0,
                     // NOTE: the max number of steps is assumed to be 8

@@ -81,7 +81,7 @@ export const SelectionTrial: FC<ITrial> = (props) => {
             <Selection
                 advisors={sessionState.advisors}
                 onAdvisorSelected={selectAdvisor}
-                ownScore={sessionState.totalPoints / 2}
+                ownScore={sessionState.practiceScore / 2}
                 showTutorial={sessionState.showTutorialInCurrentTrial}
             />
         </>
@@ -132,7 +132,7 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Practice ${sessionState.practiceCount}`}/>
+                <Header title={`Learning Opportunity | Practice Trial ${sessionState.practiceCount}`}/>
                 <Observation solution={props.data.advisor.solution.moves}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
                              playAnimation={!networkState.tutorialOptions.comment}
@@ -212,7 +212,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={`Practice ${sessionState.practiceCount}`}/>
+                <Header title={`Learning Opportunity | Practice Trial ${sessionState.practiceCount}`}/>
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}

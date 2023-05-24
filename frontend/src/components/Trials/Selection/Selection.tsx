@@ -18,12 +18,13 @@ const Selection: React.FC<SocialLearningSelectionProps> = (props) => {
 
     return (
         <>
-            <Typography variant="h3" align='center'>
+            <Typography variant="h5" align='center'>
                 Select a player to learn from
             </Typography>
-            {/*<Typography variant="h3" align='center'>*/}
-            {/*    Your Score:  {ownScore}*/}
-            {/*</Typography>*/}
+            <Typography variant="h6" align='center'>
+                You can choose one of the below players to learn from. Their average scores give you an estimate of
+                their performances. For comparison, your average score across the two practice rounds was: {ownScore}
+            </Typography>
             <Grid sx={{flexGrow: 1}} container spacing={8} justifyContent="center">
                 {
                     advisors.scores.map((score, inx) => {
