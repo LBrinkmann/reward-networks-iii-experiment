@@ -66,7 +66,8 @@ const ExperimentTrial: FC = () => {
                 currentTrialId: data.id,
                 currentTrialType: data.trial_type,
                 is_practice: data.is_practice,
-                practice_count: data.practice_count
+                practice_count: data.practice_count,
+                last_trial_for_current_example: data.last_trial_for_current_example,
             }
         });
 

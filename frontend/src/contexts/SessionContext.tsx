@@ -18,6 +18,7 @@ export type SessionState = {
     isPractice: boolean;
     practiceCount: string;
     practiceScore: number;
+    lastTrialForCurrentExample: boolean;
 }
 
 
@@ -34,6 +35,7 @@ const sessionInitialState: SessionState = {
     isPractice: false,
     practiceCount: '',
     practiceScore: 0,
+    lastTrialForCurrentExample: false,
 }
 
 export type SessionContextType = {

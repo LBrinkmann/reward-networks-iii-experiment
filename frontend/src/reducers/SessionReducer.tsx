@@ -37,6 +37,7 @@ const sessionReducer = (state: SessionState, action: any) => {
                 selectedAdvisorExampleId: selectedAdvisorExampleId,
                 isPractice: action.payload.is_practice,
                 practiceCount: action.payload.practice_count,
+                lastTrialForCurrentExample: action.payload.last_trial_for_current_example,
             }
         case SESSION_ACTIONS.SET_ADVISORS:
             return {

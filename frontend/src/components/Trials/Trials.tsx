@@ -114,17 +114,6 @@ export const ObservationTrial: FC<ITrial> = (props) => {
         }
     }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
-    const calculateScore = useCallback((moves: number[], edges: StaticNetworkEdgeInterface[]) => {
-        let score = 0;
-        for (let i = 0; i < moves.length - 1; i++) {
-            const edge = edges.find(e => e.source_num === moves[i] && e.target_num === moves[i + 1]);
-            if (edge) {
-                score += edge.reward;
-            }
-        }
-        return score;
-    }, []);
-
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
         return <WaitForNextTrialScreen newNetwork={false}/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
@@ -182,6 +171,7 @@ export const RepeatTrial: FC<ITrial> = (props) => {
 }
 
 export const TryYourselfTrial: FC<ITrial> = (props) => {
+    const [isTimeoutAfterLastMoveDone, setIsTimeoutAfterLastMoveDone] = useState(false);
     const {sessionState} = useSessionContext();
     const {networkState} = useNetworkContext();
 
@@ -189,12 +179,24 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
         if (networkState.isNetworkFinished) {
             // wait for 30 seconds before submitting the results to give participant time to compare the solutions
             const timer1 = setTimeout(() => {
-                props.endTrial({moves: networkState.moves})
+                setIsTimeoutAfterLastMoveDone(true);
             }, 30 * 1000);
 
             return () => clearTimeout(timer1);
+        } else {
+            setIsTimeoutAfterLastMoveDone(false);
         }
     }, [networkState.isNetworkFinished]);
+
+    useEffect(() => {
+        if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone) {
+            const timer2 = setTimeout(() => {
+                props.endTrial({moves: networkState.moves})
+                // wait longer if this is the last trial for the current example
+            }, TIME_BETWEEN_TRIALS * (sessionState.lastTrialForCurrentExample ? 2 : 1));
+            return () => clearTimeout(timer2);
+        }
+    }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
     const calculateScore = useCallback((moves: number[], edges: StaticNetworkEdgeInterface[]) => {
         let score = 0;
@@ -207,8 +209,16 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
         return score;
     }, []);
 
+    const tryYourselfTrialEndHandler = useCallback(() => {
+        // this is necessary to show wait screen
+        setIsTimeoutAfterLastMoveDone(true);
+    }, [])
+
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
         return <WaitForNextTrialScreen newNetwork={false}/>
+    else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
+        // if this is the last trial for the current example, then show the wait screen
+        return <WaitForNextTrialScreen newNetwork={sessionState.lastTrialForCurrentExample}/>
     else
         return (
             <>
@@ -216,7 +226,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
                 <TryYourself solution={props.data.advisor.solution.moves}
                              teacherTotalScore={calculateScore(props.data.advisor.solution.moves, props.data.network.edges)}
                              teacherId={sessionState.selectedAdvisor.advisorNumber}
-                             endTrial={props.endTrial}
+                             endTrial={tryYourselfTrialEndHandler}
                              teacherWrittenSolution={props.data.advisor.written_strategy}
                              playerTotalPoints={sessionState.totalPoints}
                 />
@@ -256,7 +266,7 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={sessionState.isPractice ? `Practice ${sessionState.practiceCount}` : 'Main Task' }/>
+                <Header title={sessionState.isPractice ? `Practice ${sessionState.practiceCount}` : 'Main Task'}/>
                 <NetworkTrial
                     playerTotalPoints={sessionState.totalPoints}
                     showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials
