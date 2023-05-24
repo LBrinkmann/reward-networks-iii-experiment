@@ -27,6 +27,6 @@ class ExperimentSettings(Document):
 
     # SESSION TRIALS SETTINGS
     # the number of social learning iterations
-    n_social_learning_trials: int = 2
-    n_individual_trials: int = 6
-    n_demonstration_trials: int = 2
+    n_social_learning_trials: int = 1
+    n_individual_trials: int = 4
+    n_demonstration_trials: int = 0

@@ -163,7 +163,7 @@ async def one_subject(default_client: httpx.AsyncClient,
                 trial_num += 1
 
             # social learning
-            for _ in range(e_config.n_demonstration_trials):
+            for _ in range(e_config.n_individual_trials):
                 await get_post_trial(default_client, 'try_yourself', trial_num, url, solution, headers)
                 trial_num += 1
                 await get_post_trial(default_client, 'observation', trial_num, url, solution, headers)
