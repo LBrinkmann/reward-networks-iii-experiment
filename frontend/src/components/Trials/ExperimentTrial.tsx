@@ -141,7 +141,7 @@ const ExperimentTrial: FC = () => {
     }
 
     if (status === "loading") {
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     } else if (status === "error") {
         console.error(error);
         return <ErrorMessage/>

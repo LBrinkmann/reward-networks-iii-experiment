@@ -126,9 +126,9 @@ export const ObservationTrial: FC<ITrial> = (props) => {
     }, []);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     else
         return (
             <>
@@ -167,9 +167,9 @@ export const RepeatTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     else
         return (
             <>
@@ -208,7 +208,7 @@ export const TryYourselfTrial: FC<ITrial> = (props) => {
     }, []);
 
     if (!networkState.network || !props.data.advisor || !props.data.advisor.solution)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={false}/>
     else
         return (
             <>
@@ -250,9 +250,9 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     }, [networkState.isNetworkFinished, isTimeoutAfterLastMoveDone]);
 
     if (!networkState.network)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={true}/>
     else if (networkState.isNetworkFinished && isTimeoutAfterLastMoveDone)
-        return <WaitForNextTrialScreen/>
+        return <WaitForNextTrialScreen newNetwork={true}/>
     else
         return (
             <>
