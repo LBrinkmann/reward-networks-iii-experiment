@@ -32,6 +32,7 @@ interface LinearSolutionInterface {
     onTutorialClose?: () => void;
     /** Rewards range */
     allRewards?: number[];
+    showStepsLabel?: boolean;
 }
 
 
@@ -47,7 +48,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         moves,
         id = 100,
         showTutorial = false,
-        allRewards = [-50, 0, 100, 200, 400]
+        allRewards = [-50, 0, 100, 200, 400],
+        showStepsLabel = true
     } = props;
 
     let colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];
@@ -67,9 +69,9 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             placement="left"
         >
             <Box>
-                <Typography variant="h4" align='center'>
+                {showStepsLabel && <Typography variant="h4" align='center'>
                     Steps
-                </Typography>
+                </Typography>}
                 <svg width={size.width} height={size.height + gap / 2}>
                     <g>
                         {moves.map((move, idx) => {
