@@ -1,4 +1,4 @@
-import React, {FC} from "react"
+import React, {FC, useCallback} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
@@ -52,6 +52,12 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
 
     let colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];
 
+    const setNextNodeColor = useCallback((targetNodeId: number, currentNodeId: number) => {
+        const reward = edges.find(edge => (edge.source_num === currentNodeId) && (edge.target_num === targetNodeId))?.reward;
+        // check if reward in not null
+        return reward === null ? '#ffffff' : colors[allRewards.indexOf(reward)];
+    }, [edges, allRewards, colors]);
+
     return (
         <TutorialTip
             tutorialId={"practice_linear_solution"}
@@ -86,7 +92,8 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         Radius={nodeRadius}
                                         onNodeClick={() => {
                                         }}
-                                        status={'disabled'}
+                                        status={idx > 0 ? 'next' : 'active'}
+                                        nextNodeColor={idx > 0 && setNextNodeColor(node.node_num, moves[idx - 1])}
                                         isValidMove={false}
                                         key={"linear-solution-node-" + idx}
                                     />
