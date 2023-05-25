@@ -48,7 +48,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({endTrial, type = "
                     />
                 </Grid>
                 <Grid item style={{textAlign: "center"}}>
-                    {writtenStrategy.length < (type == "start" ? 10 : 50) ? (
+                    {writtenStrategy.length < (type == "start" ? 20 : 20) ? (
                         <Button variant="contained" color="primary" disabled>Continue</Button>
                     ) : (
                         <Button onClick={onClickContinueHandler} variant="contained" color="primary">Continue</Button>
