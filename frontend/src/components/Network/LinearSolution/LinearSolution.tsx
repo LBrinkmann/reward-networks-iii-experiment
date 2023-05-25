@@ -82,7 +82,7 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
                                         style={{fontWeight: "bold", fontSize: '25px'}}
                                         textAnchor="middle"
                                     >
-                                        {idx + 1}
+                                        {idx > 0 ? idx : ' '}
                                     </text>
                                     <NetworkNode
                                         x={onset + idx * gap}
