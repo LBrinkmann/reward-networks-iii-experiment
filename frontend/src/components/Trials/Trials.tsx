@@ -266,7 +266,8 @@ export const IndividualTrial: FC<ITrial> = (props) => {
     else
         return (
             <>
-                <Header title={sessionState.isPractice ? `Practice ${sessionState.practiceCount}` : 'Main Task'}/>
+                <Header
+                    title={`${sessionState.isPractice ? "Practice" : "Main Task"} ${sessionState.practiceCount}`}/>
                 <NetworkTrial
                     playerTotalPoints={sessionState.totalPoints}
                     showTotalPoints={!sessionState.isPractice}  // show total points only in non-practice trials
