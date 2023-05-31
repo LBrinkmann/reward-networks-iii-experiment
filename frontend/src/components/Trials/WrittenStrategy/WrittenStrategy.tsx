@@ -42,7 +42,7 @@ const WrittenStrategy: React.FC<WrittenStrategyInterface> = ({endTrial, type = "
                         fullWidth
                         margin="normal"
                         rows={6}
-                        helperText={type == "start" ? "Please enter between 10 and 200 characters" : "Please enter between 50 and 200 characters"}
+                        helperText={type == "start" ? "Please enter between 20 and 200 characters" : "Please enter between 20 and 200 characters"}
                         value={writtenStrategy}
                         onChange={onChange}
                     />
