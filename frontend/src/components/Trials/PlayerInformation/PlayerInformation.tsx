@@ -1,7 +1,6 @@
-import {CardMedia, Divider, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Divider, Paper, Stack, TextField, Typography} from "@mui/material";
 import React, {FC} from "react";
 import TutorialTip from "../../Tutorial/TutorialTip";
-import rewardsImg from "../../../images/legend.png";
 import styled from "@emotion/styled";
 
 interface PlayerInformationProps {
@@ -9,21 +8,23 @@ interface PlayerInformationProps {
     id: number;
     step: number;
     cumulativePoints: number;
+    totalScore: number;
     /** Player's comment */
     comment?: string;
     showComment?: boolean;
     /** show tutorial tip */
     showTutorialScore?: boolean;
     showTutorialComment?: boolean;
+    showTutorialTotalScore?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialCommentClose?: () => void;
-    /** Show the legend for the rewards */
-    showLegend?: boolean;
-    playerScore?: number | null;
+    onTutorialClose?: () => void;
+    showCumulativePoints?: boolean;
+    showTotalPoints?: boolean;
 }
 
 const Item = styled(Paper)(() => ({
-    padding: 2,
+    padding: 0,
     elevation: 0,
     textAlign: 'left',
 }));
@@ -32,47 +33,61 @@ const PlayerInfoItem: FC = ({children}) => {
     return (
         <Item elevation={0}>
             {children}
-            <Divider/>
+            {/*<Divider/>*/}
         </Item>
     )
 };
 
 
 export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
-    const {showComment = true, showTutorialScore = false, showTutorialComment = false, showLegend = true, playerScore = null} = props;
+    const {
+        showComment = true,
+        showTutorialScore = false,
+        showTutorialComment = false,
+        showTutorialTotalScore = false,
+        showCumulativePoints = true,
+        showTotalPoints = true
+    } = props;
     return (
 
-        <Stack spacing={1} sx={{paddingTop: "20px"}}>
-            <PlayerInfoItem>
-                {/*show if showLegend*/}
-                {showLegend && (
-                    <CardMedia
-                        component="img"
-                        image={rewardsImg}
-                        alt="You earn or lose points depending on the color of the arrow."
-                    />
-                )}
-            </PlayerInfoItem>
-            <PlayerInfoItem>
-                <Typography gutterBottom variant="h5" component="div">
-                    Step {props.step}
-                </Typography>
-            </PlayerInfoItem>
-            <PlayerInfoItem>
-                <TutorialTip
-                    tutorialId={"practice_step_score"}
-                    isTutorial={showTutorialScore}
-                    isShowTip={false}
-                    onTutorialClose={() => {}}
-                >
-                    <Typography gutterBottom variant="h5" component="div">
-                        Points {props.cumulativePoints}
+        <Stack spacing={0} sx={{paddingTop: "20px"}}>
+            {(showCumulativePoints || showTotalPoints) &&
+                <>
+                    <Typography variant="h4" component="div">
+                        Points
                     </Typography>
-                </TutorialTip>
-            </PlayerInfoItem>
+
+                    {showCumulativePoints && <PlayerInfoItem>
+                        <TutorialTip
+                            tutorialId={"practice_step_score"}
+                            isTutorial={showTutorialScore}
+                            isShowTip={false}
+                            onTutorialClose={props.onTutorialClose}
+                            placement={"right"}
+                        >
+                            <Typography variant="subtitle1" component="div">
+                                Current Network: {props.cumulativePoints}
+                            </Typography>
+                        </TutorialTip>
+                    </PlayerInfoItem>}
+                    {showTotalPoints && <PlayerInfoItem>
+                        <TutorialTip
+                            tutorialId={"practice_total_score"}
+                            isTutorial={showTutorialTotalScore}
+                            isShowTip={false}
+                            onTutorialClose={props.onTutorialClose}
+                            placement={"right"}
+                        >
+                            <Typography variant="subtitle1" component="div">
+                                Total: {props.totalScore}
+                            </Typography>
+                        </TutorialTip>
+                    </PlayerInfoItem>}
+                </>
+            }
             {(showComment) ? (
                 <PlayerInfoItem>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="subtitle1" component="div">
                         Player {props.id} comment:
                     </Typography>
 
@@ -95,14 +110,6 @@ export const PlayerInformation: FC<PlayerInformationProps> = (props) => {
                     </TutorialTip>
                 </PlayerInfoItem>
             ) : null}
-            {playerScore !== null &&
-                <PlayerInfoItem>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Player {props.id} score: {playerScore}
-                    </Typography>
-                </PlayerInfoItem>
-            }
-
         </Stack>
 
     )

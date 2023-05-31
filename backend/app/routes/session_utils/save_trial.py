@@ -102,24 +102,7 @@ async def save_social_learning_selection(trials: List[Trial],
         return TrialError(message='Advisor session is not found')
 
     # get advisor demonstration trials
-    ad_trials = [t for t in ad_s.trials if t.trial_type == 'demonstration']
-
-    # TODO: remove this after pilot 4B !!!
-    # ----------------- Relevant for pilot 2B and 4B -----------------
-    # sl_selection.id == 8 is the first social learning selection trial
-    if sl_selection.id == 8 and ad_trials[0].solution.solution_type == "myopic":
-        comment = "Always follow the green arrows"
-    elif sl_selection.id == 8 and ad_trials[0].solution.solution_type == "loss":
-        comment = "I tried many different things. It turned out that the best strategy is to take exactly three " \
-                  "violet arrows as early as possible and to go for dark green arrows afterwards. Do not take a dark " \
-                  "green arrow before taking at least three violet arrows first"
-    elif sl_selection.id == 16 and ad_trials[0].solution.solution_type == "myopic":
-        comment = "Try to maximize green, especially dark green"
-    # elif sl_selection.id == 16 and ad_trials[0].solution.solution_type == "loss":
-    else:
-        comment = "To be able to get to the arrows with 400 points you first need to take exactly three arrows with " \
-                  "-50 points. Do it as early as possible"
-    # ---------------------------------------------------------
+    ad_trials = [t for t in ad_s.trials if t.trial_type == 'individual']
 
     # select advisor's written strategy
     wr_s = [t.written_strategy for t in ad_s.trials if
@@ -136,11 +119,6 @@ async def save_social_learning_selection(trials: List[Trial],
             sl_trials[n * 3 + i].advisor = Advisor(
                 advisor_id=body.advisor_id,
                 solution=t.solution,
-                # written_strategy=wr_s.strategy
-                # TODO: remove this after pilot 2B !!!
-                # ----------------- Relevant for pilot 2B -----------------
-                written_strategy=comment
-                # ---------------------------------------------------------
             )
             # assign advisor's network to the trial
             sl_trials[n * 3 + i].network = t.network

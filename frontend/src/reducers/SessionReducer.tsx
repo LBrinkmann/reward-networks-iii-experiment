@@ -7,6 +7,7 @@ export const SESSION_ACTIONS = {
     SET_ADVISORS: 'setAdvisors',
     SET_SELECTED_ADVISOR: 'setSelectedAdvisor',
     UPDATE_TOTAL_POINTS: 'updateTotalPoints',
+    UPDATE_PRACTICE_POINTS: 'updatePracticePoints',
     CLEAN_TOTAL_POINTS: 'cleanTotalPoints',
 }
 
@@ -34,6 +35,9 @@ const sessionReducer = (state: SessionState, action: any) => {
                 // show tutorial for social learning selection and observation trials
                 showTutorialInCurrentTrial: action.payload.currentTrialId < 8,
                 selectedAdvisorExampleId: selectedAdvisorExampleId,
+                isPractice: action.payload.is_practice,
+                practiceCount: action.payload.practice_count,
+                lastTrialForCurrentExample: action.payload.last_trial_for_current_example,
             }
         case SESSION_ACTIONS.SET_ADVISORS:
             return {
@@ -50,6 +54,11 @@ const sessionReducer = (state: SessionState, action: any) => {
                 ...state,
                 totalPoints: state.totalPoints + action.payload.points + action.payload.missingSteps * -50,
             };
+        case SESSION_ACTIONS.UPDATE_PRACTICE_POINTS:
+            return {
+                ...state,
+                practiceScore: state.practiceScore + action.payload.points + action.payload.missingSteps * -50,
+            }
         case SESSION_ACTIONS.CLEAN_TOTAL_POINTS:
             return {
                 ...state,

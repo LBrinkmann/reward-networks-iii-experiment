@@ -6,6 +6,7 @@ import PlayerInformation from "../PlayerInformation";
 import LinearSolution from "../../Network/LinearSolution";
 import Timer from "../../Timer";
 import {NETWORK_ACTIONS} from "../../../reducers/NetworkReducer";
+import Legend from "./RewardsLegend";
 
 interface NetworkTrialInterface {
     showLegend?: boolean;
@@ -16,11 +17,15 @@ interface NetworkTrialInterface {
     time?: number;
     isPractice?: boolean;
     isTimerPaused?: boolean;
-    advisorTotalPoints?: number | null;
+    playerTotalPoints?: number;
+    showCurrentNetworkPoints?: boolean;
+    showTotalPoints?: boolean;
+    allowNodeClick?: boolean;
 }
 
 const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
     const {
+        showLegend = true,
         showComment = false,
         teacherId = 1,
         showLinearNetwork = true,
@@ -28,22 +33,25 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         time = 35,
         isPractice = false,
         isTimerPaused = false,
-        advisorTotalPoints = null,
+        playerTotalPoints = 0,
+        showCurrentNetworkPoints = true,
+        showTotalPoints = true,
+        allowNodeClick = true
     } = props;
     const {networkState, networkDispatcher} = useNetworkContext();
 
     const NodeClickHandler = (nodeIdx: number) => {
+        if (!allowNodeClick) return;
+
         // skip update if network is disabled or finished
         if (networkState.isNetworkDisabled || networkState.isNetworkFinished) return;
 
-        if (isPractice) {
-            if (networkState.tutorialStep === 2 || networkState.tutorialStep === 3 || networkState.tutorialStep === 4) {
-                networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
-                networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
-            }
-        } else {
-            networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
-        }
+        // allow clicking only for some tutorial steps
+        if (isPractice && !(networkState.tutorialOptions.edge ||
+            networkState.tutorialOptions.linearSolution)) return;
+
+        networkDispatcher({type: NETWORK_ACTIONS.NEXT_NODE, payload: {nodeIdx}});
+        if (isPractice) networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP});
     }
 
     const NextTutorialStepHandler = () => networkDispatcher({type: NETWORK_ACTIONS.NEXT_TUTORIAL_STEP,});
@@ -55,12 +63,12 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
         <Grid container sx={{margin: 'auto', width: '85%'}} justifyContent="space-around">
             <Grid item sx={{p: 1}} xs={3}>
                 <Grid container direction="column">
-                    <Grid item xs={4}>
+                    <Grid item xs={3} mt={"340px"}>
                         {showTimer &&
                             <Timer
                                 time={time}
                                 invisibleTime={5} // 5 seconds before the timer starts
-                                pause={isPractice || isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
+                                pause={isTimerPaused || networkState.isNetworkFinished || networkState.isNetworkDisabled}
                                 showTutorial={networkState.tutorialOptions.time}
                                 onTutorialClose={NextTutorialStepHandler}
                             />
@@ -71,17 +79,21 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             id={teacherId}
                             step={networkState.step}
                             cumulativePoints={networkState.points}
+                            totalScore={playerTotalPoints + networkState.points}
                             showComment={showComment}
                             comment={networkState.teacherComment}
                             showTutorialScore={networkState.tutorialOptions.points}
                             showTutorialComment={networkState.tutorialOptions.comment}
                             onTutorialCommentClose={onTutorialCommentClose}
-                            playerScore={advisorTotalPoints}
+                            showTutorialTotalScore={networkState.tutorialOptions.totalScore}
+                            onTutorialClose={NextTutorialStepHandler}
+                            showCumulativePoints={showCurrentNetworkPoints}
+                            showTotalPoints={showTotalPoints}
                         />
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={6}>
                 <Grid container direction="row" justifyContent="space-around">
                     <Grid item style={{position: 'relative'}}>
                         <FlashingReward/>
@@ -97,7 +109,6 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                             onTutorialClose={NextTutorialStepHandler}
                             blur={networkState.tutorialOptions.comment}
                         />
-                        <Divider variant="middle" light/>
                     </Grid>
                     <Grid item sx={{marginTop: '10px'}}>
                         {showLinearNetwork &&
@@ -111,14 +122,17 @@ const NetworkTrial: FC<NetworkTrialInterface> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
+            <Grid item xs={1}>
+                <Grid container direction="column" justifyContent="center" alignItems="center">
+                    {showLegend &&
+                        <Grid item mt={"150px"}>
+                            <Legend/>
+                        </Grid>}
+                </Grid>
+            </Grid>
         </Grid>
     );
 }
-
-interface IFlashingReward {
-    show?: boolean;
-}
-
 const FlashingReward: FC = () => {
     const allRewards = [-50, 0, 100, 200, 400];
     const colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];

@@ -13,8 +13,8 @@ export default {
 const Template: ComponentStory<typeof WaitForNextTrialScreen> = function (args) {
     return (
         <>
-            <Header totalPoints={0} title={"Wait for the next trial"}/>
-            <WaitForNextTrialScreen />
+            <Header title={"Wait for the next trial"}/>
+            <WaitForNextTrialScreen {...args}/>
         </>
     );
 };
@@ -22,4 +22,10 @@ const Template: ComponentStory<typeof WaitForNextTrialScreen> = function (args) 
 export const DefaultStory = Template.bind({});
 
 DefaultStory.args = {
+};
+
+export const NotNewNetworkStory = Template.bind({});
+
+NotNewNetworkStory.args = {
+    newNetwork: false,
 };

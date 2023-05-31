@@ -36,7 +36,7 @@ const networkReducer = (state: NetworkState, action: any) => {
                 tutorialStep: action.payload.isPractice ? 1 : networkInitialState.tutorialStep,
                 tutorialOptions: {
                     ...networkInitialState.tutorialOptions,
-                    node: action.payload.isPractice,
+                    start: action.payload.isPractice,
                     comment: action.payload.commentTutorial,
                 },
                 teacherComment: action.payload.teacherComment,
@@ -108,23 +108,39 @@ const networkReducer = (state: NetworkState, action: any) => {
         case NETWORK_ACTIONS.NEXT_TUTORIAL_STEP:
             if (!state.isPractice) return state;
 
-            if (state.tutorialStep === 1) {
+            if (state.tutorialOptions.start) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, node: true},
+                }
+            }
+
+            if (state.tutorialOptions.node) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, general_edge: true},
+                }
+            }
+
+            if (state.tutorialOptions.general_edge) {
                 return {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
                     tutorialOptions: {...networkInitialState.tutorialOptions, edge: true},
                 }
             }
-            if (state.tutorialStep === 2) {
+
+            if (state.tutorialOptions.edge) {
                 return {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
-                    tutorialOptions: {...networkInitialState.tutorialOptions, points: true},
+                    tutorialOptions: {...networkInitialState.tutorialOptions, general_points: true},
                 }
             }
 
-            if (state.tutorialStep === 3 && !(state.moves.length >= 2 && state.moves.length < 3)) {
-
+            if (state.tutorialOptions.general_points) {
                 return {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
@@ -132,12 +148,41 @@ const networkReducer = (state: NetworkState, action: any) => {
                 }
             }
 
-            if (state.tutorialStep === 4 && !(state.moves.length >= 3 && state.moves.length < 9)) {
-
+            if (state.tutorialOptions.linearSolution && (state.moves.length === 9)) {
                 return {
                     ...state,
                     tutorialStep: state.tutorialStep + 1,
                     tutorialOptions: {...networkInitialState.tutorialOptions, time: true},
+                }
+            } else if (state.tutorialOptions.linearSolution && (state.moves.length < 9)) {
+                return {
+                    ...state,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, linearSolution: true},
+                }
+            }
+
+            if (state.tutorialOptions.time) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, points: true},
+                }
+            }
+
+            if (state.tutorialOptions.points) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: {...networkInitialState.tutorialOptions, totalScore: true},
+                }
+            }
+
+            // final step
+            if (state.tutorialOptions.totalScore) {
+                return {
+                    ...state,
+                    tutorialStep: state.tutorialStep + 1,
+                    tutorialOptions: networkInitialState.tutorialOptions,
                 }
             }
 

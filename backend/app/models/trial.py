@@ -1,5 +1,7 @@
 import datetime
-from typing import Optional, List, Literal, Dict
+from typing import Optional, List, Dict
+# https://github.com/pydantic/pydantic/issues/545
+from typing_extensions import Literal
 
 from beanie import PydanticObjectId
 
@@ -82,6 +84,10 @@ class Trial(BaseModel):
     post_survey: Optional[PostSurvey]
     # redirect url with the confirmation code
     redirect_url: Optional[str]
+    is_practice: Optional[bool] = False
+    practice_count: Optional[str] = ''
+    # relevant for the social learning loop to determine if the trial is the last in the example
+    last_trial_for_current_example: Optional[bool] = False
 
     class Config:
         orm_mode = True

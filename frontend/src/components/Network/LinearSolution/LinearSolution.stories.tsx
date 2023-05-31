@@ -34,7 +34,7 @@ EightSteps.args = {
     nodes: data[0].nodes,
     moves: [9, 3, 8, 7, 4, 6, 7, 4, 6],
     title: "Player 3 solution",
-    size: {width: 600, height: 50},
+    size: {width: 530, height: 50},
     nodeRadius: 20,
     gap: 60,
     onset: 24
@@ -48,7 +48,7 @@ FourSteps.args = {
     nodes: data[0].nodes,
     moves: [9, 3, 8, 7],
     title: "Player 3 solution",
-    size: {width: 600, height: 50},
+    size: {width: 530, height: 50},
     nodeRadius: 20,
     gap: 60,
     onset: 24

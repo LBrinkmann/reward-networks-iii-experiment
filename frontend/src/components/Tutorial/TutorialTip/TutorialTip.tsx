@@ -78,7 +78,7 @@ const TutorialTip: FC<TutorialTipInterface> = (props) => {
             {props.onTutorialClose &&
                 (
                     <>
-                        <Divider/>
+                        {/*<Divider/>*/}
                         <Button sx={{m: 1}} variant="contained" color="secondary" onClick={onClose}>
                             Ok
                         </Button>

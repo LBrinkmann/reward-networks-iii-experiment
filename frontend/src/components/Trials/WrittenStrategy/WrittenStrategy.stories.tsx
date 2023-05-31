@@ -13,7 +13,7 @@ export default {
 const Template: ComponentStory<typeof WrittenStrategy> = function (args) {
     return (
         <>
-            <Header totalPoints={0} title={"Written Strategy"}/>
+            <Header title={"Written Strategy"}/>
             <WrittenStrategy {...args}/>
         </>
     );

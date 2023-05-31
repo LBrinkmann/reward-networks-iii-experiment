@@ -225,7 +225,7 @@ async def create_generation(config_id: PydanticObjectId,
                 experiment_type=experiment_type,
                 generation=generation,
                 session_idx=session_idx,
-                n_demonstration_trials=n_demonstration_trials,
+                n_demonstration_trials=n_individual_trials,
                 solution_type=solution_type
             )
             # save session
@@ -266,8 +266,8 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
 
         for i in range(2):
             net, _ = get_net_solution()
-            # individual trial
-            trial = Trial(trial_type='individual', id=trial_n, network=net)
+            # individual trial practice
+            trial = Trial(trial_type='individual', id=trial_n, network=net, is_practice=True, practice_count=f'{i+1}/2')
             # update the starting node
             trial.network.nodes[trial.network.starting_node].starting_node = True
             trials.append(trial)
@@ -293,13 +293,14 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
                 trial_n += 1
 
             # show all demonstration trials
-            for ii in range(n_demonstration_trials):
+            for ii in range(n_individual_trials):
                 # Social learning
-                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{ii+1}/4'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='observation'))
+                trials.append(Trial(id=trial_n, trial_type='observation', is_practice=True, practice_count=f'{ii+1}/4'))
                 trial_n += 1
-                trials.append(Trial(id=trial_n, trial_type='try_yourself'))
+                trials.append(Trial(id=trial_n, trial_type='try_yourself', is_practice=True, practice_count=f'{ii+1}/4',
+                                    last_trial_for_current_example=True))
                 trial_n += 1
     else:
         # Replace social learning trials with individual trials for the very
@@ -310,13 +311,14 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
     trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='individual'))
     trial_n += 1
 
-    for i in range(n_individual_trials - 2 if generation > 0 else n_individual_trials):
+    for i in range(n_individual_trials):
         net, _ = get_net_solution()
         # individual trial
         trial = Trial(
             trial_type='individual',
             id=trial_n,
             network=net,
+            practice_count=f'{i+1}/{n_individual_trials}'
         )
         # update the starting node
         trial.network.nodes[trial.network.starting_node].starting_node = True
@@ -324,21 +326,22 @@ def create_trials(config_id: PydanticObjectId, experiment_num: int,
         trial_n += 1
 
     # Demonstration trials
-    trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='demonstration'))
-    trial_n += 1
-    for i in range(n_demonstration_trials):
-        net, _ = get_net_solution()
-        # demonstration trial
-        dem_trial = Trial(
-            id=trial_n,
-            trial_type='demonstration',
-            network=net,
-        )
-        # update the starting node
-        dem_trial.network.nodes[
-            dem_trial.network.starting_node].starting_node = True
-        trials.append(dem_trial)
+    if n_demonstration_trials > 0:
+        trials.append(Trial(id=trial_n, trial_type='instruction', instruction_type='demonstration'))
         trial_n += 1
+        for i in range(n_demonstration_trials):
+            net, _ = get_net_solution()
+            # demonstration trial
+            dem_trial = Trial(
+                id=trial_n,
+                trial_type='demonstration',
+                network=net,
+            )
+            # update the starting node
+            dem_trial.network.nodes[
+                dem_trial.network.starting_node].starting_node = True
+            trials.append(dem_trial)
+            trial_n += 1
 
     # Written strategy
     trials.append(Trial(id=trial_n, trial_type='written_strategy'))

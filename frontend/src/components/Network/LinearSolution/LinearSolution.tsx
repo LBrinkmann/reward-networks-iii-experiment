@@ -1,8 +1,8 @@
-import React, {FC} from "react"
+import React, {FC, useCallback} from "react"
 import {StaticNetworkEdgeInterface, StaticNetworkNodeInterface} from "../StaticNetwork/StaticNetwork";
 import NetworkNode from "../NetworkNode";
 import NetworkEdge from "../NetworkEdge";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
 interface LinearSolutionInterface {
@@ -20,7 +20,7 @@ interface LinearSolutionInterface {
     nodeRadius?: number;
     /** Edge width. Default = 3 */
     edgeWidth?: number;
-    /** Gap between nodes. Default = 70 */
+    /** Gap between nodes. Default = 60 */
     gap?: number;
     /** Onset of the first node. Default = 24 */
     onset?: number;
@@ -32,6 +32,7 @@ interface LinearSolutionInterface {
     onTutorialClose?: () => void;
     /** Rewards range */
     allRewards?: number[];
+    showStepsLabel?: boolean;
 }
 
 
@@ -47,43 +48,17 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         moves,
         id = 100,
         showTutorial = false,
-        allRewards = [-50, 0, 100, 200, 400]
+        allRewards = [-50, 0, 100, 200, 400],
+        showStepsLabel = true
     } = props;
 
     let colors = ['#c51b7d', '#e9a3c9', '#e6f5d0', '#a1d76a', '#4d9221',];
 
-    const plotEdge = (moveIdx: number) => {
-        if (moveIdx < moves.length - 1) {
-            const edge = edges.filter((edge) =>
-                edge.source_num === moves[moveIdx] && edge.target_num === moves[moveIdx + 1])[0];
-
-            // the point on the border of the source node
-            const sourceX = onset + moveIdx * gap + nodeRadius;
-            // the point on the border of the target node
-            const targetX = onset + (moveIdx + 1) * gap - nodeRadius;
-
-            return (
-                <NetworkEdge
-                    reward={edge.reward}
-                    edgeWidth={edgeWidth}
-                    edgeStyle={"normal"}
-                    idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
-                    showRewardText={false}
-                    arc_type={edge.arc_type}
-                    source_x={sourceX}
-                    source_y={size.height / 2}
-                    arc_x={sourceX + (targetX - sourceX)}
-                    arc_y={size.height / 2}
-                    target_x={targetX}
-                    target_y={size.height / 2}
-                    key={'linear-solution-edge-' + moveIdx}
-                    color={colors[allRewards.indexOf(edge.reward)]}
-                />
-            );
-        } else {
-            return null;
-        }
-    }
+    const setNextNodeColor = useCallback((targetNodeId: number, currentNodeId: number) => {
+        const reward = edges.find(edge => (edge.source_num === currentNodeId) && (edge.target_num === targetNodeId))?.reward;
+        // check if reward in not null
+        return reward === null ? '#ffffff' : colors[allRewards.indexOf(reward)];
+    }, [edges, allRewards, colors]);
 
     return (
         <TutorialTip
@@ -94,25 +69,50 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
             placement="left"
         >
             <Box>
-                <svg width={size.width} height={size.height}>
+                {showStepsLabel && <Typography variant="h4" align='center'>
+                    Steps
+                </Typography>}
+                <svg width={size.width} height={size.height + gap / 2}>
                     <g>
                         {moves.map((move, idx) => {
                             const node = nodes[move];
                             return (
                                 <React.Fragment key={"move" + idx}>
-                                    <NetworkNode
+                                    <text
                                         x={onset + idx * gap}
                                         y={size.height / 2}
+                                        style={{fontWeight: "bold", fontSize: '25px'}}
+                                        textAnchor="middle"
+                                    >
+                                        {idx > 0 ? idx : ' '}
+                                    </text>
+                                    <NetworkNode
+                                        x={onset + idx * gap}
+                                        y={size.height / 2 + gap / 2}
                                         nodeInx={node.node_num}
                                         Text={node.display_name}
                                         Radius={nodeRadius}
                                         onNodeClick={() => {
                                         }}
-                                        status={'disabled'}
+                                        status={idx > 0 ? 'next' : 'active'}
+                                        nextNodeColor={idx > 0 && setNextNodeColor(node.node_num, moves[idx - 1])}
                                         isValidMove={false}
                                         key={"linear-solution-node-" + idx}
                                     />
-                                    {plotEdge(idx)}
+                                    <LinearSolutionEdge
+                                        {...props}
+                                        colors={colors}
+                                        allRewards={allRewards}
+                                        edges={edges}
+                                        moves={moves}
+                                        moveIdx={idx}
+                                        gap={gap}
+                                        nodeRadius={nodeRadius}
+                                        onset={onset}
+                                        edgeWidth={edgeWidth}
+                                        id={id}
+                                        size={size}
+                                    />
                                 </ React.Fragment>
                             );
                         })};
@@ -122,5 +122,57 @@ export const LinearSolution: FC<LinearSolutionInterface> = (props) => {
         </TutorialTip>
     )
 }
+
+interface ILinearSolutionEdge extends LinearSolutionInterface {
+    moveIdx: number;
+    colors: string[];
+}
+
+const LinearSolutionEdge: FC<ILinearSolutionEdge> = (props) => {
+    const {
+        edges,
+        moves,
+        moveIdx,
+        gap,
+        nodeRadius,
+        onset,
+        edgeWidth,
+        id,
+        size,
+        colors,
+        allRewards
+    } = props;
+    if (moveIdx < moves.length - 1) {
+        const edge = edges.filter((edge) =>
+            edge.source_num === moves[moveIdx] && edge.target_num === moves[moveIdx + 1])[0];
+
+        // the point on the border of the source node
+        const sourceX = onset + moveIdx * gap + nodeRadius;
+        // the point on the border of the target node
+        const targetX = onset + (moveIdx + 1) * gap - nodeRadius;
+
+        return (
+            <NetworkEdge
+                reward={edge.reward}
+                edgeWidth={edgeWidth}
+                edgeStyle={"normal"}
+                idx={moveIdx + id} // add id to avoid conflict with edge idx in other components
+                showRewardText={false}
+                arc_type={edge.arc_type}
+                source_x={sourceX}
+                source_y={size.height / 2 + gap / 2}
+                arc_x={sourceX + (targetX - sourceX)}
+                arc_y={size.height / 2 + gap / 2}
+                target_x={targetX}
+                target_y={size.height / 2 + gap / 2}
+                key={'linear-solution-edge-' + moveIdx}
+                color={colors[allRewards.indexOf(edge.reward)]}
+            />
+        );
+    } else {
+        return null;
+    }
+}
+
 
 export default LinearSolution

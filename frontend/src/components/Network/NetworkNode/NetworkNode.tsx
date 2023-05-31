@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import NetworkNodeStyled from "./NetworkNode.styled";
 import TutorialTip from "../../Tutorial/TutorialTip";
 
-export type NetworkNodeStatus = "normal" | "starting" | "active" | "disabled";
+export type NetworkNodeStatus = "normal" | "starting" | "active" | "disabled" | "next";
 
 export interface NetworkNodeInterface {
     /** Node index */
@@ -24,6 +24,7 @@ export interface NetworkNodeInterface {
     showTutorial?: boolean;
     /** Callback to handle tutorial tip close */
     onTutorialClose?: () => void;
+    nextNodeColor?: string;
 }
 
 
@@ -59,6 +60,7 @@ const NetworkNode: React.FC<NetworkNodeInterface> = props => {
                 fontSize={props.Radius}
                 onClick={nodeClickHandler}
                 wrongClick={wrongClick}
+                nextNodeColor={props.nextNodeColor}
             >
                 <circle cx={props.x} cy={props.y} r={props.Radius} key={"circle"}/>
                 <text x={props.x} y={props.y + props.Radius * 0.35} textAnchor="middle" key={"state-name"}>

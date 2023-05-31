@@ -5,6 +5,7 @@ type NetworkNodeProps = {
     status: NetworkNodeStatus;
     fontSize: number;
     wrongClick: boolean;
+    nextNodeColor?: string;
 }
 
 const colors = {
@@ -15,6 +16,7 @@ const colors = {
     // red 500 from Tailwind
     'invalid-click': '#ef4444',
     'starting': 'rgb(193, 145, 207)',
+    'next': 'rgb(193, 145, 207)',
     'normal': 'white'
 }
 
@@ -39,8 +41,9 @@ const NetworkNodeStyled = styled('g')<NetworkNodeProps>`
 
     fill: ${({
                status,
-               wrongClick
-             }) => wrongClick ? colors['invalid-click'] : colors[status] ? colors[status] : colors['disabled']};
+               wrongClick,
+               nextNodeColor
+             }) => wrongClick ? colors['invalid-click'] : status === 'next' ? nextNodeColor : colors[status] ? colors[status] : colors['disabled']};
     transition: ${({status}) => {
       switch (status) {
         case 'active':

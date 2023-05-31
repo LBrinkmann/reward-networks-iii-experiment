@@ -6,12 +6,11 @@ interface IHeader {
     showTip?: boolean;
     showTutorial?: boolean;
     title?: string;
-    totalPoints?: number;
     onTutorialClose?: () => void;
 }
 
 const Header: FC<IHeader> = (props) => {
-    const {showTip= true, showTutorial=false, title='', totalPoints=0, onTutorialClose} = props;
+    const {showTip= true, showTutorial=false, title='', onTutorialClose} = props;
 
     return (
         <Box sx={{flexGrow: 1, height: 80}}>
@@ -20,17 +19,19 @@ const Header: FC<IHeader> = (props) => {
                     <Typography variant="h6" sx={{flexGrow: 1}}>
                         {title}
                     </Typography>
-                    <TutorialTip
-                        tutorialId={"practice_total_score"}
-                        isTutorial={showTutorial}
-                        isShowTip={showTip}
-                        onTutorialClose={onTutorialClose}
-                        placement="bottom"
-                    >
-                        <Typography variant="h6" sx={{mr: 2}}>
-                            {totalPoints} points
-                        </Typography>
-                    </TutorialTip>
+                    {/*{totalPoints &&*/}
+                    {/*    <TutorialTip*/}
+                    {/*        tutorialId={"practice_total_score"}*/}
+                    {/*        isTutorial={showTutorial}*/}
+                    {/*        isShowTip={showTip}*/}
+                    {/*        onTutorialClose={onTutorialClose}*/}
+                    {/*        placement="bottom"*/}
+                    {/*    >*/}
+                    {/*        <Typography variant="h6" sx={{mr: 2}}>*/}
+                    {/*            {totalPoints} points*/}
+                    {/*        </Typography>*/}
+                    {/*    </TutorialTip>*/}
+                    {/*}*/}
                 </Toolbar>
             </AppBar>
         </Box>
